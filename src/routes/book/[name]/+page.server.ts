@@ -1,0 +1,74 @@
+import { prisma } from "$lib/server/prisma";
+import { error } from "@sveltejs/kit";
+import { append } from "svelte/internal";
+import { redirect } from "sveltekit-flash-message/server";
+import type { Action, RequestEvent } from "./$types";
+
+export async function load({ params }: any) {
+  const book = await prisma.book.findFirst({
+    where: {
+      name: params.name,
+    },
+    include: {
+      rating: true,
+    },
+  });
+  if (!book) {
+    throw error(404, {message: "Not found"})
+  }
+  
+
+  return {
+    book,
+  };
+}
+
+export const actions = {
+  save: async (event: RequestEvent) => {
+    const data = await event.request.formData();
+
+    const id = data.get("id")?.toString();
+    const name = data.get("name")?.toString();
+    const author = data.get("author")?.toString();
+    if (id === undefined || name === undefined || author === undefined) {
+      return { success: false };
+    }
+
+    const book = await prisma.book.update({
+      where: { id },
+      data: {
+        name,
+        author,
+      },
+    });    
+
+    const message = {
+      type: "success",
+      message: "Successfully updated book details",
+    };
+    throw redirect(303, "/book/" + name, message, event);
+  },
+  delete: async (event: RequestEvent) => {
+    const data = await event.request.formData();
+    console.log(data);
+
+    const id = data.get("id")?.toString();
+    if (id === undefined) {
+      return { success: false };
+    }
+
+    const book = await prisma.book.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log("deleted book:" + book.name);
+
+    const message = {
+      type: "success",
+      message: "Successfully deleted book " + book.name,
+    };
+
+    throw redirect(303, "/?success=true");
+  },
+};
