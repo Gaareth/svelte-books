@@ -13,10 +13,11 @@ export async function load({ params }: any) {
       rating: true,
     },
   });
+  console.log(book);
+
   if (!book) {
-    throw error(404, {message: "Not found"})
+    throw error(404, { message: "Not found" });
   }
-  
 
   return {
     book,
@@ -26,21 +27,48 @@ export async function load({ params }: any) {
 export const actions = {
   save: async (event: RequestEvent) => {
     const data = await event.request.formData();
+    console.log(data);
 
     const id = data.get("id")?.toString();
     const name = data.get("name")?.toString();
     const author = data.get("author")?.toString();
-    if (id === undefined || name === undefined || author === undefined) {
+    let comment = data.get("comment")?.toString();
+    const stars = data.get("stars")?.toString();
+    const monthRead = data.get("month")?.toString();
+
+
+    if (
+      id === undefined ||
+      name === undefined ||
+      author === undefined ||
+      comment === undefined ||
+      stars === undefined
+    ) {
       return { success: false };
     }
+
+    const stars_number = parseInt(stars);
+    if (Number.isNaN(stars_number)) {
+      return { success: false };
+    }
+
+    comment = comment.trim();
 
     const book = await prisma.book.update({
       where: { id },
       data: {
         name,
         author,
+        monthRead,
+        rating: {
+          upsert: {
+            update: { stars: stars_number, comment },
+            create: { stars: stars_number, comment },
+          },
+        },
       },
-    });    
+    });
+    console.log(book);
 
     const message = {
       type: "success",

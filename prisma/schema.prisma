@@ -16,6 +16,11 @@ model Account {
   password_hash String
 }
 
+model BookList {
+  name  String @id
+  books Book[]
+}
+
 model Book {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -24,8 +29,11 @@ model Book {
   name       String
   author     String
   coverImage String?
-  month_read String
-  rating     Rating?
+  monthRead  String?
+
+  rating       Rating?
+  bookList     BookList? @relation(fields: [bookListName], references: [name])
+  bookListName String?
 }
 
 model Rating {

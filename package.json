@@ -33,6 +33,7 @@
     "@auth/sveltekit": "^0.2.2",
     "@prisma/client": "^4.11.0",
     "bcrypt": "^5.1.0",
+    "svelte-icons": "^2.1.0",
     "sveltekit-flash-message": "^0.11.3",
     "ts-node": "^10.9.1"
   },
