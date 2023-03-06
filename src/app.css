@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .animate-drop-click {
+        @apply transition ease-in translate-y-[0.1rem] duration-75
+    }
+
+    .animate-drop-hover {
+        @apply transition ease-in translate-y-[0.05rem] duration-75
+    }
+}
+
+@layer components {
+    .btn-group-btn {
+        @apply inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative;
+    }
+
+    .btn-group {
+        @apply inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm;
+    }
+}

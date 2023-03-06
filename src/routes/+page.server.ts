@@ -5,9 +5,13 @@ export async function load({ url }: any) {
     books: await prisma.book.findMany(({
       where: {
         bookListName: "Read"
+      },
+      include: {
+        rating: true,
       }
     })),
   };
+  
   
   return data;
 }

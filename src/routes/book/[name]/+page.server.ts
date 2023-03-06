@@ -1,10 +1,17 @@
+import { getBookLists } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error } from "@sveltejs/kit";
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
 import { append } from "svelte/internal";
 import { redirect } from "sveltekit-flash-message/server";
-import type { Action, RequestEvent } from "./$types";
+import type { Action, PageServerLoad, RequestEvent } from "./$types";
 
-export async function load({ params }: any) {
+export async function load(page: ServerLoadEvent) {
+  const params = page.params;
+
+  const edit = page.url.searchParams.get("edit");
+  console.log(edit);
+  
+  
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
@@ -13,7 +20,8 @@ export async function load({ params }: any) {
       rating: true,
     },
   });
-  console.log(book);
+
+  const bookLists = await getBookLists();
 
   if (!book) {
     throw error(404, { message: "Not found" });
@@ -21,6 +29,8 @@ export async function load({ params }: any) {
 
   return {
     book,
+    bookLists,
+    edit
   };
 }
 
@@ -35,20 +45,33 @@ export const actions = {
     let comment = data.get("comment")?.toString();
     const stars = data.get("stars")?.toString();
     const monthRead = data.get("month")?.toString();
-
+    const yearRead = data.get("year")?.toString();
+    const listName = data.get("listName")?.toString();
 
     if (
       id === undefined ||
       name === undefined ||
       author === undefined ||
       comment === undefined ||
-      stars === undefined
+      stars === undefined ||
+      monthRead === undefined ||
+      yearRead === undefined ||
+      listName === undefined
     ) {
       return { success: false };
     }
 
     const stars_number = parseInt(stars);
     if (Number.isNaN(stars_number)) {
+      return { success: false };
+    }
+
+    const month_number = parseInt(monthRead);
+    if (Number.isNaN(month_number)) {
+      return { success: false };
+    }
+    const year_number = parseInt(yearRead);
+    if (Number.isNaN(year_number)) {
       return { success: false };
     }
 
@@ -59,11 +82,17 @@ export const actions = {
       data: {
         name,
         author,
-        monthRead,
+        monthRead: month_number,
+        yearRead: year_number,
         rating: {
           upsert: {
             update: { stars: stars_number, comment },
             create: { stars: stars_number, comment },
+          },
+        },
+        bookList: {
+          connect: {
+            name: listName,
           },
         },
       },

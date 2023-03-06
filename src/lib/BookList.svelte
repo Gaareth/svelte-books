@@ -1,12 +1,75 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import type { Book, Prisma } from "@prisma/client";
+  import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
+  import IoMdSettings from 'svelte-icons/io/IoMdSettings.svelte'
+  import IoMdTrash from 'svelte-icons/io/IoMdTrash.svelte'
 
-  export let books: Book[];
+  type BookFullType = Prisma.BookGetPayload<{
+    select: { [K in keyof Required<Prisma.BookSelect>]: true };
+  }>;
+
+  export let books: BookFullType[];
+  let maxRating = 5;
 </script>
 
+<h2 class="mt-3">Books</h2>
 {#each books as book}
-  <div class="border-blue-400 border-2 my-3 p-1 flex gap-3">
-    <a href="/book/{book.name}">{book.name}</a>
-    <p>{book.author}</p>
+  <div class="rounded border mb-3 p-2 items-center grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} ">
+    <div>
+      <a href="/book/{book.name}" class="text-md underline-hover">{book.name}</a
+      >
+    </div>
+    <div>
+      <p class="text-gray-600">{book.author}</p>
+    </div>
+
+    <div>
+      <p>{book.yearRead ?? "?"} / {book.monthRead ? '0' + book.monthRead : '?'}</p>
+    </div>
+
+    {#if book.rating}
+      <div class="flex gap-2 items-center">
+        <p>{book.rating.stars} / {maxRating}</p>
+        <div class="icon"><IoIosStar /></div>
+      </div>
+    {/if}
+
+    {#if $page.data.session}
+      <div class="flex justify-end">
+        <span
+          class="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm"
+        >
+          <button
+            class="group inline-block p-2  hover:bg-gray-50 focus:relative"
+            title="Edit book"
+          >
+            <div class="icon-edit group-hover:animate-drop"><IoMdSettings/></div>
+          </button>
+
+          <button
+            class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600"
+            title="Delete book"
+          >
+            <div class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+              <IoMdTrash />
+            </div>
+          </button>
+        </span>
+      </div>
+    {:else}
+      <button>View</button>
+    {/if}
   </div>
 {/each}
+
+<style>
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .icon-edit {
+    width: 20px;
+    height: 20px;
+  }
+</style>
