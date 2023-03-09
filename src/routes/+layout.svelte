@@ -2,6 +2,7 @@
   import "../app.css";
   import { initFlash } from "sveltekit-flash-message/client";
   import { page } from "$app/stores";
+  import { SvelteToast } from "@zerodevx/svelte-toast";
 
   const flash = initFlash(page);
   const flashTimeoutMs = 5000;
@@ -72,10 +73,16 @@
 </header>
 
 <main>
+  <SvelteToast />
+
   <div class="container max-w-2xl mx-auto">
     {#if $flash}
-      {@const color = $flash.type == "success" ? "text-green-600" : "text-red-600"}
-      <div role="alert" class="rounded-xl border border-gray-100 p-4 shadow-xl mt-5 mb-12">
+      {@const color =
+        $flash.type == "success" ? "text-green-600" : "text-red-600"}
+      <div
+        role="alert"
+        class="rounded-xl border border-gray-100 p-4 shadow-xl mt-5 mb-12"
+      >
         <div class="flex items-start gap-4">
           <span class={color}>
             <svg
@@ -136,18 +143,31 @@
   } */
 
   :global(.underline-hover) {
-    @apply before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0  before:transition hover:before:scale-x-100
+    @apply before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0  before:transition hover:before:scale-x-100;
   }
 
   :global(.btn-primary-black) {
-    @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75
+    @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75;
+  }
+
+  :global(.btn-primary-black:disabled) {
+    @apply inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
   }
 
   :global(.input) {
-    @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full
+    @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full;
   }
 
   :global(html) {
-    @apply motion-reduce:transition-none motion-reduce:hover:transform-none 
+    @apply motion-reduce:transition-none motion-reduce:hover:transform-none;
+  }
+
+  :global(.input-error) {
+    border-color: red !important;
+  }
+
+  :global(.text-error) {
+    color: red !important;
+    font-size: 0.8rem;
   }
 </style>

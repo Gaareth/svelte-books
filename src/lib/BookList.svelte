@@ -14,6 +14,12 @@
 </script>
 
 <h2 class="mt-3">Books</h2>
+{#if books.length <= 0}
+  <p>No books added at the moment :(</p>
+  <!-- {#if $page.data.session}
+     <button on:click={() => add}>add some</button>
+  {/if} -->
+{/if}
 {#each books as book}
   <div class="rounded border mb-3 p-2 items-center grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} ">
     <div>

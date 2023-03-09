@@ -29,6 +29,16 @@
       return "bg-red-400";
     }
   }
+
+  function getColorVar() {
+    if (type == "Info") {
+      return "blue";
+    } else if (type == "Warning") {
+      return "yellow";
+    } else {
+      return "red";
+    }
+  }
 </script>
 
 <Modal bind:showModal>
@@ -43,15 +53,20 @@
 
   <div class="mt-6 sm:flex sm:gap-4">
     <button
-      class="inline-block w-full rounded-lg {getColor()} px-5 py-3 text-center text-sm font-semibold text-white sm:w-auto"
+      class="inline-block w-full rounded-lg {getColor()} px-5 py-3 text-center text-sm font-semibold text-white sm:w-auto
+      border border-{getColorVar()}-400 hover:border-{getColorVar()}-500"
       on:click={() => dispatch("primary")}
     >
       {btn1_msg}
     </button>
 
     <button
-      class="mt-2 inline-block w-full rounded-lg bg-gray-100 px-5 py-3 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto"
-      on:click={() => showModal = !showModal}
+      class="mt-2 inline-block w-full rounded-lg bg-gray-100 px-5 py-3 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300"
+      on:click={() => {
+        console.log(showModal);
+        
+        showModal = false
+      }}
     >
       {btn2_msg}
     </button>

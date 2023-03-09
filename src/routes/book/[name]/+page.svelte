@@ -3,9 +3,15 @@
   import type { BookList, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
   import Popup from "$lib/Popup.svelte";
+  import { enhance, type SubmitFunction } from "$app/forms";
+  import { json, type ActionResult } from "@sveltejs/kit";
+  import { goto } from "$app/navigation";
+  import InputText from "$lib/InputText.svelte";
+  import InputSelect from "$lib/InputSelect.svelte";
+
+  import type { ActionData } from "./$types";
 
   export let data: any;
-  let edit: boolean = data.edit !== "false" && data.edit !== null;
 
   type BookAll = Prisma.BookGetPayload<{
     include: {
@@ -51,11 +57,29 @@
   let endDate = new Date().getFullYear() + 100;
 
   let open_delete = false;
+  
 
+  const deleteBook = async (event: any) => {
+    const response = await fetch("/book/" + book.name + "/delete", {
+      method: "POST",
+      body: JSON.stringify({ id: book.id }),
+    });
+    const { success } = await response.json();
+
+    if (success) {
+      goto("/");
+    } else {
+      // TODO: toast
+    }
+  };
+
+  export let form: ActionData;
+  let edit: boolean =
+    (data.edit !== "false" && data.edit !== null) || !!form?.errors;
 </script>
 
-<div class="py-3">
-  <form method="POST" use:enhance>
+<div class="mt-5">
+  <form method="POST" id="form-book">
     <div class="flex justify-between">
       <h1 class="text-4xl">{book.name}</h1>
 
@@ -78,7 +102,8 @@
                 Save
               </button>
             {/if}
-            <button formaction="?/delete" class="text-red-700 btn-group-btn">
+            <button on:click={() => open_delete = !open_delete} 
+              type="button" class="text-red-700 btn-group-btn">
               Delete
             </button>
           </span>
@@ -118,54 +143,62 @@
         </div>
       </div>
     {:else}
+      <!-- Inputs -->
       <div class="w-full">
-        <div class="grid grid-cols-2 items-center">
-          <label for="name">Name:</label>
-          <input
-            id="name"
+        <div class="grid grid-cols-2 items-center gap-3">
+          <InputText
+            value={book.name}
             name="name"
-            type="text"
-            class="border"
-            bind:value={book.name}
+            error={(form?.errors?.name ?? [undefined])[0]}
           />
-          <label for="author">Author:</label>
-          <input
-            id="author"
+          <InputText
+            value={book.author}
             name="author"
-            type="text"
-            class="border"
-            bind:value={book.author}
+            error={(form?.errors?.author ?? [undefined])[0]}
           />
-          <label for="month">Read in (month):</label>
-          <select bind:value={book.monthRead} name="month" id="month">
+          <InputSelect
+            value={book.monthRead}
+            displayName="Read in (month)"
+            name={"month"}
+            error={(form?.errors?.month ?? [undefined])[0]}
+          >
             {#each Array(12) as _, month}
               <option value={month + 1}>
                 {months[month]}
               </option>
             {/each}
-          </select>
+          </InputSelect>
+          
 
-          <label for="year">Read in (year):</label>
-          <select bind:value={book.yearRead} name="year" id="year">
+          <InputSelect
+            value={book.yearRead}
+            displayName="Read in (year)"
+            name={"year"}
+            error={(form?.errors?.year ?? [undefined])[0]}
+          >
             {#each range(startDate, endDate) as year}
               <option value={year}>
                 {year}
               </option>
             {/each}
-          </select>
+          </InputSelect>
 
-          <label for="listName">List:</label>
-          <select bind:value={book.bookListName} name="listName" id="listName">
-            {#each bookLists as list}
+          <InputSelect
+            value={book.bookListName}
+            displayName="List"
+            name={"listName"}
+            error={(form?.errors?.listName ?? [undefined])[0]}
+          >
+           {#each bookLists as list}
               <option value={list.name}>
                 {list.name}
               </option>
             {/each}
-          </select>
+          </InputSelect>
         </div>
 
         <div class="my-7">
-          <div class="flex gap-2 items-center">
+          <div class="flex gap-2 items-center mb-1">
             <h2 class="text-xl">Rating</h2>
             <div>
               (<input
@@ -180,10 +213,11 @@
             </div>
           </div>
           <Rating rating={rating_stars} rating_max={5} />
-
-          <div class="border rounded p-2 my-2 w-full">
+          
+          <h2 class="text-xl mt-5">Comment</h2>
+          <div class="w-full">
             <textarea
-              class="w-full"
+              class="w-full input"
               name="comment"
               id="comment"
               bind:value={rating_comment}
@@ -197,11 +231,11 @@
 </div>
 
 <Popup
-  showModal={true}
+  bind:showModal={open_delete}
   message={"Delete book: " + book.name + "?"}
   content={"You won't be able to restore this book, unless you create a new one"}
   btn1_msg={"Delete book"}
-  btn2_msg={"cancel" }
+  btn2_msg={"cancel"}
   type={"Error"}
-  on:primary={}
+  on:primary={deleteBook}
 />

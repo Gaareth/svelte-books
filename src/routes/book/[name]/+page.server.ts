@@ -1,17 +1,18 @@
 import { getBookLists } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { error, json, type ServerLoadEvent } from "@sveltejs/kit";
 import { append } from "svelte/internal";
 import { redirect } from "sveltekit-flash-message/server";
 import type { Action, PageServerLoad, RequestEvent } from "./$types";
+import { toast } from "@zerodevx/svelte-toast";
+import { z, ZodError } from "zod";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
 
   const edit = page.url.searchParams.get("edit");
   console.log(edit);
-  
-  
+
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
@@ -30,102 +31,66 @@ export async function load(page: ServerLoadEvent) {
   return {
     book,
     bookLists,
-    edit
+    edit,
   };
 }
 
+const saveSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1).trim(),
+  author: z.string().min(1).trim(),
+  comment: z.string().trim().optional(),
+  stars: z.coerce.number().min(0).max(5),
+  month: z.coerce.number().min(0).max(12).optional(),
+  year: z.coerce.number().positive().optional(),
+  listName: z.string(),
+});
+
 export const actions = {
   save: async (event: RequestEvent) => {
-    const data = await event.request.formData();
-    console.log(data);
+    const formData = Object.fromEntries(await event.request.formData());
+    console.log(formData);
 
-    const id = data.get("id")?.toString();
-    const name = data.get("name")?.toString();
-    const author = data.get("author")?.toString();
-    let comment = data.get("comment")?.toString();
-    const stars = data.get("stars")?.toString();
-    const monthRead = data.get("month")?.toString();
-    const yearRead = data.get("year")?.toString();
-    const listName = data.get("listName")?.toString();
+    const result =
+      saveSchema.safeParse(formData);
+    
+      if (result.success) {
+        const { id, name, author, comment, stars, month, year, listName } =
+          result.data;
 
-    if (
-      id === undefined ||
-      name === undefined ||
-      author === undefined ||
-      comment === undefined ||
-      stars === undefined ||
-      monthRead === undefined ||
-      yearRead === undefined ||
-      listName === undefined
-    ) {
-      return { success: false };
-    }
-
-    const stars_number = parseInt(stars);
-    if (Number.isNaN(stars_number)) {
-      return { success: false };
-    }
-
-    const month_number = parseInt(monthRead);
-    if (Number.isNaN(month_number)) {
-      return { success: false };
-    }
-    const year_number = parseInt(yearRead);
-    if (Number.isNaN(year_number)) {
-      return { success: false };
-    }
-
-    comment = comment.trim();
-
-    const book = await prisma.book.update({
-      where: { id },
-      data: {
-        name,
-        author,
-        monthRead: month_number,
-        yearRead: year_number,
-        rating: {
-          upsert: {
-            update: { stars: stars_number, comment },
-            create: { stars: stars_number, comment },
+        const book = await prisma.book.update({
+          where: { id },
+          data: {
+            name,
+            author,
+            monthRead: month,
+            yearRead: year,
+            rating: {
+              upsert: {
+                update: { stars: stars, comment },
+                create: { stars: stars, comment },
+              },
+            },
+            bookList: {
+              connect: {
+                name: listName,
+              },
+            },
           },
-        },
-        bookList: {
-          connect: {
-            name: listName,
-          },
-        },
-      },
-    });
-    console.log(book);
+        });
 
-    const message = {
-      type: "success",
-      message: "Successfully updated book details",
-    };
-    throw redirect(303, "/book/" + name, message, event);
-  },
-  delete: async (event: RequestEvent) => {
-    const data = await event.request.formData();
-    console.log(data);
+        throw redirect(302, "/book/" + book.name);
+        // return { success: true };
+      }
 
-    const id = data.get("id")?.toString();
-    if (id === undefined) {
-      return { success: false };
-    }
+  
+    const { fieldErrors: errors } = result.error.flatten();
+    console.log(errors);
 
-    const book = await prisma.book.delete({
-      where: {
-        id: id,
-      },
-    });
-    console.log("deleted book:" + book.name);
-
-    const message = {
-      type: "success",
-      message: "Successfully deleted book " + book.name,
+    return {
+      data: formData,
+      errors,
     };
 
-    throw redirect(303, "/?success=true");
   },
 };

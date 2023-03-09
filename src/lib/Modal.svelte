@@ -6,6 +6,7 @@
   let dialog: HTMLDialogElement; // HTMLDialogElement
 
   $: if (dialog && showModal) dialog.showModal();
+  $: if (!showModal && !!dialog) dialog.close();
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
