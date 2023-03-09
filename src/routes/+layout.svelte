@@ -68,9 +68,6 @@
 </footer>
 
 <style lang="postcss">
-  /* :global(.btn) {
-    @apply text-lg
-  } */
 
   :global(.btn-primary-black) {
     @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75;
