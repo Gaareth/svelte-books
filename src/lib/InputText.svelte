@@ -2,9 +2,7 @@
   export let value: Object;
   export let name: string;
   // export let type: string = "text"
-  export let error: string | undefined;
-  console.log("error " + error);
-  
+  export let error: string | undefined;  
 </script>
 
 <label for="name">{name.charAt(0).toUpperCase() + name.slice(1)}:</label>

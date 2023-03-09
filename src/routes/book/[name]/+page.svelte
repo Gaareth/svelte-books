@@ -62,7 +62,7 @@
   
   export let form: ActionData;
   let edit: boolean =
-    (data.edit !== "false" && data.edit !== null) || !!form?.errors;
+    ((data.edit !== "false" && data.edit !== null) || !!form?.errors) && (!!$page.data.session);
 </script>
 
 <div class="mt-5">
@@ -70,7 +70,7 @@
     <div class="flex justify-between">
       <h1 class="text-4xl">{book.name}</h1>
 
-      {#if $page.data.session}
+      {#if !$page.data.session}
         <input type="hidden" name="id" value={book.id} />
 
         <div class="flex flex-col gap-1">

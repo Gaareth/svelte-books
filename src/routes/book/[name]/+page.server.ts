@@ -11,8 +11,7 @@ export async function load(page: ServerLoadEvent) {
   const params = page.params;
 
   const edit = page.url.searchParams.get("edit");
-  console.log(edit);
-
+  
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
@@ -48,9 +47,13 @@ const saveSchema = z.object({
 
 export const actions = {
   save: async (event: RequestEvent) => {
-    const formData = Object.fromEntries(await event.request.formData());
-    console.log(formData);
+    const session = await event.locals.getSession();
+    if (!(!!session)) {
+      throw error(401)
+    }
 
+    const formData = Object.fromEntries(await event.request.formData());
+    
     const result =
       saveSchema.safeParse(formData);
     
@@ -86,7 +89,6 @@ export const actions = {
 
   
     const { fieldErrors: errors } = result.error.flatten();
-    console.log(errors);
 
     return {
       data: formData,

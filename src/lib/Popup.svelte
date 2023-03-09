@@ -62,9 +62,7 @@
 
     <button
       class="mt-2 inline-block w-full rounded-lg bg-gray-100 px-5 py-3 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300"
-      on:click={() => {
-        console.log(showModal);
-        
+      on:click={() => {        
         showModal = false
       }}
     >

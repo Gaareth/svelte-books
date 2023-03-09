@@ -5,7 +5,6 @@
 
   // export let type: string = "text"
   export let error: string | undefined;
-  console.log("error " + error);
 </script>
 
 <label for="name">{displayName}:</label>

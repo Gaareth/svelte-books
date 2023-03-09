@@ -21,8 +21,8 @@
       toast.success("Successfully deleted book");
       
       dispatch("success")
-    } else {
-      toast.error("Error deleting book");
+    } else {      
+      toast.error("[" + response.status + "]" + " Error deleting book: " + response.statusText);
       dispatch("error")
     }
   };
