@@ -7,7 +7,7 @@
   export let data: { books: Book[] };
 </script>
 
-<h1 class="text-center text-5xl my-4">To-Read LIST</h1>
+<h1 class="text-center text-5xl my-4 mb-6">To-Read LIST</h1>
 
 <BookNew
   endpoint="/"

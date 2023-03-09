@@ -6,7 +6,7 @@
   export let data: any;
 </script>
 
-<h1 class="text-center text-5xl my-4">LIST</h1>
+<h1 class="text-center text-5xl my-4 mb-6">LIST</h1>
 
 <BookNew endpoint="/" listName={"Read"}/>
 <BookList books={data.books} />

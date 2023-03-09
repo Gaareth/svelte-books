@@ -10,6 +10,14 @@
     .animate-drop-hover {
         @apply transition ease-in translate-y-[0.05rem] duration-75
     }
+
+    .input {
+        @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full;
+    }
+
+    .underline-hover {
+        @apply before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
+    }
 }
 
 @layer components {

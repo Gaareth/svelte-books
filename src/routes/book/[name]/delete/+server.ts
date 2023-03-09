@@ -3,7 +3,6 @@ import type { RequestEvent } from "./$types";
 
 export async function POST(req: RequestEvent) {
   const { id } = await req.request.json();
-  // console.log(data);
   if (id === undefined) {
     return { success: false };
   }
@@ -13,12 +12,7 @@ export async function POST(req: RequestEvent) {
       id: id,
     },
   });
-  console.log("deleted book:" + book.name);
 
-  const message = {
-    type: "success",
-    message: "Successfully deleted book " + book.name,
-  };
-
+ 
   return json({ success: true });
 }

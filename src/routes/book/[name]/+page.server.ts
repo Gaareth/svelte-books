@@ -4,8 +4,8 @@ import { error, json, type ServerLoadEvent } from "@sveltejs/kit";
 import { append } from "svelte/internal";
 import { redirect } from "sveltekit-flash-message/server";
 import type { Action, PageServerLoad, RequestEvent } from "./$types";
-import { toast } from "@zerodevx/svelte-toast";
 import { z, ZodError } from "zod";
+import toast from "svelte-french-toast";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -37,8 +37,8 @@ export async function load(page: ServerLoadEvent) {
 
 const saveSchema = z.object({
   id: z.string(),
-  name: z.string().min(1).trim(),
-  author: z.string().min(1).trim(),
+  name: z.string().trim().min(1),
+  author: z.string().trim().min(1),
   comment: z.string().trim().optional(),
   stars: z.coerce.number().min(0).max(5),
   month: z.coerce.number().min(0).max(12).optional(),
@@ -78,7 +78,8 @@ export const actions = {
             },
           },
         });
-
+        
+        // toast.success("test");
         throw redirect(302, "/book/" + book.name);
         // return { success: true };
       }

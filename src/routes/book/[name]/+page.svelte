@@ -10,6 +10,8 @@
   import InputSelect from "$lib/InputSelect.svelte";
 
   import type { ActionData } from "./$types";
+  import { toast } from "svelte-french-toast";
+  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
 
   export let data: any;
 
@@ -58,21 +60,6 @@
 
   let open_delete = false;
   
-
-  const deleteBook = async (event: any) => {
-    const response = await fetch("/book/" + book.name + "/delete", {
-      method: "POST",
-      body: JSON.stringify({ id: book.id }),
-    });
-    const { success } = await response.json();
-
-    if (success) {
-      goto("/");
-    } else {
-      // TODO: toast
-    }
-  };
-
   export let form: ActionData;
   let edit: boolean =
     (data.edit !== "false" && data.edit !== null) || !!form?.errors;
@@ -230,12 +217,6 @@
   </form>
 </div>
 
-<Popup
-  bind:showModal={open_delete}
-  message={"Delete book: " + book.name + "?"}
-  content={"You won't be able to restore this book, unless you create a new one"}
-  btn1_msg={"Delete book"}
-  btn2_msg={"cancel"}
-  type={"Error"}
-  on:primary={deleteBook}
-/>
+<BookDeletePopUp name={book.name} id={book.id} 
+bind:openModal={open_delete} 
+on:success={() => goto("/")}/>

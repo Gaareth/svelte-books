@@ -1,9 +1,11 @@
 <script lang="ts">
+	import BookDeletePopUp from '$lib/BookDeletePopUp.svelte';
   import { page } from "$app/stores";
   import type { Book, Prisma } from "@prisma/client";
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   import IoMdSettings from 'svelte-icons/io/IoMdSettings.svelte'
   import IoMdTrash from 'svelte-icons/io/IoMdTrash.svelte'
+  import { goto, invalidateAll } from '$app/navigation';
 
   type BookFullType = Prisma.BookGetPayload<{
     select: { [K in keyof Required<Prisma.BookSelect>]: true };
@@ -11,9 +13,14 @@
 
   export let books: BookFullType[];
   let maxRating = 5;
+
+  let name: string;
+  let id: string;
+  let openModal: boolean = false;
+
 </script>
 
-<h2 class="mt-3">Books</h2>
+<h2 class="mt-8">Books</h2>
 {#if books.length <= 0}
   <p>No books added at the moment :(</p>
   <!-- {#if $page.data.session}
@@ -46,16 +53,21 @@
         <span
           class="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm"
         >
-          <button
+          <a
             class="group inline-block p-2  hover:bg-gray-50 focus:relative"
             title="Edit book"
+            href="/book/{book.name}/?edit=true"
           >
-            <div class="icon-edit group-hover:animate-drop"><IoMdSettings/></div>
-          </button>
+            <div class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"><IoMdSettings/></div>
+          </a>
 
           <button
             class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600"
-            title="Delete book"
+            title="Delete book" on:click={() => {
+              name = book.name;
+              id = book.id;
+              openModal = true;
+            }}
           >
             <div class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
               <IoMdTrash />
@@ -64,10 +76,17 @@
         </span>
       </div>
     {:else}
-      <button>View</button>
+      <div class="flex justify-end">
+        <a class="underline-hover" href="/book/{book.name}">View</a>
+      </div>
     {/if}
   </div>
 {/each}
+
+<BookDeletePopUp {name} {id} bind:openModal on:success={() => {
+  openModal = false;
+  invalidateAll();
+}}/>
 
 <style>
   .icon {

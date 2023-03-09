@@ -2,7 +2,7 @@
   import "../app.css";
   import { initFlash } from "sveltekit-flash-message/client";
   import { page } from "$app/stores";
-  import { SvelteToast } from "@zerodevx/svelte-toast";
+  import { Toaster } from "svelte-french-toast";
 
   const flash = initFlash(page);
   const flashTimeoutMs = 5000;
@@ -35,12 +35,14 @@
           </span>
           <a
             href="/auth/signout"
-            class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500"
+            class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500 border 
+            border-gray-100 hover:border-gray-200"
             data-sveltekit-preload-data="off">Sign out</a
           >
         {:else}
           <a
-            class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500"
+            class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500 border
+            border-gray-100 hover:border-gray-200"
             href="/auth/signin"
           >
             Log in
@@ -73,7 +75,7 @@
 </header>
 
 <main>
-  <SvelteToast />
+  <Toaster />
 
   <div class="container max-w-2xl mx-auto">
     {#if $flash}
@@ -142,20 +144,12 @@
     @apply text-lg
   } */
 
-  :global(.underline-hover) {
-    @apply before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0  before:transition hover:before:scale-x-100;
-  }
-
   :global(.btn-primary-black) {
     @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75;
   }
 
   :global(.btn-primary-black:disabled) {
     @apply inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
-  }
-
-  :global(.input) {
-    @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full;
   }
 
   :global(html) {
