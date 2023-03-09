@@ -70,7 +70,7 @@
     <div class="flex justify-between">
       <h1 class="text-4xl">{book.name}</h1>
 
-      {#if !$page.data.session}
+      {#if $page.data.session}
         <input type="hidden" name="id" value={book.id} />
 
         <div class="flex flex-col gap-1">

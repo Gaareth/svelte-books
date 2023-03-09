@@ -1,8 +1,7 @@
 import { getBookLists } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, json, type ServerLoadEvent } from "@sveltejs/kit";
+import { error, json, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { append } from "svelte/internal";
-import { redirect } from "sveltekit-flash-message/server";
 import type { Action, PageServerLoad, RequestEvent } from "./$types";
 import { z, ZodError } from "zod";
 import toast from "svelte-french-toast";

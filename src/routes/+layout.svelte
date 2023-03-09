@@ -1,33 +1,24 @@
 <script lang="ts">
   import "../app.css";
-  import { initFlash } from "sveltekit-flash-message/client";
   import { page } from "$app/stores";
   import { Toaster } from "svelte-french-toast";
 
-  const flash = initFlash(page);
-  const flashTimeoutMs = 5000;
-
-  let flashTimeout: ReturnType<typeof setTimeout>;
-  $: if ($flash) {
-    clearTimeout(flashTimeout);
-    flashTimeout = setTimeout(() => ($flash = undefined), flashTimeoutMs);
-  }
 </script>
 
 <header aria-label="Site Header" class="shadow-sm">
   <div class="mx-auto max-w-screen-xl p-4">
-    <div class="flex items-center justify-between gap-4 lg:gap-10">
+    <div class="flex items-center justify-between gap-4 lg:gap-10 min-[400px]:flex-row flex-col">
       <div class="flex lg:w-0 lg:flex-1" />
 
       <nav
         aria-label="Site Nav"
-        class="hidden gap-8 text-md font-medium md:flex"
+        class="gap-8 text-md font-medium flex"
       >
-        <a class="text-gray-500" href="/">Home</a>
+        <a class="text-gray-500 hover:text-[#F2440D]" href="/">Home</a>
         <a class="text-gray-500" href="/to-read">To-Read</a>
       </nav>
 
-      <div class="hidden flex-1 items-center justify-end gap-4 sm:flex">
+      <div class="flex-1 items-center justify-end gap-4 flex">
         {#if $page.data.session}
           <span class="signedInText">
             <small>Signed in as</small><br />
@@ -50,94 +41,31 @@
         {/if}
       </div>
 
-      <div class="lg:hidden">
-        <button class="rounded-lg bg-gray-100 p-2 text-gray-600" type="button">
-          <span class="sr-only">Open menu</span>
-          <svg
-            aria-hidden="true"
-            class="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewbox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
-      </div>
+
     </div>
   </div>
 </header>
 
-<main>
+<main class="pb-20">
   <Toaster />
 
   <div class="container max-w-2xl mx-auto">
-    {#if $flash}
-      {@const color =
-        $flash.type == "success" ? "text-green-600" : "text-red-600"}
-      <div
-        role="alert"
-        class="rounded-xl border border-gray-100 p-4 shadow-xl mt-5 mb-12"
-      >
-        <div class="flex items-start gap-4">
-          <span class={color}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </span>
-
-          <div class="flex-1">
-            <strong class="block font-medium text-gray-900">
-              {$flash.type}
-            </strong>
-
-            <p class="mt-1 text-sm text-gray-700">
-              {$flash.message}
-            </p>
-          </div>
-
-          <button class="text-gray-500 transition hover:text-gray-600">
-            <span class="sr-only">Dismiss popup</span>
-
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-    {/if}
-
-    <slot />
+    <slot/>
   </div>
 </main>
+
+<footer class="bg-[#F2440D] min-h-10 absolute bottom-0 w-screen">
+  <div class="text-white mx-auto max-w-2xl flex p-2 flex-col text-center gap-2">
+     <p> 
+      Made using 
+      <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a> / - Kit
+      and <a href="/tech-stack">...</a>
+    </p>
+     <p>
+      by <a href="https://github.com/Gaareth" class="underline">Gareth</a>
+     </p>
+  </div>
+</footer>
 
 <style lang="postcss">
   /* :global(.btn) {
