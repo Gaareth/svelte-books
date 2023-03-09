@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover" class="min-h-screen relative">
-		<div style="display: block" class="min-h-screen relative px-3 md:px-0">%sveltekit.body%</div>
-	</body>
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+	<meta name="viewport" content="width=device-width" />
+
+	<script>
+		localStorage.theme === 'dark' ||
+			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			? document.documentElement.classList.add('dark')
+			: document.documentElement.classList.remove('dark');
+	</script>
+
+	%sveltekit.head%
+</head>
+
+<body data-sveltekit-preload-data="hover" class="min-h-screen relative">
+	<div style="display: block" class="min-h-screen relative">%sveltekit.body%</div>
+</body>
+
 </html>

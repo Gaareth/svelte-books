@@ -28,21 +28,21 @@
   {/if} -->
 {/if}
 {#each books as book}
-  <div class="rounded border mb-3 p-2 items-center grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} ">
+  <div class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} ">
     <div>
       <a href="/book/{book.name}" class="text-md underline-hover">{book.name}</a
       >
     </div>
     <div>
-      <p class="text-gray-600">{book.author}</p>
+      <p class="text-gray-600 dark:text-slate-400">{book.author}</p>
     </div>
 
-    <div>
+    <div class="mr-1 sm:mr-0">
       <p>{book.yearRead ?? "?"} / {book.monthRead ? '0' + book.monthRead : '?'}</p>
     </div>
 
     {#if book.rating}
-      <div class="flex gap-2 items-center">
+      <div class="flex sm:gap-2 gap-1 items-center">
         <p>{book.rating.stars} / {maxRating}</p>
         <div class="icon"><IoIosStar /></div>
       </div>
@@ -51,10 +51,12 @@
     {#if $page.data.session}
       <div class="flex justify-end">
         <span
-          class="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm"
+          class="inline-flex sm:flex-row flex-col divide-x overflow-hidden rounded-md border bg-white shadow-sm
+          dark:bg-slate-600 dark:border-slate-700"
         >
           <a
-            class="group inline-block p-2  hover:bg-gray-50 focus:relative"
+            class="group inline-block p-2  hover:bg-gray-50 focus:relative
+            dark:hover:bg-slate-500"
             title="Edit book"
             href="/book/{book.name}/?edit=true"
           >
@@ -62,7 +64,9 @@
           </a>
 
           <button
-            class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600"
+            class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600
+            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400 
+            dark:text-red-200"
             title="Delete book" on:click={() => {
               name = book.name;
               id = book.id;

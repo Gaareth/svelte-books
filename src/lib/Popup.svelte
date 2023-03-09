@@ -47,21 +47,23 @@
     <p class="font-medium sm:text-lg">{message}</p>
   </div>
 
-  <p class="mt-4 text-gray-500">
+  <p class="mt-4 text-gray-500 dark:text-white">
     {content}
   </p>
 
   <div class="mt-6 sm:flex sm:gap-4">
     <button
-      class="inline-block w-full rounded-lg {getColor()} px-5 py-3 text-center text-sm font-semibold text-white sm:w-auto
-      border border-{getColorVar()}-400 hover:border-{getColorVar()}-500"
+      class="inline-block w-full rounded-md {getColor()} px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto
+      border-0 
+    dark:border-slate-400 dark:hover:border-slate-300"
       on:click={() => dispatch("primary")}
     >
       {btn1_msg}
     </button>
 
     <button
-      class="mt-2 inline-block w-full rounded-lg bg-gray-100 px-5 py-3 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300"
+      class="mt-2 inline-block w-full rounded-md bg-gray-100 px-5 py-2 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300
+      dark:bg-slate-400 dark:text-white dark:border-slate-400 dark:hover:border-slate-300"
       on:click={() => {        
         showModal = false
       }}

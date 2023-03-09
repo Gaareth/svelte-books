@@ -14,7 +14,7 @@
   bind:this={dialog}
   on:close={() => (showModal = false)}
   on:click|self={() => dialog.close()}
-  class="rounded-2xl border border-blue-100 bg-white p-4 shadow-lg sm:p-6 lg:p-8"
+  class="rounded-md border border-blue-100 bg-white dark:bg-slate-500 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8"
   role="alert"
 >
   <div on:click|stopPropagation>
@@ -27,10 +27,10 @@
         </div>
       </button>
     </div>
-    <hr />
+    <hr class="dark:border-slate-400"/>
 
     <slot/>
-    <hr class="mt-2"/>
+    <hr class="mt-4 dark:border-slate-400"/>
   </div>
 </dialog>
 

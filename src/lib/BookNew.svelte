@@ -2,6 +2,7 @@
   import { toast } from "svelte-french-toast";
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
+  import { Moon } from "svelte-loading-spinners";
 
   export let endpoint: string;
   export let listName: string;
@@ -9,12 +10,14 @@
   let new_book = false;
   let name = "";
   let author = "";
+  let loading: boolean = false;
 
   $: has_content = name.length > 0 && author.length > 0;
 
   // const dispatch = createEventDispatcher();
 
   async function newBook() {
+    loading = true;
     const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify({ name, author, listName }),
@@ -24,6 +27,7 @@
     });
 
     const { success } = await response.json();
+    loading = false;
 
     if (success) {
       invalidateAll();
@@ -40,12 +44,15 @@
 </script>
 
 {#if $page.data.session}
-  <div class="border rounded-md p-3 my-2">
+  <div
+    class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600"
+  >
     <div class="flex justify-between">
       <h2 class="text-xl flex items-center justify-center">Add new book</h2>
       <button
         on:click={() => (new_book = !new_book)}
-        class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium"
+        class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
+        dark:bg-slate-600 dark:border-0 dark:hover:bg-slate-500"
       >
         {new_book ? "Cancel" : "Open"}
       </button>
@@ -57,7 +64,7 @@
           id="name"
           name="name"
           type="text"
-          class="input"
+          class="input dark:bg-slate-600 dark:border-slate-500"
           bind:value={name}
         />
         <label for="author">Author:</label>
@@ -65,7 +72,7 @@
           id="author"
           name="author"
           type="text"
-          class="input"
+          class="input dark:bg-slate-600 dark:border-slate-500"
           bind:value={author}
         />
       </div>
@@ -77,6 +84,9 @@
           title="Add new book"
           disabled={!has_content}
         >
+          {#if loading}
+            <Moon size="25" color="black" duration="1s"/>
+          {/if}
           Save new book
         </button>
       </div>

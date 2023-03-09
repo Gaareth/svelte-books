@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  /* transition: background-color 0.1s ease-in-out; */
+  @apply bg-white dark:bg-slate-800 text-black dark:text-white;
+}
+
+input {
+    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white
+}
+
+select {
+    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
+}
+
+textarea {
+    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
+}
+
+
+/* .btn-primary-black {
+    @apply dark:bg-[#F2440D] dark:border-[#F2440D] dark:text-white
+} */
+.btn-primary-black {
+    @apply dark:bg-[#005773] dark:border-[#00607f] dark:hover:bg-[#00759a] dark:text-white
+}
+.btn-primary-black:disabled {
+    @apply dark:bg-[#343c3f] dark:border-[#343c3f] dark:hover:bg-[#343c3f] dark:text-white 
+}
+
 @layer utilities {
     .animate-drop-click {
         @apply transition ease-in translate-y-[0.1rem] duration-75
@@ -16,8 +44,17 @@
     }
 
     .underline-hover {
-        @apply before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
+        @apply dark:before:bg-slate-300 before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
     }
+
+    .btn-primary-black {
+        @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75;
+    }
+    
+    .btn-primary-black:disabled {
+        @apply cursor-not-allowed inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
+    }
+
 }
 
 @layer components {
@@ -26,6 +63,6 @@
     }
 
     .btn-group {
-        @apply inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm;
+        @apply inline-flex -space-x-px overflow-hidden rounded-md border  shadow-sm;
     }
 }

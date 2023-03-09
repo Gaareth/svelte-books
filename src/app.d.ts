@@ -11,9 +11,6 @@ declare global {
     // interface Platform {}
   }
   var prisma: PrismaClient;
-  interface PageData {
-    flash?: { type: "success" | "error"; message: string };
-  }
 }
 
 export {};

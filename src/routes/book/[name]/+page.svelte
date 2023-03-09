@@ -59,10 +59,11 @@
   let endDate = new Date().getFullYear() + 100;
 
   let open_delete = false;
-  
+
   export let form: ActionData;
   let edit: boolean =
-    ((data.edit !== "false" && data.edit !== null) || !!form?.errors) && (!!$page.data.session);
+    ((data.edit !== "false" && data.edit !== null) || !!form?.errors) &&
+    !!$page.data.session;
 </script>
 
 <div class="mt-5">
@@ -74,9 +75,12 @@
         <input type="hidden" name="id" value={book.id} />
 
         <div class="flex flex-col gap-1">
-          <span class="btn-group mb-2 ">
+          <span
+            class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
+          >
             <button
-              class="btn-group-btn"
+              class="btn-group-btn 
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-white"
               type="button"
               on:click={() => {
                 edit = !edit;
@@ -85,12 +89,20 @@
               {edit ? "Cancel" : "Edit"}
             </button>
             {#if edit}
-              <button formaction="?/save" class="btn-group-btn text-blue-700">
+              <button
+                formaction="?/save"
+                class="btn-group-btn text-blue-700
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-blue-500"
+              >
                 Save
               </button>
             {/if}
-            <button on:click={() => open_delete = !open_delete} 
-              type="button" class="text-red-700 btn-group-btn">
+            <button
+              on:click={() => (open_delete = !open_delete)}
+              type="button"
+              class="text-red-700 btn-group-btn
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-red-500"
+            >
               Delete
             </button>
           </span>
@@ -101,9 +113,13 @@
     {#if !edit}
       <div>
         <div>
-          <p class="text-gray-600">Author: {book.author}</p>
-          <p class="text-gray-600">Read in (month): {book.monthRead ?? "-"}</p>
-          <p class="text-gray-600">Read in (year): {book.yearRead ?? "-"}</p>
+          <p class="text-gray-600 dark:text-slate-400">Author: {book.author}</p>
+          <p class="text-gray-600 dark:text-slate-400">
+            Read in (month): {book.monthRead ?? "-"}
+          </p>
+          <p class="text-gray-600 dark:text-slate-400">
+            Read in (year): {book.yearRead ?? "-"}
+          </p>
         </div>
 
         <div class="my-7">
@@ -155,7 +171,6 @@
               </option>
             {/each}
           </InputSelect>
-          
 
           <InputSelect
             value={book.yearRead}
@@ -176,7 +191,7 @@
             name={"listName"}
             error={(form?.errors?.listName ?? [undefined])[0]}
           >
-           {#each bookLists as list}
+            {#each bookLists as list}
               <option value={list.name}>
                 {list.name}
               </option>
@@ -200,7 +215,7 @@
             </div>
           </div>
           <Rating rating={rating_stars} rating_max={5} />
-          
+
           <h2 class="text-xl mt-5">Comment</h2>
           <div class="w-full">
             <textarea
@@ -211,12 +226,25 @@
               rows="10"
             />
           </div>
+
+          <div class="min-[500px]:flex min-[500px]:justify-end">
+            <button
+              formaction="?/save"
+              class="bg-blue-700 text-white py-3 px-4 my-4 rounded-md w-full 
+            block sm:hidden min-[500px]:w-1/2"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     {/if}
   </form>
 </div>
 
-<BookDeletePopUp name={book.name} id={book.id} 
-bind:openModal={open_delete} 
-on:success={() => goto("/")}/>
+<BookDeletePopUp
+  name={book.name}
+  id={book.id}
+  bind:openModal={open_delete}
+  on:success={() => goto("/")}
+/>
