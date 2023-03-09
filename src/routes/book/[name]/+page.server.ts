@@ -81,9 +81,7 @@ export const actions = {
           },
         });
         
-        // toast.success("test");
         throw redirect(302, "/book/" + book.name);
-        // return { success: true };
       }
 
   
