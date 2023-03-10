@@ -1,10 +1,8 @@
 import { getBookLists } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, json, redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import { append } from "svelte/internal";
-import type { Action, PageServerLoad, RequestEvent } from "./$types";
-import { z, ZodError } from "zod";
-import toast from "svelte-french-toast";
+import { error, redirect, type ServerLoadEvent } from "@sveltejs/kit";
+import type { RequestEvent } from "./$types";
+import { z } from "zod";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;

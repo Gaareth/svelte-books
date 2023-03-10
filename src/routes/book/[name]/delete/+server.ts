@@ -1,5 +1,6 @@
 import { error, json, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
+import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();

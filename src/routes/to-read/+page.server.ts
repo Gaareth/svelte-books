@@ -1,4 +1,5 @@
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals }: ServerLoadEvent) {  
   const session = await locals.getSession();
@@ -11,6 +12,12 @@ export async function load({ locals }: ServerLoadEvent) {
       where: {
         bookListName: "To read",
       },
+      include: {
+        rating: true
+      },
+      orderBy: {
+        updatedAt: "desc"
+      }
     }),
   };
 

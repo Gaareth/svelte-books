@@ -1,6 +1,8 @@
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
+import { prisma } from "$lib/server/prisma";
+
 
 const createSchema = z.object({
   name: z.string().trim().min(1),

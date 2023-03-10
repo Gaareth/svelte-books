@@ -1,3 +1,5 @@
+import { prisma } from "$lib/server/prisma";
+
 export async function getBookLists() {
-    return prisma.bookList.findMany();
+  return prisma.bookList.findMany();
 }

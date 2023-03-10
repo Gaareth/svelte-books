@@ -4,6 +4,7 @@
 
 import { SvelteKitAuth } from "@auth/sveltekit";
 import CredentialsProvider from "@auth/core/providers/credentials";
+import { prisma } from "$lib/server/prisma";
 
 import bcrypt from "bcrypt";
 
