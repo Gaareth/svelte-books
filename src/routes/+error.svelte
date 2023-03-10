@@ -6,7 +6,7 @@
     "400":
       "You either manipulated the request (bad) or somethings wrong with your client or our deployed js (also bad).",
     "500":
-      "This looks like our fault. We are tremendously (yeah really). Please message me (look in the footer), for feedback.",
+      "This looks like our fault. We are tremendously (yeah really) sorry. Please message me (look in the footer), for feedback.",
   };
 </script>
 

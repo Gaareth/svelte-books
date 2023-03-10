@@ -1,11 +1,11 @@
 <script lang="ts">
-	import BookDeletePopUp from '$lib/BookDeletePopUp.svelte';
+  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import { page } from "$app/stores";
   import type { Book, Prisma } from "@prisma/client";
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-  import IoMdSettings from 'svelte-icons/io/IoMdSettings.svelte'
-  import IoMdTrash from 'svelte-icons/io/IoMdTrash.svelte'
-  import { goto, invalidateAll } from '$app/navigation';
+  import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+  import { goto, invalidateAll } from "$app/navigation";
 
   type BookFullType = Prisma.BookGetPayload<{
     select: { [K in keyof Required<Prisma.BookSelect>]: true };
@@ -18,6 +18,46 @@
   let id: string;
   let openModal: boolean = false;
 
+  const colors = [
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-lime-500",
+    "bg-green-600",
+    "bg-emerald-500",
+    "bg-teal-600",
+    "bg-cyan-400",
+    "bg-blue-600",
+    "bg-indigo-500",
+    "bg-violet-600",
+    "bg-fuchsia-600",
+    "bg-rose-600",
+  ];
+
+  const getColor = (name: string, author: string) => {
+    const hash = hashCode(name+author);    
+    let index = hash % (colors.length);
+    if (index < 0) {
+        index += colors.length;
+    }
+    return colors[index];
+  };
+
+  /**
+   * Returns a hash code from a string
+   * @param  {String} str The string to hash.
+   * @return {Number}    A 32bit integer
+   * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+   * @credit https://stackoverflow.com/a/8831937
+   */
+  function hashCode(str: string) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+      let chr = str.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
 </script>
 
 <h2 class="mt-8">Books</h2>
@@ -28,8 +68,13 @@
   {/if} -->
 {/if}
 {#each books as book}
-  <div class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} ">
-    <div>
+  <div
+    class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center 
+    grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} "
+  >
+    <div class="flex items-center">
+      <div class="h-10 w-1 {getColor(book.name, book.author)} rounded-md mr-2" />
+
       <a href="/book/{book.name}" class="text-md underline-hover">{book.name}</a
       >
     </div>
@@ -38,7 +83,9 @@
     </div>
 
     <div class="mr-1 sm:mr-0">
-      <p>{book.yearRead ?? "?"} / {book.monthRead ? '0' + book.monthRead : '?'}</p>
+      <p>
+        {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
+      </p>
     </div>
 
     {#if book.rating}
@@ -60,20 +107,27 @@
             title="Edit book"
             href="/book/{book.name}/?edit=true"
           >
-            <div class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"><IoMdSettings/></div>
+            <div
+              class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+            >
+              <IoMdSettings />
+            </div>
           </a>
 
           <button
             class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600
             dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400 
             dark:text-red-200"
-            title="Delete book" on:click={() => {
+            title="Delete book"
+            on:click={() => {
               name = book.name;
               id = book.id;
               openModal = true;
             }}
           >
-            <div class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+            <div
+              class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+            >
               <IoMdTrash />
             </div>
           </button>
@@ -87,10 +141,15 @@
   </div>
 {/each}
 
-<BookDeletePopUp {name} {id} bind:openModal on:success={() => {
-  openModal = false;
-  invalidateAll();
-}}/>
+<BookDeletePopUp
+  {name}
+  {id}
+  bind:openModal
+  on:success={() => {
+    openModal = false;
+    invalidateAll();
+  }}
+/>
 
 <style>
   .icon {
