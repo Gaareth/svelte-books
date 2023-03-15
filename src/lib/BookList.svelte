@@ -70,7 +70,8 @@
 {#each books as book}
   <div
     class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center 
-    grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} "
+    grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} 
+    hover:border-gray-300 dark:hover:border-slate-500"
   >
     <div class="flex items-center">
       <div class="h-10 w-1 {getColor(book.name, book.author)} rounded-md mr-2" />

@@ -66,3 +66,43 @@ textarea {
         @apply inline-flex -space-x-px overflow-hidden rounded-md border  shadow-sm;
     }
 }
+
+@font-face {
+    font-family: 'Elnath';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/fonts/ELNATH.ttf');
+}
+
+@font-face {
+    font-family: 'Helgoland';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/fonts/Helgoland.otf');
+}
+
+@font-face {
+    font-family: 'Cloister';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/fonts/CloisterBlack.ttf');
+}
+
+@font-face {
+    font-family: 'Libertine';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/fonts/LinLibertine_R.ttf');
+}
+
+body {
+    font-family: 'Libertine';
+}
+
+p, a, label, input, span {
+    font-size: 1.25rem;
+}
+
+button, input, select {
+    font-size: 1.2rem !important;
+}
