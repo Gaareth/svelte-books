@@ -9,7 +9,7 @@ COPY prisma ./prisma/
 COPY .env ./
 
 # RUN npm install --frozen-lockfile
-RUN npm install --production
+RUN npm install --omit=dev
 RUN npx prisma generate
 
 # source code?
