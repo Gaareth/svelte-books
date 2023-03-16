@@ -26,19 +26,23 @@
       },
     });
 
-    const { success } = await response.json();
+    const { success, message } = await response.json();
     loading = false;
 
     if (success) {
       invalidateAll();
     } else {
-      toast.error(
-        "[" +
-          response.status +
-          "]" +
-          " Error creating book: " +
-          response.statusText
-      );
+      if (message) {
+        toast.error(message);
+      } else {
+        toast.error(
+          "[" +
+            response.status +
+            "]" +
+            " Error creating book: " +
+            response.statusText
+        );
+      }
     }
   }
 </script>
@@ -85,7 +89,7 @@
           disabled={!has_content}
         >
           {#if loading}
-            <Moon size="25" color="black" duration="1s"/>
+            <Moon size="25" color="black" duration="1s" />
           {/if}
           Save new book
         </button>

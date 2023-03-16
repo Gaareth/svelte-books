@@ -3,7 +3,6 @@ import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { prisma } from "$lib/server/prisma";
 
-
 const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
@@ -19,6 +18,13 @@ export async function POST(req: RequestEvent) {
   const result = createSchema.safeParse(await req.request.json());
   if (result.success) {
     const { name, author, listName } = result.data;
+
+    const book_exist = await prisma.book.findFirst({ where: { name } });
+    if (book_exist) {
+        return json({success: false, 
+          message: "Books titles have to be unique.\nPlease use another title"})
+    }
+
     const book = await prisma.book.create({
       data: {
         name,

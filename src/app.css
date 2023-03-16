@@ -106,3 +106,22 @@ p, a, label, input, span {
 button, input, select {
     font-size: 1.2rem !important;
 }
+
+.toaster {
+    font-family: ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        Segoe UI,
+        Roboto,
+        Helvetica Neue,
+        Arial,
+        Noto Sans,
+        sans-serif,
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        Segoe UI Symbol,
+        "Noto Color Emoji";
+
+    font-weight: 500;
+}
