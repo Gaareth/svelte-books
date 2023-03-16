@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 dev.db
 seed.js
 prisma/migrations
+*.tar
