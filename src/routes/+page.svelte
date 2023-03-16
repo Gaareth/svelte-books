@@ -16,7 +16,7 @@
     <summary class="text-xl"> Why? </summary>
     <div>
       <p class="mb-5">
-        This website just exits because, I wanted something to "store" the
+        This website exists because, I wanted something to "store" the
         books I have read, (and potentially also the books I want to read). Why not use some of
         those popular apps? Idk, but this also gave me a reason too look into
         <a href="https://svelte.dev/" class="underline">Svelte</a>, and built a

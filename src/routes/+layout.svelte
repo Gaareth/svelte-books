@@ -62,7 +62,7 @@
   </div>
 </main>
 
-<footer class="bg-[#F2440D] min-h-10 absolute bottom-[-72px] w-full">
+<footer class="bg-[#F2440D] min-h-10 absolute bottom-[-100px] w-full">
   <div class="text-white mx-auto max-w-2xl flex p-2 flex-col text-center gap-2">
     <p>
       Made using
