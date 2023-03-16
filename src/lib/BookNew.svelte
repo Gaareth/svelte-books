@@ -3,6 +3,7 @@
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { Moon } from "svelte-loading-spinners";
+  import { darkMode } from "../stores";
 
   export let endpoint: string;
   export let listName: string;
@@ -89,7 +90,11 @@
           disabled={!has_content}
         >
           {#if loading}
-            <Moon size="25" color="black" duration="1s" />
+            <Moon
+              size="25"
+              color={$darkMode ? "white" : "black"}
+              duration="1s"
+            />
           {/if}
           Save new book
         </button>

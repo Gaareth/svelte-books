@@ -3,17 +3,17 @@
   import toast from "svelte-french-toast";
   import IoIosMoon from "svelte-icons/io/IoIosMoon.svelte";
   import IoIosSunny from "svelte-icons/io/IoIosSunny.svelte";
+  import { darkMode } from "../stores";
 
-  let darkMode: boolean = false;
-
-  const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"]
+  const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"];
 
   const toggleMode = () => {
-    darkMode = !darkMode;
+    // darkMode = !darkMode;
+    darkMode.set(!$darkMode);
 
     localStorage.setItem("theme", darkMode ? "dark" : "light");
 
-    if (darkMode) {
+    if ($darkMode) {
       document.documentElement.classList.add("dark");
       toast("Hello Darkness!", {
         icon: icons[Math.floor(Math.random() * icons.length)],
@@ -32,10 +32,12 @@
         window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       document.documentElement.classList.add("dark");
-      darkMode = true;
+      // darkMode = true;
+      darkMode.set(true);
     } else {
       document.documentElement.classList.remove("dark");
-      darkMode = false;
+      // darkMode = false;
+      darkMode.set(false);
     }
   }
 </script>
@@ -46,7 +48,7 @@
   class="hover:scale-[1.15] transition-transform ease-out"
 >
   <div class="w-10 h-10 text-purple-500 dark:text-yellow-300">
-    {#if darkMode}
+    {#if $darkMode}
       <IoIosSunny />
     {:else}
       <IoIosMoon />
