@@ -73,11 +73,12 @@
     grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} 
     hover:border-gray-300 dark:hover:border-slate-500"
   >
-    <div class="flex items-center">
-      <div class="h-10 w-1 {getColor(book.name, book.author)} rounded-md mr-2" />
+    <div class="flex items-center h-full">
+      <div class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(book.name, book.author)} rounded-md mr-2" 
+      style="height: 98%;"/>
 
-      <a href="/book/{book.name}" class="text-md underline-hover">{book.name}</a
-      >
+      <a href="/book/{book.name}" class="text-md underline-hover 
+      text-ellipsis overflow-hidden">{book.name}</a>
     </div>
     <div>
       <p class="text-gray-600 dark:text-slate-400">{book.author}</p>

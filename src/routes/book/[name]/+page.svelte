@@ -12,6 +12,7 @@
   import type { ActionData } from "./$types";
   import { toast } from "svelte-french-toast";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
+  import InputNumber from "$lib/InputNumber.svelte";
 
   export let data: any;
 
@@ -69,7 +70,7 @@
 <div class="mt-5">
   <form method="POST" id="form-book">
     <div class="flex justify-between">
-      <h1 class="text-4xl">{book.name}</h1>
+      <h1 class="text-4xl overflow-hidden text-ellipsis">{book.name}</h1>
 
       {#if $page.data.session}
         <input type="hidden" name="id" value={book.id} />
@@ -172,7 +173,14 @@
             {/each}
           </InputSelect>
 
-          <InputSelect
+          <InputNumber
+            value={book.yearRead}
+            name="year"
+            displayName="Read in (year)"
+            error={(form?.errors?.year ?? [undefined])[0]}
+          />
+
+          <!-- <InputSelect
             value={book.yearRead}
             displayName="Read in (year)"
             name={"year"}
@@ -183,7 +191,7 @@
                 {year}
               </option>
             {/each}
-          </InputSelect>
+          </InputSelect> -->
 
           <InputSelect
             value={book.bookListName}

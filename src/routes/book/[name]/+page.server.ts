@@ -38,7 +38,7 @@ const saveSchema = z.object({
   comment: z.string().trim().optional(),
   stars: z.coerce.number().min(0).max(5),
   month: z.coerce.number().min(0).max(12).optional(),
-  year: z.coerce.number().positive().optional(),
+  year: z.coerce.number().min(0).max(5000).optional(),
   listName: z.string(),
 });
 
@@ -79,7 +79,7 @@ export const actions = {
           },
         });
         
-        throw redirect(302, "/book/" + book.name);
+        throw redirect(302, "/book/" + encodeURIComponent(book.name));
       }
 
   
