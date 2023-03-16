@@ -53,9 +53,10 @@
 
   <div class="mt-6 sm:flex sm:gap-4">
     <button
-      class="inline-block w-full rounded-md {getColor()} px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto
-      border-0 
-    dark:border-slate-400 dark:hover:border-slate-300"
+      class="inline-block w-full {getColor()} rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto
+      border 
+      dark:border-slate-400 dark:hover:border-slate-300 
+      border-slate-400 hover:border-slate-500"
       on:click={() => dispatch("primary")}
     >
       {btn1_msg}

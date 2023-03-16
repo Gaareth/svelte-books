@@ -10,22 +10,40 @@
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
-  const deleteBook = async (event: any) => {
-    const response = await fetch("/book/" + name + "/delete", {
-      method: "POST",
-      body: JSON.stringify({ id: id }),
+  const deleteBook = (event: any) => {
+    let res = new Promise((resolve, reject) => {
+      fetch("/book/" + name + "/delete", {
+        method: "POST",
+        body: JSON.stringify({ id: id }),
+      }).then((response) => {
+        response.json().then(({ success }) => {
+          if (success) {
+            resolve(true);
+            dispatch("success");
+          } else {
+            reject(response);
+            dispatch("error");
+          }
+        });
+      });
     });
-    const { success } = await response.json();
 
-    if (success) {
-      toast.success("Successfully deleted book");
-      
-      dispatch("success")
-    } else {      
-      toast.error("[" + response.status + "]" + " Error deleting book: " + response.statusText);
-      dispatch("error")
-    }
+    // TODO: give more info upon error, by moving into block above
+    toast.promise(res, {
+      loading: "Deleting book" + "'" + name + "'",
+      success: "Successfully deleted book " + "'" + name + "'!",
+      error: "Error deleting book :(",
+    });
   };
+
+  // if (success) {
+  //     toast.success("Successfully deleted book");
+
+  //     dispatch("success")
+  //   } else {
+  //     toast.error("[" + response.status + "]" + " Error deleting book: " + response.statusText);
+  //     dispatch("error")
+  //   }
 </script>
 
 <Popup
