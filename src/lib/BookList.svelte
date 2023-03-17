@@ -98,7 +98,7 @@
   <p>No books found matching your search :(</p>
 {/if}
 
-{#each $searchStore.filtered as book, i (book.id)}
+{#each $searchStore.filtered as book (book.id)}
   <div
     class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center 
     grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} 
