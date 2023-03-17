@@ -27,7 +27,7 @@ export const searchHandler = <T extends Record<PropertyKey, any>>(
   store: SearchStoreModel<T>
 ) => {
   const searcher = new FuzzySearch(store.data, ["name", "author"], {
-    caseSensitive: true,
+    caseSensitive: false,
   });
 
   const searchTerm = store.search.toLowerCase() || "";
