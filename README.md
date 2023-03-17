@@ -1,38 +1,17 @@
-# create-svelte
+## Installation
+### Docker
+Use on of the docker images:
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+`docker pull ghcr.io/gaareth/svelte-books`
 
-## Creating a project
+```docker run -it  -d -e DATABASE_URL=file:/database/prod.db -v book-store:/database -p 3001:3000 --name book-store ghcr.io/gaareth/svelte-books```
 
-If you're seeing this, you've probably already done this step. Congrats!
+However you need to supply the db file with a user yourself. You probably should run seed.js and add your credentials to .env, then copy the db file to /var/lib/docker/volumes/book-store/_data/
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+### Source
+`git clone https://github.com/Gaareth/svelte-books`
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Create .env file similar to `env.example`.
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+1. Build: `npm run build`
+2. Run: node -r dotenv/config build
