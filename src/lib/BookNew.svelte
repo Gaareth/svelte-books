@@ -3,7 +3,8 @@
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { Moon } from "svelte-loading-spinners";
-  import { darkMode } from "../stores";
+  import { darkMode } from "./stores/stores";
+  import { scale } from "svelte/transition";
 
   export let endpoint: string;
   export let listName: string;
@@ -19,6 +20,7 @@
 
   async function newBook() {
     loading = true;
+
     const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify({ name, author, listName }),
@@ -85,16 +87,18 @@
       <div class="flex justify-end">
         <button
           on:click={newBook}
-          class="btn-primary-black mt-5 mb-1"
+          class="btn-primary-black mt-5 mb-1 transition-all"
           title="Add new book"
           disabled={!has_content}
         >
           {#if loading}
-            <Moon
-              size="25"
-              color={$darkMode ? "white" : "black"}
-              duration="1s"
-            />
+            <div>
+              <Moon
+                size="20"
+                color={$darkMode ? "white" : "white"}
+                duration="1s"
+              />
+            </div>
           {/if}
           Save new book
         </button>

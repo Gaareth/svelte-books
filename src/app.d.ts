@@ -13,4 +13,10 @@ declare global {
   var prisma: PrismaClient;
 }
 
+import { Prisma } from "@prisma/client";
+
+export type BookFullType = Prisma.BookGetPayload<{
+  select: { [K in keyof Required<Prisma.BookSelect>]: true };
+}>;
+
 export {};

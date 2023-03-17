@@ -1,0 +1,35 @@
+import FuzzySearch from "fuzzy-search";
+import { writable } from "svelte/store";
+
+export interface SearchStoreModel<T extends Record<PropertyKey, any>> {
+  data: T[];
+  filtered: T[];
+  search: string;
+}
+
+export const createSearchStore = <T extends Record<PropertyKey, any>>(
+  data: T[]
+) => {
+  const { subscribe, set, update } = writable<SearchStoreModel<T>>({
+    data: data,
+    filtered: data,
+    search: "",
+  });
+
+  return {
+    subscribe,
+    set,
+    update,
+  };
+};
+
+export const searchHandler = <T extends Record<PropertyKey, any>>(
+  store: SearchStoreModel<T>
+) => {
+  const searcher = new FuzzySearch(store.data, ["name", "author"], {
+    caseSensitive: true,
+  });
+
+  const searchTerm = store.search.toLowerCase() || "";
+  store.filtered = searcher.search(searchTerm);
+};

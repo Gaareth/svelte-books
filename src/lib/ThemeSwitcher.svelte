@@ -3,7 +3,7 @@
   import toast from "svelte-french-toast";
   import IoIosMoon from "svelte-icons/io/IoIosMoon.svelte";
   import IoIosSunny from "svelte-icons/io/IoIosSunny.svelte";
-  import { darkMode } from "../stores";
+  import { darkMode } from "./stores/stores";
 
   const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"];
 
@@ -11,7 +11,7 @@
     // darkMode = !darkMode;
     darkMode.set(!$darkMode);
 
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    localStorage.setItem("theme", $darkMode ? "dark" : "light");
 
     if ($darkMode) {
       document.documentElement.classList.add("dark");
