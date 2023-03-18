@@ -8,7 +8,7 @@
 </script>
 
 <label for="name">{displayName}:</label>
-<div class="flex flex-col">
+<div class="flex flex-col mb-3 sm:mb-0">
   <select bind:value {name} id={name} class="input w-full {!!error ? 'input-error' : ''}">
     <slot />
   </select>

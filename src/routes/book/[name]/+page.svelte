@@ -69,13 +69,13 @@
 
 <div class="mt-5">
   <form method="POST" id="form-book">
-    <div class="flex justify-between">
+    <div class="flex justify-between flex-col-reverse sm:flex-row mb-2 sm:mb-0">
       <h1 class="text-4xl overflow-hidden text-ellipsis">{book.name}</h1>
 
       {#if $page.data.session}
         <input type="hidden" name="id" value={book.id} />
 
-        <div class="flex flex-col gap-1">
+        <div class="sm:flex sm:flex-col sm:gap-1">
           <span
             class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
           >
@@ -149,7 +149,7 @@
     {:else}
       <!-- Inputs -->
       <div class="w-full">
-        <div class="grid grid-cols-2 items-center gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 items-center sm:gap-3">
           <InputText
             value={book.name}
             name="name"

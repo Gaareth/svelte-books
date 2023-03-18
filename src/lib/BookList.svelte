@@ -85,7 +85,7 @@
   };
 </script>
 
-<div class="flex justify-between mt-8 mb-2">
+<div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
   <h2 class="flex items-end text-2xl -mb-1">Books</h2>
   {#if books.length > 0}
     <BookSearch bind:search_term={$searchStore.search} />
@@ -101,86 +101,96 @@
 {#each $searchStore.filtered as book (book.id)}
   <div
     class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center 
-    grid {book.rating ? 'grid-cols-5' : 'grid-cols-4'} 
-    hover:border-gray-300 dark:hover:border-slate-500"
+    hover:border-gray-300 dark:hover:border-slate-500 w-full
+    grid gap-2
+    "
+    style="grid-template-columns: 4px 1fr;"
     transition:animate|local={{}}
     animate:flip={{ duration: 300 }}
   >
-    <div class="flex items-center h-full">
-      <div
-        class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
-          book.name,
-          book.author
-        )} rounded-md mr-2"
-        style="height: 98%;"
-      />
-
-      <a
-        href="/book/{book.name}"
-        class="text-md underline-hover 
+    <div
+      class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
+        book.name,
+        book.author
+      )} rounded-md"
+      style="height: 98%;"
+    />
+    <div
+      class="grid {book.rating
+        ? 'sm:grid-cols-5 grid-cols-4'
+        : 'sm:grid-cols-4 grid-cols-3'} grid-rows-2 sm:grid-rows-1
+    items-center flex-grow h-full gap-2"
+    style="grid-template-rows: auto;"
+    >
+      <div class="flex justify-center item flex-col h-full col-span-full sm:col-span-1 max-h-36">
+        <a
+          href="/book/{book.name}"
+          class="text-md underline-hover 
       text-ellipsis overflow-hidden">{book.name}</a
-      >
-    </div>
-    <div>
-      <p class="text-gray-600 dark:text-slate-400">{book.author}</p>
-    </div>
-
-    <div class="mr-1 sm:mr-0">
-      <p>
-        {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
-      </p>
-    </div>
-
-    {#if book.rating}
-      <div class="flex sm:gap-2 gap-1 items-center">
-        <p>{book.rating.stars} / {maxRating}</p>
-        <div class="icon"><IoIosStar /></div>
-      </div>
-    {/if}
-
-    {#if $page.data.session}
-      <div class="flex justify-end">
-        <span
-          class="inline-flex sm:flex-row flex-col divide-x overflow-hidden rounded-md border bg-white shadow-sm
-          dark:bg-slate-600 dark:border-slate-700"
         >
-          <a
-            class="group inline-block p-2  hover:bg-gray-50 focus:relative
-            dark:hover:bg-slate-500"
-            title="Edit book"
-            href="/book/{book.name}/?edit=true"
-          >
-            <div
-              class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-            >
-              <IoMdSettings />
-            </div>
-          </a>
+      </div>
+      <div>
+        <p class="text-gray-600 dark:text-slate-400">{book.author}</p>
+      </div>
 
-          <button
-            class="group inline-block p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600
-            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400 
-            dark:text-red-200"
-            title="Delete book"
-            on:click={() => {
-              name = book.name;
-              id = book.id;
-              openModal = true;
-            }}
+      <div class="flex justify-end ml-5 sm:ml-0">
+        <p>
+          {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
+        </p>
+      </div>
+
+      {#if book.rating}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end">
+          <p>{book.rating.stars} / {maxRating}</p>
+          <div class="icon"><IoIosStar /></div>
+        </div>
+      {/if}
+
+      {#if $page.data.session}
+        <div class="flex justify-end">
+          <span
+            class="inline-flex flex-row  divide-x overflow-hidden rounded-md border bg-white shadow-sm
+          dark:bg-slate-600 dark:border-slate-700"
           >
-            <div
-              class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+            <a
+              class="group inline-block p-2  hover:bg-gray-50 focus:relative
+            dark:hover:bg-slate-500"
+              title="Edit book"
+              href="/book/{book.name}/?edit=true"
             >
-              <IoMdTrash />
-            </div>
-          </button>
-        </span>
-      </div>
-    {:else}
-      <div class="flex justify-end">
-        <a class="underline-hover" href="/book/{book.name}">View</a>
-      </div>
-    {/if}
+              <div
+                class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+              >
+                <IoMdSettings />
+              </div>
+            </a>
+
+            <button
+              class="group p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600
+            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400 
+            dark:text-red-200
+            hidden sm:inline-block"
+              title="Delete book"
+              on:click={() => {
+                name = book.name;
+                id = book.id;
+                openModal = true;
+              }}
+            >
+              <div
+                class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+              >
+                <IoMdTrash />
+              </div>
+            </button>
+          </span>
+        </div>
+      {:else}
+        <div class="flex justify-end">
+          <a class="underline-hover" href="/book/{book.name}">View</a>
+        </div>
+      {/if}
+    </div>
   </div>
 {/each}
 

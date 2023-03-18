@@ -1,3 +1,5 @@
+# svelte book store 
+
 ## Installation
 ### Docker
 Use on of the docker images:
