@@ -73,40 +73,42 @@
       <h1 class="text-4xl overflow-hidden text-ellipsis">{book.name}</h1>
 
       {#if $page.data.session}
-        <input type="hidden" name="id" value={book.id} />
+        <div class="flex justify-center mb-2 sm:mb-0">
+          <input type="hidden" name="id" value={book.id} />
 
-        <div class="sm:flex sm:flex-col sm:gap-1">
-          <span
-            class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
-          >
-            <button
-              class="btn-group-btn 
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-white"
-              type="button"
-              on:click={() => {
-                edit = !edit;
-              }}
+          <div class="sm:flex sm:flex-col sm:gap-1">
+            <span
+              class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
             >
-              {edit ? "Cancel" : "Edit"}
-            </button>
-            {#if edit}
               <button
-                formaction="?/save"
-                class="btn-group-btn text-blue-700
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-blue-500"
+                class="btn-group-btn 
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-white"
+                type="button"
+                on:click={() => {
+                  edit = !edit;
+                }}
               >
-                Save
+                {edit ? "Cancel" : "Edit"}
               </button>
-            {/if}
-            <button
-              on:click={() => (open_delete = !open_delete)}
-              type="button"
-              class="text-red-700 btn-group-btn
+              {#if edit}
+                <button
+                  formaction="?/save"
+                  class="btn-group-btn text-blue-700
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-blue-500"
+                >
+                  Save
+                </button>
+              {/if}
+              <button
+                on:click={() => (open_delete = !open_delete)}
+                type="button"
+                class="text-red-700 btn-group-btn
               dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-red-500"
-            >
-              Delete
-            </button>
-          </span>
+              >
+                Delete
+              </button>
+            </span>
+          </div>
         </div>
       {/if}
     </div>

@@ -117,9 +117,9 @@
     />
     <div
       class="grid {book.rating
-        ? 'sm:grid-cols-5 grid-cols-4'
-        : 'sm:grid-cols-4 grid-cols-3'} grid-rows-2 sm:grid-rows-1
-    items-center flex-grow h-full gap-2"
+        ? 'sm:grid-cols-5 grid-cols-3'
+        : 'sm:grid-cols-4 grid-cols-2'} grid-rows-3 sm:grid-rows-1
+    items-center flex-grow h-full gap-2 gap-y-0"
     style="grid-template-rows: auto;"
     >
       <div class="flex justify-center item flex-col h-full col-span-full sm:col-span-1 max-h-36">
@@ -129,7 +129,7 @@
       text-ellipsis overflow-hidden">{book.name}</a
         >
       </div>
-      <div>
+      <div class="col-span-full sm:col-span-1 -mt-2 sm:mt-0">
         <p class="text-gray-600 dark:text-slate-400">{book.author}</p>
       </div>
 
