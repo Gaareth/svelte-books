@@ -43,6 +43,19 @@ textarea {
         @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full;
     }
 
+    .input-error {
+        @apply dark:border-red-600;
+    }
+
+    .text-error {
+        @apply dark:text-red-500;
+    }
+
+    .input-error {
+        border-color: red;
+    }
+
+
     .underline-hover {
         @apply dark:before:bg-slate-300 before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
     }
@@ -67,6 +80,10 @@ textarea {
 
     .btn-group {
         @apply inline-flex -space-x-px overflow-hidden rounded-md border  shadow-sm;
+    }
+
+    .text-error {
+        @apply text-[0.8rem] text-[#FF0000];
     }
 }
 

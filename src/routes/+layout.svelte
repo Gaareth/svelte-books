@@ -80,12 +80,4 @@
     @apply motion-reduce:transition-none motion-reduce:hover:transform-none;
   }
 
-  :global(.input-error) {
-    border-color: red !important;
-  }
-
-  :global(.text-error) {
-    color: red !important;
-    font-size: 0.8rem;
-  }
 </style>

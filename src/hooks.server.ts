@@ -9,6 +9,9 @@ import { prisma } from "$lib/server/prisma";
 import bcrypt from "bcrypt";
 
 export const handle = SvelteKitAuth({
+  pages: {
+      signIn: "/login"
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
