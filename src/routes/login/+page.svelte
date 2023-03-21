@@ -9,7 +9,7 @@
 >
   <h1 class="text-5xl text-center">Login</h1>
   <div
-    class="flex gap-3 flex-col rounded-md mt-7 p-4 border dark:border-slate-600"
+    class="flex gap-3 flex-col rounded-md mt-7 p-4 border dark:border-slate-600 {!error || "input-error"}"
   >
     <form method="post" action="/auth/callback/credentials">
       <p class="{error ? "block" : "hidden"} text-error text-center font-bold text-xl my-3">

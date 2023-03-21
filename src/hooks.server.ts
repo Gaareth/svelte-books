@@ -10,7 +10,8 @@ import bcrypt from "bcrypt";
 
 export const handle = SvelteKitAuth({
   pages: {
-      signIn: "/login"
+      signIn: "/login",
+      signOut: "/logout",
   },
   providers: [
     CredentialsProvider({
