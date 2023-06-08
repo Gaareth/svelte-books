@@ -10,8 +10,11 @@ declare global {
     // interface PageData {}
     // interface Platform {}
   }
-  var prisma: PrismaClient;
+  const prisma: PrismaClient;
+  declare const VERSION: string;
+
 }
+
 
 import { Prisma } from "@prisma/client";
 

@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
   import { Toaster } from "svelte-french-toast";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  const version = VERSION;
 </script>
 
 <header aria-label="Site Header" class="shadow-sm">
@@ -63,7 +64,10 @@
 </main>
 
 <footer class="bg-[#F2440D] min-h-10 absolute bottom-[-100px] w-full">
-  <div class="text-white mx-auto max-w-2xl flex p-2 flex-col text-center gap-2">
+  <div class="text-white mx-auto max-w-3xl flex p-2 flex-col text-center gap-2">
+    <span class="text-gray-200 text-md text-center absolute">
+        V{version}
+    </span>
     <p>
       Made using
       <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a> /
