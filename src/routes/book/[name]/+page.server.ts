@@ -42,14 +42,24 @@ const saveSchema = z.object({
   listName: z.string(),
 });
 
+function undefinedToNull<Type>(any: Type | undefined): Type | null {
+  return any === undefined ? null : any;
+}
+
 export const actions = {
   save: async (event: RequestEvent) => {
     const session = await event.locals.getSession();
-    if (!(!!session)) {
+    if (!(session)) {
       throw error(401)
     }
 
     const formData = Object.fromEntries(await event.request.formData());
+    console.log(formData);
+    if (formData.year == '') {
+      delete formData.year;
+    } 
+    console.log(formData);
+
     
     const result =
       saveSchema.safeParse(formData);
@@ -58,13 +68,14 @@ export const actions = {
         const { id, name, author, comment, stars, month, year, listName } =
           result.data;
 
+
         const book = await prisma.book.update({
           where: { id },
           data: {
             name,
             author,
-            monthRead: month,
-            yearRead: year,
+            monthRead: undefinedToNull(month),
+            yearRead: undefinedToNull(year),
             rating: {
               upsert: {
                 update: { stars: stars, comment },

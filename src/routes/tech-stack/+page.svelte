@@ -1,3 +1,7 @@
+<svelte:head>
+  <title>Books Tech-Stack</title>
+</svelte:head>
+
 <div class="border rounded-md p-3 mt-8 px-7">
   <h1
     class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-b

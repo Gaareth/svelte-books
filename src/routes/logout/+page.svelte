@@ -3,6 +3,10 @@
   let csrfToken = data.csrfToken;  
 </script>
 
+<svelte:head>
+  <title>Logout</title>
+</svelte:head>
+
 <div class="mx-auto h-screen flex items-center justify-center">
   <form class="mb-40" method="POST" action="/auth/signout">
     <input name="csrfToken" type="hidden" value={csrfToken} />

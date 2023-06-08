@@ -67,6 +67,10 @@
     !!$page.data.session;
 </script>
 
+<svelte:head>
+  <title>{book.name}</title>
+</svelte:head>
+
 <div class="mt-5">
   <form method="POST" id="form-book">
     <div class="flex justify-between flex-col-reverse sm:flex-row mb-2 sm:mb-0">
@@ -122,6 +126,9 @@
           </p>
           <p class="text-gray-600 dark:text-slate-400">
             Read in (year): {book.yearRead ?? "-"}
+          </p>
+          <p class="text-gray-600 dark:text-slate-400">
+            Added: {book.createdAt.toLocaleDateString()} {book.createdAt.toLocaleTimeString()}
           </p>
         </div>
 

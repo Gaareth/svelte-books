@@ -6,14 +6,16 @@ export async function getBookLists() {
 }
 
 function getReadDate(book: Book) {
-  if (book.yearRead === null || book.monthRead === null) {
+  if (book.yearRead === null) {
     return null;
   }
-  return new Date(book.yearRead, book.monthRead - 1);
+  return new Date(book.yearRead, (book.monthRead ?? 0) - 1);
 }
 
+// function sortBooksBy
+
 export async function loadBooks() {
-  let data = {
+  const data = {
     books: await prisma.book.findMany({
       where: {
         bookListName: "Read",
@@ -25,9 +27,21 @@ export async function loadBooks() {
   };
 
   data.books = data.books.sort(function (a: Book, b: Book) {
-    const ad = getReadDate(a) ?? a.createdAt;
-    const bd = getReadDate(b) ?? b.createdAt;
-    return (ad.getTime() - bd.getTime()) * -1;
+    const read_date_a = getReadDate(a);
+    const read_date_b = getReadDate(b);
+
+    let date_a: Date = read_date_a ?? a.createdAt;
+    let date_b: Date = read_date_b ?? b.createdAt;
+
+    // sort by date added, when the read date is the same
+    if (
+      read_date_a?.getTime() == read_date_b?.getTime()
+    ) {
+      date_a = a.createdAt;
+      date_b = b.createdAt;
+    }
+
+    return (date_a.getTime() - date_b.getTime()) * -1;
   });
 
   return data;

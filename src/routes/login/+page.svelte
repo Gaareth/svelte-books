@@ -4,6 +4,10 @@
   let error = data.error;
 </script>
 
+<svelte:head>
+  <title>Login</title>
+</svelte:head>
+
 <div
   class="max-w-lg mx-auto my-4"
 >
