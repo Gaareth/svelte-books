@@ -11,6 +11,8 @@
   const clearSelection = () => {
     value = null;
   };
+
+  $: hoverCss = value != null ? "group-hover:animate-drop-hover group-active:animate-drop-click" : "text-neutral-500";
 </script>
 
 <label for="name">{displayName}:</label>
@@ -24,9 +26,10 @@
     >
       <slot />
     </select>
-    <button on:click={() => clearSelection()} type="button" class="group" title="Clear Input">
+    <button on:click={() => clearSelection()} disabled={value === null}
+      type="button" class="group" title="Clear Input">
       <div
-        class="icon group group-hover:animate-drop-hover group-active:animate-drop-click"
+        class="icon group {hoverCss}"
       >
         <IoIosRemoveCircle />
       </div>

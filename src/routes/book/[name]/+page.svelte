@@ -221,9 +221,10 @@
             <h2 class="text-xl">Rating</h2>
             <div>
               (<input
-                class="max-w-[2.5rem] p-0 text-center"
+                class="max-w-[3.5rem] p-0 text-center"
                 name="stars"
                 type="number"
+                step="0.5"
                 bind:value={rating_stars}
                 min="0"
                 max={max_rating}
@@ -231,7 +232,7 @@
               / {max_rating})
             </div>
           </div>
-          <Rating rating={rating_stars} rating_max={5} />
+          <Rating bind:rating={rating_stars} rating_max={5} />
 
           <h2 class="text-xl mt-5">Comment</h2>
           <div class="w-full">

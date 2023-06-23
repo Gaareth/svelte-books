@@ -2,20 +2,40 @@
   import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
 
-  export let rating: Number;
+  export let rating: number;
   export let rating_max: number;
+
+  const increaseRating = (i: number) => {
+    rating = i;
+  };
+
+  const decreaseRating = (i: number) => {
+    if (i == rating) {
+      rating -= 1;
+    } else {
+      rating = i;
+    }
+  };
 </script>
 
 <div class="flex flex-row flex-wrap">
   {#each Array(rating_max) as _, i}
-    {#if (i+1) <= rating}
-      <div class="icon">
+    {#if i + 1 <= rating}
+      <button
+        class="icon"
+        on:click={(e) => decreaseRating(i + 1)}
+        type="button"
+      >
         <IoIosStar />
-      </div>
+      </button>
     {:else}
-      <div class="icon">
+      <button
+        class="icon"
+        on:click={(e) => increaseRating(i + 1)}
+        type="button"
+      >
         <IoIosStarOutline />
-      </div>
+      </button>
     {/if}
   {/each}
 </div>
