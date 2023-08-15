@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { invalidate, invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
   import BookList from "$lib/BookList.svelte";
   import BookNew from "$lib/BookNew.svelte";
+  import Statistics from "$lib/Statistics.svelte";
   import type { BookFullType } from "../app";
   export let data: { books: BookFullType[] };
 
@@ -10,6 +11,7 @@
 </script>
 
 <h1 class="text-center text-5xl my-4 mb-6 mt-8" id="header">My Book List</h1>
+{#if !$page.data.session}
 <div>
   <details
     class="open:ring-1 open:ring-black/5 
@@ -28,7 +30,11 @@
     </div>
   </details>
 </div>
-<BookNew endpoint="/book/create" listName={"Read"} />
+{:else}
+<Statistics books={data.books}/>
+{/if}
+<div class="my-5" />
+<BookNew endpoint="/book/create" listName={"Read"} authors={data.books.map((b) => b.author)}/>
 <BookList books={data.books} />
 
 {#if random != 0}

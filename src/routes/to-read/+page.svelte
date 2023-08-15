@@ -12,5 +12,6 @@
 <BookNew
   endpoint="/book/create"
   listName={"To read"}
+  authors={data.books.map((b) => b.author)}
 />
 <BookList books={data.books} />

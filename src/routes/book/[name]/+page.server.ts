@@ -54,11 +54,11 @@ export const actions = {
     }
 
     const formData = Object.fromEntries(await event.request.formData());
-    console.log(formData);
+    // console.log(formData);
     if (formData.year == '') {
       delete formData.year;
     } 
-    console.log(formData);
+    // console.log(formData);
 
     
     const result =

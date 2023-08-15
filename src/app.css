@@ -30,6 +30,22 @@ textarea {
     @apply dark:border-[#545250] dark:bg-[#545250]
 }
 
+.autocomplete::after {
+    @apply border-black dark:border-gray-200 !important
+}
+
+.autocomplete {
+    min-width: auto !important;
+}
+
+.autocomplete-list {
+    @apply dark:bg-slate-600 dark:border-slate-600 !important
+}
+
+.autocomplete-list-item {
+    @apply dark:text-gray-100 !important
+}
+
 @layer utilities {
     .animate-drop-click {
         @apply transition ease-in translate-y-[0.1rem] duration-75
@@ -37,10 +53,6 @@ textarea {
 
     .animate-drop-hover {
         @apply transition ease-in translate-y-[0.05rem] duration-75
-    }
-
-    .input {
-        @apply border-gray-200 rounded-md sm:text-sm mt-1 w-full;
     }
 
     .input-error {
@@ -84,6 +96,10 @@ textarea {
 
     .text-error {
         @apply text-[0.8rem] text-[#FF0000];
+    }
+
+    .input {
+        @apply border-gray-200 rounded-md sm:text-sm w-full;
     }
 }
 

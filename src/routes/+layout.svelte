@@ -15,7 +15,9 @@
 
       <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex">
         <a class="text-gray-500 hover:text-[#F2440D]" href="/">Home</a>
+       {#if $page.data.session}
         <a class="text-gray-500" href="/to-read">To-Read</a>
+       {/if}
       </nav>
 
       <div class="flex-1 justify-end flex">

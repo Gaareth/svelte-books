@@ -4,10 +4,13 @@
   import { page } from "$app/stores";
   import { Moon } from "svelte-loading-spinners";
   import { darkMode } from "./stores/stores";
-  import { scale } from "svelte/transition";
+  // @ts-ignore
+  import AutoComplete from "simple-svelte-autocomplete";
 
   export let endpoint: string;
   export let listName: string;
+  export let authors: string[];
+  $: authors = [...new Set(authors)];
 
   let new_book = false;
   let name = "";
@@ -48,6 +51,7 @@
       }
     }
   }
+  
 </script>
 
 {#if $page.data.session}
@@ -59,13 +63,13 @@
       <button
         on:click={() => (new_book = !new_book)}
         class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
-        dark:bg-slate-600 dark:border-0 dark:hover:bg-slate-500"
+        dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500"
       >
         {new_book ? "Cancel" : "Open"}
       </button>
     </div>
     {#if new_book}
-      <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center">
+      <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
         <label for="name">Name:</label>
         <input
           id="name"
@@ -75,12 +79,20 @@
           bind:value={name}
         />
         <label for="author">Author:</label>
-        <input
+        <!-- <input
           id="author"
           name="author"
           type="text"
           class="input dark:bg-slate-600 dark:border-slate-500"
           bind:value={author}
+        /> -->
+        <AutoComplete
+          items={authors}
+          bind:text={author}
+          create={true}
+          id="author"
+          name="author"
+          class="input dark:bg-slate-600 dark:border-slate-500"
         />
       </div>
 
