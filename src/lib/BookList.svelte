@@ -129,7 +129,7 @@
         >
       </div>
       <div class="col-span-full sm:col-span-1 -mt-2 sm:mt-0">
-        <p class="text-gray-600 dark:text-slate-400">{book.author}</p>
+        <p class="text-gray-600 dark:text-slate-300">{book.author}</p>
       </div>
 
       <div class="flex justify-end ml-5 sm:ml-0">

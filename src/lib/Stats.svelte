@@ -11,7 +11,7 @@
 </script>
 
 <div class="border p-3 px-4 rounded-md dark:border-slate-700">
-  <p class="text-gray-500 text-base">{name}</p>
+  <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
   <div class="flex gap-2 min-h-[50px]">
     <p class={clsx("font-bold self-center", typeof value === "number" ? "text-5xl" : "text-4xl")}>{value}</p>
     {#if last_value != undefined}

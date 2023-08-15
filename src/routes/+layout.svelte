@@ -14,9 +14,10 @@
       <div class="flex lg:w-0 lg:flex-1" />
 
       <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex">
-        <a class="text-gray-500 hover:text-[#F2440D]" href="/">Home</a>
+        <a class="text-gray-500 dark:text-gray-400 
+        hover:text-[#F2440D] dark:hover:text-[#f67c56]" href="/">Home</a>
        {#if $page.data.session}
-        <a class="text-gray-500" href="/to-read">To-Read</a>
+        <a class="text-gray-500 dark:text-gray-400" href="/to-read">To-Read</a>
        {/if}
       </nav>
 
@@ -30,7 +31,7 @@
             <div>
               <a
                 href="/auth/signout"
-                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500 border 
+                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border 
             border-gray-100 hover:border-gray-200
             dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
                 data-sveltekit-preload-data="off">Sign out</a
@@ -39,7 +40,7 @@
           {:else}
             <div>
               <a
-                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500 border
+                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
             border-gray-100 hover:border-gray-200 
             dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
                 href="/auth/signin"
@@ -65,9 +66,9 @@
   </div>
 </main>
 
-<footer class="bg-[#F2440D] min-h-10 absolute bottom-[-100px] w-full">
+<footer class="bg-[#da3d0c] min-h-10 absolute bottom-[-100px] w-full">
   <div class="text-white mx-auto max-w-3xl flex p-2 flex-col text-center gap-2">
-    <span class="text-gray-200 text-md text-center absolute">
+    <span class="text-md text-center absolute">
         V{version}
     </span>
     <p>

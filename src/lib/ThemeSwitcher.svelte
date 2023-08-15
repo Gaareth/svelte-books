@@ -43,7 +43,7 @@
 </script>
 
 <button
-  title="Toggle"
+  title="Switch theme"
   on:click={toggleMode}
   class="hover:scale-[1.15] transition-transform ease-out"
 >
@@ -51,7 +51,7 @@
     {#if $darkMode}
       <IoIosSunny />
     {:else}
-      <IoIosMoon />
+      <IoIosMoon/>
     {/if}
   </div>
 </button>
