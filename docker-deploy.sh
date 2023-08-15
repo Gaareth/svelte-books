@@ -1,0 +1,2 @@
+sh docker-build.sh;
+ssh raspberrypi sh /home/gareth/scripts/update-book-store.sh;

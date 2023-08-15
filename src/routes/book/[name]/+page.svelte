@@ -2,9 +2,6 @@
   import Rating from "./../../../lib/Rating.svelte";
   import type { BookList, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
-  import Popup from "$lib/Popup.svelte";
-  import { enhance, type SubmitFunction } from "$app/forms";
-  import { json, type ActionResult } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
   import InputSelect from "$lib/InputSelect.svelte";

@@ -1,13 +1,12 @@
 <script lang="ts">
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import { page } from "$app/stores";
-  import type { Book, Prisma } from "@prisma/client";
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
-  import { goto, invalidateAll } from "$app/navigation";
+  import { invalidateAll } from "$app/navigation";
   import BookSearch from "./BookSearch.svelte";
-  import { fade, fly, scale, slide } from "svelte/transition";
+  import { fade, scale } from "svelte/transition";
 
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import { onDestroy } from "svelte";
