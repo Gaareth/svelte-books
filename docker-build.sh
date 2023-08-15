@@ -1,2 +1,2 @@
 npm run build;
-docker buildx build --platform=linux/arm64,linux/amd64 . -t ghcr.io/gaareth/svelte-books --push
+docker buildx build --platform=linux/arm64,linux/amd64 . -t ghcr.io/gaareth/svelte-books:$(jq -r .version package.json) --push;
