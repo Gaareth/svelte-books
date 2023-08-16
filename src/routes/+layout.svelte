@@ -6,6 +6,11 @@
   const version = VERSION;
 </script>
 
+
+<svelte:head>
+  <title>{$page.data.title || "Books - Gareth"}</title>
+</svelte:head>
+
 <header aria-label="Site Header" class="shadow-sm">
   <div class="mx-auto max-w-screen-xl p-4">
     <div
@@ -74,7 +79,7 @@
     <p>
       Made using
       <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a> /
-      - Kit and <a href="/tech-stack">...</a>
+      - Kit and <a href="/tech-stack">more</a>
     </p>
     <p>
       by <a href="https://github.com/Gaareth" class="underline">Gareth</a>
@@ -86,5 +91,4 @@
   :global(html) {
     @apply motion-reduce:transition-none motion-reduce:hover:transform-none;
   }
-
 </style>

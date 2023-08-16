@@ -47,11 +47,11 @@
   on:click={toggleMode}
   class="hover:scale-[1.15] transition-transform ease-out"
 >
-  <div class="w-10 h-10 text-purple-500 dark:text-yellow-300">
+  <span class="w-10 h-10 text-purple-500 dark:text-yellow-300 inline-block">
     {#if $darkMode}
       <IoIosSunny />
     {:else}
       <IoIosMoon/>
     {/if}
-  </div>
+  </span>
 </button>

@@ -15,10 +15,10 @@
   <div class="flex gap-2 min-h-[50px]">
     <p class={clsx("font-bold self-center", typeof value === "number" ? "text-5xl" : "text-4xl")}>{value}</p>
     {#if last_value != undefined}
-      <div class="flex flex-col justify-center content-around">
+      <div class="flex flex-row">
         <div
           class={clsx(
-            "w-10 h-10",
+            "w-10 h-10 self-center",
             value > last_value ? "text-green-500" : "text-red-500"
           )}
         >
@@ -30,7 +30,7 @@
             <IoIosRemove />
           {/if}
         </div>
-        <p class="flex justify-center -mt-4">
+        <p class="self-center">
           {#if value > last_value}
             +{value - last_value}
           {:else if value < last_value}

@@ -5,7 +5,7 @@
 <div class="border rounded-md p-3 mt-8 px-7">
   <h1
     class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-b
-  from-svelte to-blue-300"
+  from-svelte via-purple-500 to-pink-500"
   >
     Tech-Stack
   </h1>
@@ -15,6 +15,7 @@
     <li>Typescript</li>
     <li>Prisma</li>
     <li>NextAuth</li>
+    <li>Tailwind</li>
   </ul>
 
   <ul class="my-2 list-disc">
@@ -22,6 +23,8 @@
     <li>svelte-icons</li>
     <li>zod</li>
     <li>bcrypt</li>
+    <li>simple-svelte-autocomplete</li>
+    <li>svelte-loading-spinners</li>
   </ul>
 </div>
 

@@ -15,16 +15,16 @@
   on:close={() => (showModal = false)}
   on:click|self={() => dialog.close()}
   class="rounded-md border border-blue-100 bg-white dark:bg-slate-500 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8"
-  role="alert"
+  role="alertdialog"
 >
   <div on:click|stopPropagation>
     <div class="flex justify-between item-center gap-3">
       <slot name="header" />
       <!-- svelte-ignore a11y-autofocus -->
       <button autofocus on:click={() => dialog.close()} title="Close modal">
-        <div class="w-[24px] h-[24px]">
+        <span class="w-[24px] h-[24px] inline-block">
           <IoMdClose />
-        </div>
+        </span>
       </button>
     </div>
     <hr class="dark:border-slate-400"/>

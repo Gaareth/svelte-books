@@ -98,8 +98,9 @@
 {/if}
 
 {#each $searchStore.filtered as book (book.id)}
+  {@const book_url = encodeURIComponent(book.name)}
   <div
-    class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center 
+    class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center
     hover:border-gray-300 dark:hover:border-slate-500 w-full
     grid gap-2
     "
@@ -115,16 +116,16 @@
       style="height: 98%;"
     />
     <div
-      class="grid {book.rating
+      class="book-item-grid {book.rating
         ? 'sm:grid-cols-5 grid-cols-3'
-        : 'sm:grid-cols-4 grid-cols-2'} grid-rows-3 sm:grid-rows-1
-    items-center flex-grow h-full gap-2 gap-y-0"
-    style="grid-template-rows: auto;"
+        : 'sm:grid-cols-4 grid-cols-2'}"
     >
-      <div class="flex justify-center item flex-col h-full col-span-full sm:col-span-1 max-h-36">
+      <div
+        class="flex justify-center item flex-col h-full col-span-full sm:col-span-1 max-h-36"
+      >
         <a
-          href="/book/{book.name}"
-          class="text-md underline-hover 
+          href="/book/{book_url}"
+          class="text-md underline-hover
       text-ellipsis overflow-hidden">{book.name}</a
         >
       </div>
@@ -148,27 +149,24 @@
       {#if $page.data.session}
         <div class="flex justify-end">
           <span
-            class="inline-flex flex-row  divide-x overflow-hidden rounded-md border bg-white shadow-sm
+            class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
           dark:bg-slate-600 dark:border-slate-700"
           >
             <a
-              class="group inline-block p-2  hover:bg-gray-50 focus:relative
+              class="group inline-block p-2 hover:bg-gray-50 focus:relative
             dark:hover:bg-slate-500"
               title="Edit book"
-              href="/book/{book.name}/?edit=true"
+              href="/book/{book_url}/?edit=true"
             >
-              <div
-                class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+              <span
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
               >
                 <IoMdSettings />
-              </div>
+              </span>
             </a>
 
             <button
-              class="group p-2  hover:bg-red-200 focus:relative bg-red-100 text-red-600
-            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400 
-            dark:text-red-200
-            hidden sm:inline-block"
+              class="group p-2 delete-button"
               title="Delete book"
               on:click={() => {
                 name = book.name;
@@ -176,17 +174,17 @@
                 openModal = true;
               }}
             >
-              <div
-                class="icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+              <span
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
               >
                 <IoMdTrash />
-              </div>
+              </span>
             </button>
           </span>
         </div>
       {:else}
         <div class="flex justify-end">
-          <a class="underline-hover" href="/book/{book.name}">View</a>
+          <a class="underline-hover" href="/book/{book_url}">View</a>
         </div>
       {/if}
     </div>
@@ -203,7 +201,7 @@
   }}
 />
 
-<style>
+<style lang="postcss">
   .icon {
     width: 20px;
     height: 20px;
@@ -211,5 +209,29 @@
   .icon-edit {
     width: 20px;
     height: 20px;
+  }
+
+  .book-item-grid {
+    display: grid;
+    flex-grow: 1;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    row-gap: 0;
+    align-items: center;
+    height: 100%;
+    grid-template-rows: auto;
+  }
+
+  @media (min-width: 640px) {
+    .book-item-grid {
+      grid-template-rows: repeat(1, minmax(0, 1fr));
+    }
+  }
+
+  .delete-button {
+    @apply hover:bg-red-200 focus:relative bg-red-100 text-red-600
+            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400
+            dark:text-red-200
+            hidden sm:inline-block
   }
 </style>

@@ -14,3 +14,4 @@ dev.db
 seed.js
 prisma/migrations
 *.tar
+validation-tests/

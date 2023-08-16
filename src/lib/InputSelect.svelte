@@ -15,7 +15,7 @@
   $: hoverCss = value != null ? "group-hover:animate-drop-hover group-active:animate-drop-click" : "text-neutral-500";
 </script>
 
-<label for="name">{displayName}:</label>
+<label for={name}>{displayName}:</label>
 <div class="flex flex-col mb-3 sm:mb-0">
   <div class="flex gap-2">
     <select
@@ -27,15 +27,15 @@
       <slot />
     </select>
     <button on:click={() => clearSelection()} disabled={value === null}
-      type="button" class="group" title="Clear Input">
-      <div
-        class="icon group {hoverCss}"
+      type="button" class="group flex" title="Clear Input">
+      <span
+        class="inline-block icon group {hoverCss} self-center"
       >
         <IoIosRemoveCircle />
-      </div>
+      </span>
     </button>
   </div>
-  <label for="name" class="label">
+  <label for={name} class="label">
     {#if !!error}
       <span class="label-text-alt text-error">{error}</span>
     {/if}

@@ -33,8 +33,8 @@
   };
 </script>
 
-<section class="flex gap-3">
+<div class="flex gap-3">
   <Stats name="total books read" value={books.length} />
   <Stats name="books read this month" value={books_this_month.length} last_value={books_last_month.length}/>
   <Stats name="most read author" value={most_read_author()} />
-</section>
+</div>
