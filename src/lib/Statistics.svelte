@@ -33,7 +33,7 @@
   };
 </script>
 
-<div class="flex gap-3">
+<div class="flex gap-3 flex-wrap">
   <Stats name="total books read" value={books.length} />
   <Stats name="books read this month" value={books_this_month.length} last_value={books_last_month.length}/>
   {#if books.length > 0}
