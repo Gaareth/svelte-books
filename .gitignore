@@ -15,3 +15,4 @@ seed.js
 prisma/migrations
 *.tar
 validation-tests/
+db-backups/
