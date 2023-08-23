@@ -29,7 +29,9 @@
     var sortedArray = Object.entries(author_occur).sort(
       ([, a], [, b]) => a - b
     );
-    return sortedArray[sortedArray.length - 1][0];
+    const entry: [string, number] = sortedArray[sortedArray.length - 1];
+    const author_string: string = `${entry[0]} (${entry[1]})`
+    return author_string;
   };
 </script>
 
