@@ -12,14 +12,14 @@ declare global {
   }
   const prisma: PrismaClient;
   declare const VERSION: string;
-
 }
-
 
 import { Prisma } from "@prisma/client";
 
 export type BookFullType = Prisma.BookGetPayload<{
   select: { [K in keyof Required<Prisma.BookSelect>]: true };
 }>;
+
+export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
 export {};

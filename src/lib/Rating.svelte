@@ -4,12 +4,20 @@
 
   export let rating: number;
   export let rating_max: number;
+  export let editable: boolean = false;
 
   const increaseRating = (i: number) => {
+    if (!editable) {
+      return;
+    }
     rating = i;
   };
 
   const decreaseRating = (i: number) => {
+    if (!editable) {
+      return;
+    }
+    
     if (i == rating) {
       rating -= 1;
     } else {

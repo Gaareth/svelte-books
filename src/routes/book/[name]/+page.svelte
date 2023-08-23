@@ -1,34 +1,73 @@
 <script lang="ts">
+  // @ts-ignore
+  import AutoComplete from "simple-svelte-autocomplete";
   import Rating from "./../../../lib/Rating.svelte";
-  import type { BookList, Prisma } from "@prisma/client";
+  import type { Book, BookList, BookSeries, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
   import InputSelect from "$lib/InputSelect.svelte";
-
-  import type { ActionData } from "./$types";
+  import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
+  import type { ActionData, PageData } from "./$types";
   import { toast } from "svelte-french-toast";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
+  import type { load } from "./+page.server";
+  import BookListComponent from "$lib/BookList.svelte";
+  import BookListSimple from "$lib/BookListSimple.svelte";
+  import type { BookFullType, BookRating } from "../../../app";
+  import type { ItemDeleteEvent } from "$lib/BookListItem.svelte";
+  import BookListSeries from "$lib/BookListSeries.svelte";
 
-  export let data: any;
+  export let data: PageData;
 
   type BookAll = Prisma.BookGetPayload<{
     include: {
       rating: true;
-      bookList: true;
-      bookListName: true;
+      bookSeries: {
+        include: {
+          books: {
+            include: {
+              rating: true;
+            };
+          };
+        };
+      };
     };
   }>;
-  let book: BookAll = data.book;
 
-  let bookLists: BookList[] = data.bookLists;
+  // let book: BookAll;
+  let book: BookAll = data.book;
+  let books: BookRating[] = data.books;
+
+  // let no_rating = !data.book?.rating;
+  let no_rating = false;
+
+  $: {
+    book = data.book;
+
+    if (book.rating === null && edit) {
+      book.rating = { stars: 0, bookId: book.id, comment: "" };
+    }
+
+    if (book.bookSeries === null && edit) {
+      book.bookSeries = { books: [], id: -1 }; // very bad :(
+    }
+  }
+
+  // console.log(data.book.bookSeries?.books);
+
+  let bookLists: BookList[];
+
+  $: bookLists = data.bookLists;
+
+  let selectedSeriesBook: BookRating;
 
   let max_rating = 5;
 
-  let rating = book.rating ?? { stars: 0, comment: "" };
-  let rating_stars = rating.stars;
-  let rating_comment = rating.comment;
+  // $: rating = book?.rating ?? { stars: 0, comment: "" };
+  // $: rating_stars = rating.stars;
+  // $: rating_comment = rating.comment;
 
   let months = [
     "January",
@@ -45,23 +84,61 @@
     "December",
   ];
 
-  function range(start: number, end: number) {
-    var list = [];
-    for (var i = start; i <= end; i++) {
-      list.push(i);
-    }
-    return list;
-  }
-
-  let startDate = 1900;
-  let endDate = new Date().getFullYear() + 100;
-
   let open_delete = false;
 
   export let form: ActionData;
-  let edit: boolean =
+  let edit: boolean;
+
+  $: edit =
     ((data.edit !== "false" && data.edit !== null) || !!form?.errors) &&
     !!$page.data.session;
+
+  const addBookSeries = () => {
+    if (!selectedSeriesBook) {
+      return;
+    }
+
+    let selectedBook = books.find((b) => b.name == selectedSeriesBook.name);
+    console.log(selectedSeriesBook);
+    if (!selectedBook) {
+      series_error = "Please choose a valid book"
+      return;
+    }
+
+    console.log(book.bookSeries?.books);
+    console.log(selectedBook);
+    
+    
+    let currentSeries = book.bookSeries?.books.map(b => b.name);
+    if (currentSeries.includes(selectedBook.name)) {
+      series_error = "This book is already in this book series"
+      return;
+    }
+
+    book.bookSeries?.books.push(selectedBook);
+    book = book;
+    series_error = undefined;
+  };
+
+  let series_error: string | undefined = undefined;
+  const on_delete = (b: BookRating) => {
+    const index = book.bookSeries?.books.indexOf(b);
+
+    if (index === undefined) {
+      series_error = "The book is not part of a book series"
+      return;
+    }
+
+    if (index > -1) {
+      book.bookSeries?.books.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    book = book;
+    series_error = undefined;
+  };
+
+  const autoCompleteBookLabel = (b: BookFullType) => {
+    return b.name + " - " + b.author;
+  };
 </script>
 
 <svelte:head>
@@ -82,11 +159,19 @@
               class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
             >
               <button
-                class="btn-group-btn 
+                class="btn-group-btn
               dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-white"
                 type="button"
                 on:click={() => {
                   edit = !edit;
+
+                  let query = new URLSearchParams(
+                    $page.url.searchParams.toString()
+                  );
+
+                  query.set("edit", edit.toString());
+
+                  goto(`?${query.toString()}`);
                 }}
               >
                 {edit ? "Cancel" : "Edit"}
@@ -125,12 +210,13 @@
             Read in (year): {book.yearRead ?? "-"}
           </p>
           <p class="text-gray-600 dark:text-slate-400">
-            Added: {book.createdAt.toLocaleDateString()} {book.createdAt.toLocaleTimeString()}
+            Added: {book.createdAt.toLocaleDateString()}
+            {book.createdAt.toLocaleTimeString()}
           </p>
         </div>
 
         <div class="my-7">
-          {#if book.rating}
+          {#if book.rating && !no_rating}
             <div class="flex gap-2 items-center">
               <h2 class="text-xl">Rating</h2>
               <p>({book.rating.stars}/{max_rating})</p>
@@ -149,6 +235,18 @@
             {/if}
           {:else}
             <h2>No rating...</h2>
+          {/if}
+
+          {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
+            <section>
+              <h2 class="text-xl mt-5">Series</h2>
+              <p class="text-slate-500 text-base">
+                following books are also in this series:
+              </p>
+              <div>
+                <BookListSimple books={book.bookSeries.books} />
+              </div>
+            </section>
           {/if}
         </div>
       </div>
@@ -222,30 +320,70 @@
                 name="stars"
                 type="number"
                 step="0.5"
-                bind:value={rating_stars}
+                bind:value={book.rating.stars}
                 min="0"
                 max={max_rating}
               />
               / {max_rating})
             </div>
           </div>
-          <Rating bind:rating={rating_stars} rating_max={5} />
+          <Rating
+            bind:rating={book.rating.stars}
+            rating_max={5}
+            editable={true}
+          />
 
-          <h2 class="text-xl mt-5">Comment</h2>
-          <div class="w-full">
-            <textarea
-              class="w-full input"
-              name="comment"
-              id="comment"
-              bind:value={rating_comment}
-              rows="10"
-            />
-          </div>
+          <section>
+            <h2 class="text-xl mt-5">Comment</h2>
+            <div class="w-full">
+              <textarea
+                class="w-full input"
+                name="comment"
+                id="comment"
+                bind:value={book.rating.comment}
+                rows="10"
+              />
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-xl mt-5">Series</h2>
+            <div class="mt-2 flex gap-2 w-full">
+              <input
+                type="hidden"
+                name="bookSeriesId"
+                value={book.bookSeriesId}
+              />
+              <AutoComplete
+                items={books}
+                labelFunction={autoCompleteBookLabel}
+                bind:selectedItem={selectedSeriesBook}
+                class="input dark:bg-slate-600 dark:border-slate-500 w-full"
+              />
+              <button
+                type="button"
+                class="btn-primary-black px-1 py-1"
+                on:click={addBookSeries}
+              >
+                <span class="block w-[30px]">
+                  <IoIosAdd />
+                </span>
+              </button>
+            </div>
+            <p class="label-text-alt text-error" hidden={!series_error}>{series_error}</p>
+            <div class="mt-2">
+              <BookListSeries
+                books={book.bookSeries?.books ?? []}
+                {on_delete}
+                allow_deletion={true}
+              />
+            </div>
+          </section>
 
           <div class="min-[500px]:flex min-[500px]:justify-end">
             <button
               formaction="?/save"
-              class="bg-blue-700 text-white py-3 px-4 my-4 rounded-md w-full 
+              class="bg-blue-700 text-white py-3 px-4 my-4 rounded-md w-full
             block sm:hidden min-[500px]:w-1/2"
             >
               Save
@@ -258,8 +396,11 @@
 </div>
 
 <BookDeletePopUp
-  name={book.name}
-  id={book.id}
+  deletionBook={book}
   bind:openModal={open_delete}
   on:success={() => goto("/")}
 />
+
+<!-- <style>
+  .a
+</style> -->

@@ -1,0 +1,25 @@
+<script lang="ts">
+  import type { BookRating } from "../app";
+  import BookListItem, { type ItemDeleteEvent } from "./BookListItem.svelte";
+
+  export let books: BookRating[];
+  export let on_delete: ((e: CustomEvent<ItemDeleteEvent>) => any) | undefined =
+    undefined;
+  export let allow_deletion: boolean = false;
+</script>
+
+{#each books as book, i (book.id)}
+  <input type="hidden" name={`books[${i}]`} value={book.name} />
+
+  <BookListItem {book} on:delete={on_delete} allow_deletion={allow_deletion && !!on_delete} />
+  <!-- <BookListItem {book} bind:deletionBook bind:openModal/> -->
+{/each}
+
+<!-- <BookDeletePopUp
+  {deletionBook}
+  bind:openModal
+  on:success={() => {
+    openModal = false;
+    invalidateAll();
+  }}
+/> -->

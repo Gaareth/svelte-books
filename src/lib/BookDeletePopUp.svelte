@@ -2,19 +2,18 @@
   import { goto } from "$app/navigation";
   import toast from "svelte-french-toast";
   import Popup from "./Popup.svelte";
-
-  export let name: string;
-  export let id: string;
-  export let openModal: boolean;
-
   import { createEventDispatcher } from "svelte";
+  import type { Book } from "@prisma/client";
+
+  export let openModal: boolean;
+  export let deletionBook: Book;
   const dispatch = createEventDispatcher();
 
   const deleteBook = (event: any) => {
     let res = new Promise((resolve, reject) => {
-      fetch("/book/" + name + "/delete", {
+      fetch("/book/" + deletionBook.name + "/delete", {
         method: "POST",
-        body: JSON.stringify({ id: id }),
+        body: JSON.stringify({ id: deletionBook.id }),
       }).then((response) => {
         response.json().then(({ success }) => {
           if (success) {
@@ -30,8 +29,8 @@
 
     // TODO: give more info upon error, by moving into block above
     toast.promise(res, {
-      loading: "Deleting book" + "'" + name + "'",
-      success: "Successfully deleted book " + "'" + name + "'!",
+      loading: "Deleting book" + "'" + deletionBook.name + "'",
+      success: "Successfully deleted book " + "'" + deletionBook.name + "'!",
       error: "Error deleting book :(",
     });
   };
@@ -48,7 +47,7 @@
 
 <Popup
   bind:showModal={openModal}
-  message={"Delete book: " + name + "?"}
+  message={"Delete book: " + deletionBook?.name + "?"}
   content={"You won't be able to restore this book, unless you create a new one"}
   btn1_msg={"Delete book"}
   btn2_msg={"cancel"}

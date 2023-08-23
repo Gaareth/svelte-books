@@ -8,13 +8,22 @@ export async function load(page: ServerLoadEvent) {
   const params = page.params;
 
   const edit = page.url.searchParams.get("edit");
-  
+
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
     },
     include: {
       rating: true,
+      bookSeries: {
+        include: {
+          books: {
+            include: {
+              rating: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -24,8 +33,15 @@ export async function load(page: ServerLoadEvent) {
     throw error(404, { message: "Not found" });
   }
 
+  const books = await prisma.book.findMany({
+    include: {
+      rating: true,
+    },
+  });
+
   return {
     book,
+    books,
     bookLists,
     edit,
   };
@@ -40,66 +56,162 @@ const saveSchema = z.object({
   month: z.coerce.number().min(0).max(12).optional(),
   year: z.coerce.number().min(0).max(5000).optional(),
   listName: z.string(),
+  bookSeries: z.string().array(),
+  bookSeriesId: z.preprocess(
+    (s) => (s != "" ? Number(s) : undefined),
+    z.number().optional()
+  ),
 });
 
 function undefinedToNull<Type>(any: Type | undefined): Type | null {
   return any === undefined ? null : any;
 }
 
+function parseFormArray(
+  formData: { [k: string]: FormDataEntryValue },
+  attribute: string
+) {
+  const values = [];
+  for (const [key, value] of Object.entries(formData)) {
+    if (key.includes(attribute) && key.includes("[") && key.includes("]")) {
+      values.push(value);
+    }
+  }
+
+  return values;
+}
+
+async function updateBookSeries(
+  id: string,
+  bookSeries: string[],
+  bookSeriesId: number | undefined
+) {
+  type UniqueInput = "name" | "id";
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const bookSeriesNames: { [key in UniqueInput]: string }[] = bookSeries.map(
+    (n) => Object.fromEntries([["name", n]])
+  );
+
+  if (!bookSeriesId) {
+    const bs = await prisma.bookSeries.create({
+      data: {
+        books: {
+          connect: [...bookSeriesNames, { id }],
+        },
+      },
+    });
+  } else {
+    const currentBookSeries = await prisma.bookSeries.findUnique({
+      where: {
+        id: bookSeriesId,
+      },
+      select: {
+        books: true,
+      },
+    });
+
+    const currentBookSeriesNamesArray = currentBookSeries.books.map(
+      (b) => b.name
+    );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentBookSeriesNames: { [key in UniqueInput]: string }[] =
+      currentBookSeriesNamesArray.map((n) => Object.fromEntries([["name", n]]));
+    console.log(currentBookSeriesNames);
+    console.log(bookSeriesNames);
+
+    const oldSeries = currentBookSeriesNamesArray.filter(
+      (bookName) => !bookSeries.includes(bookName)
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const oldSeriesNames: { [key in UniqueInput]: string }[] = oldSeries.map(
+      (n) => Object.fromEntries([["name", n]])
+    );
+
+    console.log(oldSeriesNames);
+
+    const bs = await prisma.bookSeries.update({
+      where: { id: bookSeriesId },
+      data: {
+        books: {
+          connect: bookSeriesNames,
+          disconnect: oldSeriesNames,
+        },
+      },
+    });
+  }
+}
+
 export const actions = {
   save: async (event: RequestEvent) => {
     const session = await event.locals.getSession();
-    if (!(session)) {
-      throw error(401)
+    if (!session) {
+      throw error(401);
     }
 
     const formData = Object.fromEntries(await event.request.formData());
-    // console.log(formData);
-    if (formData.year == '') {
+    console.log(formData);
+    if (formData.year == "") {
       delete formData.year;
-    } 
+    }
     // console.log(formData);
+    const bookSeries = parseFormArray(formData, "books");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    formData["bookSeries"] = bookSeries;
 
-    
-    const result =
-      saveSchema.safeParse(formData);
-    
-      if (result.success) {
-        const { id, name, author, comment, stars, month, year, listName } =
-          result.data;
+    const result = saveSchema.safeParse(formData);
+    console.log(result);
 
+    if (result.success) {
+      const {
+        id,
+        name,
+        author,
+        comment,
+        stars,
+        month,
+        year,
+        listName,
+        bookSeries,
+        bookSeriesId,
+      } = result.data;
 
-        const book = await prisma.book.update({
-          where: { id },
-          data: {
-            name,
-            author,
-            monthRead: undefinedToNull(month),
-            yearRead: undefinedToNull(year),
-            rating: {
-              upsert: {
-                update: { stars: stars, comment },
-                create: { stars: stars, comment },
-              },
-            },
-            bookList: {
-              connect: {
-                name: listName,
-              },
+      await updateBookSeries(id, bookSeries, bookSeriesId);
+
+      const book = await prisma.book.update({
+        where: { id },
+        data: {
+          name,
+          author,
+          monthRead: undefinedToNull(month),
+          yearRead: undefinedToNull(year),
+          rating: {
+            upsert: {
+              update: { stars: stars, comment },
+              create: { stars: stars, comment },
             },
           },
-        });
-        
-        throw redirect(302, "/book/" + encodeURIComponent(book.name));
-      }
+          bookList: {
+            connect: {
+              name: listName,
+            },
+          },
+        },
+      });
 
-  
+      throw redirect(302, "/book/" + encodeURIComponent(book.name));
+    }
+
     const { fieldErrors: errors } = result.error.flatten();
 
     return {
       data: formData,
       errors,
     };
-
   },
 };

@@ -1,5 +1,4 @@
-import { error, json } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
+import { error, json, type RequestEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
@@ -10,10 +9,10 @@ export async function POST(req: RequestEvent) {
 
   const { id } = await req.request.json();
   if (id === undefined) {
-    return { success: false };
+    throw error(400)
   }
 
-  const book = await prisma.book.delete({
+  const book = await prisma.book.findUnique({
     where: {
       id: id,
     },
@@ -22,5 +21,5 @@ export async function POST(req: RequestEvent) {
     return { success: false };
   }
 
-  return json({ success: true });
+  return json({ success: true, book });
 }

@@ -72,16 +72,6 @@ textarea {
         @apply dark:before:bg-slate-300 before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
     }
 
-    .btn-primary-black {
-        @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors 
-        hover:bg-transparent hover:text-[#171515] 
-        focus:outline-none focus:ring active:opacity-75 
-        focus:bg-[#171515] focus:text-white;
-    }
-    
-    .btn-primary-black:disabled {
-        @apply cursor-not-allowed inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
-    }
 
 }
 
@@ -100,6 +90,17 @@ textarea {
 
     .input {
         @apply border-gray-200 rounded-md sm:text-sm w-full;
+    }
+
+    .btn-primary-black {
+        @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors 
+        hover:bg-transparent hover:text-[#171515] 
+        focus:outline-none focus:ring active:opacity-75 
+        focus:bg-[#171515] focus:text-white;
+    }
+    
+    .btn-primary-black:disabled {
+        @apply cursor-not-allowed inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
     }
 }
 
