@@ -9,9 +9,24 @@
 
 	<script>
 		localStorage.theme === 'dark' ||
-			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			((!("theme" in localStorage) || localStorage.theme === 'system') 
+			&& window.matchMedia('(prefers-color-scheme: dark)').matches)
+			
 			? document.documentElement.classList.add('dark')
 			: document.documentElement.classList.remove('dark');
+		window.matchMedia('(prefers-color-scheme: dark)').onchange = (e)  => {
+			if (localStorage.theme !== 'system') {
+				return;
+			}
+			console.log("ccc");
+			if (e.matches) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		};
+
+		console.log(document.documentElement.classList);
 	</script>
 
 	%sveltekit.head%

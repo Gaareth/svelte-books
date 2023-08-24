@@ -1,3 +1,3 @@
 import { writable, type Writable } from "svelte/store";
-
-export const darkMode: Writable<boolean> = writable(true);
+type THEME = "dark" | "light" | "system";
+export const theme: Writable<THEME> = writable("dark");

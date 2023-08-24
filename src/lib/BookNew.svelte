@@ -3,7 +3,7 @@
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { Moon } from "svelte-loading-spinners";
-  import { darkMode } from "./stores/stores";
+  import { theme } from "./stores/stores";
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
 
@@ -107,7 +107,7 @@
             <div>
               <Moon
                 size="20"
-                color={$darkMode ? "white" : "white"}
+                color="white"
                 duration="1s"
               />
             </div>

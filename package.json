@@ -43,6 +43,7 @@
     "fuzzy-search": "^3.2.1",
     "svelte-french-toast": "^1.0.3",
     "svelte-icons": "^2.1.0",
+    "tailwind-merge": "^1.14.0",
     "ts-node": "^10.9.1",
     "zod": "^3.21.4"
   },

@@ -12,7 +12,15 @@ declare global {
   }
   const prisma: PrismaClient;
   declare const VERSION: string;
+
+  namespace svelteHTML {
+    interface HTMLAttributes<T> {
+      "on:click_outside"?: (event: CustomEvent) => void;
+    }
+  }
 }
+
+
 
 import { Prisma } from "@prisma/client";
 
@@ -21,5 +29,6 @@ export type BookFullType = Prisma.BookGetPayload<{
 }>;
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
+
 
 export {};
