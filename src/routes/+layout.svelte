@@ -6,7 +6,6 @@
   const version = VERSION;
 </script>
 
-
 <svelte:head>
   <title>{$page.data.title || "Books - Gareth"}</title>
 </svelte:head>
@@ -19,44 +18,50 @@
       <div class="flex lg:w-0 lg:flex-1" />
 
       <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex">
-        <a class="text-gray-500 dark:text-gray-400 
-        hover:text-[#F2440D] dark:hover:text-[#f67c56]" href="/">Home</a>
-       {#if $page.data.session}
-        <a class="text-gray-500 dark:text-gray-400" href="/to-read">To-Read</a>
-       {/if}
+        <a
+          class="text-gray-500 dark:text-gray-400
+        hover:text-[#F2440D] dark:hover:text-[#f67c56]"
+          href="/">Home</a
+        >
+        {#if $page.data.session}
+          <a class="text-gray-500 dark:text-gray-400" href="/to-read">To-Read</a
+          >
+        {/if}
       </nav>
 
       <div class="flex-1 justify-end flex">
-        <div class="flex gap-4 items-center">
-          {#if $page.data.session}
-            <span class="signedInText">
-              <small>Signed in as</small><br />
-              <strong>{$page.data.session.user?.name}</strong>
-            </span>
-            <div>
-              <a
-                href="/auth/signout"
-                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border 
+        <div class="flex flex-row-reverse xl:flex-row">
+          <div class="flex gap-4 items-center">
+            {#if $page.data.session}
+              <span class="signedInText">
+                <small>Signed in as</small><br />
+                <strong>{$page.data.session.user?.name}</strong>
+              </span>
+              <div>
+                <a
+                  href="/auth/signout"
+                  class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
             border-gray-100 hover:border-gray-200
             dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
-                data-sveltekit-preload-data="off">Sign out</a
-              >
-            </div>
-          {:else}
-            <div>
-              <a
-                class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
-            border-gray-100 hover:border-gray-200 
+                  data-sveltekit-preload-data="off">Sign out</a
+                >
+              </div>
+            {:else}
+              <div>
+                <a
+                  class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
+            border-gray-100 hover:border-gray-200
             dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
-                href="/auth/signin"
-              >
-                Log in
-              </a>
-            </div>
-          {/if}
-        </div>
-        <div class="flex items-center sm:ml-10 ml-2">
-          <ThemeSwitcher />
+                  href="/auth/signin"
+                >
+                  Log in
+                </a>
+              </div>
+            {/if}
+          </div>
+          <div class="flex items-center sm:ml-10 ml-2 xl:mr-0 mr-10">
+            <ThemeSwitcher />
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +79,7 @@
 <footer class="bg-[#da3d0c] min-h-10 absolute bottom-[-100px] w-full">
   <div class="text-white mx-auto max-w-3xl flex p-2 flex-col text-center gap-2">
     <span class="text-md text-center absolute">
-        V{version}
+      V{version}
     </span>
     <p>
       Made using

@@ -43,7 +43,7 @@
   }
 
   .dropdown-content {
-    left: -1.55rem;
+    left: -100%;
     visibility: hidden;
     position: absolute;
     background-color: #f9f9f9;
