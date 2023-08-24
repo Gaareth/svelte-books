@@ -74,7 +74,7 @@
 </script>
 
 <Dropdown>
-  <span slot="button">
+  <span slot="button" title="Change theme" aria-label="open theme changer dropdown">
     <span
       class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block
     hover:scale-[1.15] transition-transform ease-out"
@@ -91,7 +91,6 @@
   <ul
     slot="dropdown"
     class="py-1 w-36 text-sm text-gray-700 dark:text-gray-200"
-    aria-labelledby="dropdownDefaultButton"
   >
     <li>
       <button
