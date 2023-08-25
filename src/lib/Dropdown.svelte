@@ -4,9 +4,11 @@
   import { clickOutside } from "./clickOutside";
 
   let open: boolean | undefined = undefined;
-  let content_ref: HTMLElement;
+  let button_ref: HTMLElement;
 
   const toggleOpen = () => {
+    button_ref.focus();
+    
     open = !open;
   };
 
@@ -15,13 +17,19 @@
   };
 </script>
 
+<div class="dropdown">
+  <span>Mouse over me</span>
+  <div class="dropdown-content">
+    <p>Hello World!</p>
+  </div>
+</div>
+
 <div class="dropdown" use:clickOutside on:click_outside={click_outside}>
-  <button class="dropdown-btn peer" on:click={toggleOpen}>
+  <button class="dropdown-btn flex" on:click={toggleOpen} bind:this={button_ref}>
     <slot name="button" />
   </button>
   <div
     class={clsx("dropdown-content", open == false ? "hidden-imp" : "")}
-    bind:this={content_ref}
     on:click={click_outside}
     on:keydown
   >
@@ -45,6 +53,8 @@
   .dropdown-content {
     left: -100%;
     visibility: hidden;
+    /* display: none; */
+
     position: absolute;
     background-color: #f9f9f9;
     /* min-width: 60px; */
@@ -68,4 +78,11 @@
     background-color: #374151;
     border-color: #475569;
   }
+
+  /* .dropdown:hover .dropdown-content {
+    visibility: visible;
+    transform: translateY(0);
+
+    display: block;
+  } */
 </style>

@@ -63,7 +63,6 @@
     apply();
   };
 
-
   if (browser) {
     if ("theme" in localStorage) {
       theme.set(localStorage.theme);
@@ -74,54 +73,45 @@
 </script>
 
 <Dropdown>
-  <span slot="button" title="Change theme" aria-label="open theme changer dropdown">
-    <span
-      class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block
+  <span
+    slot="button"
+    title="Change theme"
+    aria-label="open theme changer dropdown"
+    class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block
     hover:scale-[1.15] transition-transform ease-out"
-    >
-      {#if $theme == "dark"}
-        <IoIosMoon />
-      {:else if $theme == "light"}
-        <IoIosSunny />
-      {:else}
-        <IoIosDesktop />
-      {/if}
-    </span>
+  >
+    {#if $theme == "dark"}
+      <IoIosMoon />
+    {:else if $theme == "light"}
+      <IoIosSunny />
+    {:else}
+      <IoIosDesktop />
+    {/if}
   </span>
   <ul
     slot="dropdown"
     class="py-1 w-36 text-sm text-gray-700 dark:text-gray-200"
   >
     <li>
-      <button
-        on:click={applyDarkMode}
-        class="theme-dropdown-button"
-        >
+      <button on:click={applyDarkMode} class="theme-dropdown-button">
         <span>
-            <IoIosMoon />
+          <IoIosMoon />
         </span>
         Dark
-        </button
-      >
+      </button>
     </li>
     <li>
-      <button
-        on:click={applyLightMode}
-        class="theme-dropdown-button"
-        >
+      <button on:click={applyLightMode} class="theme-dropdown-button">
         <span>
-            <IoIosSunny />
+          <IoIosSunny />
         </span>
         Light</button
       >
     </li>
     <li>
-      <button
-        on:click={applySystem}
-        class="theme-dropdown-button"
-        >
+      <button on:click={applySystem} class="theme-dropdown-button">
         <span>
-            <IoIosDesktop />
+          <IoIosDesktop />
         </span>System</button
       >
     </li>
