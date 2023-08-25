@@ -72,7 +72,7 @@
   }
 </script>
 
-<Dropdown>
+<Dropdown buttonClass="outline-none">
   <span
     slot="button"
     title="Change theme"

@@ -1,14 +1,16 @@
 <script lang="ts">
   import clsx from "clsx";
-  import { twMerge } from "tailwind-merge";
   import { clickOutside } from "./clickOutside";
+  import { twMerge } from "tailwind-merge";
+
+  export let buttonClass: string | undefined = undefined;
 
   let open: boolean | undefined = undefined;
   let button_ref: HTMLElement;
 
   const toggleOpen = () => {
     button_ref.focus();
-    
+
     open = !open;
   };
 
@@ -17,15 +19,13 @@
   };
 </script>
 
-<div class="dropdown">
-  <span>Mouse over me</span>
-  <div class="dropdown-content">
-    <p>Hello World!</p>
-  </div>
-</div>
-
 <div class="dropdown" use:clickOutside on:click_outside={click_outside}>
-  <button class="dropdown-btn flex" on:click={toggleOpen} bind:this={button_ref}>
+  <button
+    class={twMerge("dropdown-btn flex", buttonClass)}
+    type="button"
+    on:click={toggleOpen}
+    bind:this={button_ref}
+  >
     <slot name="button" />
   </button>
   <div
@@ -40,7 +40,7 @@
 <style>
   .hidden-imp {
     visibility: hidden !important;
-    transform: translateY(20px) !important;
+    transform: translateX(-50%) translateY(20px) !important;
     opacity: 0;
     transition: visibility 0s 2s, opacity 2s linear;
   }
@@ -49,9 +49,13 @@
     position: relative;
     display: inline-block;
   }
+  /* .dropdown-btn {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    outline: 0;
+  } */
 
   .dropdown-content {
-    left: -100%;
+    left: 50%;
     visibility: hidden;
     /* display: none; */
 
@@ -64,14 +68,14 @@
     border-radius: 0.25rem;
     border-width: 1px;
 
-    transform: translateY(20px);
+    transform: translateX(-50%) translateY(20px);
 
     transition: all 150ms linear;
   }
 
   .dropdown:focus-within .dropdown-content {
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(10%);
   }
 
   :is(.dark .dropdown-content) {
