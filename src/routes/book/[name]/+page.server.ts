@@ -86,7 +86,12 @@ async function updateBookSeries(
   bookSeries: string[],
   bookSeriesId: number | undefined
 ) {
+  if (bookSeriesId === undefined && bookSeries.length == 0) {
+    return;
+  }
+
   type UniqueInput = "name" | "id";
+  
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -94,7 +99,7 @@ async function updateBookSeries(
     (n) => Object.fromEntries([["name", n]])
   );
 
-  if (!bookSeriesId) {
+  if (bookSeriesId === undefined) {
     const bs = await prisma.bookSeries.create({
       data: {
         books: {
@@ -112,6 +117,10 @@ async function updateBookSeries(
       },
     });
 
+    if (currentBookSeries === null) {
+      throw error(400);
+    }
+
     const currentBookSeriesNamesArray = currentBookSeries.books.map(
       (b) => b.name
     );
@@ -120,8 +129,12 @@ async function updateBookSeries(
     // @ts-ignore
     const currentBookSeriesNames: { [key in UniqueInput]: string }[] =
       currentBookSeriesNamesArray.map((n) => Object.fromEntries([["name", n]]));
-    console.log(currentBookSeriesNames);
-    console.log(bookSeriesNames);
+
+    // console.log("current");
+    // console.log(currentBookSeriesNames);
+
+    // console.log(bookSeriesNames);
+    // console.log(bookSeriesNames);
 
     const oldSeries = currentBookSeriesNamesArray.filter(
       (bookName) => !bookSeries.includes(bookName)
@@ -132,7 +145,9 @@ async function updateBookSeries(
       (n) => Object.fromEntries([["name", n]])
     );
 
-    console.log(oldSeriesNames);
+    // console.log("DISconnecting: ");
+    // console.log(oldSeriesNames);
+    
 
     const bs = await prisma.bookSeries.update({
       where: { id: bookSeriesId },
@@ -181,7 +196,10 @@ export const actions = {
         bookSeriesId,
       } = result.data;
 
-      await updateBookSeries(id, bookSeries, bookSeriesId);
+      // dont update if only the book itself is in the series
+      if (!(bookSeries.length == 1 && bookSeries[0] == name)) {
+        await updateBookSeries(id, bookSeries, bookSeriesId);
+      }
 
       const book = await prisma.book.update({
         where: { id },

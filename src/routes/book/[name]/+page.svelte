@@ -355,7 +355,7 @@
                 value={book.bookSeriesId}
               />
               <AutoComplete
-                items={books}
+                items={books.filter(b => b.name != book.name)}
                 labelFunction={autoCompleteBookLabel}
                 bind:selectedItem={selectedSeriesBook}
                 class="input dark:bg-slate-600 dark:border-slate-500 w-full"
