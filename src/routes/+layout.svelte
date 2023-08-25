@@ -68,10 +68,10 @@
 </main>
 
 <footer class="bg-[#da3d0c] min-h-10 absolute bottom-[-100px] w-full">
-  <div class="text-white mx-auto max-w-3xl flex p-2 flex-col text-center gap-2">
-    <span class="text-md text-center absolute">
+  <div class="text-white mx-auto max-w-3xl flex flex-col text-center gap-1 p-2">
+    <p class="text-md text-left sm:text-center sm:absolute w-full sm:w-fit">
       V{version}
-    </span>
+    </p>
     <p>
       Made using
       <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a> /
