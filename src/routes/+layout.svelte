@@ -40,22 +40,13 @@
               <div>
                 <a
                   href="/auth/signout"
-                  class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
-            border-gray-100 hover:border-gray-200
-            dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
+                  class="auth-button"
                   data-sveltekit-preload-data="off">Sign out</a
                 >
               </div>
             {:else}
               <div>
-                <a
-                  class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 border
-            border-gray-100 hover:border-gray-200
-            dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600"
-                  href="/auth/signin"
-                >
-                  Log in
-                </a>
+                <a class="auth-button" href="/auth/signin"> Log in </a>
               </div>
             {/if}
           </div>
@@ -95,5 +86,11 @@
 <style lang="postcss">
   :global(html) {
     @apply motion-reduce:transition-none motion-reduce:hover:transform-none;
+  }
+
+  .auth-button {
+    @apply  bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 whitespace-nowrap
+            border border-gray-100 hover:border-gray-200 rounded-lg
+            dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600;
   }
 </style>
