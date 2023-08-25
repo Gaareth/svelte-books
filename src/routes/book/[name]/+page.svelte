@@ -101,17 +101,16 @@
     let selectedBook = books.find((b) => b.name == selectedSeriesBook.name);
     console.log(selectedSeriesBook);
     if (!selectedBook) {
-      series_error = "Please choose a valid book"
+      series_error = "Please choose a valid book";
       return;
     }
 
     console.log(book.bookSeries?.books);
     console.log(selectedBook);
-    
-    
-    let currentSeries = book.bookSeries?.books.map(b => b.name);
+
+    let currentSeries = book.bookSeries?.books.map((b) => b.name);
     if (currentSeries.includes(selectedBook.name)) {
-      series_error = "This book is already in this book series"
+      series_error = "This book is already in this book series";
       return;
     }
 
@@ -125,7 +124,7 @@
     const index = book.bookSeries?.books.indexOf(b);
 
     if (index === undefined) {
-      series_error = "The book is not part of a book series"
+      series_error = "The book is not part of a book series";
       return;
     }
 
@@ -348,6 +347,7 @@
 
           <section>
             <h2 class="text-xl mt-5">Series</h2>
+            <span class="text-base text-slate-500">Don't forget to press the big blue save button</span>
             <div class="mt-2 flex gap-2 w-full">
               <input
                 type="hidden"
@@ -355,12 +355,14 @@
                 value={book.bookSeriesId}
               />
               <AutoComplete
-                items={books.filter(b => b.name != book.name)}
+                items={books.filter((b) => b.name != book.name)}
                 labelFunction={autoCompleteBookLabel}
                 bind:selectedItem={selectedSeriesBook}
                 class="input dark:bg-slate-600 dark:border-slate-500 w-full"
               />
               <button
+                title="Add book"
+                aria-label="Add book to book series"
                 type="button"
                 class="btn-primary-black px-1 py-1"
                 on:click={addBookSeries}
@@ -370,7 +372,9 @@
                 </span>
               </button>
             </div>
-            <p class="label-text-alt text-error" hidden={!series_error}>{series_error}</p>
+            <p class="label-text-alt text-error" hidden={!series_error}>
+              {series_error}
+            </p>
             <div class="mt-2">
               <BookListSeries
                 books={book.bookSeries?.books ?? []}
@@ -401,6 +405,8 @@
   on:success={() => goto("/")}
 />
 
-<!-- <style>
-  .a
-</style> -->
+<style>
+  :global(.autocomplete) {
+    width: 100%;
+  }
+</style>
