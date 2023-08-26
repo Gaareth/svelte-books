@@ -9,7 +9,7 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .db
-.sql
+# .sql
 dev.db
 seed.js
 prisma/migrations
