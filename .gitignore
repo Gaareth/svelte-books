@@ -12,7 +12,7 @@ vite.config.ts.timestamp-*
 # .sql
 dev.db
 seed.js
-prisma/migrations
+# prisma/migrations
 *.tar
 validation-tests/
 db-backups/
