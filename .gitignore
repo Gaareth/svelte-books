@@ -9,6 +9,7 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .db
+.db-journal
 # .sql
 dev.db
 seed.js
