@@ -8,9 +8,9 @@
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
-  import type { BookRating } from "../app";
   import type { Book } from "@prisma/client";
   import { createEventDispatcher } from "svelte";
+  import type { BookRating } from "$appTypes";
 
   export let book: BookRating;
   // export let deletionBook: Book | undefined = undefined;
@@ -67,9 +67,8 @@
 </script>
 
 <div
-  class="rounded-md dark:bg-slate-700 dark:border-slate-600 border mb-3 p-2 items-center
-    hover:border-gray-300 dark:hover:border-slate-500 w-full
-    grid gap-2"
+  class="item-border mb-3 p-2 items-center
+     w-full grid gap-2"
   style="grid-template-columns: 4px 1fr;"
 >
   <div

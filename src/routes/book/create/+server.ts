@@ -11,7 +11,7 @@ const createSchema = z.object({
 
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();
-  if (!!!session) {
+  if (!session) {
     throw error(401);
   }
 

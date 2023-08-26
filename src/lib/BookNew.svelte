@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { toast } from "svelte-french-toast";
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
+  import { toast } from "svelte-french-toast";
   import { Moon } from "svelte-loading-spinners";
-  import { theme } from "./stores/stores";
-  // @ts-ignore
+// @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
+  import BookApiSelection from "./BookApiSelection/BookApiSelection.svelte";
 
-  export let endpoint: string;
+  export let endpoint: string = "/book/create";
   export let listName: string;
   export let authors: string[];
   $: authors = [...new Set(authors)];
@@ -18,6 +18,7 @@
   let loading: boolean = false;
 
   $: has_content = name.length > 0 && author.length > 0;
+  let bookID: string;
 
   // const dispatch = createEventDispatcher();
 
@@ -95,6 +96,8 @@
           class="input dark:bg-slate-600 dark:border-slate-500"
         />
       </div>
+      
+      <BookApiSelection class="my-2" bind:selectedBookId={bookID}/>
 
       <div class="flex justify-end">
         <button

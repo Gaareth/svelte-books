@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import BookList from "$lib/BookList.svelte";
+  import BookList from "$lib/BookList/BookList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
   import clsx from "clsx";
@@ -42,7 +42,6 @@
 {/if}
 <div class="my-5" />
 <BookNew
-  endpoint="/book/create"
   listName={"Read"}
   authors={data.books.map((b) => b.author)}
 />

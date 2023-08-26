@@ -1,7 +1,7 @@
 <script lang="ts">
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
-  import type { BookRating } from "../app";
+  import type { BookRating } from "$appTypes";
   import BookListItem from "./BookListItem.svelte";
 
   export let books: BookRating[];

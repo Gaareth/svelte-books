@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BookRating } from "../app";
+  import type { BookRating } from "$appTypes";
   import BookListItem, { type ItemDeleteEvent } from "./BookListItem.svelte";
 
   export let books: BookRating[];

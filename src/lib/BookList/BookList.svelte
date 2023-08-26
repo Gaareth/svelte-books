@@ -1,19 +1,16 @@
 <script lang="ts">
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import { page } from "$app/stores";
-  import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-  import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
-  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
   import { invalidateAll } from "$app/navigation";
-  import BookSearch from "./BookSearch.svelte";
+  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import { fade, scale } from "svelte/transition";
+  import BookSearch from "../BookSearch.svelte";
 
   import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
   import { flip } from "svelte/animate";
-  import type { BookFullType, BookRating } from "../app";
-  import BookListItem, { type ItemDeleteEvent } from "./BookListItem.svelte";
-  import type { Book } from "@prisma/client";
+  import type { BookFullType } from "$appTypes";
+  import BookListItem from "./BookListItem.svelte";
+  import type { ItemDeleteEvent } from "./BookListItem.svelte";
 
   export let books: BookFullType[];
 

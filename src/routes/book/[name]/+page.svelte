@@ -2,22 +2,18 @@
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import Rating from "./../../../lib/Rating.svelte";
-  import type { Book, BookList, BookSeries, Prisma } from "@prisma/client";
+  import type { BookList, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
   import InputSelect from "$lib/InputSelect.svelte";
   import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
   import type { ActionData, PageData } from "./$types";
-  import { toast } from "svelte-french-toast";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type { load } from "./+page.server";
-  import BookListComponent from "$lib/BookList.svelte";
-  import BookListSimple from "$lib/BookListSimple.svelte";
   import type { BookFullType, BookRating } from "../../../app";
-  import type { ItemDeleteEvent } from "$lib/BookListItem.svelte";
-  import BookListSeries from "$lib/BookListSeries.svelte";
+  import BookListSeries from "$lib/BookList/BookListSeries.svelte";
+  import BookListSimple from "$lib/BookList/BookListSimple.svelte";
 
   export let data: PageData;
 
