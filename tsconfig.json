@@ -9,6 +9,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "paths": {
+      "$src": ["./src"],
+      "$appTypes": ["./src/app.d.ts"],
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"]
+    }
     // "module": "NodeNext"
   }
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
