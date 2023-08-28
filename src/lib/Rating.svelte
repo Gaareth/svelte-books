@@ -31,6 +31,7 @@
     {#if i + 1 <= rating}
       <button
         class="icon"
+        disabled={!editable}
         on:click={() => decreaseRating(i + 1)}
         type="button"
       >
@@ -39,6 +40,7 @@
     {:else}
       <button
         class="icon"
+        disabled={!editable}
         on:click={() => increaseRating(i + 1)}
         type="button"
       >
