@@ -28,4 +28,4 @@ jobs:
       run: npm run lint
       
     - name: vite build
-      run: npm run build
+      run: npm run build-noenv
