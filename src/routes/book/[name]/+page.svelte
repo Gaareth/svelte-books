@@ -212,17 +212,17 @@
 
         <div class="my-7">
           {#if book.rating && !no_rating}
-            <div class="flex gap-2 items-center">
+            <section class="flex gap-2 items-center">
               <h2 class="text-xl">Rating</h2>
               <p>({book.rating.stars}/{max_rating})</p>
-            </div>
+            </section>
             <Rating rating={book.rating.stars} rating_max={max_rating} />
 
             {#if book.rating.comment && book.rating.comment.length > 0}
-              <div class="py-2 my-2">
-                <h3 class="text-xl">Comment</h3>
+              <section class="py-2 my-2">
+                <h2 class="text-xl">Comment</h2>
                 <p>{book.rating.comment}</p>
-              </div>
+              </section>
             {:else if $page.data.session}
               <button class="mt-5" on:click={() => (edit = !edit)}
                 >Add a comment?</button
