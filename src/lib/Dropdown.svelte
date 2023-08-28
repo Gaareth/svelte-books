@@ -32,6 +32,8 @@
     class={clsx("dropdown-content", open == false ? "hidden-imp" : "")}
     on:click={click_outside}
     on:keydown
+    role="button"
+    tabindex=0
   >
     <slot name="dropdown" />
   </div>

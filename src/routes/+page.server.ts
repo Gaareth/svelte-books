@@ -1,5 +1,5 @@
 import { loadBooks } from "$lib/server/db/utils";
 
-export async function load({ url }: any) {
+export async function load() {
   return await loadBooks();
 }
