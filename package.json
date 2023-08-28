@@ -1,6 +1,6 @@
 {
   "name": "book-store",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -41,6 +41,7 @@
     "clsx": "^2.0.0",
     "dotenv": "^16.0.3",
     "fuzzy-search": "^3.2.1",
+    "language-icons": "^0.3.0",
     "svelte-french-toast": "^1.0.3",
     "svelte-icons": "^2.1.0",
     "tailwind-merge": "^1.14.0",

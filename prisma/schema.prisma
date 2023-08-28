@@ -19,25 +19,50 @@ model BookList {
 }
 
 model BookSeries {
-  id    Int @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   books Book[]
 }
 
+model BookApiData {
+  id            String         @id
+  title         String
+  authors       String //TODO: author relation?
+  subtitle      String
+  thumbnailUrl  String
+  isbn_13       String?
+  pageCount     Int
+  categories    BookCategory[]
+  publishedDate String //YYYY-MM-DD
+  publisher     String
+  language      String
+
+  book Book[]
+}
+
+model BookCategory {
+  id    Int           @id @default(autoincrement())
+  name  String
+  books BookApiData[]
+}
+
 model Book {
-  id           String      @id @default(cuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  name         String      @unique
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String    @unique
   author       String
   coverImage   String?
   monthRead    Int?
   yearRead     Int?
   bookListName String?
-  bookList     BookList?   @relation(fields: [bookListName], references: [name])
+  bookList     BookList? @relation(fields: [bookListName], references: [name])
   rating       Rating?
 
   bookSeriesId Int?
   bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])
+
+  bookApiData   BookApiData? @relation(fields: [bookApiDataId], references: [id])
+  bookApiDataId String?
 }
 
 model Rating {

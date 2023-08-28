@@ -6,6 +6,8 @@
   import IoIosDesktop from "svelte-icons/io/IoIosDesktop.svelte";
   import { theme } from "./stores/stores";
   import Dropdown from "./Dropdown.svelte";
+  import { isDarkModeEnabled } from "./utils";
+  import { onMount } from "svelte";
 
   const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"];
 
@@ -31,11 +33,7 @@
   };
 
   const apply = (notify: boolean = true) => {
-    if (
-      $theme == "dark" ||
-      ($theme == "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
+    if (isDarkModeEnabled($theme, window)) {
       document.documentElement.classList.add("dark");
       if (notify) {
         toast("Hello Darkness!", {

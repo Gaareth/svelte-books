@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BookApiData from './../../../lib/Book/BookApiData.svelte';
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import Rating from "./../../../lib/Rating.svelte";
@@ -27,6 +28,11 @@
               rating: true;
             };
           };
+        };
+      };
+      bookApiData: {
+        include: {
+          categories: true;
         };
       };
     };
@@ -196,19 +202,21 @@
 
     {#if !edit}
       <div>
-        <div>
-          <p class="text-gray-600 dark:text-slate-400">Author: {book.author}</p>
-          <p class="text-gray-600 dark:text-slate-400">
+        <div class="attribute-stats">
+          <p>Author: {book.author}</p>
+          <p>
             Read in (month): {book.monthRead ?? "-"}
           </p>
-          <p class="text-gray-600 dark:text-slate-400">
+          <p>
             Read in (year): {book.yearRead ?? "-"}
           </p>
-          <p class="text-gray-600 dark:text-slate-400">
+          <p>
             Added: {book.createdAt.toLocaleDateString()}
             {book.createdAt.toLocaleTimeString()}
           </p>
         </div>
+
+        <BookApiData data={book.bookApiData}/>
 
         <div class="my-7">
           {#if book.rating && !no_rating}

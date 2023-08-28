@@ -24,6 +24,11 @@ export async function load(page: ServerLoadEvent) {
           },
         },
       },
+      bookApiData: {
+        include: {
+          categories: true,
+        }
+      },
     },
   });
 

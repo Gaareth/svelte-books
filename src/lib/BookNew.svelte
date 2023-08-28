@@ -6,20 +6,21 @@
 // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApiSelection from "./BookApiSelection/BookApiSelection.svelte";
+  import { string } from "zod";
+  import BookApi from "./BookApiSelection/BookApi.svelte";
 
   export let endpoint: string = "/book/create";
   export let listName: string;
   export let authors: string[];
   $: authors = [...new Set(authors)];
 
-  let new_book = false;
+  let new_book = true;
   let name = "";
   let author = "";
   let loading: boolean = false;
 
   $: has_content = name.length > 0 && author.length > 0;
-  let bookID: string;
-
+  let volumeId: string;
   // const dispatch = createEventDispatcher();
 
   async function newBook() {
@@ -27,7 +28,7 @@
 
     const response = await fetch(endpoint, {
       method: "POST",
-      body: JSON.stringify({ name, author, listName }),
+      body: JSON.stringify({ name, author, listName, volumeId }),
       headers: {
         "content-type": "application/json",
       },
@@ -64,7 +65,7 @@
       <button
         on:click={() => (new_book = !new_book)}
         class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
-        dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500"
+        dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500"
       >
         {new_book ? "Cancel" : "Open"}
       </button>
@@ -97,7 +98,9 @@
         />
       </div>
       
-      <BookApiSelection class="my-2" bind:selectedBookId={bookID}/>
+      <div class="mt-4">
+        <BookApi bind:volumeId/>
+      </div>
 
       <div class="flex justify-end">
         <button

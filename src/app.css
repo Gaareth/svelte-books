@@ -11,6 +11,11 @@ input {
     @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white
 }
 
+input[type="radio"] {
+    @apply text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 
+    dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500
+}
+
 select {
     @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
 }
@@ -72,6 +77,9 @@ textarea {
         @apply dark:before:bg-slate-300 before:bg-black relative font-medium before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:transition hover:before:scale-x-100;
     }
 
+    .attribute-stats p {
+        @apply text-gray-600 dark:text-slate-400
+    }
 
 }
 
@@ -101,6 +109,10 @@ textarea {
     
     .btn-primary-black:disabled {
         @apply cursor-not-allowed inline-flex items-center gap-2 rounded-md border-2 border-[#545250] bg-[#545250] px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring active:opacity-75;
+    }
+
+    .item-border {
+        @apply rounded-md dark:bg-slate-700 dark:border-slate-600 border hover:border-gray-300 dark:hover:border-slate-500
     }
 }
 
