@@ -5,8 +5,6 @@
   import { Moon } from "svelte-loading-spinners";
 // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
-  import BookApiSelection from "./BookApiSelection/BookApiSelection.svelte";
-  import { string } from "zod";
   import BookApi from "./BookApiSelection/BookApi.svelte";
 
   export let endpoint: string = "/book/create";
@@ -14,7 +12,7 @@
   export let authors: string[];
   $: authors = [...new Set(authors)];
 
-  let new_book = true;
+  let new_book = false;
   let name = "";
   let author = "";
   let loading: boolean = false;
