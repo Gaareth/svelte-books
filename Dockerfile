@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 
 # COPY ENV variable
-COPY .env ./
+# COPY .env ./
 
 # RUN npm install --frozen-lockfile
 RUN npm install --omit=dev

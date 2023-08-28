@@ -85,7 +85,7 @@ function parseFormArray(
 
   return values;
 }
-
+//TODO: check if a book in the new books is already part of a bookseries, then add to it
 async function updateBookSeries(
   id: string,
   bookSeries: string[],
