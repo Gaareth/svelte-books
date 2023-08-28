@@ -11,7 +11,7 @@ declare global {
     // interface Platform {}
   }
   const prisma: PrismaClient;
-  declare const VERSION: string;
+  declare const APP_VERSION: string;
 
   namespace svelteHTML {
     interface HTMLAttributes<T> {

@@ -4,7 +4,7 @@
   import { Toaster } from "svelte-french-toast";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
   // eslint-disable-next-line no-undef
-  const version = VERSION;
+  const version = APP_VERSION;
 </script>
 
 <svelte:head>
