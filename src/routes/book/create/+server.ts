@@ -57,7 +57,7 @@ export async function POST(req: RequestEvent) {
     // } catch { /* errors if bookApiData does not exits. Will be created in the next create call below.*/ }
     // return json({ success: true });
 
-    const book = await prisma.book.create({
+    await prisma.book.create({
       data: {
         name,
         author,

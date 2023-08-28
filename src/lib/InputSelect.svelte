@@ -1,7 +1,7 @@
 <script lang="ts">
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
-  export let value: Object | null;
+  export let value: unknown | null;
   export let name: string;
   export let displayName: string = name;
 
@@ -22,7 +22,7 @@
       bind:value
       {name}
       id={name}
-      class="input w-full {!!error ? 'input-error' : ''}"
+      class="input w-full {error ? 'input-error' : ''}"
     >
       <slot />
     </select>
@@ -36,7 +36,7 @@
     </button>
   </div>
   <label for={name} class="label">
-    {#if !!error}
+    {#if error}
       <span class="label-text-alt text-error">{error}</span>
     {/if}
   </label>

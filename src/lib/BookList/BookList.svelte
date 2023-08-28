@@ -4,13 +4,13 @@
   import { fade, scale } from "svelte/transition";
   import BookSearch from "../BookSearch.svelte";
 
+  import type { BookFullType } from "$appTypes";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
   import { flip } from "svelte/animate";
-  import type { BookFullType } from "$appTypes";
-  import BookListItem from "./BookListItem.svelte";
   import type { ItemDeleteEvent } from "./BookListItem.svelte";
+  import BookListItem from "./BookListItem.svelte";
 
   export let books: BookFullType[];
 
@@ -28,7 +28,7 @@
   });
 
   let deletionBook: Book;
-  let openModal: boolean = false;
+  let openModal = false;
 
   const animate = (node: any, args: any) => {
     const animation = added_book

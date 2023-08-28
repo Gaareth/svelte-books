@@ -5,7 +5,7 @@
   import BookListItem from "./BookListItem.svelte";
 
   export let books: BookRating[];
-  export let on_delete: ((b: BookRating) => any) | undefined =
+  export let on_delete: ((b: BookRating) => unknown) | undefined =
     undefined;
   export let allow_deletion: boolean = false;
 </script>

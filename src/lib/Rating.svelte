@@ -4,7 +4,7 @@
 
   export let rating: number;
   export let rating_max: number;
-  export let editable: boolean = false;
+  export let editable = false;
 
   const increaseRating = (i: number) => {
     if (!editable) {
@@ -31,7 +31,7 @@
     {#if i + 1 <= rating}
       <button
         class="icon"
-        on:click={(e) => decreaseRating(i + 1)}
+        on:click={() => decreaseRating(i + 1)}
         type="button"
       >
         <IoIosStar />
@@ -39,7 +39,7 @@
     {:else}
       <button
         class="icon"
-        on:click={(e) => increaseRating(i + 1)}
+        on:click={() => increaseRating(i + 1)}
         type="button"
       >
         <IoIosStarOutline />

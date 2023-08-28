@@ -3,9 +3,9 @@
   import BookListItem, { type ItemDeleteEvent } from "./BookListItem.svelte";
 
   export let books: BookRating[];
-  export let on_delete: ((e: CustomEvent<ItemDeleteEvent>) => any) | undefined =
+  export let on_delete: ((e: CustomEvent<ItemDeleteEvent>) => unknown) | undefined =
     undefined;
-  export let allow_deletion: boolean = false;
+  export let allow_deletion = false;
 </script>
 
 {#each books as book, i (book.id)}

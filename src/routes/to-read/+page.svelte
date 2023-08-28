@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { invalidate, invalidateAll } from "$app/navigation";
   import BookList from "$lib/BookList/BookList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import type { BookFullType } from "../../app";

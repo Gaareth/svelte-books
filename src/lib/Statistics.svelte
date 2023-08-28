@@ -28,7 +28,7 @@
       ([, a], [, b]) => a - b
     );
     const entry: [string, number] = sortedArray[sortedArray.length - 1];
-    const author_string: string = `${entry[0]} (${entry[1]})`;
+    const author_string = `${entry[0]} (${entry[1]})`;
     return author_string;
   };
 </script>

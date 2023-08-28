@@ -1,5 +1,6 @@
 <script lang="ts">
-	import BookApiData from './../../../lib/Book/BookApiData.svelte';
+  import BookApiData from "./../../../lib/Book/BookApiData.svelte";
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import Rating from "./../../../lib/Rating.svelte";
@@ -216,7 +217,7 @@
           </p>
         </div>
 
-        <BookApiData data={book.bookApiData}/>
+        <BookApiData data={book.bookApiData} />
 
         <div class="my-7">
           {#if book.rating && !no_rating}
@@ -351,7 +352,9 @@
 
           <section>
             <h2 class="text-xl mt-5">Series</h2>
-            <span class="text-base text-slate-500">Don't forget to press the big blue save button</span>
+            <span class="text-base text-slate-500"
+              >Don't forget to press the big blue save button</span
+            >
             <div class="mt-2 flex gap-2 w-full">
               <input
                 type="hidden"

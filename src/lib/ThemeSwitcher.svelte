@@ -32,7 +32,7 @@
     apply();
   };
 
-  const apply = (notify: boolean = true) => {
+  const apply = (notify = true) => {
     if (isDarkModeEnabled($theme, window)) {
       document.documentElement.classList.add("dark");
       if (notify) {

@@ -105,7 +105,7 @@ async function updateBookSeries(
   );
 
   if (bookSeriesId === undefined) {
-    const bs = await prisma.bookSeries.create({
+    await prisma.bookSeries.create({
       data: {
         books: {
           connect: [...bookSeriesNames, { id }],
@@ -132,8 +132,8 @@ async function updateBookSeries(
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentBookSeriesNames: { [key in UniqueInput]: string }[] =
-      currentBookSeriesNamesArray.map((n) => Object.fromEntries([["name", n]]));
+    // const currentBookSeriesNames: { [key in UniqueInput]: string }[] =
+    //   currentBookSeriesNamesArray.map((n) => Object.fromEntries([["name", n]]));
 
     // console.log("current");
     // console.log(currentBookSeriesNames);

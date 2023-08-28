@@ -1,7 +1,4 @@
 <script>
-  import { theme } from "$lib/stores/stores";
-  import { isDarkModeEnabled } from "$lib/utils";
-
   import { Moon } from "svelte-loading-spinners";
 </script>
 
@@ -16,12 +13,8 @@
   <div class="flex flex-row items-center gap-2 flex-grow justify-center">
     <span class="animate-pulse">loading</span>
     <div class="loading-wrapper">
-        <p></p>
-        <Moon
-      size="20"
-      color="black"
-      duration="1s"
-    />
+      <p />
+      <Moon size="20" color="black" duration="1s" />
     </div>
   </div>
 </div>

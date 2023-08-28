@@ -3,14 +3,12 @@
 </script>
 
 <script lang="ts">
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import { page } from "$app/stores";
+  import type { BookRating } from "$appTypes";
+  import { createEventDispatcher } from "svelte";
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
-  import type { Book } from "@prisma/client";
-  import { createEventDispatcher } from "svelte";
-  import type { BookRating } from "$appTypes";
 
   export let book: BookRating;
   // export let deletionBook: Book | undefined = undefined;

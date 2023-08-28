@@ -2,12 +2,16 @@
   import { page } from "$app/stores";
 
   const errorMsgs = {
-    "401": "Looks like you are not allowed to access this content.",
-    "400":
+    401: "Looks like you are not allowed to access this content.",
+    400:
       "You either manipulated the request (bad) or something is wrong with your client or our deployed javascript (also bad).",
-    "500":
+    500:
       "This looks like our fault. We are tremendously (yeah really) sorry. Please message me (look in the footer), for feedback.",
   };
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const errorMsg = errorMsgs[$page.status];
 </script>
 
 <div class="text-center flex h-screen">
@@ -22,8 +26,8 @@
           href="/"
           class="underline text-[#F2440D]">here</a
         >
-      {:else if errorMsgs.hasOwnProperty($page.status)}
-        {errorMsgs[$page.status]}
+      {:else if $page.status in errorMsgs}
+        {errorMsg}
         Please go back
         <a href="/" class="underline text-[#3DB3FF]">here</a>
       {:else}

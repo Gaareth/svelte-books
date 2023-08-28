@@ -1,7 +1,4 @@
-import type { RequestEvent } from "./$types";
-import { signIn } from "@auth/sveltekit/client";
 import { redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import { getSession } from "@auth/sveltekit";
 
 export async function load(page: ServerLoadEvent) {
     if (await page.locals.getSession()) {

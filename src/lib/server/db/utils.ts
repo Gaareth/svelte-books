@@ -1,5 +1,5 @@
 import { prisma } from "$lib/server/prisma";
-import type { Book, Prisma } from "@prisma/client";
+import type { Book } from "@prisma/client";
 
 export async function getBookLists() {
   return prisma.bookList.findMany();

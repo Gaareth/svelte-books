@@ -3,11 +3,13 @@
   import { page } from "$app/stores";
   import { toast } from "svelte-french-toast";
   import { Moon } from "svelte-loading-spinners";
-// @ts-ignore
+  
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApi from "./BookApiSelection/BookApi.svelte";
 
-  export let endpoint: string = "/book/create";
+  export let endpoint = "/book/create";
   export let listName: string;
   export let authors: string[];
   $: authors = [...new Set(authors)];
@@ -15,7 +17,7 @@
   let new_book = false;
   let name = "";
   let author = "";
-  let loading: boolean = false;
+  let loading = false;
 
   $: has_content = name.length > 0 && author.length > 0;
   let volumeId: string;
@@ -51,7 +53,6 @@
       }
     }
   }
-  
 </script>
 
 {#if $page.data.session}
@@ -95,9 +96,9 @@
           class="input dark:bg-slate-600 dark:border-slate-500"
         />
       </div>
-      
+
       <div class="mt-4">
-        <BookApi bind:volumeId/>
+        <BookApi bind:volumeId />
       </div>
 
       <div class="flex justify-end">
@@ -109,11 +110,7 @@
         >
           {#if loading}
             <div>
-              <Moon
-                size="20"
-                color="white"
-                duration="1s"
-              />
+              <Moon size="20" color="white" duration="1s" />
             </div>
           {/if}
           Save new book
