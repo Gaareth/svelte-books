@@ -58,7 +58,7 @@
 {/if}
 
 {#each $searchStore.filtered as book (book.id)}
-  <div transition:animate|local={{}} animate:flip={{ duration: 300 }}>
+  <div transition:animate|global={{}} animate:flip={{ duration: 300 }}>
     <BookListItem {book} on:delete={openPopup} />
   </div>
 {/each}
