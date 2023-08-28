@@ -112,7 +112,7 @@
     console.log(selectedBook);
 
     let currentSeries = book.bookSeries?.books.map((b) => b.name);
-    if (currentSeries.includes(selectedBook.name)) {
+    if (currentSeries?.includes(selectedBook.name)) {
       series_error = "This book is already in this book series";
       return;
     }

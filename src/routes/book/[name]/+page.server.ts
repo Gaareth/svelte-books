@@ -154,7 +154,7 @@ async function updateBookSeries(
     // console.log(oldSeriesNames);
     
 
-    const bs = await prisma.bookSeries.update({
+    await prisma.bookSeries.update({
       where: { id: bookSeriesId },
       data: {
         books: {
@@ -201,9 +201,19 @@ export const actions = {
         bookSeriesId,
       } = result.data;
 
-      // dont update if only the book itself is in the series
+      // don't update if only the book itself is in the series
       if (!(bookSeries.length == 1 && bookSeries[0] == name)) {
         await updateBookSeries(id, bookSeries, bookSeriesId);
+      }
+
+      const allBooks = await prisma.book.findMany();
+      if (allBooks.find((b) => b.name == name && b.id != id) !== undefined) {
+         return {
+           data: formData,
+           errors: {
+            name: ["Book names have to be unique"]
+           },
+         };
       }
 
       const book = await prisma.book.update({
@@ -231,6 +241,8 @@ export const actions = {
     }
 
     const { fieldErrors: errors } = result.error.flatten();
+    console.log(errors);
+    
 
     return {
       data: formData,
