@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
   import { Toaster } from "svelte-french-toast";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  // eslint-disable-next-line no-undef
   const version = VERSION;
 </script>
 

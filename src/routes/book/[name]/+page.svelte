@@ -316,40 +316,41 @@
         </div>
 
         <div class="my-7">
-          <div class="flex gap-2 items-center mb-1">
-            <h2 class="text-xl">Rating</h2>
-            <div>
-              (<input
-                class="max-w-[3.5rem] p-0 text-center"
-                name="stars"
-                type="number"
-                step="0.5"
-                bind:value={book.rating.stars}
-                min="0"
-                max={max_rating}
-              />
-              / {max_rating})
+          {#if book.rating !== null}
+            <div class="flex gap-2 items-center mb-1">
+              <h2 class="text-xl">Rating</h2>
+              <div>
+                (<input
+                  class="max-w-[3.5rem] p-0 text-center"
+                  name="stars"
+                  type="number"
+                  step="0.5"
+                  bind:value={book.rating.stars}
+                  min="0"
+                  max={max_rating}
+                />
+                / {max_rating})
+              </div>
             </div>
-          </div>
-          <Rating
-            bind:rating={book.rating.stars}
-            rating_max={5}
-            editable={true}
-          />
+            <Rating
+              bind:rating={book.rating.stars}
+              rating_max={5}
+              editable={true}
+            />
 
-          <section>
-            <h2 class="text-xl mt-5">Comment</h2>
-            <div class="w-full">
-              <textarea
-                class="w-full input"
-                name="comment"
-                id="comment"
-                bind:value={book.rating.comment}
-                rows="10"
-              />
-            </div>
-          </section>
-
+            <section>
+              <h2 class="text-xl mt-5">Comment</h2>
+              <div class="w-full">
+                <textarea
+                  class="w-full input"
+                  name="comment"
+                  id="comment"
+                  bind:value={book.rating.comment}
+                  rows="10"
+                />
+              </div>
+            </section>
+          {/if}
           <section>
             <h2 class="text-xl mt-5">Series</h2>
             <span class="text-base text-slate-500"

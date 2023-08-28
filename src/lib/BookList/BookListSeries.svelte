@@ -7,7 +7,7 @@
   export let books: BookRating[];
   export let on_delete: ((b: BookRating) => unknown) | undefined =
     undefined;
-  export let allow_deletion: boolean = false;
+  export let allow_deletion = false;
 </script>
 
 {#each books as book, i (book.id)}

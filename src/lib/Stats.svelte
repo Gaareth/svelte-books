@@ -11,10 +11,22 @@
   export let last_value: typeof value | undefined = undefined;
 </script>
 
-<div class={twMerge("border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col", $$restProps.class)}>
+<div
+  class={twMerge(
+    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col",
+    $$restProps.class
+  )}
+>
   <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
   <div class="flex gap-2 min-h-[50px] flex-grow">
-    <p class={clsx("font-bold self-center", typeof value === "number" ? "text-5xl" : "text-4xl")}>{value}</p>
+    <p
+      class={clsx(
+        "font-bold self-center",
+        typeof value === "number" ? "text-5xl" : "text-4xl"
+      )}
+    >
+      {value}
+    </p>
     {#if last_value != undefined}
       <div class="flex flex-row">
         <div
@@ -31,15 +43,17 @@
             <IoIosRemove />
           {/if}
         </div>
-        <p class="self-center">
-          {#if value > last_value}
-            +{value - last_value}
-          {:else if value < last_value}
-            -{last_value - value}
-          {:else}
-            +/- 0
-          {/if}
-        </p>
+        {#if typeof value == "number" && typeof last_value == "number"}
+          <p class="self-center">
+            {#if value > last_value}
+              +{value - last_value}
+            {:else if value < last_value}
+              -{last_value - value}
+            {:else}
+              +/- 0
+            {/if}
+          </p>
+        {/if}
       </div>
     {/if}
   </div>
