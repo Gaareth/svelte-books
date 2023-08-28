@@ -17,3 +17,4 @@ seed.js
 *.tar
 validation-tests/
 db-backups/
+.xcf
