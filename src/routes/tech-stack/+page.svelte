@@ -25,6 +25,8 @@
     <li>bcrypt</li>
     <li>simple-svelte-autocomplete</li>
     <li>svelte-loading-spinners</li>
+    <li>language-icons</li>
+    <li>fuzzy-search</li>
   </ul>
 </div>
 
