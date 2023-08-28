@@ -8,8 +8,8 @@ node_modules
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-.db
-.db-journal
+*.db
+*.db-journal
 # .sql
 dev.db
 seed.js
@@ -17,4 +17,4 @@ seed.js
 *.tar
 validation-tests/
 db-backups/
-.xcf
+*.xcf
