@@ -2,7 +2,6 @@
   export let value: unknown | null;
   export let name: string;
   export let displayName: string = name;
-  // export let type: string = "text"
   export let error: string | undefined;  
 </script>
 
