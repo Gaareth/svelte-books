@@ -11,6 +11,24 @@ const createSchema = z.object({
   volumeId: z.string().trim().optional(),
 });
 
+function extractCategories(apiData: queriedBookFull): string[] {
+  const categories = [];
+  for (const entry of apiData.volumeInfo.categories ?? []) {
+    // entry can be: "Fiction / Science Fiction / General", which is a bit stupid, so we have to split it
+    // entry can also be just "Fiction", don't ask me, ask google
+
+    if (entry.includes("/")) {
+      for (const category of entry.split("/")) {
+        categories.push(category.trim());
+      }
+    } else {
+      categories.push(entry);
+    }
+  }
+
+  return categories;
+}
+
 function extractBookApiData(apiData: queriedBookFull) {
   const info = apiData.volumeInfo;
   const { title, subtitle, publishedDate, publisher, pageCount, language } =
@@ -79,7 +97,6 @@ export async function POST(req: RequestEvent) {
 
       const extractedData = extractBookApiData(apiData);
 
-
       if (bookApiData !== null) {
         await prisma.bookApiData.update({
           where: { id: apiData.id },
@@ -88,18 +105,38 @@ export async function POST(req: RequestEvent) {
         // message = `Updated api data (${apiData.id}) from ${bookApiData?.title} to ${name}`;
       }
 
-        await prisma.book.update({
-          where: { name },
-          data: {
-            bookApiData: {
-              connectOrCreate: {
-                where: { id: apiData.id },
-                create: extractedData,
-              },
+      await prisma.book.update({
+        where: { name },
+        data: {
+          bookApiData: {
+            connectOrCreate: {
+              where: { id: apiData.id },
+              create: extractedData,
             },
           },
-        });
+        },
+      });
+
+      const categories = extractCategories(apiData);
       
+      console.log(categories);
+      
+      for (const category_str of categories) {
+        const category = await prisma.bookCategory.upsert({
+          where: { name: category_str },
+          update: {
+            name: category_str,
+            books: { connect: { id: apiData.id } },
+          },
+          create: {
+            name: category_str,
+            books: { connect: { id: apiData.id } },
+          },
+        });
+
+        console.log(category);
+        
+      }
     }
 
     return json({ success: true });

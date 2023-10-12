@@ -17,3 +17,10 @@ Create .env file similar to `env.example`.
 
 1. Build: `npm run build`
 2. Run: node -r dotenv/config build
+
+
+## Todos
+- private books
+- spannend stats draw yourself
+- auto google api connection
+- add or remove google api

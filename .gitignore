@@ -18,3 +18,4 @@ seed.js
 validation-tests/
 db-backups/
 *.xcf
+.vscode/
