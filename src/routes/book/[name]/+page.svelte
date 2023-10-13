@@ -16,6 +16,7 @@
   import type { BookFullType, BookRating } from "../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
+  import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
 
   export let data: PageData;
 
@@ -314,6 +315,8 @@
             {/each}
           </InputSelect>
         </div>
+
+        <BookApiDataEdit data={book.bookApiData} />
 
         <div class="my-7">
           {#if book.rating !== null}

@@ -3,6 +3,7 @@
   import Stats from "./Stats.svelte";
 
   export let books: BookFullType[];
+  export let most_read_category: [string, number];
   let now = new Date();
 
   let books_read_per_month = (month: number): BookFullType[] => {
@@ -31,9 +32,12 @@
     const author_string = `${entry[0]} (${entry[1]})`;
     return author_string;
   };
+
+
+
 </script>
 
-<div class="grid gap-3 sm:grid-flow-col grid-cols-2 sm:grid-cols-4 grid-rows-2 sm:grid-rows-1 stats-wrapper">
+<div class="grid gap-3 sm:grid-flow-col1 grid-cols-2 sm:grid-cols-4 grid-rows-2 sm:grid-rows-1 stats-wrapper">
   <Stats name="total books read" value={books.length} />
   <Stats
     name="books read this month"
@@ -42,6 +46,9 @@
   />
   {#if books.length > 0}
     <Stats name="most read author" value={most_read_author()} class="col-span-2" />
+  {/if}
+  {#if books.length > 0}
+    <Stats name="most read genre/category" value={most_read_category[0] + " (" + most_read_category[1] + ")"} class="col-span-2" />
   {/if}
 </div>
 

@@ -2,7 +2,9 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { prisma } from "$lib/server/prisma";
-import { getBookApiData, type queriedBookFull } from "../api/api.server";
+import { getBookApiData } from "../api/api.server";
+import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
+import type { queriedBookFull } from "$appTypes";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
@@ -11,47 +13,7 @@ const createSchema = z.object({
   volumeId: z.string().trim().optional(),
 });
 
-function extractCategories(apiData: queriedBookFull): string[] {
-  const categories = [];
-  for (const entry of apiData.volumeInfo.categories ?? []) {
-    // entry can be: "Fiction / Science Fiction / General", which is a bit stupid, so we have to split it
-    // entry can also be just "Fiction", don't ask me, ask google
 
-    if (entry.includes("/")) {
-      for (const category of entry.split("/")) {
-        categories.push(category.trim());
-      }
-    } else {
-      categories.push(entry);
-    }
-  }
-
-  return categories;
-}
-
-function extractBookApiData(apiData: queriedBookFull) {
-  const info = apiData.volumeInfo;
-  const { title, subtitle, publishedDate, publisher, pageCount, language } =
-    info;
-  const authors = info.authors.join("|"); //TODO: relation
-  const thumbnailUrl = info.imageLinks.thumbnail;
-  const isbn_13 = info.industryIdentifiers.find(
-    (o) => o.type == "ISBN_13"
-  )?.identifier;
-
-  return {
-    id: apiData.id,
-    title,
-    subtitle,
-    authors,
-    publishedDate,
-    publisher,
-    pageCount,
-    language,
-    thumbnailUrl,
-    isbn_13,
-  };
-}
 
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();
@@ -91,11 +53,11 @@ export async function POST(req: RequestEvent) {
       const apiData = await getBookApiData(volumeId);
       console.log(apiData);
 
+      const extractedData = extractBookApiData(apiData);
+
       const bookApiData = await prisma.bookApiData.findUnique({
         where: { id: apiData.id },
       });
-
-      const extractedData = extractBookApiData(apiData);
 
       if (bookApiData !== null) {
         await prisma.bookApiData.update({
@@ -143,3 +105,4 @@ export async function POST(req: RequestEvent) {
   }
   throw error(400);
 }
+

@@ -1,8 +1,14 @@
-import { getBookLists } from "$lib/server/db/utils";
+import {
+  extractBookApiData,
+  extractCategories,
+  getBookLists,
+} from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { error, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
+import { getBookApiData } from "../api/api.server";
+import type { queriedBookFull } from "$appTypes";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -27,7 +33,7 @@ export async function load(page: ServerLoadEvent) {
       bookApiData: {
         include: {
           categories: true,
-        }
+        },
       },
     },
   });
@@ -66,6 +72,7 @@ const saveSchema = z.object({
     (s) => (s != "" ? Number(s) : undefined),
     z.number().optional()
   ),
+  apiVolumeId: z.string().optional(),
 });
 
 function undefinedToNull<Type>(any: Type | undefined): Type | null {
@@ -96,7 +103,6 @@ async function updateBookSeries(
   }
 
   type UniqueInput = "name" | "id";
-  
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -152,7 +158,6 @@ async function updateBookSeries(
 
     // console.log("DISconnecting: ");
     // console.log(oldSeriesNames);
-    
 
     await prisma.bookSeries.update({
       where: { id: bookSeriesId },
@@ -199,6 +204,7 @@ export const actions = {
         listName,
         bookSeries,
         bookSeriesId,
+        apiVolumeId,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -208,14 +214,58 @@ export const actions = {
 
       const allBooks = await prisma.book.findMany();
       if (allBooks.find((b) => b.name == name && b.id != id) !== undefined) {
-         return {
-           data: formData,
-           errors: {
-            name: ["Book names have to be unique"]
-           },
-         };
+        return {
+          data: formData,
+          errors: {
+            name: ["Book names have to be unique"],
+          },
+        };
       }
 
+      let apiData;
+      // if apiVolumeId was sent with
+      // refetch the data from google and update (or create) it locally
+      if (apiVolumeId !== undefined) {
+        apiData = await getBookApiData(apiVolumeId);
+        const extractedData = extractBookApiData(apiData);
+        console.log(extractedData);
+
+        const categories = extractCategories(apiData);
+
+        console.log(categories);
+
+        for (const category_str of categories) {
+          try {
+            const category = await prisma.bookCategory.create({
+              data: {
+                name: category_str,
+              },
+            });
+            console.log(category);
+          } catch (e) {
+            // ignore
+          }
+        }
+
+        // categories.map((n) => ({ name: n }));
+        await prisma.bookApiData.upsert({
+          where: { id: apiData.id },
+          create: {
+            ...extractedData,
+            categories: {
+              connect: categories.map((n) => ({
+                name: n,
+              })),
+            },
+          },
+          update: {
+            ...extractedData,
+            categories: {
+              set: categories.map((n) => ({ name: n })),
+            },
+          },
+        });
+      }
       const book = await prisma.book.update({
         where: { id },
         data: {
@@ -234,15 +284,18 @@ export const actions = {
               name: listName,
             },
           },
+          bookApiData:
+            apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
         },
       });
+
+      console.log("nnew book:", book);
 
       throw redirect(302, "/book/" + encodeURIComponent(book.name));
     }
 
     const { fieldErrors: errors } = result.error.flatten();
     console.log(errors);
-    
 
     return {
       data: formData,

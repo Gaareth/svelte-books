@@ -30,5 +30,41 @@ export type BookFullType = Prisma.BookGetPayload<{
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
+export type BookApiDataFullType = Prisma.BookApiDataGetPayload<{
+  select: { [K in keyof Required<Prisma.BookApiDataSelect>]: true };
+}>;
+
+
+export type queriedBook = {
+  id: string;
+  volumeInfo: {
+    title: string;
+    subtitle: string;
+    authors: string[];
+    imageLinks: { smallThumbnail: string; thumbnail: string };
+  };
+};
+
+export type queriedBookFull = {
+  id: string;
+  volumeInfo: {
+    title: string;
+    subtitle: string;
+    authors: string[];
+    publishedDate: string;
+    publisher: string;
+    industryIdentifiers: {
+      type: string | undefined;
+      identifier: string | undefined;
+    }[];
+    imageLinks: { smallThumbnail: string; thumbnail: string };
+    pageCount: number;
+    printedPageCount: number;
+    categories: string[] | undefined;
+    language: string;
+  };
+};
+
+
 
 export {};

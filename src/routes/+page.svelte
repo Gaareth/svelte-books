@@ -5,7 +5,8 @@
   import Statistics from "$lib/Statistics.svelte";
   import clsx from "clsx";
   import type { BookFullType } from "../app";
-  export let data: { books: BookFullType[] };
+  export let data: { books: BookFullType[], most_read_category: [string, number] };
+  let most_read_category = data.most_read_category;
 
   let chance = 20;
   let random = Math.floor(Math.random() * chance);
@@ -38,7 +39,7 @@
     </details>
   </div>
 {:else}
-  <Statistics books={data.books} />
+  <Statistics books={data.books} {most_read_category} />
 {/if}
 <div class="my-5" />
 <BookNew

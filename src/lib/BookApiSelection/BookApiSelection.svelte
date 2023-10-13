@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { queriedBook } from "../../routes/book/api/api.server";
-  import IoIosArrowForward from 'svelte-icons/io/IoIosArrowForward.svelte'
+  import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
   import { delay } from "$lib/utils";
+  import type { queriedBook } from "$appTypes";
+  import type { EventDispatcher } from "svelte";
 
   // const queryBooksDebug = async () => {
   //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();
@@ -12,7 +13,7 @@
   let queriedBooksPromise: Promise<queriedBook[]>;
 
   const queryBooks = async () => {
-    return (await fetch(`book/api/list/?query=${query}`)).json();
+    return (await fetch(`/book/api/list/?query=${query}`)).json();
   };
 
   const handleClick = async () => {
@@ -20,8 +21,9 @@
     console.log(await queryBooks());
   };
 
-  export let selectedBookId: string;
+  export let selectedBookId: string | undefined;
   export let apiBookSelected: boolean;
+  export let dispatch: EventDispatcher<any>;
 
   //TODO: make tabbable, the radio button
 </script>
@@ -33,12 +35,14 @@
       type="text"
       bind:value={query}
     />
-    <button class="btn-primary-black" on:click={handleClick}>Search</button>
+    <button type="button" class="btn-primary-black" on:click={handleClick}
+      >Search</button
+    >
   </div>
   <div>
     {#if queriedBooksPromise !== undefined}
       {#await queriedBooksPromise}
-         <BookApiSkeleton />
+        <BookApiSkeleton />
       {:then queriedBooks}
         {#each queriedBooks as book}
           <label class="item-border p-2 my-2 flex justify-between items-center">
@@ -82,13 +86,17 @@
               />
               <button
                 class="hidden peer-checked:flex px-3 py-1
-                border rounded-lg dark:border-slate-500 dark:bg-slate-600
+                border rounded-md dark:border-slate-500 dark:bg-slate-600
                 hover:bg-gray-50 dark:hover:bg-slate-500
                 text-base flex-row items-center gap-1"
-                on:click={() => apiBookSelected = true}
+                on:click={() => {
+                  apiBookSelected = true;
+                  dispatch("select");
+                }}
                 title="Select book"
+                type="button"
               >
-                <span class="hidden md:inline">Select</span> 
+                <span class="hidden md:inline">Select</span>
                 <span class="w-6 block">
                   <IoIosArrowForward />
                 </span>

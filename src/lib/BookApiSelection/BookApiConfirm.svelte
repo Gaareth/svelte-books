@@ -1,22 +1,29 @@
 <script lang="ts">
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
   import { delay } from "$lib/utils";
-  import type { queriedBookFull } from "../../routes/book/api/api.server";
   import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
+  import IoMdOpen from 'svelte-icons/io/IoMdOpen.svelte'
   import clsx from "clsx";
   import { browser } from "$app/environment";
-  export let volumeId: string;
-  export let apiBookSelected: boolean;
+  import type { queriedBookFull } from "$appTypes";
+  import { boolean } from "zod";
+  import type { EventDispatcher } from "svelte";
+  export let volumeId: string | undefined;
+  export let apiBookSelected: boolean = true;
+  export let back_button: boolean = true;
+  export let dispatch: EventDispatcher<any> | undefined = undefined;
 
   export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
   $: {
-    if (volumeId !== undefined && apiBookSelected) {
+    if (volumeId !== undefined && apiBookSelected && getBookPromise === undefined) {      
       getBookPromise = getBook(volumeId);
     }
   }
 
   async function getBook(id: string) {
-    return (await fetch(`book/api/get/${id}`)).json();
+    console.log("FETRHCINGF");
+    
+    return (await fetch(`/book/api/get/${id}`)).json();
   }
 
   let item_ref: HTMLElement | undefined = undefined;
@@ -35,15 +42,18 @@
   }
 </script>
 
-<button
-  on:click={() => (apiBookSelected = false)}
-  class="mt-5 flex flex-row items-center gap-1"
->
-  <span class="block w-6">
-    <IoIosArrowBack />
-  </span>
-  Back
-</button>
+{#if back_button}
+  <button
+    on:click={() => {apiBookSelected = false; dispatch && dispatch("back")}}
+    class="mt-5 flex flex-row items-center gap-1"
+    type="button"
+  >
+    <span class="block w-6">
+      <IoIosArrowBack />
+    </span>
+    Back
+  </button>
+{/if}
 {#if volumeId !== undefined && apiBookSelected && getBookPromise}
   {#await getBookPromise}
     <BookApiSkeleton />
@@ -52,7 +62,7 @@
     {@const isbn_13 = info.industryIdentifiers.find(
       (t) => t.type == "ISBN_13"
     )?.identifier}
-    {@const categories = info.categories?.join(" | ")}
+    {@const categories = info.categories ? info.categories?.join(" | ") : "uncategorized"}
     <div
       class="item-border p-2 my-2 flex flex-wrap items-center gap-4 relative"
       bind:this={item_ref}
@@ -63,7 +73,7 @@
             <img
               src={info.imageLinks.smallThumbnail}
               alt="book cover"
-              class="w-10"
+              class="w-10 max-w-[2.5rem]"
             />
           {:else}
             <img src="/cover.png" alt="placeholder book cover" class="w-10" />
@@ -71,11 +81,16 @@
         </div>
 
         <div class="flex flex-col">
-          <p class="text-base">
+          <p class="text-base flex items-center">
             {info.title}
             {#if info.subtitle}
               ({info.subtitle})
             {/if}
+            <a class="pl-1" target="_blank" href="http://books.google.de/books?id=UktVDwAAQBAJ&hl" title="Open on books.google.de">
+              <span class="w-4 h-4 block">
+                <IoMdOpen />
+              </span>
+            </a>
           </p>
           <p class="text-base">
             {info.authors?.join(",") ?? "unknown author"}

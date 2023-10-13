@@ -1,5 +1,20 @@
 import { loadBooks } from "$lib/server/db/utils";
+import { prisma } from "$lib/server/prisma";
 
 export async function load() {
-  return await loadBooks();
+  const most_read_category = await prisma.bookCategory.findFirst({
+    include: {
+      _count: {
+        select: { books: true },
+      },
+    },
+    orderBy: { books: { _count: "desc" } },
+  });
+  console.log(most_read_category);
+  
+
+  return {
+    books: (await loadBooks()).books,
+    most_read_category: [most_read_category?.name, most_read_category?._count.books],
+  };
 }
