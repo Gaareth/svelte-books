@@ -9,6 +9,9 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
+  rules: {
+    "typescript-eslint/ban-ts-comment": "off",
+  },
   parserOptions: {
     sourceType: "module",
     ecmaVersion: 2020,

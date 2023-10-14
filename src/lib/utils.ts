@@ -7,3 +7,22 @@ export const isDarkModeEnabled = (theme: THEME, window: Window): boolean => {
     (theme == "system" && window && 
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 };
+
+
+export function arrMax(arr: number[]) {
+  if (arr.length === 0) {
+    return undefined;
+  }
+
+  let maxValue = arr[0];
+  let maxIndex = 0;
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > maxValue) {
+      maxIndex = i;
+      maxValue = arr[i];
+    }
+  }
+
+  return {maxIndex, maxValue};
+}

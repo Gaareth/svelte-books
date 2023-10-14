@@ -1,7 +1,9 @@
 <script lang="ts">
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
   import { delay } from "$lib/utils";
+  //@ts-ignore
   import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
+  //@ts-ignore
   import IoMdOpen from 'svelte-icons/io/IoMdOpen.svelte'
   import clsx from "clsx";
   import { browser } from "$app/environment";

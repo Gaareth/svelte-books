@@ -1,5 +1,7 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
+  //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
 
   export let rating: number;
@@ -17,7 +19,7 @@
     if (!editable) {
       return;
     }
-    
+
     if (i == rating) {
       rating -= 1;
     } else {

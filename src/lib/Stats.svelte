@@ -1,7 +1,9 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosArrowUp from "svelte-icons/io/IoIosArrowUp.svelte";
-
+  //@ts-ignore
   import IoIosArrowDown from "svelte-icons/io/IoIosArrowDown.svelte";
+  //@ts-ignore
   import IoIosRemove from "svelte-icons/io/IoIosRemove.svelte";
   import clsx from "clsx";
   import { twMerge } from "tailwind-merge";

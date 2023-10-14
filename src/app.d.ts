@@ -30,8 +30,8 @@ export type BookFullType = Prisma.BookGetPayload<{
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
-export type BookApiDataFullType = Prisma.BookApiDataGetPayload<{
-  select: { [K in keyof Required<Prisma.BookApiDataSelect>]: true };
+export type BookApiDataCategories = Prisma.BookApiDataGetPayload<{
+  include: { categories: true };
 }>;
 
 
@@ -49,17 +49,17 @@ export type queriedBookFull = {
   id: string;
   volumeInfo: {
     title: string;
-    subtitle: string;
+    subtitle: string | undefined;
     authors: string[];
-    publishedDate: string;
-    publisher: string;
+    publishedDate: string | undefined;
+    publisher: string | undefined;
     industryIdentifiers: {
       type: string | undefined;
       identifier: string | undefined;
-    }[];
-    imageLinks: { smallThumbnail: string; thumbnail: string };
-    pageCount: number;
-    printedPageCount: number;
+    }[] | undefined;
+    imageLinks: { smallThumbnail: string; thumbnail: string } | undefined;
+    pageCount: number | undefined;
+    printedPageCount: number | undefined;
     categories: string[] | undefined;
     language: string;
   };

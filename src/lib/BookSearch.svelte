@@ -1,4 +1,5 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosSearch from "svelte-icons/io/IoIosSearch.svelte";
   export let search_term = "";
 </script>
@@ -13,8 +14,8 @@
     placeholder="Search for books.."
   />
   <span
-    class="pointer-events-none absolute inset-y-0 right-0 grid w-7 mx-1 mt-1 place-content-center 
-  text-svelte dark:text-svelte_dark "
+    class="pointer-events-none absolute inset-y-0 right-0 grid w-7 mx-1 mt-1 place-content-center
+  text-svelte dark:text-svelte_dark"
   >
     <IoIosSearch />
   </span>

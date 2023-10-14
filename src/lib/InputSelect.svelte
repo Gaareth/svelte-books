@@ -1,4 +1,5 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
   export let value: unknown | null;
@@ -12,7 +13,10 @@
     value = null;
   };
 
-  $: hoverCss = value != null ? "group-hover:animate-drop-hover group-active:animate-drop-click" : "text-neutral-500";
+  $: hoverCss =
+    value != null
+      ? "group-hover:animate-drop-hover group-active:animate-drop-click"
+      : "text-neutral-500";
 </script>
 
 <label for={name}>{displayName}:</label>
@@ -26,11 +30,14 @@
     >
       <slot />
     </select>
-    <button on:click={() => clearSelection()} disabled={value === null}
-      type="button" class="group flex" title="Clear Input">
-      <span
-        class="inline-block icon group {hoverCss} self-center"
-      >
+    <button
+      on:click={() => clearSelection()}
+      disabled={value === null}
+      type="button"
+      class="group flex"
+      title="Clear Input"
+    >
+      <span class="inline-block icon group {hoverCss} self-center">
         <IoIosRemoveCircle />
       </span>
     </button>

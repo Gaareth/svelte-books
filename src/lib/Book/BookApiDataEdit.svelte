@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { BookApiDataFullType, queriedBookFull } from "$appTypes";
+  import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
   import BookApi from "./../BookApiSelection/BookApi.svelte";
-  export let data: BookApiDataFullType | null;
+  export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;
   let bookSelected: boolean;
   // let fetch_data = data;
@@ -13,18 +13,25 @@
       id: data.id,
       volumeInfo: {
         ...data,
+        subtitle: data.subtitle || undefined,
         authors: data.authors.split("|"),
+        publishedDate: data.publishedDate || undefined,
+        publisher: data.publisher || undefined,
         industryIdentifiers: [
           {
             type: "ISBN_13",
             identifier: data.isbn_13 ?? undefined,
           },
         ],
-        imageLinks: {
-          smallThumbnail: data.thumbnailUrl,
-          thumbnail: data.thumbnailUrl,
-        },
-        printedPageCount: -1,
+        imageLinks:
+          data.thumbnailUrl !== null
+            ? {
+                smallThumbnail: data.thumbnailUrl,
+                thumbnail: data.thumbnailUrl,
+              }
+            : undefined,
+        printedPageCount: undefined,
+        pageCount: data.pageCount || undefined,
         categories: data.categories.map((c) => c.name),
       },
     };
@@ -37,7 +44,7 @@
   );
 
   const reloadData = async () => {
-    currentBookData = (await fetch(`/book/api/get/${data?.id}`)).json();    
+    currentBookData = (await fetch(`/book/api/get/${data?.id}`)).json();
     bookSelected = true;
     newVolumeId = data?.id;
   };
@@ -71,7 +78,8 @@
     <p class="text-base text-slate-500 text-center mt-3">
       <span class="text-base text-stone-950 dark:text-gray-200"
         >Unsaved changes!
-      </span>Don't forget to press the big <span class="text-blue-700 text-base">blue</span> save button
+      </span>Don't forget to press the big
+      <span class="text-blue-700 text-base">blue</span> save button
     </p>
   {/if}
 

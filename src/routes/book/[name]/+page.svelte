@@ -9,11 +9,12 @@
   import { goto } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
   import InputSelect from "$lib/InputSelect.svelte";
+  //@ts-ignore
   import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type { BookFullType, BookRating } from "../../../app";
+  import type { BookApiDataCategories, BookFullType, BookRating } from "../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";

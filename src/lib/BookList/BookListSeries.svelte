@@ -1,12 +1,12 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
   import type { BookRating } from "$appTypes";
   import BookListItem from "./BookListItem.svelte";
 
   export let books: BookRating[];
-  export let on_delete: ((b: BookRating) => unknown) | undefined =
-    undefined;
+  export let on_delete: ((b: BookRating) => unknown) | undefined = undefined;
   export let allow_deletion = false;
 </script>
 
@@ -21,7 +21,7 @@
       slot="delete"
       hidden={!(!!on_delete && allow_deletion)}
       on:click={() => {
-        !!on_delete && allow_deletion && on_delete(book)
+        !!on_delete && allow_deletion && on_delete(book);
       }}
     >
       <span
@@ -45,11 +45,11 @@
 
 <style lang="postcss">
   .delete-button {
-    @apply  hover:bg-red-200 dark:text-red-200
+    @apply hover:bg-red-200 dark:text-red-200
             dark:bg-red-500 dark:border-red-500 
             dark:hover:bg-red-400 dark:hover:border-red-400
             bg-red-100 text-red-600
             
-            focus:relative 
+            focus:relative;
   }
 </style>

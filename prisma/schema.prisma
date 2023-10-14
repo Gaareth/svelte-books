@@ -27,13 +27,13 @@ model BookApiData {
   id            String         @id
   title         String
   authors       String //TODO: author relation?
-  subtitle      String
-  thumbnailUrl  String
+  subtitle      String?
+  thumbnailUrl  String?
   isbn_13       String?
-  pageCount     Int
+  pageCount     Int?
   categories    BookCategory[]
-  publishedDate String //YYYY-MM-DD
-  publisher     String
+  publishedDate String? //YYYY-MM-DD
+  publisher     String?
   language      String
 
   book Book[]

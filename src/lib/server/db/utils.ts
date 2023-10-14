@@ -73,7 +73,7 @@ export function extractBookApiData(apiData: queriedBookFull) {
   const { title, subtitle, publishedDate, publisher, pageCount, language } =
     info;
   const authors = info.authors.join("|"); //TODO: relation
-  const thumbnailUrl = info.imageLinks.thumbnail;
+  const thumbnailUrl = info.imageLinks?.thumbnail;
   const isbn_13 = info.industryIdentifiers.find(
     (o) => o.type == "ISBN_13"
   )?.identifier;

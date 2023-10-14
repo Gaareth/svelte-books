@@ -1,4 +1,5 @@
 <script lang="ts">
+  //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
   import { delay } from "$lib/utils";

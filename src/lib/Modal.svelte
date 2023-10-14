@@ -1,4 +1,5 @@
 <script lang="ts">
+  //@ts-ignore
   import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
 
   export let showModal: boolean; // boolean

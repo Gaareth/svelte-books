@@ -6,8 +6,11 @@
   import { page } from "$app/stores";
   import type { BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
+  //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
+  //@ts-ignore
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
+  //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   export let book: BookRating;

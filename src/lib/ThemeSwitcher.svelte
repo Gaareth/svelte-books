@@ -1,8 +1,11 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import toast from "svelte-french-toast";
+  //@ts-ignore
   import IoIosMoon from "svelte-icons/io/IoIosMoon.svelte";
+  //@ts-ignore
   import IoIosSunny from "svelte-icons/io/IoIosSunny.svelte";
+  //@ts-ignore
   import IoIosDesktop from "svelte-icons/io/IoIosDesktop.svelte";
   import { theme } from "./stores/stores";
   import Dropdown from "./Dropdown.svelte";
