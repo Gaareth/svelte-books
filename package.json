@@ -49,6 +49,7 @@
     "language-icons": "^0.3.0",
     "svelte-french-toast": "^1.0.3",
     "svelte-icons": "^2.1.0",
+    "sveltekit-sse": "^0.3.3",
     "tailwind-merge": "^1.14.0",
     "ts-node": "^10.9.1",
     "zod": "^3.21.4"

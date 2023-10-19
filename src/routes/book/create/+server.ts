@@ -42,8 +42,13 @@ export async function POST(req: RequestEvent) {
         name,
         author,
         bookList: {
-          connect: {
-            name: listName,
+          connectOrCreate: {
+            where: {
+              name: listName,
+            },
+            create: {
+              name: listName,
+            },
           },
         },
       },

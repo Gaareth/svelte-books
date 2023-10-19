@@ -32,7 +32,7 @@
 
 <style>
   .from-svelte {
-     --tw-gradient-from: #F2440D;
+    --tw-gradient-from: #f2440d;
     /* --tw-gradient-to: rgb(249 115 22 / 0); */
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
   }
