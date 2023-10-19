@@ -1,61 +1,29 @@
 <script lang="ts">
   import { Moon } from "svelte-loading-spinners";
+  import type { ActionData } from "../$types.js";
 
   import type { Book } from "@prisma/client";
   import { toast } from "svelte-french-toast";
   import { enhance } from "$app/forms";
 
-  export let form;
+  // @ts-ignore
+  import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
+  // @ts-ignore
+  import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
 
-  import { source } from "sveltekit-sse";
+  export let form: {
+    success: boolean;
+    errorsBooks: Book[];
+    booksUpdated: number;
+  };
+
   import type { SSE_EVENT } from "../book/api/update_all/sse.js";
-  const value = source("/book/api/update_all").onError((event: any) =>
-    console.error({ event })
-  );
-  let seen = 0;
-  let currentStatus: typeof SSE_EVENT | undefined = undefined;
-  $: {
-    try {
-      console.log($value);
 
-      currentStatus = JSON.parse($value);
-    } catch (error) {
-      currentStatus = undefined;
-    }
-    value;
-  }
+  let evtSource: EventSource;
+
+  let currentStatus: typeof SSE_EVENT | undefined = undefined;
 
   let loading = false;
-  let errorsBooks: Book[] = [];
-
-  const reload_all = async () => {
-    return;
-    loading = true;
-    const response = await fetch("/book/api/update_all", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    loading = false;
-
-    const response_json = await response.json();
-    const { success, booksUpdated } = response_json;
-    errorsBooks = response_json.errorsBooks;
-
-    if (success) {
-      toast.success(`Successfully added ${booksUpdated} new entries`);
-    } else if (booksUpdated == 0) {
-      toast.error("Failed updating any book :(");
-    } else {
-      toast(
-        `Updated ${booksUpdated} books and failed on ${errorsBooks.length}`,
-        {
-          icon: "⚠️",
-        }
-      );
-    }
-  };
 
   //TODO: toast
 </script>
@@ -64,19 +32,6 @@
 
 <div>
   <h2>Datasource</h2>
-  {#if currentStatus !== undefined}
-    {#if currentStatus.length !== undefined}
-      <div>
-        {currentStatus?.updates[currentStatus.updates.length-1]}
-        <progress
-          max={currentStatus?.length}
-          value={currentStatus?.updates.length}
-        />
-      </div>
-    {/if}
-  {:else}
-    <span>...</span>
-  {/if}
 
   <form
     action="?/reload"
@@ -88,9 +43,30 @@
       // calling `cancel()` will prevent the submission
       // `submitter` is the `HTMLElement` that caused the form to be submitted
       loading = true;
+      evtSource = new EventSource("/book/api/update_all/");
+      evtSource.onmessage = function (event) {
+        //console.log(event);
+        currentStatus = JSON.parse(event.data);
+      };
       return async ({ result, update }) => {
         update();
         loading = false;
+        evtSource.close();
+        console.log(result);
+
+        // if (success) {
+        //   toast.success(`Successfully added ${booksUpdated} new entries`);
+        // } else if (booksUpdated == 0) {
+        //   toast.error("Failed updating any book :(");
+        // } else {
+        //   toast(
+        //     `Updated ${booksUpdated} books and failed on ${errorsBooks.length}`,
+        //     {
+        //       icon: "⚠️",
+        //     }
+        //   );
+        // }
+
         // `result` is an `ActionResult` object
         // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
       };
@@ -113,13 +89,40 @@
     Updates all existing entries and tries to fetch new data for books without a
     connected datasource
   </p>
-  {#if errorsBooks.length > 0}
-    <div>
-      {#each errorsBooks as book}
-        <div>
-          {book.name}
-        </div>
-      {/each}
+  {#if form !== undefined && form !== null}
+    {#if form.errorsBooks.length > 0}
+      <span
+        >Finished updating all {form.booksUpdated} entries.
+        <span class="text-red-500 flex items-center gap-1">
+          <span class="w-[20px] inline-block">
+            <ErrorIcon />
+          </span>
+          Failed with {form.errorsBooks.length}</span
+        ></span
+      >
+      <div>
+        {#each form.errorsBooks as book}
+          <div>
+            {book.name}
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <div>
+        <div class="text-green-400 flex items-center gap-1">
+          <span class="w-[20px] inline-block">
+            <SuccessIcon /></span>Successfully
+          </div>
+        updated all {form.booksUpdated}
+        entries</div
+      >
+    {/if}
+  {/if}
+
+  {#if currentStatus !== undefined && !form}
+    <div class="flex flex-col">
+      <span>{currentStatus.msg}</span>
+      <progress max={currentStatus.max} value={currentStatus.items} />
     </div>
   {/if}
 </div>

@@ -20,7 +20,7 @@ async function updateData() {
   // console.log(existingCategoryNames);
 
   const bookDataList = await prisma.bookApiData.findMany();
-  SSE_EVENT.length = bookDataList.length;
+  SSE_EVENT.max = bookDataList.length;
 
   for (const { id, title } of bookDataList) {
     const apiData = await getBookApiData(id);
@@ -55,8 +55,9 @@ async function updateData() {
       },
     });
 
-    SSE_EVENT.updates.push(title);
-    await delay(2000);  
+    SSE_EVENT.msg = "[API] Updated: " + title;
+    SSE_EVENT.items = SSE_EVENT.items + 1;
+    // await delay(2000);
   }
 }
 
@@ -77,8 +78,7 @@ async function createConnections() {
     },
   });
   console.log(unconnectedBooks.length);
-  SSE_EVENT.length = unconnectedBooks.length;
-
+  SSE_EVENT.max = unconnectedBooks.length;
 
   const createConnection = async (
     volumeId: string,
@@ -160,7 +160,7 @@ async function createConnections() {
   };
 
   let booksUpdated = 0;
-  const errorsBooks = [];
+  const errorsBooks: Book[] = [];
 
   for (const book of unconnectedBooks) {
     console.log("book: " + book.name);
@@ -182,7 +182,10 @@ async function createConnections() {
           errorsBooks.push(book);
         });
     }
-    //TODO: update
+
+    booksUpdated += 1;
+    SSE_EVENT.msg = "Added: " + book.name;
+    SSE_EVENT.items = SSE_EVENT.items + 1;
   }
 
   return { booksUpdated, errorsBooks };
@@ -195,26 +198,31 @@ export const actions = {
       throw error(401);
     }
 
-    SSE_EVENT.length = undefined;
-    SSE_EVENT.updates = [];
-    console.log("UPDAA");
-    
+    SSE_EVENT.items = 0;
+    SSE_EVENT.msg = "";
+    SSE_EVENT.max = 0;
+
     await updateData();
     console.log(SSE_EVENT);
-    // SSE_EVENT.length = 0;
+    //SSE_EVENT.items = 0;
 
-    
     await delay(1000);
-    // const result = await createConnections();
+    const result = await createConnections();
 
-    // return json({
-    //   success: result.errorsBooks.length == 0 ? true : false,
-    //   ...result,
-    // });
+    const response = {
+      success: result.errorsBooks.length == 0 ? true : false,
+      ...result,
+    };
 
-    SSE_EVENT.length = undefined;
-    SSE_EVENT.updates = [];
-    return { success: false };
+   
+
+    // console.log(response);
+    // console.log(JSON.stringify(response));
+    
+    
+    return response
+
+    //  return { success: true };
   },
 };
 

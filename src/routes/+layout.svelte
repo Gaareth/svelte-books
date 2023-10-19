@@ -25,8 +25,8 @@
           href="/">Home</a
         >
         {#if $page.data.session}
-          <a class="text-gray-500 dark:text-gray-400" href="/to-read">To-Read</a
-          >
+          <a class="nav-a" href="/to-read">To-Read</a>
+          <a class="nav-a" href="/settings">Settings</a>
         {/if}
       </nav>
 
@@ -90,8 +90,12 @@
   }
 
   .auth-button {
-    @apply  bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 whitespace-nowrap
+    @apply bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 whitespace-nowrap
             border border-gray-100 hover:border-gray-200 rounded-lg
             dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600;
+  }
+
+  .nav-a {
+    @apply text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300;
   }
 </style>
