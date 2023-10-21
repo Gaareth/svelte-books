@@ -8,25 +8,33 @@ import {
 } from "../book/api/api.server";
 import type { Book, BookApiData } from "@prisma/client";
 import type { queriedBookFull } from "$appTypes";
-import { arrMax, delay, getErrorMessage } from "$lib/utils";
+import { arrMax, delay, getErrorMessage, zip } from "$lib/utils";
 import { SSE_EVENT } from "../book/api/update_all/sse";
 
+type bookDiff = {
+  bookName: string;
+  propName: string;
+  oldValue: unknown;
+  newValue: unknown;
+};
 /// Updates existing apiData by querying google
 async function updateData() {
   const existingCategoryNames = (await prisma.bookCategory.findMany()).map(
     ({ name }) => name
   );
 
-  // console.log(existingCategoryNames);
+  const diffs: bookDiff[] = [];
+  let booksUpdated = 0;
 
   const bookDataList = await prisma.bookApiData.findMany();
   SSE_EVENT.max = bookDataList.length;
 
-  for (const { id, title } of bookDataList) {
+  for (const book of bookDataList) {
+    const { id, title } = book;
     SSE_EVENT.msg = "Updating: " + title;
     SSE_EVENT.items = SSE_EVENT.items + 1;
-    // const apiData = await getBookApiData(id);
-    // const extractedData = extractBookApiData(apiData);
+    const apiData = await getBookApiData(id);
+    const extractedData = extractBookApiData(apiData);
     // const categories = extractCategories(apiData);
 
     // // create non-existing categories
@@ -57,8 +65,35 @@ async function updateData() {
     //   },
     // });
 
+    // TOOD: zipMap?
+    zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
+      (props) => {
+        console.log(props);
+        
+        const entries = [
+          [props[0], extractedData[props[0]]],
+          [props[1], extractedData[props[1]]],
+        ];
+        console.log(entries);
+
+        const oldKV = entries[0];
+
+        const newKV = entries[1];
+        if (oldKV[1] != newKV[1]) {
+          return diffs.push({
+            bookName: title,
+            propName: oldKV[0],
+            oldValue: oldKV[1],
+            newValue: newKV[1],
+          });
+        }
+      }
+    );
     await delay(1000);
+    booksUpdated += 1;
   }
+
+  return { booksUpdated, diffs };
 }
 
 type errorBooksType = {
@@ -210,6 +245,12 @@ export type settingsApiResult = {
   errorsBooks: errorBooksType;
 };
 
+export type settingsApiReloadResult = {
+  success: boolean;
+  booksUpdated: number;
+  diffs: bookDiff[];
+};
+
 export const actions = {
   reload: async ({ locals }) => {
     const session = await locals.getSession();
@@ -221,13 +262,29 @@ export const actions = {
     SSE_EVENT.msg = "";
     SSE_EVENT.max = 0;
 
-    await updateData();
+    const diffs = await updateData();
     console.log(SSE_EVENT);
+
+    const response: settingsApiReloadResult = {
+      success: true,
+      ...diffs,
+    };
+
+    SSE_EVENT.msg = "done";
+    return response;
+  },
+
+  try_add: async ({ locals }) => {
+    const session = await locals.getSession();
+    if (!session) {
+      throw error(401);
+    }
+
     SSE_EVENT.items = 0;
+    SSE_EVENT.msg = "";
+    SSE_EVENT.max = 0;
 
-    await delay(1000);
     const result = await createConnections();
-
     const response: settingsApiResult = {
       success: result.errorsBooks.length == 0 ? true : false,
       ...result,
@@ -237,8 +294,6 @@ export const actions = {
     // console.log(JSON.stringify(response));
     SSE_EVENT.msg = "done";
     return response;
-
-    //  return { success: true };
   },
 };
 

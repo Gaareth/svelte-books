@@ -33,3 +33,6 @@ export function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
 }
+
+
+export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
