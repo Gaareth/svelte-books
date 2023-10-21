@@ -3,11 +3,13 @@ import type { THEME } from "./stores/stores";
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const isDarkModeEnabled = (theme: THEME, window: Window): boolean => {
-  return theme == "dark" ||
-    (theme == "system" && window && 
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  return (
+    theme == "dark" ||
+    (theme == "system" &&
+      window &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  );
 };
-
 
 export function arrMax(arr: number[]) {
   if (arr.length === 0) {
@@ -24,5 +26,10 @@ export function arrMax(arr: number[]) {
     }
   }
 
-  return {maxIndex, maxValue};
+  return { maxIndex, maxValue };
+}
+
+export function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return String(error);
 }

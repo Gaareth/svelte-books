@@ -8,7 +8,7 @@ import {
 } from "../book/api/api.server";
 import type { Book, BookApiData } from "@prisma/client";
 import type { queriedBookFull } from "$appTypes";
-import { arrMax, delay } from "$lib/utils";
+import { arrMax, delay, getErrorMessage } from "$lib/utils";
 import { SSE_EVENT } from "../book/api/update_all/sse";
 
 /// Updates existing apiData by querying google
@@ -23,44 +23,49 @@ async function updateData() {
   SSE_EVENT.max = bookDataList.length;
 
   for (const { id, title } of bookDataList) {
-    const apiData = await getBookApiData(id);
-    const extractedData = extractBookApiData(apiData);
-    const categories = extractCategories(apiData);
-
-    // create non-existing categories
-    for (const category_name of categories) {
-      // console.log(existingCategoryNames.includes(category_name));
-      // console.log(category_name);
-
-      if (!existingCategoryNames.includes(category_name)) {
-        await prisma.bookCategory.create({
-          data: {
-            name: category_name,
-          },
-        });
-      }
-    }
-
-    // update stored api data with newly fetched data
-    await prisma.bookApiData.update({
-      where: {
-        id,
-      },
-
-      data: {
-        ...extractedData,
-        categories: {
-          set: categories.map((n) => ({ name: n })),
-        },
-      },
-    });
-
-    SSE_EVENT.msg = "[API] Updated: " + title;
+    SSE_EVENT.msg = "Updating: " + title;
     SSE_EVENT.items = SSE_EVENT.items + 1;
-    // await delay(2000);
+    // const apiData = await getBookApiData(id);
+    // const extractedData = extractBookApiData(apiData);
+    // const categories = extractCategories(apiData);
+
+    // // create non-existing categories
+    // for (const category_name of categories) {
+    //   // console.log(existingCategoryNames.includes(category_name));
+    //   // console.log(category_name);
+
+    //   if (!existingCategoryNames.includes(category_name)) {
+    //     await prisma.bookCategory.create({
+    //       data: {
+    //         name: category_name,
+    //       },
+    //     });
+    //   }
+    // }
+
+    // // update stored api data with newly fetched data
+    // await prisma.bookApiData.update({
+    //   where: {
+    //     id,
+    //   },
+
+    //   data: {
+    //     ...extractedData,
+    //     categories: {
+    //       set: categories.map((n) => ({ name: n })),
+    //     },
+    //   },
+    // });
+
+    await delay(1000);
   }
 }
 
+type errorBooksType = {
+  book: Book;
+  error: string;
+  volumeId: string | undefined;
+}[];
 async function createConnections() {
   const scoreMap: Record<string, number> = {
     publishedDate: 1,
@@ -126,7 +131,9 @@ async function createConnections() {
     }
   };
 
-  const findVolumeId = async (book: Book): Promise<string | undefined> => {
+  const findVolumeId = async (
+    book: Book
+  ): Promise<{ volumeId: string; score: number } | undefined> => {
     return queryBooksFull(`${book.name}+inauthor:${book.author}`)
       .then((books: queriedBookFull[]) => {
         console.log(books);
@@ -150,7 +157,7 @@ async function createConnections() {
           return undefined;
         }
 
-        return books[max.maxIndex].id;
+        return { volumeId: books[max.maxIndex].id, score: max.maxValue };
       })
       .catch((error: string) => {
         console.log("Error querying google api: " + error);
@@ -160,36 +167,48 @@ async function createConnections() {
   };
 
   let booksUpdated = 0;
-  const errorsBooks: Book[] = [];
+  const errorsBooks: errorBooksType = [];
 
   for (const book of unconnectedBooks) {
     console.log("book: " + book.name);
+    booksUpdated += 1;
+    SSE_EVENT.msg = "Adding: " + book.name;
+    SSE_EVENT.items = SSE_EVENT.items + 1;
 
-    const volumeId = await findVolumeId(book);
-    console.log(volumeId);
-
-    if (volumeId === undefined) {
-      errorsBooks.push(book);
-    } else {
-      createConnection(volumeId, book.name)
-        .then(() => {
-          booksUpdated += 1;
-        })
-        .catch((error) => {
-          console.log(
-            `Error connecting ${book.name} with ${volumeId}: ${error}`
-          );
-          errorsBooks.push(book);
-        });
+    try {
+      throw Error("oh no");
+    } catch (e) {
+      errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
     }
 
-    booksUpdated += 1;
-    SSE_EVENT.msg = "Added: " + book.name;
-    SSE_EVENT.items = SSE_EVENT.items + 1;
+    // const res = await findVolumeId(book);
+    // console.log(res);
+
+    // if (res === undefined) {
+    //   errorsBooks.push({ book, error: "No volumeID found" });
+    // } else {
+    //   const { volumeId, score } = res;
+    //   console.log("Book: " + book.name + ", Score: " + score);
+
+    //   try {
+    //     createConnection(volumeId, book.name);
+    //     booksUpdated += 1;
+    //   } catch (e) {
+    //     errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
+    //     console.log(e);
+    //   }
+    // }
+    await delay(1200);
   }
 
   return { booksUpdated, errorsBooks };
 }
+
+export type settingsApiResult = {
+  success: boolean;
+  booksUpdated: number;
+  errorsBooks: errorBooksType;
+};
 
 export const actions = {
   reload: async ({ locals }) => {
@@ -204,23 +223,20 @@ export const actions = {
 
     await updateData();
     console.log(SSE_EVENT);
-    //SSE_EVENT.items = 0;
+    SSE_EVENT.items = 0;
 
     await delay(1000);
     const result = await createConnections();
 
-    const response = {
+    const response: settingsApiResult = {
       success: result.errorsBooks.length == 0 ? true : false,
       ...result,
     };
 
-   
-
     // console.log(response);
     // console.log(JSON.stringify(response));
-    
-    
-    return response
+    SSE_EVENT.msg = "done";
+    return response;
 
     //  return { success: true };
   },

@@ -88,7 +88,7 @@
             {#if info.subtitle}
               ({info.subtitle})
             {/if}
-            <a class="pl-1" target="_blank" href="http://books.google.de/books?id=UktVDwAAQBAJ&hl" title="Open on books.google.de">
+            <a class="pl-1" target="_blank" href="http://books.google.de/books?id={volumeId}" title="Open on books.google.de">
               <span class="w-4 h-4 block">
                 <IoMdOpen />
               </span>

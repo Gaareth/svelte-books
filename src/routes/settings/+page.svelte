@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Moon } from "svelte-loading-spinners";
+	import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import type { ActionData } from "../$types.js";
 
   import type { Book } from "@prisma/client";
@@ -11,13 +11,10 @@
   // @ts-ignore
   import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
 
-  export let form: {
-    success: boolean;
-    errorsBooks: Book[];
-    booksUpdated: number;
-  };
+  export let form: settingsApiResult;
 
   import type { SSE_EVENT } from "../book/api/update_all/sse.js";
+  import type { settingsApiResult } from "./+page.server.js";
 
   let evtSource: EventSource;
 
@@ -45,27 +42,27 @@
       loading = true;
       evtSource = new EventSource("/book/api/update_all/");
       evtSource.onmessage = function (event) {
-        //console.log(event);
+        console.log(event);
         currentStatus = JSON.parse(event.data);
       };
       return async ({ result, update }) => {
         update();
         loading = false;
         evtSource.close();
-        console.log(result);
+        const { success, booksUpdated, errorsBooks } = result.data;
 
-        // if (success) {
-        //   toast.success(`Successfully added ${booksUpdated} new entries`);
-        // } else if (booksUpdated == 0) {
-        //   toast.error("Failed updating any book :(");
-        // } else {
-        //   toast(
-        //     `Updated ${booksUpdated} books and failed on ${errorsBooks.length}`,
-        //     {
-        //       icon: "⚠️",
-        //     }
-        //   );
-        // }
+        if (success) {
+          toast.success(`Successfully added ${booksUpdated} new entries`);
+        } else if (booksUpdated == 0) {
+          toast.error("Failed updating any book :(");
+        } else {
+          toast(
+            `Updated ${booksUpdated} books and failed in ${errorsBooks.length}`,
+            {
+              icon: "⚠️",
+            }
+          );
+        }
 
         // `result` is an `ActionResult` object
         // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
@@ -78,7 +75,7 @@
       disabled={loading}
     >
       {#if loading}
-        <span> <Moon size="18" color="black" duration="1s" /> </span>
+        <LoadingSpinner />
         loading..
       {:else}
         Reload all
@@ -91,37 +88,49 @@
   </p>
   {#if form !== undefined && form !== null}
     {#if form.errorsBooks.length > 0}
-      <span
-        >Finished updating all {form.booksUpdated} entries.
-        <span class="text-red-500 flex items-center gap-1">
+      <span class="inline-flex gap-1">
+        Finished updating all {form.booksUpdated} entries.
+        <span class="text-red-500 inline-flex items-center gap-1">
           <span class="w-[20px] inline-block">
             <ErrorIcon />
           </span>
-          Failed with {form.errorsBooks.length}</span
-        ></span
-      >
+          Failed in {form.errorsBooks.length} entries
+        </span>
+      </span>
       <div>
-        {#each form.errorsBooks as book}
-          <div>
-            {book.name}
+        {#each form.errorsBooks as errorBook}
+          <div class="flex items-center gap-2">
+            <span class="w-[20px] inline-block text-red-500">
+              <ErrorIcon />
+            </span>
+            <a href="/book/{errorBook.book.name}">{errorBook.book.name}</a>
+            -
+            {#if errorBook.volumeId !== undefined}
+              <a href="http://books.google.de/books?id={errorBook.volumeId}">volumeId: {errorBook.volumeId}</a>
+            {/if}
+            - Error: {errorBook.error}
           </div>
         {/each}
       </div>
     {:else}
-      <div>
-        <div class="text-green-400 flex items-center gap-1">
-          <span class="w-[20px] inline-block">
-            <SuccessIcon /></span>Successfully
-          </div>
+      <span class="inline-flex gap-1 flex-wrap">
+        <span class="text-green-400 inline-flex items-center gap-1">
+          <span class="w-[22px] inline-block">
+            <SuccessIcon />
+          </span>Successfully
+        </span>
         updated all {form.booksUpdated}
-        entries</div
-      >
+        entries
+      </span>
     {/if}
   {/if}
 
-  {#if currentStatus !== undefined && !form}
+  {#if currentStatus !== undefined && !form && currentStatus.msg != "done"}
     <div class="flex flex-col">
-      <span>{currentStatus.msg}</span>
+      <div>
+        <span>{currentStatus.msg}</span>
+        <span>{currentStatus.items}/{currentStatus.max}</span>
+      </div>
       <progress max={currentStatus.max} value={currentStatus.items} />
     </div>
   {/if}
