@@ -5,7 +5,10 @@
   import Statistics from "$lib/Statistics.svelte";
   import clsx from "clsx";
   import type { BookFullType } from "../app";
-  export let data: { books: BookFullType[], most_read_category: [string, number] };
+  export let data: {
+    books: BookFullType[];
+    most_read_category: [string, number];
+  };
   let most_read_category = data.most_read_category;
 
   let chance = 20;
@@ -16,7 +19,12 @@
   <title>Books - Gareth</title>
 </svelte:head>
 
-<h1 class={clsx("text-center text-5xl my-4 mb-6 mt-8", random != 0 ? "header-elnath" : "header-cloister")}>
+<h1
+  class={clsx(
+    "text-center text-5xl my-4 mb-6 mt-8 header-gradient",
+    random != 0 ? "header-elnath" : "header-cloister"
+  )}
+>
   My Book List
 </h1>
 {#if !$page.data.session}
@@ -42,10 +50,7 @@
   <Statistics books={data.books} {most_read_category} />
 {/if}
 <div class="my-5" />
-<BookNew
-  listName={"Read"}
-  authors={data.books.map((b) => b.author)}
-/>
+<BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
 <BookList books={data.books} />
 
 <style>
@@ -56,5 +61,27 @@
     font-family: "Cloister";
     font-size: 4.5rem;
     margin-bottom: 3rem;
+  }
+
+  .header-gradient {
+    /* background: #0968e5;
+    background: linear-gradient(to right, #0968e5 0%, #820da0 70%);
+    background: #62cdf4;
+    background: linear-gradient(to right, #62cdf4 0%, #2c67f2 100%); */
+
+    /* background: hsla(283, 88%, 48%, 1);
+
+    background: linear-gradient(
+      90deg,
+      hsla(283, 88%, 48%, 1) 0%,
+      hsla(234, 63%, 49%, 1) 100%
+    ); */
+
+    background: #f27f6d;
+    background: linear-gradient(to right, #f27f6d 0%, #9335e6 98%);
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 </style>

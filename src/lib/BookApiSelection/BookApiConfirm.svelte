@@ -16,17 +16,6 @@
   export let dispatch: EventDispatcher<any> | undefined = undefined;
 
   export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
-  $: {
-    if (volumeId !== undefined && apiBookSelected && getBookPromise === undefined) {      
-      getBookPromise = getBook(volumeId);
-    }
-  }
-
-  async function getBook(id: string) {
-    console.log("FETRHCINGF");
-    
-    return (await fetch(`/book/api/get/${id}`)).json();
-  }
 
   let item_ref: HTMLElement | undefined = undefined;
   let flexWrapHappened: boolean | undefined = undefined;
@@ -61,7 +50,7 @@
     <BookApiSkeleton />
   {:then book}
     {@const info = book.volumeInfo}
-    {@const isbn_13 = info.industryIdentifiers.find(
+    {@const isbn_13 = info.industryIdentifiers?.find(
       (t) => t.type == "ISBN_13"
     )?.identifier}
     {@const categories = info.categories ? info.categories?.join(" | ") : "uncategorized"}

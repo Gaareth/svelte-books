@@ -11,13 +11,36 @@
   export let summary_text = "Add API data?";
 
   const dispatch = createEventDispatcher();
-</script>
 
+  let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+
+  $: {
+    if (
+      volumeId !== undefined &&
+      apiBookSelected
+    ) {
+      getBookPromise = getBook(volumeId);
+    }
+  }
+
+  async function getBook(id: string) {
+    console.log("FETRHCINGF");
+
+    return (await fetch(`/book/api/get/${id}`)).json();
+  }
+</script>
+{volumeId}
+{apiBookSelected}
 <details {open}>
   <summary>{summary_text}</summary>
   <div>
     <div hidden={!apiBookSelected || volumeId === undefined}>
-        <BookApiConfirm {volumeId} bind:apiBookSelected bind:getBookPromise={apiData} {dispatch}/>
+      <BookApiConfirm
+        {volumeId}
+        bind:apiBookSelected
+        {getBookPromise}
+        {dispatch}
+      />
     </div>
 
     <div hidden={apiBookSelected}>

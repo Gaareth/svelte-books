@@ -9,7 +9,7 @@
 </script>
 
 <Moon
-  size="18"
+  size="20"
   color={color ??  themedColor}
   duration="1s"
 />
