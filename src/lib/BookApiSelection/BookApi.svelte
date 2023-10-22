@@ -29,8 +29,7 @@
     return (await fetch(`/book/api/get/${id}`)).json();
   }
 </script>
-{volumeId}
-{apiBookSelected}
+
 <details {open}>
   <summary>{summary_text}</summary>
   <div>

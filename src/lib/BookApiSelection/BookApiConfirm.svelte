@@ -1,5 +1,7 @@
 <script lang="ts">
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
+  import Image from "$lib/Image.svelte";
+  
   import { delay } from "$lib/utils";
   //@ts-ignore
   import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
@@ -32,7 +34,7 @@
     };
   }
 </script>
-
+{getBookPromise}
 {#if back_button}
   <button
     on:click={() => {apiBookSelected = false; dispatch && dispatch("back")}}
@@ -61,7 +63,7 @@
       <div class="flex items-center gap-4">
         <div>
           {#if info.imageLinks?.smallThumbnail}
-            <img
+            <Image
               src={info.imageLinks.smallThumbnail}
               alt="book cover"
               class="w-10 max-w-[2.5rem]"
@@ -117,6 +119,7 @@
         <span
           class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
           hidden={isbn_13 === undefined}
+          title="ISBN 13"
         >
           {isbn_13}
         </span>
