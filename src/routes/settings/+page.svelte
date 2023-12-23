@@ -8,6 +8,7 @@
   import ReloadButton from "./ReloadButton.svelte";
 
   export let form: settingsApiResult | settingsApiReloadResult;
+  console.log("form: ", form);
 
   import type { SSE_EVENT } from "../book/api/update_all/sse.js";
   import type {

@@ -69,8 +69,8 @@
       {/if}
     </button>
   </form>
-
-  {#if form !== undefined && form !== null}
+  
+  {#if form !== undefined && form !== null && form.diffs !== undefined}
     {#each form.diffs as diff}
       <div>
         {diff.bookName} - {diff.propName}: {diff.oldValue} --> {diff.newValue}

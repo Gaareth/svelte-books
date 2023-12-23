@@ -119,6 +119,10 @@ textarea {
     .item-border {
         @apply rounded-md dark:bg-slate-700 dark:border-slate-600 border hover:border-gray-300 dark:hover:border-slate-500
     }
+
+    .default-border {
+        @apply border rounded-md dark:border-slate-700
+    }
 }
 
 @font-face {

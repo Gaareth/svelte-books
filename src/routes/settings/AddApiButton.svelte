@@ -29,16 +29,19 @@
     // calling `cancel()` will prevent the submission
     // `submitter` is the `HTMLElement` that caused the form to be submitted
     loading = true;
-    evtSource = new EventSource("/book/api/try_add/");
+    evtSource = new EventSource("/book/api/update_all/");
     evtSource.onmessage = function (event) {
-      console.log(event);
-      currentStatus = JSON.parse(event.data);
+      // console.log(event);
+      // console.log(decodeURIComponent(event.data));
+
+      currentStatus = JSON.parse(decodeURIComponent(event.data));
     };
     return async ({ result, update }) => {
       update();
       loading = false;
       evtSource.close();
       const { success, booksUpdated, errorsBooks } = result.data;
+      console.log(result.data);
 
       if (success) {
         toast.success(`Successfully added ${booksUpdated} new entries`);
@@ -74,45 +77,48 @@
   </button>
 </form>
 
-{#if form !== undefined && form !== null}
-  {#if form.errorsBooks.length > 0}
-    <span class="inline-flex gap-1">
-      Finished updating all {form.booksUpdated} entries.
-      <span class="text-red-500 inline-flex items-center gap-1">
-        <span class="w-[20px] inline-block">
-          <ErrorIcon />
-        </span>
-        Failed in {form.errorsBooks.length} entries
-      </span>
-    </span>
-    <div>
-      {#each form.errorsBooks as errorBook}
-        <div class="flex items-center gap-2">
-          <span class="w-[20px] inline-block text-red-500">
+{#if form !== undefined && form !== null && form.errorsBooks !== undefined}
+  <div class="default-border p-3 my-2">
+    {#if form.errorsBooks.length > 0}
+      <span class="inline-flex gap-1 mb-2">
+        Finished updating all {form.booksUpdated} entries.
+        <span class="text-red-500 inline-flex items-center gap-1">
+          <span class="w-[20px] inline-block">
             <ErrorIcon />
           </span>
-          <a href="/book/{errorBook.book.name}">{errorBook.book.name}</a>
-          -
-          {#if errorBook.volumeId !== undefined}
-            <a href="http://books.google.de/books?id={errorBook.volumeId}"
-              >volumeId: {errorBook.volumeId}</a
-            >
-          {/if}
-          - Error: {errorBook.error}
-        </div>
-      {/each}
-    </div>
-  {:else}
-    <span class="inline-flex gap-1 flex-wrap">
-      <span class="text-green-400 inline-flex items-center gap-1">
-        <span class="w-[22px] inline-block">
-          <SuccessIcon />
-        </span>Successfully
+          Failed in {form.errorsBooks.length} entries
+        </span>
       </span>
-      updated all {form.booksUpdated}
-      entries
-    </span>
-  {/if}
+
+      <div>
+        {#each form.errorsBooks as errorBook}
+          <div class="flex items-center gap-2">
+            <span class="w-[20px] inline-block text-red-500">
+              <ErrorIcon />
+            </span>
+            <a href="/book/{errorBook.book.name}">{errorBook.book.name}</a>
+            -
+            {#if errorBook.volumeId !== undefined}
+              <a href="http://books.google.de/books?id={errorBook.volumeId}"
+                >volumeId: {errorBook.volumeId}</a
+              >
+            {/if}
+            - Error: {errorBook.error}
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <span class="inline-flex gap-1 flex-wrap">
+        <span class="text-green-400 inline-flex items-center gap-1">
+          <span class="w-[22px] inline-block">
+            <SuccessIcon />
+          </span>Successfully
+        </span>
+        updated all {form.booksUpdated}
+        entries
+      </span>
+    {/if}
+  </div>
 {/if}
 
 {#if currentStatus !== undefined && !form && currentStatus.msg != "done"}

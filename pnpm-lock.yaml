@@ -7,10 +7,10 @@ settings:
 dependencies:
   '@auth/core':
     specifier: latest
-    version: 0.17.0
+    version: 0.19.0
   '@auth/sveltekit':
     specifier: latest
-    version: 0.3.10(@sveltejs/kit@1.26.0)(svelte@4.2.2)
+    version: 0.5.0(@sveltejs/kit@1.26.0)(svelte@4.2.2)
   '@prisma/client':
     specifier: ^5.4.2
     version: 5.4.2(prisma@5.4.2)
@@ -103,6 +103,9 @@ devDependencies:
   svelte-loading-spinners:
     specifier: ^0.3.4
     version: 0.3.4
+  sveltekit-sse:
+    specifier: ^0.5.3
+    version: 0.5.3(@microsoft/fetch-event-source@2.0.1)(@sveltejs/kit@1.26.0)(svelte@4.2.2)
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3(ts-node@10.9.1)
@@ -135,8 +138,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
 
-  /@auth/core@0.17.0:
-    resolution: {integrity: sha512-YkbWuXny6sv0gF/sYm7KD3GxnnGxJomoQJzibzhJuwVOYjPUjjYBv/JMTkYcfpBuPHoHZwTVR3y1J+/W18oRxA==}
+  /@auth/core@0.19.0:
+    resolution: {integrity: sha512-BkFg2SoNftMN6A2Sn2g1lLFLTO74qMtFKsZmSCEF9d1csqSaEXIv50k6OrfniODWi5tZP8bcfSxGodv75khlOA==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -144,20 +147,21 @@ packages:
         optional: true
     dependencies:
       '@panva/hkdf': 1.1.1
-      cookie: 0.5.0
-      jose: 4.15.4
-      oauth4webapi: 2.3.0
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      jose: 5.1.3
+      oauth4webapi: 2.4.0
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/sveltekit@0.3.10(@sveltejs/kit@1.26.0)(svelte@4.2.2):
-    resolution: {integrity: sha512-VQKpEY5anPjD1kDc9bbNmNpCOuKJCNvmebKazxN5gwOFL9w5lAZLfTBp1ta10qj1CfjHPYlMrLTLI+jjN5KM3g==}
+  /@auth/sveltekit@0.5.0(@sveltejs/kit@1.26.0)(svelte@4.2.2):
+    resolution: {integrity: sha512-oSfeevQE06KSpA2gucwDarXLzJ6rA/s9XWsH3cq6vrEgxxgeFS+t3CB2QuJHzoBg3UXRkg6EBpxrPY/9tCkYrA==}
     peerDependencies:
-      '@sveltejs/kit': ^1.0.0
+      '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0
     dependencies:
-      '@auth/core': 0.17.0
+      '@auth/core': 0.19.0
       '@sveltejs/kit': 1.26.0(svelte@4.2.2)(vite@4.5.0)
       svelte: 4.2.2
     transitivePeerDependencies:
@@ -456,6 +460,10 @@ packages:
       - supports-color
     dev: false
 
+  /@microsoft/fetch-event-source@2.0.1:
+    resolution: {integrity: sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==}
+    dev: true
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -675,6 +683,10 @@ packages:
 
   /@types/cookie@0.5.3:
     resolution: {integrity: sha512-SLg07AS9z1Ab2LU+QxzU8RCmzsja80ywjf/t5oqw+4NSH20gIGlhLOrBDm1L3PBWzPa4+wkgFQVZAjE6Ioj2ug==}
+
+  /@types/cookie@0.6.0:
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
+    dev: false
 
   /@types/estree@1.0.3:
     resolution: {integrity: sha512-CS2rOaoQ/eAgAfcTfq6amKG7bsN+EMcgGY4FAFQdvSj2y1ixvOZTUA9mOtCai7E1SYu283XNw7urKK30nP3wkQ==}
@@ -1104,6 +1116,11 @@ packages:
   /cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
+
+  /cookie@0.6.0:
+    resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
@@ -1722,8 +1739,8 @@ packages:
     hasBin: true
     dev: true
 
-  /jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  /jose@5.1.3:
+    resolution: {integrity: sha512-GPExOkcMsCLBTi1YetY2LmkoY559fss0+0KVa6kOfb2YFe84nAM7Nm/XzuZozah4iHgmBGrCOHL5/cy670SBRw==}
     dev: false
 
   /js-yaml@4.1.0:
@@ -1977,8 +1994,8 @@ packages:
       set-blocking: 2.0.0
     dev: false
 
-  /oauth4webapi@2.3.0:
-    resolution: {integrity: sha512-JGkb5doGrwzVDuHwgrR4nHJayzN4h59VCed6EW8Tql6iHDfZIabCJvg6wtbn5q6pyB2hZruI3b77Nudvq7NmvA==}
+  /oauth4webapi@2.4.0:
+    resolution: {integrity: sha512-ZWl8ov8HeGVyc9Icl1cag76HvIcDAp23eIIT+UVGir+dEu8BMgMlvZeZwqLVd0P8DqaumH4N+QLQXN69G1QjSA==}
     dev: false
 
   /object-assign@4.1.1:
@@ -2590,6 +2607,18 @@ packages:
       locate-character: 3.0.0
       magic-string: 0.30.5
       periscopic: 3.1.0
+
+  /sveltekit-sse@0.5.3(@microsoft/fetch-event-source@2.0.1)(@sveltejs/kit@1.26.0)(svelte@4.2.2):
+    resolution: {integrity: sha512-glaU94H7U6QWEvPubSLn//2Taf2FDDrbdYB46hS2cEoydMsFxzOvUjpBlJIpnMSZsL8qi8llSX3p9eqZTR7v0g==}
+    peerDependencies:
+      '@microsoft/fetch-event-source': ^2.0.1
+      '@sveltejs/kit': ^1.25.2 || ^2.0.0
+      svelte: ^4.0.0
+    dependencies:
+      '@microsoft/fetch-event-source': 2.0.1
+      '@sveltejs/kit': 1.26.0(svelte@4.2.2)(vite@4.5.0)
+      svelte: 4.2.2
+    dev: true
 
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}

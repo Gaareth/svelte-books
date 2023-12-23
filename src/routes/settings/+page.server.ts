@@ -234,6 +234,7 @@ async function createConnections() {
     //   }
     // }
     await delay(1200);
+    break
   }
 
   return { booksUpdated, errorsBooks };
@@ -290,7 +291,7 @@ export const actions = {
       ...result,
     };
 
-    // console.log(response);
+    console.log(response);
     // console.log(JSON.stringify(response));
     SSE_EVENT.msg = "done";
     return response;

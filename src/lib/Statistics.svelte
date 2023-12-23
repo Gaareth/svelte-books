@@ -8,7 +8,9 @@
 
   let books_read_per_month = (month: number): BookFullType[] => {
     return books.filter(
-      (b) => b.yearRead == now.getFullYear() && (b.monthRead ?? -1) == month // -1 if monthRead is null, so this will be false
+      (b) => b.yearRead == now.getFullYear() && 
+      b.monthRead !== null && 
+      b.monthRead == month
     );
   };
 
@@ -17,6 +19,16 @@
   );
 
   let books_last_month: BookFullType[] = books_read_per_month(now.getMonth());
+
+  let books_read_per_year = (year: number): BookFullType[] => {
+    return books.filter((b) => b.yearRead == year);
+  };
+
+  let books_this_year: BookFullType[] = books_read_per_year(now.getFullYear());
+
+  let books_last_year: BookFullType[] = books_read_per_year(
+    now.getFullYear() - 1
+  );
 
   let most_read_author = () => {
     let authors = books.map((b) => b.author);
@@ -32,23 +44,39 @@
     const author_string = `${entry[0]} (${entry[1]})`;
     return author_string;
   };
-
-
-
 </script>
 
-<div class="grid gap-3 sm:grid-flow-col1 grid-cols-2 sm:grid-cols-4 grid-rows-2 sm:grid-rows-1 stats-wrapper">
+<div
+  class="grid gap-3 sm:grid-flow-col1 grid-cols-2 sm:grid-cols-4 grid-rows-2 sm:grid-rows-1 stats-wrapper"
+>
   <Stats name="total books read" value={books.length} />
   <Stats
     name="books read this month"
     value={books_this_month.length}
     last_value={books_last_month.length}
   />
+
+  {#if books_last_year.length > 0}
+    <Stats
+      name="books read this year"
+      value={books_this_year.length}
+      last_value={books_last_year.length}
+    />
+  {/if}
+
   {#if books.length > 0}
-    <Stats name="most read author" value={most_read_author()} class="col-span-2" />
+    <Stats
+      name="most read author"
+      value={most_read_author()}
+      class="col-span-2"
+    />
   {/if}
   {#if books.length > 0}
-    <Stats name="most read genre/category" value={most_read_category[0] + " (" + most_read_category[1] + ")"} class="col-span-2" />
+    <Stats
+      name="most read genre/category"
+      value={most_read_category[0] + " (" + most_read_category[1] + ")"}
+      class="col-span-2"
+    />
   {/if}
 </div>
 
