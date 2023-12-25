@@ -1,12 +1,14 @@
 <script lang="ts">
-	import BookApiDetails from './BookApiSelection/BookApiDetails.svelte';
+  import BookApiDetails from "./BookApiSelection/BookApiDetails.svelte";
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { toast } from "svelte-french-toast";
   import { Moon } from "svelte-loading-spinners";
-  
-  import ArrowDown from 'svelte-icons/io/IoMdArrowDropdown.svelte'
-  import ArrowUp from 'svelte-icons/io/IoMdArrowDropup.svelte'
+
+  //@ts-ignore
+  import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
+  //@ts-ignore
+  import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -110,23 +112,30 @@
       </div>
 
       <div class="flex justify-center mt-2">
-        <button on:click={take_over} class="my-2 flex btn-generic items-center group 
+        <button
+          on:click={take_over}
+          class="my-2 flex btn-generic items-center group
         disabled:hover:cursor-not-allowed"
-        disabled={!(name.length > 0 && author.length > 0) && volumeId === undefined}>
+          disabled={!(name.length > 0 && author.length > 0) &&
+            volumeId === undefined}
+        >
           take over data
           <span class="group-disabled:w-0 w-8 self-center block">
             {#if volumeId !== undefined}
               <ArrowUp />
             {:else if name.length > 0 && author.length > 0}
               <ArrowDown />
-
             {/if}
           </span>
         </button>
       </div>
 
       <div>
-        <BookApiDetails bind:volumeId bind:query={api_query} bind:open={api_open}/>
+        <BookApiDetails
+          bind:volumeId
+          bind:query={api_query}
+          bind:open={api_open}
+        />
       </div>
 
       <div class="flex justify-end">
