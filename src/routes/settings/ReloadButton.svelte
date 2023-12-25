@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { settingsApiReloadResult } from "./+page.server.js";
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import toast from "svelte-french-toast";
@@ -13,9 +12,7 @@
 
   let loading = false;
   let evtSource: EventSource;
-  let currentStatus: any;
-
-  export let form: settingsApiReloadResult;
+  export let currentStatus: any;
 </script>
 
 <div>
@@ -69,24 +66,8 @@
       {/if}
     </button>
   </form>
-  
-  {#if form !== undefined && form !== null && form.diffs !== undefined}
-    {#each form.diffs as diff}
-      <div>
-        {diff.bookName} - {diff.propName}: {diff.oldValue} --> {diff.newValue}
-      </div>
-    {:else}
-      No changes found
-    {/each}
-  {/if}
 
-  {#if currentStatus !== undefined && !form && currentStatus.msg != "done"}
-    <div class="flex flex-col">
-      <div>
-        <span>{currentStatus.msg}</span>
-        <span>{currentStatus.items}/{currentStatus.max}</span>
-      </div>
-      <progress max={currentStatus.max} value={currentStatus.items} />
-    </div>
-  {/if}
+
+
+  
 </div>

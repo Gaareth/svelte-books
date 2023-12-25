@@ -79,9 +79,23 @@
 
     background: #f27f6d;
     background: linear-gradient(to right, #f27f6d 0%, #9335e6 98%);
+    animation: scroll_background 10s ease infinite;
+    background-size: 200% 100%;
 
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  @keyframes scroll_background {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 </style>

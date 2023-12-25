@@ -1,21 +1,18 @@
 <script lang="ts">
-  import type { settingsApiResult } from "./+page.server.js";
+  import type {
+    settingsApiReloadResult,
+    settingsApiResult,
+  } from "./+page.server.js";
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import toast from "svelte-french-toast";
 
   // @ts-ignore
-  import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
-  // @ts-ignore
-  import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
-  // @ts-ignore
   import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
 
   let loading = false;
   let evtSource: EventSource;
-  let currentStatus: any;
-
-  export let form: settingsApiResult;
+  export let currentStatus: any;
 </script>
 
 <form
@@ -41,7 +38,7 @@
       loading = false;
       evtSource.close();
       const { success, booksUpdated, errorsBooks } = result.data;
-      console.log(result.data);
+      //console.log(result.data);
 
       if (success) {
         toast.success(`Successfully added ${booksUpdated} new entries`);
@@ -76,57 +73,3 @@
     {/if}
   </button>
 </form>
-
-{#if form !== undefined && form !== null && form.errorsBooks !== undefined}
-  <div class="default-border p-3 my-2">
-    {#if form.errorsBooks.length > 0}
-      <span class="inline-flex gap-1 mb-2">
-        Finished updating all {form.booksUpdated} entries.
-        <span class="text-red-500 inline-flex items-center gap-1">
-          <span class="w-[20px] inline-block">
-            <ErrorIcon />
-          </span>
-          Failed in {form.errorsBooks.length} entries
-        </span>
-      </span>
-
-      <div>
-        {#each form.errorsBooks as errorBook}
-          <div class="flex items-center gap-2">
-            <span class="w-[20px] inline-block text-red-500">
-              <ErrorIcon />
-            </span>
-            <a href="/book/{errorBook.book.name}">{errorBook.book.name}</a>
-            -
-            {#if errorBook.volumeId !== undefined}
-              <a href="http://books.google.de/books?id={errorBook.volumeId}"
-                >volumeId: {errorBook.volumeId}</a
-              >
-            {/if}
-            - Error: {errorBook.error}
-          </div>
-        {/each}
-      </div>
-    {:else}
-      <span class="inline-flex gap-1 flex-wrap">
-        <span class="text-green-400 inline-flex items-center gap-1">
-          <span class="w-[22px] inline-block">
-            <SuccessIcon />
-          </span>Successfully
-        </span>
-        updated all {form.booksUpdated}
-        entries
-      </span>
-    {/if}
-  </div>
-{/if}
-
-{#if currentStatus !== undefined && !form && currentStatus.msg != "done"}
-  <div class="flex flex-col">
-    <div>
-      <span>{currentStatus.msg}</span>
-      <span>{currentStatus.items}/{currentStatus.max}</span>
-    </div>
-    <progress max={currentStatus.max} value={currentStatus.items} />
-  </div>
-{/if}

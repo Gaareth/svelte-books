@@ -240,7 +240,13 @@ async function createConnections() {
   return { booksUpdated, errorsBooks };
 }
 
-export type settingsApiResult = {
+export type settingsApiResult<T> = {
+  success: boolean;
+  booksUpdated: number;
+  items: T;
+};
+
+export type settingsApiCreateResult = {
   success: boolean;
   booksUpdated: number;
   errorsBooks: errorBooksType;
@@ -286,7 +292,7 @@ export const actions = {
     SSE_EVENT.max = 0;
 
     const result = await createConnections();
-    const response: settingsApiResult = {
+    const response: settingsApiCreateResult = {
       success: result.errorsBooks.length == 0 ? true : false,
       ...result,
     };
