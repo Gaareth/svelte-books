@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
   //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
@@ -10,16 +11,25 @@
   //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();
   // };
 
-  let query: string;
+  export let query: string | undefined = undefined;
   let queriedBooksPromise: Promise<queriedBook[]>;
 
   const queryBooks = async () => {
-    return (await fetch(`/book/api/list/?query=${query}`)).json();
+    let data = (await fetch(`/book/api/list/?query=${query}`)).json();
+    return data.then((d) => {
+      if (d.error !== undefined) {
+        return Promise.reject(d.error);
+      }
+
+      return d;
+    });
+
+    // return data
   };
 
   const handleClick = async () => {
     queriedBooksPromise = queryBooks();
-    console.log(await queryBooks());
+    // console.log(await queryBooks()); // TODO: remove
   };
 
   export let selectedBookId: string | undefined;
@@ -105,8 +115,10 @@
             </div>
           </label>
         {/each}
-      {:catch someError}
-        System error: {someError.message}.
+      {:catch error}
+        <p class="text-red-500 pt-1 text-sm">
+          System error: {error.message}.
+        </p>
       {/await}
     {/if}
   </div>

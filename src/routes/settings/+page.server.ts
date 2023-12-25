@@ -33,8 +33,8 @@ async function updateData() {
     const { id, title } = book;
     SSE_EVENT.msg = "Updating: " + title;
     SSE_EVENT.items = SSE_EVENT.items + 1;
-    const apiData = await getBookApiData(id);
-    const extractedData = extractBookApiData(apiData);
+    // const apiData = await getBookApiData(id);
+    // const extractedData = extractBookApiData(apiData);
     // const categories = extractCategories(apiData);
 
     // // create non-existing categories
@@ -66,30 +66,36 @@ async function updateData() {
     // });
 
     // TOOD: zipMap?
-    zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
-      (props) => {
-        console.log(props);
+    // zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
+    //   (props) => {
+    //     console.log(props);
         
-        const entries = [
-          [props[0], extractedData[props[0]]],
-          [props[1], extractedData[props[1]]],
-        ];
-        console.log(entries);
+    //     const entries = [
+    //       [props[0], extractedData[props[0]]],
+    //       [props[1], extractedData[props[1]]],
+    //     ];
+    //     console.log(entries);
 
-        const oldKV = entries[0];
+    //     const oldKV = entries[0];
 
-        const newKV = entries[1];
-        if (oldKV[1] != newKV[1]) {
-          return diffs.push({
-            bookName: title,
-            propName: oldKV[0],
-            oldValue: oldKV[1],
-            newValue: newKV[1],
-          });
-        }
-      }
-    );
-    await delay(1000);
+    //     const newKV = entries[1];
+    //     if (oldKV[1] != newKV[1]) {
+    //       return diffs.push({
+    //         bookName: title,
+    //         propName: oldKV[0],
+    //         oldValue: oldKV[1],
+    //         newValue: newKV[1],
+    //       });
+    //     }
+    //   }
+    // );
+    diffs.push({
+              bookName: title,
+              propName: "a",
+              oldValue: 1,
+              newValue: 2,
+            });
+    await delay(200);
     booksUpdated += 1;
   }
 

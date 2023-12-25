@@ -29,8 +29,8 @@
       loading = true;
       evtSource = new EventSource("/book/api/update_all/");
       evtSource.onmessage = function (event) {
-        console.log(event);
-        currentStatus = JSON.parse(event.data);
+        // console.log(event);
+        currentStatus = JSON.parse(decodeURIComponent(event.data));
       };
       return async ({ result, update }) => {
         update();

@@ -13,7 +13,14 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   }
 
   const data = await queryBooks(query);
-  // console.log(data);
+  console.log(data);
+
+  if (Object.hasOwn(json, "error")) {
+    // return new Promise((resolve, reject) => {
+    //     reject(new Error(json.error.message))
+    // });
+    throw error(0, "arsch");
+  }
 
   return json(data);
 };

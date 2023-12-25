@@ -1,9 +1,13 @@
 <script lang="ts">
+	import BookApiDetails from './BookApiSelection/BookApiDetails.svelte';
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { toast } from "svelte-french-toast";
   import { Moon } from "svelte-loading-spinners";
   
+  import ArrowDown from 'svelte-icons/io/IoMdArrowDropdown.svelte'
+  import ArrowUp from 'svelte-icons/io/IoMdArrowDropup.svelte'
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
@@ -18,6 +22,9 @@
   let name = "";
   let author = "";
   let loading = false;
+
+  let api_query = "";
+  let api_open = false;
 
   $: has_content = name.length > 0 && author.length > 0;
   let volumeId: string;
@@ -52,6 +59,11 @@
         );
       }
     }
+  }
+
+  function take_over() {
+    api_open = true;
+    api_query = name + " " + author;
   }
 </script>
 
@@ -97,8 +109,24 @@
         />
       </div>
 
-      <div class="mt-4">
-        <BookApi bind:volumeId />
+      <div class="flex justify-center mt-2">
+        <button on:click={take_over} class="my-2 flex btn-generic items-center group 
+        disabled:hover:cursor-not-allowed"
+        disabled={!(name.length > 0 && author.length > 0) && volumeId === undefined}>
+          take over data
+          <span class="group-disabled:w-0 w-8 self-center block">
+            {#if volumeId !== undefined}
+              <ArrowUp />
+            {:else if name.length > 0 && author.length > 0}
+              <ArrowDown />
+
+            {/if}
+          </span>
+        </button>
+      </div>
+
+      <div>
+        <BookApiDetails bind:volumeId bind:query={api_query} bind:open={api_open}/>
       </div>
 
       <div class="flex justify-end">

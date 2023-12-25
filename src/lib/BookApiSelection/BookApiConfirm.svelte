@@ -34,7 +34,7 @@
     };
   }
 </script>
-{getBookPromise}
+
 {#if back_button}
   <button
     on:click={() => {apiBookSelected = false; dispatch && dispatch("back")}}

@@ -20,8 +20,6 @@ declare global {
   }
 }
 
-
-
 import { Prisma } from "@prisma/client";
 
 export type BookFullType = Prisma.BookGetPayload<{
@@ -33,7 +31,6 @@ export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 export type BookApiDataCategories = Prisma.BookApiDataGetPayload<{
   include: { categories: true };
 }>;
-
 
 export type queriedBook = {
   id: string;
@@ -53,10 +50,12 @@ export type queriedBookFull = {
     authors: string[];
     publishedDate: string | undefined;
     publisher: string | undefined;
-    industryIdentifiers: {
-      type: string | undefined;
-      identifier: string | undefined;
-    }[] | undefined;
+    industryIdentifiers:
+      | {
+          type: string | undefined;
+          identifier: string | undefined;
+        }[]
+      | undefined;
     imageLinks: { smallThumbnail: string; thumbnail: string } | undefined;
     pageCount: number | undefined;
     printedPageCount: number | undefined;
@@ -64,7 +63,5 @@ export type queriedBookFull = {
     language: string;
   };
 };
-
-
 
 export {};

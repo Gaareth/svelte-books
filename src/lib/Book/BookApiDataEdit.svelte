@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
+  import BookApiDetails from "$lib/BookApiSelection/BookApiDetails.svelte";
   import BookApi from "./../BookApiSelection/BookApi.svelte";
   export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;
@@ -83,7 +84,7 @@
     </p>
   {/if}
 
-  <BookApi
+  <BookApiDetails
     open={false}
     bind:volumeId={newVolumeId}
     summary_text={data !== null ? "Update API connection" : undefined}

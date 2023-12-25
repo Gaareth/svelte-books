@@ -28,7 +28,7 @@ textarea {
     @apply dark:bg-[#F2440D] dark:border-[#F2440D] dark:text-white
 } */
 .btn-primary-black {
-    @apply dark:bg-[#005773] dark:border-[#00607f] dark:hover:bg-[#00759a] dark:text-white
+    @apply dark:bg-[#006B8C] dark:border-[#006B8C] dark:hover:border-[#00a4d9] dark:text-white
 }
 
 .btn-primary-black:disabled {
