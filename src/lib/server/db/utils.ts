@@ -74,7 +74,7 @@ export function extractBookApiData(apiData: queriedBookFull) {
     info;
   const authors = info.authors.join("|"); //TODO: relation
   const thumbnailUrl = info.imageLinks?.thumbnail;
-  const isbn_13 = info.industryIdentifiers.find(
+  const isbn_13 = info.industryIdentifiers?.find(
     (o) => o.type == "ISBN_13"
   )?.identifier;
 

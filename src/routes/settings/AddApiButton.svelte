@@ -9,6 +9,7 @@
 
   // @ts-ignore
   import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
+  import { update } from "svelte-french-toast/dist/core/store.js";
 
   let loading = false;
   let evtSource: EventSource;
@@ -37,6 +38,8 @@
       update();
       loading = false;
       evtSource.close();
+
+      // @ts-ignore
       const { success, booksUpdated, errorsBooks } = result.data;
       //console.log(result.data);
 
