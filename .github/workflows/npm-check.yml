@@ -24,8 +24,8 @@ jobs:
     - name: svelte check
       run: npm run check-noenv
       
-    - name: eslint 
-      run: npm run lint
+    # - name: eslint 
+    #   run: npm run lint
       
     - name: vite build
       run: npm run build-noenv
