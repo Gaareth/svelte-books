@@ -71,7 +71,7 @@
       class="col-span-2"
     />
   {/if}
-  {#if books.length > 0}
+  {#if books.length > 0 && most_read_category[0] !== undefined}
     <Stats
       name="most read genre/category"
       value={most_read_category[0] + " (" + most_read_category[1] + ")"}

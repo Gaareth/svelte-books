@@ -28,6 +28,7 @@
           <a class="nav-a" href="/to-read">To-Read</a>
           <a class="nav-a" href="/settings">Settings</a>
         {/if}
+        <a class="nav-a" href="/about">About</a>
       </nav>
 
       <div class="flex-1 justify-end flex">
