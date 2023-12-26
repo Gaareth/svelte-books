@@ -2,38 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    /* transition: background-color 0.1s ease-in-out; */
-    @apply bg-white dark:bg-slate-800 text-black dark:text-white;
-}
 
-input {
-    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white
-}
-
-input[type="radio"] {
-    @apply text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500
-}
-
-select {
-    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
-}
-
-textarea {
-    @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
-}
-
-
-/* .btn-primary-black {
-    @apply dark:bg-[#F2440D] dark:border-[#F2440D] dark:text-white
-} */
-.btn-primary-black {
-    @apply dark:bg-[#006B8C] dark:border-[#006B8C] dark:hover:border-[#00a4d9] dark:text-white
-}
-
-.btn-primary-black:disabled {
-    @apply dark:border-[#545250] dark:bg-[#545250]
-}
 
 .autocomplete::after {
     @apply border-black dark:border-gray-200 !important
@@ -49,6 +18,49 @@ textarea {
 
 .autocomplete-list-item {
     @apply dark:text-gray-100 !important
+}
+
+@layer base {
+    body {
+        /* transition: background-color 0.1s ease-in-out; */
+        @apply bg-white dark:bg-slate-800 text-black dark:text-white
+    }
+
+    input {
+        @apply dark:border-slate-800 dark:focus:border-blue-800 dark:bg-slate-700 dark:text-white;
+    }
+
+    [type="text"],
+    input:where(:not([type])),
+    [type="email"],
+    [type="url"],
+    [type="password"],
+    [type="number"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="search"],
+    [type="tel"],
+    [type="time"],
+    [type="week"],
+    [multiple],
+    textarea,
+    select {
+        @apply dark:border-slate-800 dark:focus:border-blue-800 dark:bg-slate-700 dark:text-white;
+    }
+
+    input[type="radio"] {
+        @apply text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500 !important;
+    }
+
+    select {
+        @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
+    }
+
+    textarea {
+        @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700
+    }
+
 }
 
 @layer utilities {
@@ -97,11 +109,15 @@ textarea {
     }
 
     .input {
-        @apply border-gray-200 rounded-md sm:text-sm w-full;
+        @apply border-gray-200 dark:border-slate-800 rounded-md sm:text-sm w-full;
     }
 
     .btn-primary-black {
         @apply inline-flex items-center gap-2 rounded-md border-2 border-[#171515] bg-[#171515] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-[#171515] focus:outline-none focus:ring active:opacity-75 focus:bg-[#171515] focus:text-white;
+    }
+
+    .btn-primary-black {
+        @apply dark:bg-[#006B8C] dark:border-[#006B8C] dark:hover:border-[#00a4d9] dark:text-white dark:hover:text-white dark:hover:bg-[#006B8C] dark:focus:text-white dark:focus:bg-[#006B8C] dark:focus:border-[#00a4d9];
     }
 
     .btn-generic {
@@ -123,6 +139,8 @@ textarea {
     .default-border {
         @apply border rounded-md dark:border-slate-700
     }
+
+
 }
 
 @font-face {

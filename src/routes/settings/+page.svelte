@@ -1,10 +1,6 @@
 <script lang="ts">
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
-  import type { ActionData } from "../$types.js";
 
-  import type { Book } from "@prisma/client";
-  import { toast } from "svelte-french-toast";
-  import { enhance } from "$app/forms";
   import ReloadButton from "./ReloadButton.svelte";
 
   import type { SSE_EVENT } from "../book/api/update_all/sse.js";

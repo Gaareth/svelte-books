@@ -95,7 +95,7 @@ async function updateData() {
               oldValue: 1,
               newValue: 2,
             });
-    await delay(200);
+    await delay(100);
     booksUpdated += 1;
   }
 

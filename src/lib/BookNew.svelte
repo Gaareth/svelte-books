@@ -111,7 +111,7 @@
         />
       </div>
 
-      <div class="flex justify-center mt-2">
+      <div class="flex justify-center mt-4">
         <button
           on:click={take_over}
           class="my-2 flex btn-generic items-center group

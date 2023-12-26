@@ -1,15 +1,10 @@
 <script lang="ts">
-  import type {
-    settingsApiReloadResult,
-    settingsApiResult,
-  } from "./+page.server.js";
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import toast from "svelte-french-toast";
 
   // @ts-ignore
   import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
-  import { update } from "svelte-french-toast/dist/core/store.js";
 
   let loading = false;
   let evtSource: EventSource;
