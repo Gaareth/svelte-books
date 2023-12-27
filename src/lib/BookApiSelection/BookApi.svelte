@@ -11,7 +11,7 @@
 
   let apiBookSelected: boolean = false;
 
-  let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+  export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
 
   $: {
     if (volumeId !== undefined && apiBookSelected) {
@@ -20,7 +20,7 @@
   }
 
   async function getBook(id: string) {
-    console.log("FETRHCINGF");
+    // console.log("FETRHCINGF");
 
     return (await fetch(`/book/api/get/${id}`)).json();
   }

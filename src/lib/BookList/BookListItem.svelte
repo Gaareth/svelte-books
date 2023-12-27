@@ -132,7 +132,7 @@
           <slot name="delete">
             {#if allow_deletion}
               <button
-                class="group p-2 delete-button"
+                class="group p-2 delete-button border-0"
                 title="Delete book"
                 type="button"
                 on:click={() => {

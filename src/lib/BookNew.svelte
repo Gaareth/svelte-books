@@ -14,6 +14,7 @@
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApi from "./BookApiSelection/BookApi.svelte";
+  import type { queriedBookFull } from "$appTypes";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -63,9 +64,19 @@
     }
   }
 
-  function take_over() {
-    api_open = true;
-    api_query = name + " " + author;
+  let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+  async function take_over() {
+    if (volumeId !== undefined) {
+      let data = await getBookPromise;
+      console.log(data);
+      name = data?.volumeInfo.title || "";
+
+
+      author = data?.volumeInfo.authors[0] || "";
+    } else {
+      api_open = true;
+      api_query = name + " " + author;
+    }
   }
 </script>
 
@@ -132,6 +143,7 @@
 
       <div>
         <BookApiDetails
+          bind:getBookPromise
           bind:volumeId
           bind:query={api_query}
           bind:open={api_open}

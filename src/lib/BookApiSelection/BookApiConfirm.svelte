@@ -12,6 +12,7 @@
   import type { queriedBookFull } from "$appTypes";
   import { boolean } from "zod";
   import type { EventDispatcher } from "svelte";
+
   export let volumeId: string | undefined;
   export let apiBookSelected: boolean = true;
   export let back_button: boolean = true;
@@ -86,7 +87,7 @@
             </a>
           </p>
           <p class="text-base">
-            {info.authors?.join(",") ?? "unknown author"}
+            {info.authors?.join(", ") ?? "unknown author"}
           </p>
         </div>
       </div>
