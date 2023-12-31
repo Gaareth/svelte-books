@@ -11,6 +11,7 @@
   import { flip } from "svelte/animate";
   import type { ItemDeleteEvent } from "./BookListItem.svelte";
   import BookListItem from "./BookListItem.svelte";
+  import { sortBooksDefault } from "$lib/utils";
 
   export let books: BookFullType[];
 
@@ -30,6 +31,16 @@
   let deletionBook: Book;
   let openModal = false;
 
+  let showOptions = false;
+
+  type sortOption =
+    | "date_created"
+    | "date_read"
+    | "author"
+    | "title"
+    | "ranking";
+  let selectedSort: sortOption = "title";
+
   const animate = (node: any, args: any) => {
     const animation = added_book
       ? scale(node, args)
@@ -42,13 +53,45 @@
     openModal = true;
     deletionBook = event.detail.book;
   };
+
+  const sortBooks = (b1: Book, b2: Book) => {
+    console.log(selectedSort);
+    
+    switch (selectedSort) {
+      case "date_created":
+        return b1.createdAt.getTime() - b2.createdAt.getTime() * 1;
+
+      case "author":
+        return b1.author.localeCompare(b2.author);
+
+      case "title":
+        return b1.name.localeCompare(b2.name);
+
+      case "date_read":
+      default:
+        return sortBooksDefault(b1, b2);
+    }
+  };
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
   <h2 class="flex items-end text-2xl -mb-1">Books</h2>
   {#if books.length > 0}
-    <BookSearch bind:search_term={$searchStore.search} />
+    <div class="flex gap-2">
+      <BookSearch bind:search_term={$searchStore.search} />
+      <button class="btn-generic" on:click={() => (showOptions = !showOptions)}
+        >more</button
+      >
+    </div>
   {/if}
+</div>
+
+<div class="mb-2" hidden={!showOptions}>
+  <select class="default-border border-0" bind:value={selectedSort}>
+    <option value="date_read">Sort by date</option>
+    <option value="title">Sort by title</option>
+    <option value="author">Sort by author</option>
+  </select>
 </div>
 
 {#if books.length <= 0}
