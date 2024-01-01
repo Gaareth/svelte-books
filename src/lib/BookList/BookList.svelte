@@ -13,6 +13,11 @@
   import BookListItem from "./BookListItem.svelte";
   import { sortBooksDefault } from "$lib/utils";
 
+  //@ts-ignore
+  import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
+  //@ts-ignore
+  import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
+
   export let books: BookFullType[];
 
   const searchStore = createSearchStore(books);
@@ -22,6 +27,8 @@
     added_book = true;
     $searchStore.data = books;
   }
+
+  $: books_displayed = $searchStore.filtered;
 
   const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
   onDestroy(() => {
@@ -33,13 +40,15 @@
 
   let showOptions = false;
 
+
   type sortOption =
     | "date_created"
     | "date_read"
     | "author"
     | "title"
     | "ranking";
-  let selectedSort: sortOption = "title";
+
+  let selectedSort: sortOption = "date_read";
 
   const animate = (node: any, args: any) => {
     const animation = added_book
@@ -54,24 +63,26 @@
     deletionBook = event.detail.book;
   };
 
-  const sortBooks = (b1: Book, b2: Book) => {
-    console.log(selectedSort);
-    
-    switch (selectedSort) {
-      case "date_created":
-        return b1.createdAt.getTime() - b2.createdAt.getTime() * 1;
 
-      case "author":
-        return b1.author.localeCompare(b2.author);
+const sortBooks = (b1: Book, b2: Book) => {
+  // console.log(selectedSort);
+  
+  switch (selectedSort) {
+    case "date_created":
+      return b1.createdAt.getTime() - b2.createdAt.getTime() * 1;
 
-      case "title":
-        return b1.name.localeCompare(b2.name);
+    case "author":
+      return b1.author.localeCompare(b2.author);
 
-      case "date_read":
-      default:
-        return sortBooksDefault(b1, b2);
-    }
-  };
+    case "title":
+      return b1.name.localeCompare(b2.name);
+
+    case "date_read":
+    default:
+      return sortBooksDefault(b1, b2);
+  }
+};
+
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
@@ -79,19 +90,29 @@
   {#if books.length > 0}
     <div class="flex gap-2">
       <BookSearch bind:search_term={$searchStore.search} />
-      <button class="btn-generic" on:click={() => (showOptions = !showOptions)}
-        >more</button
-      >
+      <button class="btn-generic" on:click={() => (showOptions = !showOptions)}>
+        more
+      </button>
     </div>
   {/if}
 </div>
-
-<div class="mb-2" hidden={!showOptions}>
-  <select class="default-border border-0" bind:value={selectedSort}>
+<!-- bind:value={selectedSort} on:change={() => $searchStore.filtered = $searchStore.filtered.sort(sortBooks)} -->
+<!-- bind:value={$searchStore.sorting} -->
+<div class="mb-2" hidden={!showOptions} >
+  <select class="default-border" bind:value={selectedSort} on:change={() => books_displayed = $searchStore.filtered.sort(sortBooks)}>
     <option value="date_read">Sort by date</option>
     <option value="title">Sort by title</option>
     <option value="author">Sort by author</option>
   </select>
+  <button class="btn-generic">
+    <span class="block w-10">
+      {#if true}
+        <ArrowDown />
+      {:else}
+         <!-- else content here -->
+      {/if}
+    </span>
+  </button>
 </div>
 
 {#if books.length <= 0}
@@ -100,8 +121,8 @@
   <p>No books found matching your search :(</p>
 {/if}
 
-{#each $searchStore.filtered as book (book.id)}
-  <div transition:animate={{}} animate:flip={{ duration: 300 }}>
+{#each books_displayed as book (book.id)}
+  <div >
     <BookListItem {book} on:delete={openPopup} />
   </div>
 {/each}
