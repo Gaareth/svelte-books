@@ -38,7 +38,7 @@ export const searchHandler = <T extends Record<PropertyKey, any>>(
 
   const searchTerm = store.search.toLowerCase() || "";
   store.filtered = searcher.search(searchTerm)
-  console.log("fuzyy sorting");
+  // console.log("fuzyy sorting");
   
 
   // store.filtered = store.filtered.sort(sortBooks(store.sorting));

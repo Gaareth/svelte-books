@@ -94,7 +94,7 @@
     }
 
     .default-border {
-        @apply border rounded-md dark:border-slate-700 border-gray-200
+        @apply border rounded-md dark:border-slate-600 border-gray-200
     }
 
 }

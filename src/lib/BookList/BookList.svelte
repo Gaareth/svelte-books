@@ -12,11 +12,7 @@
   import type { ItemDeleteEvent } from "./BookListItem.svelte";
   import BookListItem from "./BookListItem.svelte";
   import { sortBooksDefault } from "$lib/utils";
-
-  //@ts-ignore
-  import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
-  //@ts-ignore
-  import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
+  import SortOrder from "./SortOrder.svelte";
 
   export let books: BookFullType[];
 
@@ -39,7 +35,7 @@
   let openModal = false;
 
   let showOptions = false;
-
+  let sortingReversed = false;
 
   type sortOption =
     | "date_created"
@@ -63,26 +59,31 @@
     deletionBook = event.detail.book;
   };
 
+  const sortBooks = () => {
+    books_displayed = $searchStore.filtered.sort(
+      (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
+    );
+  };
 
-const sortBooks = (b1: Book, b2: Book) => {
-  // console.log(selectedSort);
-  
-  switch (selectedSort) {
-    case "date_created":
-      return b1.createdAt.getTime() - b2.createdAt.getTime() * 1;
+  const cmpBooks = (b1: BookFullType, b2: BookFullType) => {
+    switch (selectedSort) {
+      case "date_created":
+        return b1.createdAt.getTime() - b2.createdAt.getTime();
 
-    case "author":
-      return b1.author.localeCompare(b2.author);
+      case "author":
+        return b1.author.localeCompare(b2.author);
 
-    case "title":
-      return b1.name.localeCompare(b2.name);
+      case "title":
+        return b1.name.localeCompare(b2.name);
 
-    case "date_read":
-    default:
-      return sortBooksDefault(b1, b2);
-  }
-};
+      case "ranking":
+        return (b1.rating?.stars ?? 0) - (b2.rating?.stars ?? 0);
 
+      case "date_read":
+      default:
+        return sortBooksDefault(b1, b2);
+    }
+  };
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
@@ -98,21 +99,22 @@ const sortBooks = (b1: Book, b2: Book) => {
 </div>
 <!-- bind:value={selectedSort} on:change={() => $searchStore.filtered = $searchStore.filtered.sort(sortBooks)} -->
 <!-- bind:value={$searchStore.sorting} -->
-<div class="mb-2" hidden={!showOptions} >
-  <select class="default-border" bind:value={selectedSort} on:change={() => books_displayed = $searchStore.filtered.sort(sortBooks)}>
-    <option value="date_read">Sort by date</option>
-    <option value="title">Sort by title</option>
-    <option value="author">Sort by author</option>
-  </select>
-  <button class="btn-generic">
-    <span class="block w-10">
-      {#if true}
-        <ArrowDown />
-      {:else}
-         <!-- else content here -->
-      {/if}
-    </span>
-  </button>
+<div class="my-4" hidden={!showOptions}>
+  <div class="flex gap-2">
+    <select
+      class="default-border border-red-600 border"
+      bind:value={selectedSort}
+      on:change={sortBooks}
+    >
+      <option value="date_read">Sort by date</option>
+      <option value="date_created">Sort by date created</option>
+      <option value="title">Sort by title</option>
+      <option value="author">Sort by author</option>
+      <option value="ranking">Sort by ranking</option>
+
+    </select>
+    <SortOrder bind:reversed={sortingReversed} on:click={sortBooks} />
+  </div>
 </div>
 
 {#if books.length <= 0}
@@ -122,7 +124,7 @@ const sortBooks = (b1: Book, b2: Book) => {
 {/if}
 
 {#each books_displayed as book (book.id)}
-  <div >
+  <div>
     <BookListItem {book} on:delete={openPopup} />
   </div>
 {/each}
