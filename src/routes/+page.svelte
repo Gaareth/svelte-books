@@ -8,6 +8,7 @@
   export let data: {
     books: BookFullType[];
     most_read_category: [string, number];
+    all_category_names: {name: string}[];
   };
   let most_read_category = data.most_read_category;
 
@@ -32,7 +33,7 @@
 {/if}
 <div class="my-5" />
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
-<BookList books={data.books} />
+<BookList books={data.books} category_names={data.all_category_names.map(c => c.name)}/>
 
 <style>
   .header-elnath {

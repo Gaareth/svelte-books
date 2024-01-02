@@ -12,6 +12,7 @@
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+  import { MAX_RATING } from "../../constants";
 
   export let book: BookRating;
   // export let deletionBook: Book | undefined = undefined;
@@ -22,8 +23,6 @@
   // console.log(book);
 
   const book_url = encodeURIComponent(book.name);
-
-  let maxRating = 5;
 
   const colors = [
     "bg-red-500",
@@ -105,7 +104,7 @@
 
     {#if book.rating}
       <div class="flex sm:gap-2 gap-1 items-center justify-end">
-        <p>{book.rating.stars} / {maxRating}</p>
+        <p>{book.rating.stars} / {MAX_RATING}</p>
         <div class="icon"><IoIosStar /></div>
       </div>
     {/if}

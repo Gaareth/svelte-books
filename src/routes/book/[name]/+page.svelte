@@ -22,6 +22,7 @@
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
+  import { MAX_RATING } from "../../../constants";
 
   export let data: PageData;
 
@@ -71,8 +72,6 @@
   $: bookLists = data.bookLists;
 
   let selectedSeriesBook: BookRating;
-
-  let max_rating = 5;
 
   // $: rating = book?.rating ?? { stars: 0, comment: "" };
   // $: rating_stars = rating.stars;
@@ -244,9 +243,9 @@
           {#if book.rating && !no_rating}
             <section class="flex gap-2 items-center">
               <h2 class="text-xl">Rating</h2>
-              <p>({book.rating.stars}/{max_rating})</p>
+              <p>({book.rating.stars}/{MAX_RATING})</p>
             </section>
-            <Rating rating={book.rating.stars} rating_max={max_rating} />
+            <Rating rating={book.rating.stars} rating_max={MAX_RATING} />
 
             {#if book.rating.comment && book.rating.comment.length > 0}
               <section class="py-2 my-2">
@@ -350,14 +349,14 @@
                   step="0.5"
                   bind:value={book.rating.stars}
                   min="0"
-                  max={max_rating}
+                  max={MAX_RATING}
                 />
-                / {max_rating})
+                / {MAX_RATING})
               </div>
             </div>
             <Rating
               bind:rating={book.rating.stars}
-              rating_max={5}
+              rating_max={MAX_RATING}
               editable={true}
             />
 

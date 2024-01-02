@@ -1,15 +1,15 @@
-import { sortBooksDefault } from "$lib/utils";
-import type { Book } from "@prisma/client";
+// import { sortBooksDefault } from "$lib/utils";
+// import type { Book } from "@prisma/client";
+import type { BookFullType } from "$appTypes";
 import FuzzySearch from "fuzzy-search";
 import { writable } from "svelte/store";
-
-type sortOption = "date_created" | "date_read" | "author" | "title" | "ranking";
 
 export interface SearchStoreModel<T extends Record<PropertyKey, any>> {
   data: T[];
   filtered: T[];
   search: string;
   // sorting: sortOption;
+  filter: (t: T) => boolean;
 }
 
 export const createSearchStore = <T extends Record<PropertyKey, any>>(
@@ -20,6 +20,7 @@ export const createSearchStore = <T extends Record<PropertyKey, any>>(
     filtered: data,
     search: "",
     // sorting: "date_read",
+    filter: () => true,
   });
 
   return {
@@ -38,6 +39,7 @@ export const searchHandler = <T extends Record<PropertyKey, any>>(
 
   const searchTerm = store.search.toLowerCase() || "";
   store.filtered = searcher.search(searchTerm)
+  store.filtered = store.filtered.filter(store.filter)
   // console.log("fuzyy sorting");
   
 

@@ -15,7 +15,7 @@
   </script>
   
   <details {open}>
-    <summary>{summary_text}</summary>
+    <summary class="text-lg">{summary_text}</summary>
     <div>
       <BookApi bind:getBookPromise bind:volumeId bind:query {dispatch} />
     </div>

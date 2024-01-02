@@ -22,11 +22,23 @@ declare global {
 
 import { Prisma } from "@prisma/client";
 
-export type BookFullType = Prisma.BookGetPayload<{
-  select: { [K in keyof Required<Prisma.BookSelect>]: true };
+
+export type BookIncludeCategory = Prisma.BookGetPayload<{
+  include: {
+    bookApiData: {
+      include: {
+        categories: true;
+      };
+    };
+  };
 }>;
 
+export type BookFullType = Prisma.BookGetPayload<{
+  select: { [K in keyof Required<Prisma.BookSelect>]: true };
+}> & BookIncludeCategory;
+
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
+
 
 export type BookApiDataCategories = Prisma.BookApiDataGetPayload<{
   include: { categories: true };

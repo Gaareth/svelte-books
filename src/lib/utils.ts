@@ -39,7 +39,7 @@ export function getErrorMessage(error: unknown) {
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
 
-function getReadDate(book: Book) {
+export function getBookReadDate(book: Book) {
   if (book.yearRead === null) {
     return null;
   }
@@ -48,8 +48,8 @@ function getReadDate(book: Book) {
 
 // function sortBooksBy
 export function sortBooksDefault(a: Book, b: Book) {
-  const read_date_a = getReadDate(a);
-  const read_date_b = getReadDate(b);
+  const read_date_a = getBookReadDate(a);
+  const read_date_b = getBookReadDate(b);
 
   let date_a: Date = read_date_a ?? a.createdAt;
   let date_b: Date = read_date_b ?? b.createdAt;

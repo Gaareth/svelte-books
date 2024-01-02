@@ -13,15 +13,30 @@
   import BookListItem from "./BookListItem.svelte";
   import { sortBooksDefault } from "$lib/utils";
   import SortOrder from "./SortOrder.svelte";
+  import { MAX_RATING } from "../../constants";
+
+
+  import Filtering from "./Filtering.svelte";
 
   export let books: BookFullType[];
 
   const searchStore = createSearchStore(books);
   let added_book = false;
 
+  let languages_used: string[];
+  let category_filter: string;
+  export let category_names: string[]; // not reactive
+
   $: {
     added_book = true;
     $searchStore.data = books;
+    languages_used = books.reduce((result, b) => {
+      let lang = b.bookApiData?.language;
+      if (lang !== undefined && !result.includes(lang)) {
+        return result.concat(lang);
+      }
+      return result;
+    }, [] as string[]);
   }
 
   $: books_displayed = $searchStore.filtered;
@@ -35,16 +50,7 @@
   let openModal = false;
 
   let showOptions = false;
-  let sortingReversed = false;
 
-  type sortOption =
-    | "date_created"
-    | "date_read"
-    | "author"
-    | "title"
-    | "ranking";
-
-  let selectedSort: sortOption = "date_read";
 
   const animate = (node: any, args: any) => {
     const animation = added_book
@@ -59,31 +65,6 @@
     deletionBook = event.detail.book;
   };
 
-  const sortBooks = () => {
-    books_displayed = $searchStore.filtered.sort(
-      (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
-    );
-  };
-
-  const cmpBooks = (b1: BookFullType, b2: BookFullType) => {
-    switch (selectedSort) {
-      case "date_created":
-        return b1.createdAt.getTime() - b2.createdAt.getTime();
-
-      case "author":
-        return b1.author.localeCompare(b2.author);
-
-      case "title":
-        return b1.name.localeCompare(b2.name);
-
-      case "ranking":
-        return (b1.rating?.stars ?? 0) - (b2.rating?.stars ?? 0);
-
-      case "date_read":
-      default:
-        return sortBooksDefault(b1, b2);
-    }
-  };
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
@@ -99,22 +80,9 @@
 </div>
 <!-- bind:value={selectedSort} on:change={() => $searchStore.filtered = $searchStore.filtered.sort(sortBooks)} -->
 <!-- bind:value={$searchStore.sorting} -->
-<div class="my-4" hidden={!showOptions}>
-  <div class="flex gap-2">
-    <select
-      class="default-border border-red-600 border"
-      bind:value={selectedSort}
-      on:change={sortBooks}
-    >
-      <option value="date_read">Sort by date</option>
-      <option value="date_created">Sort by date created</option>
-      <option value="title">Sort by title</option>
-      <option value="author">Sort by author</option>
-      <option value="ranking">Sort by ranking</option>
 
-    </select>
-    <SortOrder bind:reversed={sortingReversed} on:click={sortBooks} />
-  </div>
+<div hidden={showOptions}>
+  <Filtering bind:books_displayed {searchStore} {languages_used} {category_names}/>
 </div>
 
 {#if books.length <= 0}
