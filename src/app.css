@@ -54,7 +54,7 @@
     }
 
     input[type="radio"] {
-        @apply text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500 !important;
+        @apply text-blue-600 checked:border-0 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500 !important;
     }
 
     select {
@@ -141,7 +141,7 @@
     }
 
     .btn-generic:disabled {
-        @apply cursor-not-allowed bg-gray-50 text-gray-600
+        @apply cursor-not-allowed bg-gray-50 text-gray-600 dark:bg-slate-700 dark:text-gray-500
     }
 
     .btn-generic-color-2 {
@@ -149,7 +149,7 @@
     }
 
     .btn-generic-color-2:disabled {
-        @apply text-gray-400 dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:border-slate-600
+        @apply dark:text-gray-400 dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:border-slate-600
     }
 
     .btn-generic-icon {

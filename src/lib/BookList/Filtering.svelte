@@ -23,11 +23,11 @@
   export let category_names: string[]; // not reactive
   export let searchStore;
 
-  let allowed_categories_filter: string[];
-  let rating_filter: number;
-  let start_filter: Date;
-  let end_filter: Date;
-  let lang_filter: string;
+  let allowed_categories_filter: string[] | undefined;
+  let rating_filter: number | undefined;
+  let start_filter: Date | undefined;
+  let end_filter: Date | undefined;
+  let lang_filter: string | undefined;
 
   let sortingReversed = false;
 
@@ -85,7 +85,7 @@
       allowed_categories_filter === undefined ||
       allowed_categories_filter.length == 0 ||
       b.bookApiData?.categories.find(({ name: c }) =>
-        allowed_categories_filter.includes(c)
+        allowed_categories_filter!.includes(c)
       );
 
     let f_lang = (b: BookFullType) =>

@@ -10,13 +10,8 @@
 
   export let form;
 
-  console.log("form: ", form);
-
-  let evtSource: EventSource;
-
   let currentStatus: typeof SSE_EVENT | undefined = undefined;
 
-  let loading = false;
 
   //TODO: toast
 </script>

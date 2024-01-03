@@ -33,69 +33,69 @@ async function updateData() {
     const { id, title } = book;
     SSE_EVENT.msg = "Updating: " + title;
     SSE_EVENT.items = SSE_EVENT.items + 1;
-    // const apiData = await getBookApiData(id);
-    // const extractedData = extractBookApiData(apiData);
-    // const categories = extractCategories(apiData);
+    const apiData = await getBookApiData(id);
+    const extractedData = extractBookApiData(apiData);
+    const categories = extractCategories(apiData);
 
-    // // create non-existing categories
-    // for (const category_name of categories) {
-    //   // console.log(existingCategoryNames.includes(category_name));
-    //   // console.log(category_name);
+    // create non-existing categories
+    for (const category_name of categories) {
+      // console.log(existingCategoryNames.includes(category_name));
+      // console.log(category_name);
 
-    //   if (!existingCategoryNames.includes(category_name)) {
-    //     await prisma.bookCategory.create({
-    //       data: {
-    //         name: category_name,
-    //       },
-    //     });
-    //   }
-    // }
+      if (!existingCategoryNames.includes(category_name)) {
+        await prisma.bookCategory.create({
+          data: {
+            name: category_name,
+          },
+        });
+      }
+    }
 
-    // // update stored api data with newly fetched data
-    // await prisma.bookApiData.update({
-    //   where: {
-    //     id,
-    //   },
+    // update stored api data with newly fetched data
+    await prisma.bookApiData.update({
+      where: {
+        id,
+      },
 
-    //   data: {
-    //     ...extractedData,
-    //     categories: {
-    //       set: categories.map((n) => ({ name: n })),
-    //     },
-    //   },
-    // });
+      data: {
+        ...extractedData,
+        categories: {
+          set: categories.map((n) => ({ name: n })),
+        },
+      },
+    });
 
     // TOOD: zipMap?
-    // zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
-    //   (props) => {
-    //     console.log(props);
-        
-    //     const entries = [
-    //       [props[0], extractedData[props[0]]],
-    //       [props[1], extractedData[props[1]]],
-    //     ];
-    //     console.log(entries);
+    zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
+      (props) => {
+        console.log(props);
 
-    //     const oldKV = entries[0];
+        const entries = [
+          [props[0], extractedData[props[0]]],
+          [props[1], extractedData[props[1]]],
+        ];
+        console.log(entries);
 
-    //     const newKV = entries[1];
-    //     if (oldKV[1] != newKV[1]) {
-    //       return diffs.push({
-    //         bookName: title,
-    //         propName: oldKV[0],
-    //         oldValue: oldKV[1],
-    //         newValue: newKV[1],
-    //       });
-    //     }
-    //   }
-    // );
-    diffs.push({
-              bookName: title,
-              propName: "a",
-              oldValue: 1,
-              newValue: 2,
-            });
-    await delay(100);
+        const oldKV = entries[0];
+
+        const newKV = entries[1];
+        if (oldKV[1] != newKV[1]) {
+          return diffs.push({
+            bookName: title,
+            propName: oldKV[0],
+            oldValue: oldKV[1],
+            newValue: newKV[1],
+          });
+        }
+      }
+    );
+    // diffs.push({
+    //   bookName: title,
+    //   propName: "a",
+    //   oldValue: 1,
+    //   newValue: 2,
+    // });
+    // await delay(100);
     booksUpdated += 1;
   }
 
@@ -211,36 +211,40 @@ async function createConnections() {
   const errorsBooks: errorBooksType = [];
 
   for (const book of unconnectedBooks) {
-    console.log("book: " + book.name);
+    // console.log("book: " + book.name);
     booksUpdated += 1;
     SSE_EVENT.msg = "Adding: " + book.name;
     SSE_EVENT.items = SSE_EVENT.items + 1;
 
-    try {
-      throw Error("oh no");
-    } catch (e) {
-      errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
-    }
-
-    // const res = await findVolumeId(book);
-    // console.log(res);
-
-    // if (res === undefined) {
-    //   errorsBooks.push({ book, error: "No volumeID found" });
-    // } else {
-    //   const { volumeId, score } = res;
-    //   console.log("Book: " + book.name + ", Score: " + score);
-
-    //   try {
-    //     createConnection(volumeId, book.name);
-    //     booksUpdated += 1;
-    //   } catch (e) {
-    //     errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
-    //     console.log(e);
-    //   }
+    // try {
+    //   throw Error("oh no");
+    // } catch (e) {
+    //   errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
     // }
-    await delay(1200);
-    break
+
+    const res = await findVolumeId(book);
+    console.log(res);
+
+    if (res === undefined) {
+      errorsBooks.push({
+        book,
+        error: "No volumeID found",
+        volumeId: undefined,
+      });
+    } else {
+      const { volumeId, score } = res;
+      // console.log("Book: " + book.name + ", Score: " + score);
+
+      try {
+        createConnection(volumeId, book.name);
+        booksUpdated += 1;
+      } catch (e) {
+        errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
+        console.log(e);
+      }
+    }
+    // await delay(1200);
+    // break;
   }
 
   return { booksUpdated, errorsBooks };
@@ -276,7 +280,7 @@ export const actions = {
     SSE_EVENT.max = 0;
 
     const diffs = await updateData();
-    console.log(SSE_EVENT);
+    // console.log(SSE_EVENT);
 
     const response: settingsApiReloadResult = {
       success: true,
@@ -303,7 +307,7 @@ export const actions = {
       ...result,
     };
 
-    console.log(response);
+    // console.log(response);
     // console.log(JSON.stringify(response));
     SSE_EVENT.msg = "done";
     return response;

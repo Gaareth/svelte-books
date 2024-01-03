@@ -19,7 +19,14 @@ export async function load({ locals }: ServerLoadEvent) {
         updatedAt: "desc"
       }
     }),
+    category_names: await prisma.bookCategory.findMany({
+      select: {
+        name: true
+      }
+    }),
   };
+
+
 
   return data;
 }

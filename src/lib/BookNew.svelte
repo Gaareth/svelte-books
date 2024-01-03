@@ -66,11 +66,10 @@
 
   let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
   async function take_over() {
-    if (volumeId !== undefined) {
+    if (getBookPromise !== undefined) {
       let data = await getBookPromise;
-      console.log(data);
+      // console.log(data);
       name = data?.volumeInfo.title || "";
-
 
       author = data?.volumeInfo.authors[0] || "";
     } else {
@@ -79,6 +78,7 @@
     }
   }
 </script>
+
 
 {#if $page.data.session}
   <div
@@ -94,7 +94,8 @@
         {new_book ? "Cancel" : "Open"}
       </button>
     </div>
-    {#if new_book}
+
+    <div hidden={!new_book}>
       <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
         <label for="name">Name:</label>
         <input
@@ -106,12 +107,12 @@
         />
         <label for="author">Author:</label>
         <!-- <input
-          id="author"
-          name="author"
-          type="text"
-          class="input dark:bg-slate-600 dark:border-slate-500"
-          bind:value={author}
-        /> -->
+        id="author"
+        name="author"
+        type="text"
+        class="input dark:bg-slate-600 dark:border-slate-500"
+        bind:value={author}
+      /> -->
         <AutoComplete
           items={authors}
           bind:text={author}
@@ -127,11 +128,11 @@
           on:click={take_over}
           class="my-2 flex btn-generic items-center group btn-generic-color-2"
           disabled={!(name.length > 0 && author.length > 0) &&
-            volumeId === undefined}
+            getBookPromise === undefined}
         >
           take over data
           <span class="group-disabled:w-0 w-8 self-center block">
-            {#if volumeId !== undefined}
+            {#if getBookPromise !== undefined}
               <ArrowUp />
             {:else if name.length > 0 && author.length > 0}
               <ArrowDown />
@@ -164,6 +165,6 @@
           Save new book
         </button>
       </div>
-    {/if}
+    </div>
   </div>
 {/if}

@@ -10,7 +10,7 @@ export async function load() {
     },
     orderBy: { books: { _count: "desc" } },
   });
-  console.log(most_read_category);
+  // console.log(most_read_category);
 
   const all_category_names = await prisma.bookCategory.findMany({
     select: {
