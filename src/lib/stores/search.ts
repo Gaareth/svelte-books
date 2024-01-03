@@ -10,6 +10,7 @@ export interface SearchStoreModel<T extends Record<PropertyKey, any>> {
   search: string;
   // sorting: sortOption;
   filter: (t: T) => boolean;
+  sort: (t1: T, t2: T) => number;
 }
 
 export const createSearchStore = <T extends Record<PropertyKey, any>>(
@@ -21,6 +22,7 @@ export const createSearchStore = <T extends Record<PropertyKey, any>>(
     search: "",
     // sorting: "date_read",
     filter: () => true,
+    sort: () => 0,
   });
 
   return {
@@ -40,8 +42,8 @@ export const searchHandler = <T extends Record<PropertyKey, any>>(
   const searchTerm = store.search.toLowerCase() || "";
   store.filtered = searcher.search(searchTerm)
   store.filtered = store.filtered.filter(store.filter)
-  // console.log("fuzyy sorting");
+  console.log("fuzyy sorting");
   
 
-  // store.filtered = store.filtered.sort(sortBooks(store.sorting));
+  store.filtered = store.filtered.sort(store.sort);
 };

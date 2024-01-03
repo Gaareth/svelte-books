@@ -16,7 +16,11 @@ export async function loadBooks() {
       },
       include: {
         rating: true,
-        bookApiData: true,
+        bookApiData: {
+          include: {
+            categories: true
+          }
+        },
       },
     }),
   };

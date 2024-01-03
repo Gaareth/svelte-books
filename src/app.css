@@ -12,6 +12,10 @@
     min-width: auto !important;
 }
 
+.autocomplete, .autocomplete > .input-container {
+    @apply dark:bg-slate-700 dark:border-slate-600 rounded-md !important;
+}
+
 .autocomplete-list {
     @apply dark:bg-slate-600 dark:border-slate-600 !important
 }
@@ -138,6 +142,14 @@
 
     .btn-generic:disabled {
         @apply cursor-not-allowed bg-gray-50 text-gray-600
+    }
+
+    .btn-generic-color-2 {
+        @apply dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:hover:border-slate-500
+    }
+
+    .btn-generic-color-2:disabled {
+        @apply text-gray-400 dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:border-slate-600
     }
 
     .btn-generic-icon {

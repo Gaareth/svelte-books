@@ -5,12 +5,29 @@
     BookIncludeCategory,
   } from "$appTypes";
   import { getBookReadDate, sortBooksDefault } from "$lib/utils";
-  import type { BookCategory } from "@prisma/client";
   import { MAX_RATING } from "../../constants";
   import SortOrder from "./SortOrder.svelte";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
+
+  //@ts-ignore
+  import FilterIcon from "svelte-icons/fa/FaFilter.svelte";
+  //@ts-ignore
+  import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
+  //@ts-ignore
+  import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
+
+  export let books_displayed: BookFullType[];
+  export let languages_used: string[];
+  export let category_names: string[]; // not reactive
+  export let searchStore;
+
+  let allowed_categories_filter: string[];
+  let rating_filter: number;
+  let start_filter: Date;
+  let end_filter: Date;
+  let lang_filter: string;
 
   let sortingReversed = false;
 
@@ -20,26 +37,17 @@
     | "author"
     | "title"
     | "rating";
-
-  export let books_displayed: BookFullType[];
-  export let languages_used: string[];
-  export let category_names: string[]; // not reactive
-  export let searchStore;
-
   let selectedSort: sortOption = "date_read";
-
-  let allowed_categories_filter: string[];
-  let rating_filter: number;
-  let start_filter: Date;
-  let end_filter: Date;
-  let lang_filter: string;
 
   const sortBooks = () => {
     console.log(books_displayed);
 
-    books_displayed = books_displayed.sort(
-      (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
-    );
+    // books_displayed = books_displayed.sort(
+    //   (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
+    // );
+
+    $searchStore!.sort = (a: BookFullType, b: BookFullType) =>
+      cmpBooks(a, b) * (sortingReversed ? -1 : 1);
   };
 
   const cmpBooks = (b1: BookFullType, b2: BookFullType) => {
@@ -64,7 +72,7 @@
 
   const filter = () => {
     let f_rating = (b: BookFullType) =>
-      rating_filter === undefined || b.rating?.stars == rating_filter;
+      rating_filter === undefined || Math.floor(b.rating?.stars ?? 0) == rating_filter;
     let f_start = (b: BookFullType) =>
       start_filter === undefined ||
       (getBookReadDate(b) !== null && getBookReadDate(b)! >= start_filter);
@@ -72,10 +80,12 @@
     let f_end = (b: BookFullType) =>
       end_filter === undefined ||
       (getBookReadDate(b) !== null && getBookReadDate(b)! <= end_filter);
+
     let f_category = (b: BookFullType) =>
       allowed_categories_filter === undefined ||
-      allowed_categories_filter.find((c) =>
-        b.bookApiData?.categories.includes({ name: c })
+      allowed_categories_filter.length == 0 ||
+      b.bookApiData?.categories.find(({ name: c }) =>
+        allowed_categories_filter.includes(c)
       );
 
     let f_lang = (b: BookFullType) =>
@@ -83,13 +93,8 @@
       lang_filter == "all" ||
       b.bookApiData?.language == lang_filter;
 
-    console.log("filter");
-    console.log(rating_filter);
-
-    $searchStore!.filter = f_rating;
-    // books_displayed = books_displayed.filter((b) => false);
-    // console.log(books_displayed.length);
-    // books_displayed = [books_displayed[0]]
+    $searchStore!.filter = (b: BookFullType) =>
+      f_rating(b) && f_lang(b) && f_category(b) && f_start(b) && f_end(b);
   };
 
   const resetFilter = () => {
@@ -99,12 +104,31 @@
     end_filter = undefined;
     lang_filter = undefined;
   };
+
+  function parseDateInput(event: Event) {
+    if (event.target !== null) {
+      return new Date((event.target as HTMLDataElement).value);
+    } else {
+      return new Date(0);
+    }
+  }
 </script>
 
 <div class="mt-4 mb-8">
   <div class="grid grid-cols-1 gap-6">
-    <div class="flex flex-col">
-      <p class="text-2xl">Sorting</p>
+    <details class="flex flex-col">
+      <summary class="text-2xl">
+        <div class="inline-flex items-center gap-2">
+          Sorting
+          <span class="inline-block w-5">
+            {#if sortingReversed}
+              <SortDesc />
+            {:else}
+              <SortAsc />
+            {/if}
+          </span>
+        </div>
+      </summary>
       <div class="flex gap-2 mt-2">
         <label>
           <select
@@ -121,10 +145,17 @@
         </label>
         <SortOrder bind:reversed={sortingReversed} on:click={sortBooks} />
       </div>
-    </div>
+    </details>
 
-    <div class="flex flex-col">
-      <p class="text-2xl">Filter</p>
+    <details class="flex flex-col">
+      <summary class="text-2xl">
+        <div class="inline-flex items-center gap-2">
+          Filter
+          <span class="inline-block w-4">
+            <FilterIcon />
+          </span>
+        </div>
+      </summary>
       <div class="flex flex-col flex-wrap gap-2 mt-2 md:justify-between">
         <label class="flex flex-col">
           Rating ({rating_filter} / {MAX_RATING})
@@ -157,21 +188,30 @@
             create={false}
             id="categories"
             name="categories"
-            class="input dark:bg-slate-600 dark:border-slate-500"
+            class="input dark:bg-slate-600 dark:border-slate-500 my-2"
+            className="!h-full"
           />
         </label>
 
         <label class="flex flex-col">
           Start date
-          <input type="date" class="default-border" bind:value={start_filter} />
+          <input
+            type="date"
+            class="default-border"
+            on:change={(e) => (start_filter = parseDateInput(e))}
+          />
         </label>
 
         <label class="flex flex-col">
           End date
-          <input type="date" class="default-border" bind:value={end_filter} />
+          <input
+            type="date"
+            class="default-border"
+            on:change={(e) => (end_filter = parseDateInput(e))}
+          />
         </label>
       </div>
-      <div class="w-full md:w-fit flex gap-1 self-end">
+      <div class="w-full md:w-fit flex gap-2 self-end">
         <button
           class="btn-secondary-black block my-3 px-8 text-center w-full md:w-fit"
           on:click={resetFilter}
@@ -185,6 +225,6 @@
           Filter
         </button>
       </div>
-    </div>
+    </details>
   </div>
 </div>

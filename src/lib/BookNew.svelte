@@ -122,11 +122,10 @@
         />
       </div>
 
-      <div class="flex justify-center my-4">
+      <div class="flex justify-center mb-4 mt-5">
         <button
           on:click={take_over}
-          class="my-2 flex btn-generic items-center group
-        disabled:hover:cursor-not-allowed"
+          class="my-2 flex btn-generic items-center group btn-generic-color-2"
           disabled={!(name.length > 0 && author.length > 0) &&
             volumeId === undefined}
         >

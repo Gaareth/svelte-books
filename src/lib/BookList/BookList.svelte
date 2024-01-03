@@ -11,10 +11,9 @@
   import { flip } from "svelte/animate";
   import type { ItemDeleteEvent } from "./BookListItem.svelte";
   import BookListItem from "./BookListItem.svelte";
-  import { sortBooksDefault } from "$lib/utils";
-  import SortOrder from "./SortOrder.svelte";
-  import { MAX_RATING } from "../../constants";
 
+  //@ts-ignore
+  import MoreIcon from 'svelte-icons/io/IoMdMore.svelte'
 
   import Filtering from "./Filtering.svelte";
 
@@ -24,7 +23,6 @@
   let added_book = false;
 
   let languages_used: string[];
-  let category_filter: string;
   export let category_names: string[]; // not reactive
 
   $: {
@@ -65,25 +63,29 @@
     deletionBook = event.detail.book;
   };
 
+
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
-  <h2 class="flex items-end text-2xl -mb-1">Books</h2>
+  <h2 class="flex items-end text-2xl -mb-1 {showOptions ? "invisible" : ""}">Books</h2>
   {#if books.length > 0}
-    <div class="flex gap-2">
+    <div class="flex gap-2 justify-between">
       <BookSearch bind:search_term={$searchStore.search} />
-      <button class="btn-generic" on:click={() => (showOptions = !showOptions)}>
-        more
+      <button class="btn-generic-icon" on:click={() => (showOptions = !showOptions)}>
+        <span class="w-5 block">
+            <MoreIcon />
+        </span>
       </button>
     </div>
   {/if}
 </div>
-<!-- bind:value={selectedSort} on:change={() => $searchStore.filtered = $searchStore.filtered.sort(sortBooks)} -->
-<!-- bind:value={$searchStore.sorting} -->
 
-<div hidden={showOptions}>
+
+<div hidden={!showOptions}>
   <Filtering bind:books_displayed {searchStore} {languages_used} {category_names}/>
 </div>
+
+<h2 class="flex items-end text-2xl -mb-1 {!showOptions ? "hidden" : ""}">Books ({books_displayed.length})</h2>
 
 {#if books.length <= 0}
   <p>No books added at the moment :(</p>
