@@ -141,7 +141,7 @@
                 <span
                   class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
                 >
-                  <IoMdTrash />
+                  <IoMdTrash alt="red trash can"/>
                 </span>
               </button>
             {/if}

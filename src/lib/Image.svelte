@@ -12,7 +12,7 @@
     image.src = src;
 
     image.onload = () => {
-        console.log("loaded");
+        // console.log("loaded");
         
       loaded = true;
     };

@@ -16,6 +16,7 @@
     reversed = !reversed;
     dispatch("click");
   }}
+  title="Reverse sort order"
 >
   <span class="block w-6 h-6">
     {#if reversed}

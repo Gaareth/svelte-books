@@ -239,11 +239,11 @@
         </div>
       </summary>
       <div class="flex gap-2 mt-2">
-        <label>
           <select
             class="default-border border-red-600 border"
             bind:value={selectedSort}
             on:change={sortBooks}
+            aria-label="Sort by"
           >
             <option value="date_read">Sort by date</option>
             <option value="date_created">Sort by date created</option>
@@ -251,7 +251,6 @@
             <option value="author">Sort by author</option>
             <option value="rating">Sort by rating</option>
           </select>
-        </label>
         <SortOrder bind:reversed={sortingReversed} on:click={sortBooks} />
       </div>
     </details>
@@ -266,7 +265,7 @@
         </div>
       </summary>
       <div class="flex flex-col flex-wrap gap-2 mt-2 md:justify-between">
-        <label class="flex flex-col">
+        <label class="flex flex-col" id="rating-label">
           <div class="flex gap-2">
             Rating ({rating_filter} / {MAX_RATING})
             <button
@@ -283,6 +282,7 @@
             min="0"
             max={MAX_RATING}
             bind:value={rating_filter}
+            aria-labelledby="rating-label"
           />
         </label>
 
