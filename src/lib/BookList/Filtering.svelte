@@ -22,7 +22,7 @@
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
   import EqRelation from "./EqRelation.svelte";
 
-  export let books_displayed: BookFullType[];
+  let books_displayed: BookFullType[];
   export let languages_used: string[];
   export let category_names: string[]; // not reactive
   export let searchStore;

@@ -23,11 +23,11 @@
 </span>
 
 <style lang="postcss">
-  .btn-group > label {
+  /* .btn-group > label {
     @apply btn-group-btn flex flex-col items-center text-black text-lg;
   }
 
   .btn-group > label > span {
     @apply -mt-2
-  }
+  } */
 </style>

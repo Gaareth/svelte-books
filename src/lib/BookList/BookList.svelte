@@ -93,7 +93,6 @@
 
 <div hidden={!showOptions}>
   <Filtering
-    bind:books_displayed
     {searchStore}
     {languages_used}
     {category_names}
