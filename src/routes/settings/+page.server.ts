@@ -1,4 +1,4 @@
-import { type RequestHandler, error, json } from "@sveltejs/kit";
+import { type RequestHandler, error, json, type ServerLoadEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils.js";
 import {
@@ -227,28 +227,28 @@ async function createConnections() {
     //   errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
     // }
 
-    const res = await findVolumeId(book);
-    console.log(res);
+    // const res = await findVolumeId(book);
+    // console.log(res);
 
-    if (res === undefined) {
-      errorsBooks.push({
-        book,
-        error: "No volumeID found",
-        volumeId: undefined,
-      });
-    } else {
-      const { volumeId, score } = res;
-      // console.log("Book: " + book.name + ", Score: " + score);
+    // if (res === undefined) {
+    //   errorsBooks.push({
+    //     book,
+    //     error: "No volumeID found",
+    //     volumeId: undefined,
+    //   });
+    // } else {
+    //   const { volumeId, score } = res;
+    //   console.log("Book: " + book.name + ", Score: " + score);
 
-      try {
-        createConnection(volumeId, book.name);
-        booksUpdated += 1;
-      } catch (e) {
-        errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
-        console.log(e);
-      }
-    }
-    // await delay(1200);
+    //   try {
+    //     createConnection(volumeId, book.name);
+    //     booksUpdated += 1;
+    //   } catch (e) {
+    //     errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
+    //     console.log(e);
+    //   }
+    // }
+    await delay(200);
     // break;
   }
 
@@ -335,3 +335,10 @@ export const actions = {
 
 //   // return json({success: false})
 // }
+
+export async function load({ locals }: ServerLoadEvent) {  
+  const session = await locals.getSession();
+  if (!(session)) {
+    throw error(401);
+  }
+}

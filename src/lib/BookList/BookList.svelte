@@ -13,9 +13,10 @@
   import BookListItem from "./BookListItem.svelte";
 
   //@ts-ignore
-  import MoreIcon from 'svelte-icons/io/IoMdMore.svelte'
+  import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
 
   import Filtering from "./Filtering.svelte";
+  import { page } from "$app/stores";
 
   export let books: BookFullType[];
 
@@ -48,7 +49,14 @@
   let openModal = false;
 
   let showOptions = false;
-
+  $: {
+    let params = $page.url.searchParams;
+    showOptions =
+      (!!params.get("filter") ||
+        !!params.get("sort") ||
+        !!params.get("order")) ??
+      false;
+  }
 
   const animate = (node: any, args: any) => {
     const animation = added_book
@@ -62,30 +70,39 @@
     openModal = true;
     deletionBook = event.detail.book;
   };
-
-
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
-  <h2 class="flex items-end text-2xl -mb-1 {showOptions ? "invisible" : ""}">Books</h2>
+  <h2 class="flex items-end text-2xl -mb-1 {showOptions ? 'invisible' : ''}">
+    Books
+  </h2>
   {#if books.length > 0}
     <div class="flex gap-2 justify-between">
       <BookSearch bind:search_term={$searchStore.search} />
-      <button class="btn-generic-icon" on:click={() => (showOptions = !showOptions)}>
+      <button
+        class="btn-generic-icon"
+        on:click={() => (showOptions = !showOptions)}
+      >
         <span class="w-5 block">
-            <MoreIcon />
+          <MoreIcon />
         </span>
       </button>
     </div>
   {/if}
 </div>
 
-
 <div hidden={!showOptions}>
-  <Filtering bind:books_displayed {searchStore} {languages_used} {category_names}/>
+  <Filtering
+    bind:books_displayed
+    {searchStore}
+    {languages_used}
+    {category_names}
+  />
 </div>
 
-<h2 class="flex items-end text-2xl -mb-1 {!showOptions ? "hidden" : ""}">Books ({books_displayed.length})</h2>
+<h2 class="flex items-end text-2xl -mb-1 {!showOptions ? 'hidden' : ''}">
+  Books ({books_displayed.length})
+</h2>
 
 {#if books.length <= 0}
   <p>No books added at the moment :(</p>

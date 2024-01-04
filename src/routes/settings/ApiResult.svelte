@@ -76,7 +76,7 @@
   </div>
 {/if}
 
-{#if currentStatus !== undefined && !form && currentStatus.msg != "done"}
+{#if currentStatus !== undefined && currentStatus.msg != "done"}
   <div class="flex flex-col">
     <div>
       <span>{currentStatus.msg}</span>

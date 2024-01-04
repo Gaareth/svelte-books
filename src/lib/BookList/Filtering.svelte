@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import type {
     BookApiDataCategories,
     BookFullType,
     BookIncludeCategory,
   } from "$appTypes";
   import { getBookReadDate, sortBooksDefault } from "$lib/utils";
+  import { onMount } from "svelte";
   import { MAX_RATING } from "../../constants";
   import SortOrder from "./SortOrder.svelte";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -17,6 +20,7 @@
   import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
   //@ts-ignore
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
+  import EqRelation from "./EqRelation.svelte";
 
   export let books_displayed: BookFullType[];
   export let languages_used: string[];
@@ -29,6 +33,23 @@
   let end_filter: Date | undefined;
   let lang_filter: string | undefined;
 
+  // let params = $page.url.searchParams;
+  // $: {
+  //   allowed_categories_filter = JSON.parse(params.get("categories") ?? "[]");
+  //   rating_filter = params.get("rating") !== null
+  //       ? Number(params.get("rating")!)
+  //       : undefined;
+  //   start_filter =
+  //     params.get("start_date") !== null
+  //       ? new Date(params.get("start_date")!)
+  //       : undefined;
+  //   end_filter =
+  //     params.get("end_date") !== null
+  //       ? new Date(params.get("end_date")!)
+  //       : undefined;
+  //   lang_filter = $page.url.searchParams.get("lang") ?? "all";
+  // }
+
   let sortingReversed = false;
 
   type sortOption =
@@ -37,10 +58,41 @@
     | "author"
     | "title"
     | "rating";
-  let selectedSort: sortOption = "date_read";
+  let selectedSort: sortOption;
+
+  let params = $page.url.searchParams;
+
+  onMount(() => {
+    let params = $page.url.searchParams;
+
+    allowed_categories_filter = JSON.parse(params.get("categories") ?? "[]");
+    rating_filter =
+      params.get("rating") !== null ? Number(params.get("rating")!) : undefined;
+    start_filter =
+      params.get("start_date") !== null
+        ? new Date(params.get("start_date")!)
+        : undefined;
+    end_filter =
+      params.get("end_date") !== null
+        ? new Date(params.get("end_date")!)
+        : undefined;
+    lang_filter = params.get("lang") ?? "all";
+
+    // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
+    selectedSort = (params.get("sort") as sortOption) ?? "date_read";
+    sortingReversed = (params.get("order") ?? "desc") == "desc";
+  });
 
   const sortBooks = () => {
-    console.log(books_displayed);
+    // console.log(books_displayed);
+    let params = $page.url.searchParams;
+    params.set("order", sortingReversed ? "desc" : "asc");
+    params.set("sort", selectedSort);
+
+    goto("?" + params.toString(), {
+      noScroll: true,
+    });
+    // replaceStateWithQuery({order: "desc"})
 
     // books_displayed = books_displayed.sort(
     //   (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
@@ -72,7 +124,8 @@
 
   const filter = () => {
     let f_rating = (b: BookFullType) =>
-      rating_filter === undefined || Math.floor(b.rating?.stars ?? 0) == rating_filter;
+      rating_filter === undefined ||
+      Math.floor(b.rating?.stars ?? 0) == rating_filter;
     let f_start = (b: BookFullType) =>
       start_filter === undefined ||
       (getBookReadDate(b) !== null && getBookReadDate(b)! >= start_filter);
@@ -93,6 +146,42 @@
       lang_filter == "all" ||
       b.bookApiData?.language == lang_filter;
 
+    let params = $page.url.searchParams;
+    if (lang_filter !== undefined) {
+      params.set("lang", lang_filter);
+    }
+
+    if (rating_filter !== undefined) {
+      params.set("rating", rating_filter.toString());
+    }
+
+    if (start_filter !== undefined) {
+      params.set(
+        "start_date",
+        start_filter.toLocaleDateString("en").replaceAll("/", "-")
+      );
+    }
+
+    if (end_filter !== undefined) {
+      params.set(
+        "end_date",
+        end_filter.toLocaleDateString("en").replaceAll("/", "-")
+      );
+    }
+
+    if (
+      allowed_categories_filter !== undefined &&
+      allowed_categories_filter.length > 0
+    ) {
+      params.set("categories", JSON.stringify(allowed_categories_filter));
+    }
+
+    params.set("filter", "true");
+
+    goto("?" + params.toString(), {
+      noScroll: true,
+    });
+
     $searchStore!.filter = (b: BookFullType) =>
       f_rating(b) && f_lang(b) && f_category(b) && f_start(b) && f_end(b);
   };
@@ -103,6 +192,23 @@
     start_filter = undefined;
     end_filter = undefined;
     lang_filter = undefined;
+
+    let params = $page.url.searchParams;
+    let new_params = new URLSearchParams();
+    new_params.set("filter", "true");
+
+    if (params.get("q") !== undefined && params.get("q") !== null) {
+      new_params.set("q", params.get("q")!);
+    }
+
+    if (params.get("order")) {
+      new_params.set("order", params.get("order")!);
+    }
+    console.log(new_params);
+
+    goto("?" + new_params.toString(), {
+      noScroll: true,
+    });
   };
 
   function parseDateInput(event: Event) {
@@ -116,7 +222,10 @@
 
 <div class="mt-4 mb-8">
   <div class="grid grid-cols-1 gap-6">
-    <details class="flex flex-col">
+    <details
+      class="flex flex-col"
+      open={!!params.get("order") || !!params.get("sort")}
+    >
       <summary class="text-2xl">
         <div class="inline-flex items-center gap-2">
           Sorting
@@ -147,7 +256,7 @@
       </div>
     </details>
 
-    <details class="flex flex-col">
+    <details class="flex flex-col" open={!!params.get("filter")}>
       <summary class="text-2xl">
         <div class="inline-flex items-center gap-2">
           Filter
@@ -158,7 +267,17 @@
       </summary>
       <div class="flex flex-col flex-wrap gap-2 mt-2 md:justify-between">
         <label class="flex flex-col">
-          Rating ({rating_filter} / {MAX_RATING})
+          <div class="flex gap-2">
+            Rating ({rating_filter} / {MAX_RATING})
+            <button
+              class="btn-generic px-2 py-0"
+              on:click={() => (rating_filter = undefined)}>clear</button
+            >
+          </div>
+          <div class="my-2" hidden={true}>
+            <!-- TODO -->
+            <EqRelation />
+          </div>
           <input
             type="range"
             min="0"
@@ -170,8 +289,8 @@
         <label class="flex flex-col">
           Languages
           <select class="default-border" bind:value={lang_filter}>
+            <option value="all" selected>all</option>
             {#each languages_used as lang}
-              <option value="all" selected>all</option>
               <option value={lang}>{lang}</option>
             {/each}
           </select>

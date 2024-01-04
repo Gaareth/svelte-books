@@ -9,8 +9,8 @@
   export let data: BookApiData | null;
 </script>
 
-<section class="my-2">
-  <h2 class="text-lg">API Data (Datasource: {datasource})</h2>
+<details class="my-2">
+  <summary class="text-lg">API Data (Datasource: {datasource})</summary>
   {#if data}
     <div class="attribute-stats">
       <p>Subtitle: {data.subtitle}</p>
@@ -26,4 +26,4 @@
   {:else}
     <p>No Data</p>
   {/if}
-</section>
+</details>

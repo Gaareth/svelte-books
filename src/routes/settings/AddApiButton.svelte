@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
+  import { onMount } from "svelte";
   import toast from "svelte-french-toast";
 
   // @ts-ignore
@@ -8,6 +9,17 @@
 
   let loading = false;
   let evtSource: EventSource;
+  onMount(() => {
+    evtSource = new EventSource("/book/api/update_all/");
+    evtSource.onmessage = function (event) {
+      console.log(currentStatus);
+      // console.log(decodeURIComponent(event.data));
+
+      currentStatus = JSON.parse(decodeURIComponent(event.data));
+      loading = currentStatus.msg != "done"
+    };
+  });
+
   export let currentStatus: any;
 </script>
 
@@ -22,18 +34,14 @@
     // calling `cancel()` will prevent the submission
     // `submitter` is the `HTMLElement` that caused the form to be submitted
     loading = true;
-    evtSource = new EventSource("/book/api/update_all/");
-    evtSource.onmessage = function (event) {
-      // console.log(event);
-      // console.log(decodeURIComponent(event.data));
-
-      currentStatus = JSON.parse(decodeURIComponent(event.data));
-    };
+   
     return async ({ result, update }) => {
       update();
       loading = false;
       evtSource.close();
-
+      
+      // console.log(result);
+      
       // @ts-ignore
       const { success, booksUpdated, errorsBooks } = result.data;
       //console.log(result.data);

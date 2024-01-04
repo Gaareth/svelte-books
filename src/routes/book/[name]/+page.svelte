@@ -22,6 +22,8 @@
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
+  import Image from "$lib/Image.svelte";
+
   import { MAX_RATING } from "../../../constants";
 
   export let data: PageData;
@@ -72,6 +74,8 @@
   $: bookLists = data.bookLists;
 
   let selectedSeriesBook: BookRating;
+
+  let thumbnailUrl = book.bookApiData?.thumbnailUrl;
 
   // $: rating = book?.rating ?? { stars: 0, comment: "" };
   // $: rating_stars = rating.stars;
@@ -215,8 +219,8 @@
       </div>
     {/if}
     <div class="flex justify-between flex-col-reverse sm:flex-row mb-2 sm:mb-0">
-      {#if book.bookApiData?.thumbnailUrl !== undefined}
-        <img src={book.bookApiData?.thumbnailUrl} alt="thumbnail" />
+      {#if thumbnailUrl != null}
+        <Image src={thumbnailUrl} alt="thumbnail" />
       {/if}
       <h1 class="text-4xl overflow-hidden text-ellipsis">{book.name}</h1>
     </div>
