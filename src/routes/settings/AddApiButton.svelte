@@ -12,11 +12,21 @@
   onMount(() => {
     evtSource = new EventSource("/book/api/update_all/");
     evtSource.onmessage = function (event) {
-      console.log(currentStatus);
+      if (event.data === "undefined") {
+        loading = false;
+        return;
+      }
+      // console.log(event);
       // console.log(decodeURIComponent(event.data));
 
       currentStatus = JSON.parse(decodeURIComponent(event.data));
-      loading = currentStatus.msg != "done"
+      // console.log(currentStatus);
+
+      loading = currentStatus.msg != "done";
+
+      // if (currentStatus.msg == "done") {
+      //   evtSource.close();
+      // }
     };
   });
 
@@ -34,25 +44,30 @@
     // calling `cancel()` will prevent the submission
     // `submitter` is the `HTMLElement` that caused the form to be submitted
     loading = true;
-   
+
     return async ({ result, update }) => {
       update();
       loading = false;
       evtSource.close();
-      
+
       // console.log(result);
-      
+      if (result === undefined) {
+        return;
+      }
+
       // @ts-ignore
-      const { success, booksUpdated, errorsBooks } = result.data;
+      const { success, updatedBookNames, errorsBooks } = result.data;
       //console.log(result.data);
 
       if (success) {
-        toast.success(`Successfully added ${booksUpdated} new entries`);
-      } else if (booksUpdated == 0) {
+        toast.success(
+          `Successfully added ${updatedBookNames.length} new entries`
+        );
+      } else if (updatedBookNames.length == 0) {
         toast.error("Failed updating any book :(");
       } else {
         toast(
-          `Updated ${booksUpdated} books and failed in ${errorsBooks.length}`,
+          `Updated ${updatedBookNames.length} books and failed in ${errorsBooks.length}`,
           {
             icon: "⚠️",
           }
@@ -64,7 +79,13 @@
     };
   }}
 >
-  <p>Tries to connect all books with a matching google books api entry</p>
+  <div>
+    <label class="flex items-center gap-2">
+      Connect all:
+      <input type="checkbox" name="connect-all" class="" />
+    </label>
+    <p>Tries to connect all books with a matching google books api entry</p>
+  </div>
   <button
     type="submit"
     class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit"

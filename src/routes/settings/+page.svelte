@@ -20,7 +20,7 @@
 
 <section>
   <h2 class="text-2xl">Datasource</h2>
-  <div class="flex flex-col gap-6 sm:gap-2">
+  <div class="flex flex-col gap-6 sm:gap-8">
     <ReloadButton bind:currentStatus />
     <AddApiButton bind:currentStatus />
 

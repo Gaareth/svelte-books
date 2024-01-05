@@ -7,9 +7,9 @@ import { SSE_EVENT } from "./sse";
 export async function GET({ request, locals }) {
   console.log(SSE_EVENT);
   const session = await locals.getSession();
-  // if (!session) {
-  //   throw error(401);
-  // }
+  if (!session) {
+    throw error(401);
+  }
 
   return event(async (emit) => {
     // eslint-disable-next-line no-constant-condition

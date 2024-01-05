@@ -16,14 +16,16 @@
   $: formErrors = form as settingsApiCreateResult;
 </script>
 
-
 {#if form !== undefined && form !== null}
   <div class="default-border p-3 my-2">
     {#if Object.hasOwn(formDiffs, "diffs")}
       <p class="mb-2">Updated {formDiffs.booksUpdated} books</p>
       {#each formDiffs.diffs as diff}
         <div>
-          <a class="hover:underline" href="/book/{diff.bookName}">{diff.bookName}</a> - 
+          <a class="hover:underline" href="/book/{diff.bookName}"
+            >{diff.bookName}</a
+          >
+          -
           {diff.propName}: {diff.oldValue} --> {diff.newValue}
         </div>
       {:else}
@@ -32,7 +34,7 @@
     {:else if formErrors.errorsBooks !== undefined}
       {#if formErrors.errorsBooks.length > 0}
         <span class="inline-flex gap-1 mb-2">
-          Finished updating all {formErrors.booksUpdated} entries.
+          Finished updating all {formErrors.updatedBookNames.length} entries.
           <span class="text-red-500 inline-flex items-center gap-1">
             <span class="w-[20px] inline-block">
               <ErrorIcon />
@@ -47,10 +49,14 @@
               <span class="w-[20px] inline-block text-red-500">
                 <ErrorIcon />
               </span>
-              <a class="hover:underline" href="/book/{errorBook.book.name}">{errorBook.book.name}</a>
+              <a class="hover:underline" href="/book/{errorBook.book.name}"
+                >{errorBook.book.name}</a
+              >
               -
               {#if errorBook.volumeId !== undefined}
-                <a class="hover:underline" href="http://books.google.de/books?id={errorBook.volumeId}"
+                <a
+                  class="hover:underline"
+                  href="http://books.google.de/books?id={errorBook.volumeId}"
                   >volumeId: {errorBook.volumeId}</a
                 >
               {/if}
@@ -63,14 +69,24 @@
         </div>
       {:else}
         <span class="inline-flex gap-1 flex-wrap">
-          <span class="text-green-400 inline-flex items-center gap-1">
+          <span
+            class="text-green-500 dark:text-green-400 inline-flex items-center gap-1"
+          >
             <span class="w-[22px] inline-block">
               <SuccessIcon />
             </span>Successfully
           </span>
-          updated all {formErrors.booksUpdated}
+          updated all {formErrors.updatedBookNames.length}
           entries
         </span>
+        <details open>
+          <summary>Books updated:</summary>
+          <ul class="list-disc">
+            {#each formErrors.updatedBookNames as name}
+              <li class="ml-10"><a class="hover:underline text-base" href="/book/{name}">{name}</a></li>
+            {/each}
+          </ul>
+        </details>
       {/if}
     {/if}
   </div>

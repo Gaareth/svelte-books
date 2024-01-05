@@ -112,7 +112,7 @@ type errorBooksType = {
   error: string;
   volumeId: string | undefined;
 }[];
-async function createConnections() {
+async function createConnections(connect_all: boolean) {
   const scoreMap: Record<string, number> = {
     publishedDate: 1,
     publisher: 1,
@@ -124,7 +124,7 @@ async function createConnections() {
   };
   const unconnectedBooks = await prisma.book.findMany({
     where: {
-      bookApiDataId: undefined,
+      bookApiDataId: connect_all ? undefined : null, // for whatever reason, undefined applies to all entries (kinda make sense lol)
       bookListName: "Read",
     },
   });
@@ -212,12 +212,11 @@ async function createConnections() {
       });
   };
 
-  let booksUpdated = 0;
+  const updatedBookNames = [];
   const errorsBooks: errorBooksType = [];
 
   for (const book of unconnectedBooks) {
     // console.log("book: " + book.name);
-    booksUpdated += 1;
     SSE_EVENT.msg = "Adding: " + book.name;
     SSE_EVENT.items = SSE_EVENT.items + 1;
 
@@ -248,11 +247,13 @@ async function createConnections() {
     //     console.log(e);
     //   }
     // }
+
+    updatedBookNames.push(book.name);
     await delay(200);
     // break;
   }
 
-  return { booksUpdated, errorsBooks };
+  return { updatedBookNames, errorsBooks };
 }
 
 export type settingsApiResult<T> = {
@@ -263,7 +264,7 @@ export type settingsApiResult<T> = {
 
 export type settingsApiCreateResult = {
   success: boolean;
-  booksUpdated: number;
+  updatedBookNames: string[];
   errorsBooks: errorBooksType;
 };
 
@@ -296,17 +297,20 @@ export const actions = {
     return response;
   },
 
-  try_add: async ({ locals }) => {
+  try_add: async ({ locals, request }) => {
     const session = await locals.getSession();
     if (!session) {
       throw error(401);
     }
+    const formData = (await request.formData());
+    const connect_all = formData.get("connect-all") == "on";
+    
 
     SSE_EVENT.items = 0;
     SSE_EVENT.msg = "";
     SSE_EVENT.max = 0;
 
-    const result = await createConnections();
+    const result = await createConnections(connect_all);
     const response: settingsApiCreateResult = {
       success: result.errorsBooks.length == 0 ? true : false,
       ...result,
