@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { password } from "./../../../.svelte-kit/ambient.d.ts";
   export let data;
   let csrfToken = data.csrfToken;
   let error = data.error;
