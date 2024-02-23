@@ -6,7 +6,11 @@
     BookFullType,
     BookIncludeCategory,
   } from "$appTypes";
-  import { getBookReadDate, sortBooksDefault } from "$lib/utils";
+  import {
+    dateToYYYY_MM_DD,
+    getBookReadDate,
+    sortBooksDefault,
+  } from "$lib/utils";
   import { onMount } from "svelte";
   import { MAX_RATING } from "../../constants";
   import SortOrder from "./SortOrder.svelte";
@@ -126,13 +130,22 @@
     let f_rating = (b: BookFullType) =>
       rating_filter === undefined ||
       Math.floor(b.rating?.stars ?? 0) == rating_filter;
-    let f_start = (b: BookFullType) =>
-      start_filter === undefined ||
-      (getBookReadDate(b) !== null && getBookReadDate(b)! >= start_filter);
+    let f_start = (b: BookFullType) => {
+      return (
+        start_filter === undefined ||
+        (b.yearRead != null &&
+          b.monthRead &&
+          b.yearRead >= start_filter.getFullYear() &&
+          b.monthRead >= start_filter.getMonth() + 1)
+      );
+    };
 
     let f_end = (b: BookFullType) =>
       end_filter === undefined ||
-      (getBookReadDate(b) !== null && getBookReadDate(b)! <= end_filter);
+      (b.yearRead != null &&
+        b.monthRead &&
+        b.yearRead <= end_filter.getFullYear() &&
+        b.monthRead <= end_filter.getMonth() + 1);
 
     let f_category = (b: BookFullType) =>
       allowed_categories_filter === undefined ||
@@ -156,17 +169,11 @@
     }
 
     if (start_filter !== undefined) {
-      params.set(
-        "start_date",
-        start_filter.toLocaleDateString("en").replaceAll("/", "-")
-      );
+      params.set("start_date", dateToYYYY_MM_DD(start_filter));
     }
 
     if (end_filter !== undefined) {
-      params.set(
-        "end_date",
-        end_filter.toLocaleDateString("en").replaceAll("/", "-")
-      );
+      params.set("end_date", dateToYYYY_MM_DD(end_filter));
     }
 
     if (
@@ -218,6 +225,44 @@
       return new Date(0);
     }
   }
+
+  const filterMonth = (offset: number) => {
+    start_filter = new Date();
+    start_filter.setMonth(start_filter.getMonth() - offset);
+    start_filter.setDate(1);
+
+    end_filter = new Date();
+    end_filter.setMonth(end_filter.getMonth() - offset + 1); // one month to much
+    end_filter.setDate(0);  // => set to last day of previous month
+  };
+
+  const filterLastMonth = () => {
+    filterMonth(1);
+  };
+
+  const filterThisMonth = () => {
+    filterMonth(0);
+  };
+
+  const filterYear = (offset: number) => {
+    start_filter = new Date();
+    start_filter.setFullYear(start_filter.getFullYear() - offset);
+    start_filter.setDate(1);
+    start_filter.setMonth(0);
+
+    end_filter = new Date();
+    end_filter.setFullYear(end_filter.getFullYear() - offset);
+    end_filter.setDate(0); // calculates last day
+    end_filter.setMonth(11);
+  };
+
+  const filterLastYear = () => {
+    filterYear(1);
+  };
+
+  const filterThisYear = () => {
+    filterYear(0);
+  };
 </script>
 
 <div class="mt-4 mb-8">
@@ -239,18 +284,18 @@
         </div>
       </summary>
       <div class="flex gap-2 mt-2">
-          <select
-            class="default-border border-red-600 border"
-            bind:value={selectedSort}
-            on:change={sortBooks}
-            aria-label="Sort by"
-          >
-            <option value="date_read">Sort by date</option>
-            <option value="date_created">Sort by date created</option>
-            <option value="title">Sort by title</option>
-            <option value="author">Sort by author</option>
-            <option value="rating">Sort by rating</option>
-          </select>
+        <select
+          class="default-border border-red-600 border"
+          bind:value={selectedSort}
+          on:change={sortBooks}
+          aria-label="Sort by"
+        >
+          <option value="date_read">Sort by date</option>
+          <option value="date_created">Sort by date created</option>
+          <option value="title">Sort by title</option>
+          <option value="author">Sort by author</option>
+          <option value="rating">Sort by rating</option>
+        </select>
         <SortOrder bind:reversed={sortingReversed} on:click={sortBooks} />
       </div>
     </details>
@@ -317,20 +362,37 @@
           <input
             type="date"
             class="default-border"
+            value={start_filter?.toISOString().split("T")[0]}
             on:change={(e) => (start_filter = parseDateInput(e))}
           />
         </label>
 
         <label class="flex flex-col">
-          End date
+          End date {end_filter?.toISOString().split("T")[0]}
           <input
             type="date"
             class="default-border"
+            value={end_filter?.toISOString().split("T")[0]}
             on:change={(e) => (end_filter = parseDateInput(e))}
           />
         </label>
+
+        <div class="flex justify-center gap-2">
+          <button class="btn-generic" on:click={filterLastMonth}>
+            Last month
+          </button>
+          <button class="btn-generic mr-2" on:click={filterThisMonth}>
+            This month
+          </button>
+          <button class="btn-generic" on:click={filterLastYear}>
+            Last year
+          </button>
+          <button class="btn-generic" on:click={filterThisYear}>
+            This year
+          </button>
+        </div>
       </div>
-      <div class="w-full md:w-fit flex gap-2 self-end">
+      <div class="w-full md:w-fit flex gap-2 self-end mt-2">
         <button
           class="btn-secondary-black block my-3 px-8 text-center w-full md:w-fit"
           on:click={resetFilter}

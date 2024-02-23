@@ -4,13 +4,13 @@ import { z } from "zod";
 import { prisma } from "$lib/server/prisma";
 import { getBookApiData } from "../api/api.server";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import type { queriedBookFull } from "$appTypes";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
   listName: z.string().trim().min(1),
   volumeId: z.string().trim().optional(),
+  read_now: z.boolean().optional()
 });
 
 
@@ -25,7 +25,7 @@ export async function POST(req: RequestEvent) {
   console.log(result);
 
   if (result.success) {
-    const { name, author, listName, volumeId } = result.data;
+    const { name, author, listName, volumeId, read_now } = result.data;
 
     const book_exist = await prisma.book.findFirst({ where: { name } });
     if (book_exist) {
@@ -36,11 +36,13 @@ export async function POST(req: RequestEvent) {
     }
     // } catch { /* errors if bookApiData does not exits. Will be created in the next create call below.*/ }
     // return json({ success: true });
-
+    const now = new Date();
     await prisma.book.create({
       data: {
         name,
         author,
+        monthRead: read_now ? now.getMonth() + 1 : undefined,
+        yearRead: read_now ? now.getFullYear() : undefined,
         bookList: {
           connectOrCreate: {
             where: {

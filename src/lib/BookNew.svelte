@@ -24,6 +24,7 @@
   let new_book = false;
   let name = "";
   let author = "";
+  let read_now = false;
   let loading = false;
 
   let api_query = "";
@@ -35,10 +36,10 @@
 
   async function newBook() {
     loading = true;
-
+    
     const response = await fetch(endpoint, {
       method: "POST",
-      body: JSON.stringify({ name, author, listName, volumeId }),
+      body: JSON.stringify({ name, author, listName, volumeId, read_now }),
       headers: {
         "content-type": "application/json",
       },
@@ -121,6 +122,9 @@
           name="author"
           class="input dark:bg-slate-600 dark:border-slate-500"
         />
+
+        <label for="read_now">Read this month</label>
+        <input type="checkbox" id="read_now" class="rounded" name="read_now" bind:checked={read_now}>
       </div>
 
       <div class="flex justify-center mb-4 mt-5">

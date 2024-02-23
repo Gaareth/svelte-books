@@ -7,6 +7,7 @@
   let now = new Date();
 
   let books_read_per_month = (month: number): BookFullType[] => {
+    month = month == 0 ? 12 : month;
     return books.filter(
       (b) => b.yearRead == now.getFullYear() && 
       b.monthRead !== null && 
