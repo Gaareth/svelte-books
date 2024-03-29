@@ -59,12 +59,12 @@
   }
 
   :is(.dark .background-pattern) {
-    background-image: url("book-pattern.svg");
+    background-image: url("/book-pattern.svg");
     opacity: 0.05;
   }
 
   .background-pattern {
-    background-image: url("book-patternW.svg");
+    background-image: url("/book-patternW.svg");
     background-size: 10%;
     position: absolute;
 
