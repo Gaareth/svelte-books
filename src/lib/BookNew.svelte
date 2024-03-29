@@ -83,7 +83,7 @@
 
 {#if $page.data.session}
   <div
-    class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600"
+    class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white"
   >
     <div class="flex justify-between">
       <h2 class="text-xl flex items-center justify-center">Add new book</h2>

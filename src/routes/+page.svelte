@@ -8,7 +8,7 @@
   export let data: {
     books: BookFullType[];
     most_read_category: [string, number];
-    all_category_names: {name: string}[];
+    all_category_names: { name: string }[];
   };
   let most_read_category = data.most_read_category;
 
@@ -19,6 +19,9 @@
 <svelte:head>
   <title>Books - Gareth</title>
 </svelte:head>
+
+<div class="background-pattern" />
+<div class="background-pattern-overlay" />
 
 <h1
   class={clsx(
@@ -33,9 +36,70 @@
 {/if}
 <div class="my-5" />
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
-<BookList books={data.books} category_names={data.all_category_names.map(c => c.name)}/>
+<BookList
+  books={data.books}
+  category_names={data.all_category_names.map((c) => c.name)}
+/>
 
 <style>
+  @keyframes pan {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 100% 0%;
+    }
+  }
+
+
+  @media (max-width: 650px) {
+    .background-pattern {
+      height: 0 !important;
+    }
+  }
+
+  :is(.dark .background-pattern) {
+    background-image: url("book-pattern.svg");
+    opacity: 0.05;
+  }
+
+  .background-pattern {
+    background-image: url("book-patternW.svg");
+    background-size: 10%;
+    position: absolute;
+
+    top: 0px;
+    left: 0px;
+    z-index: -2;
+    height: 100%;
+    width: 100%;
+
+    animation: pan 180s linear infinite;
+    will-change: background-position;
+    opacity: 0.15;
+    /* background-color: rgb(215 147 23); */
+  }
+
+
+  :is(.dark .background-pattern-overlay) {
+    background: radial-gradient(circle, transparent 70%, rgb(30, 41, 59));
+  }
+
+  .background-pattern-overlay {
+    background: radial-gradient(circle, transparent 70%, white);
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* bottom: 0; */
+    /* margin: auto; */
+  }
+
   .header-elnath {
     font-family: "Elnath";
   }

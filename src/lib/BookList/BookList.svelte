@@ -92,11 +92,7 @@
 </div>
 
 <div hidden={!showOptions}>
-  <Filtering
-    {searchStore}
-    {languages_used}
-    {category_names}
-  />
+  <Filtering {searchStore} {languages_used} {category_names} />
 </div>
 
 <h2 class="flex items-end text-2xl -mb-1 {!showOptions ? 'hidden' : ''}">
@@ -109,11 +105,13 @@
   <p>No books found matching your search :(</p>
 {/if}
 
-{#each books_displayed as book (book.id)}
-  <div>
-    <BookListItem {book} on:delete={openPopup} />
-  </div>
-{/each}
+<div class="dark:bg-slate-800 bg-white">
+  {#each books_displayed as book (book.id)}
+    <div>
+      <BookListItem {book} on:delete={openPopup} />
+    </div>
+  {/each}
+</div>
 
 <BookDeletePopUp
   {deletionBook}

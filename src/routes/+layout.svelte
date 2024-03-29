@@ -11,7 +11,7 @@
   <title>{$page.data.title || "Books - Gareth"}</title>
 </svelte:head>
 
-<header aria-label="Site Header" class="shadow-sm">
+<header aria-label="Site Header" class="shadow-sm bg-white dark:bg-slate-800">
   <div class="mx-auto max-w-screen-xl p-4">
     <div
       class="flex items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col"

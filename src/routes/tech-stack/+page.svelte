@@ -2,9 +2,9 @@
   <title>Books Tech-Stack</title>
 </svelte:head>
 
-<div class="border rounded-md p-3 mt-8 px-7">
+<div>
   <h1
-    class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-b
+    class="font-extrabold text-5xl my-4 text-transparent bg-clip-text bg-gradient-to-b
   from-svelte via-purple-500 to-pink-500"
   >
     Tech-Stack
@@ -27,6 +27,10 @@
     <li>svelte-loading-spinners</li>
     <li>language-icons</li>
     <li>fuzzy-search</li>
+  </ul>
+
+  <ul class="my-2 list-disc">
+    <li>material icons</li>
   </ul>
 </div>
 

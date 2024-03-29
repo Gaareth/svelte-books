@@ -15,7 +15,7 @@
 
 <div
   class={twMerge(
-    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col",
+    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
     $$restProps.class
   )}
 >

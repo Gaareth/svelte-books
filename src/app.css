@@ -12,7 +12,8 @@
     min-width: auto !important;
 }
 
-.autocomplete, .autocomplete > .input-container {
+.autocomplete,
+.autocomplete>.input-container {
     @apply dark:bg-slate-700 dark:border-slate-600 rounded-md !important;
 }
 
@@ -25,9 +26,18 @@
 }
 
 @layer base {
+
+   
+    /* @media (scripting: none) {
+        :root {
+            @apply bg-slate-800;
+        }
+    } */
+
+
     body {
         /* transition: background-color 0.1s ease-in-out; */
-        @apply bg-white dark:bg-slate-800 text-black dark:text-white
+        @apply dark:bg-slate-800 text-black dark:text-white
     }
 
     input {

@@ -81,10 +81,10 @@
   {/if}
 </div>
 
-<style>
+<!-- <style>
   /* @media screen and (max-width: 640px) {
     .stats-wrapper {
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
   } */
-</style>
+</style> -->
