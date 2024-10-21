@@ -21,6 +21,12 @@ export const handle = SvelteKitAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        if (import.meta.env.DEV) {
+          return {
+            id: 0,
+            name: "DEV",
+          };
+        }
        
         const account = await prisma.account.findFirst({
           where: {
