@@ -35,11 +35,11 @@ export function getErrorMessage(error: unknown) {
   return String(error);
 }
 
-
+export const sum = (list: any[]) => list.reduce((a, b) => a + b);
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
 export function dateToYYYY_MM_DD(date: Date) {
-  return date.toISOString().split('T')[0]
+  return date.toISOString().split("T")[0];
 }
 
 export function getBookReadDate(book: Book) {

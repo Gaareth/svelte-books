@@ -8,12 +8,12 @@ import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
+  rating: z.number().optional(),
+  words_per_page: z.number().optional(),
   listName: z.string().trim().min(1),
   volumeId: z.string().trim().optional(),
-  read_now: z.boolean().optional()
+  read_now: z.boolean().optional(),
 });
-
-
 
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();
@@ -25,7 +25,15 @@ export async function POST(req: RequestEvent) {
   console.log(result);
 
   if (result.success) {
-    const { name, author, listName, volumeId, read_now } = result.data;
+    const {
+      name,
+      author,
+      rating,
+      words_per_page,
+      listName,
+      volumeId,
+      read_now,
+    } = result.data;
 
     const book_exist = await prisma.book.findFirst({ where: { name } });
     if (book_exist) {
@@ -53,6 +61,12 @@ export async function POST(req: RequestEvent) {
             },
           },
         },
+        rating: rating ? {
+          create: {
+            stars: rating,
+            comment: undefined,
+          },
+        } : undefined,
       },
     });
 
@@ -87,9 +101,9 @@ export async function POST(req: RequestEvent) {
       });
 
       const categories = extractCategories(apiData);
-      
+
       console.log(categories);
-      
+
       for (const category_str of categories) {
         const category = await prisma.bookCategory.upsert({
           where: { name: category_str },
@@ -104,7 +118,6 @@ export async function POST(req: RequestEvent) {
         });
 
         console.log(category);
-        
       }
     }
 
@@ -112,4 +125,3 @@ export async function POST(req: RequestEvent) {
   }
   throw error(400);
 }
-

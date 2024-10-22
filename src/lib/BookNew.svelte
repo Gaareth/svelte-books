@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Rating from './Rating.svelte';
   import BookApiDetails from "./BookApiSelection/BookApiDetails.svelte";
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
@@ -15,6 +16,9 @@
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApi from "./BookApiSelection/BookApi.svelte";
   import type { queriedBookFull } from "$appTypes";
+  import InputNumber from "./InputNumber.svelte";
+  import { unknown } from "zod";
+  import { MAX_RATING } from '../constants';
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -25,6 +29,9 @@
   let name = "";
   let author = "";
   let read_now = false;
+  let rating: number;
+  let words_per_page: number;
+
   let loading = false;
 
   let api_query = "";
@@ -36,10 +43,10 @@
 
   async function newBook() {
     loading = true;
-    
+
     const response = await fetch(endpoint, {
       method: "POST",
-      body: JSON.stringify({ name, author, listName, volumeId, read_now }),
+      body: JSON.stringify({ name, author, listName, volumeId, read_now, rating, words_per_page }),
       headers: {
         "content-type": "application/json",
       },
@@ -79,7 +86,6 @@
     }
   }
 </script>
-
 
 {#if $page.data.session}
   <div
@@ -124,7 +130,30 @@
         />
 
         <label for="read_now">Read this month</label>
-        <input type="checkbox" id="read_now" class="rounded" name="read_now" bind:checked={read_now}>
+        <input
+          type="checkbox"
+          id="read_now"
+          class="rounded"
+          name="read_now"
+          bind:checked={read_now}
+        />
+
+        <details>
+          <summary>more</summary>
+          <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
+            <label for="rating">Rating:</label>
+            <Rating rating_max={MAX_RATING} editable={true} bind:rating/>
+
+            <label for="words-per-page">Words per page:</label>
+            <input
+              id="words-per-page"
+              name="words-per-page"
+              type="number"
+              class="input dark:bg-slate-600 dark:border-slate-500"
+              bind:value={words_per_page}
+            />
+          </div>
+        </details>
       </div>
 
       <div class="flex justify-center mb-4 mt-5">

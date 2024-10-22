@@ -62,6 +62,8 @@ model Book {
 
   bookApiData   BookApiData? @relation(fields: [bookApiDataId], references: [id])
   bookApiDataId String?
+
+  wordsPerPage Int?
 }
 
 model Rating {

@@ -9,26 +9,27 @@
   import { twMerge } from "tailwind-merge";
 
   export let name: string;
-  export let value: number | string;
+  export let value: number | string | undefined = undefined;
   export let last_value: typeof value | undefined = undefined;
 </script>
 
 <div
   class={twMerge(
-    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
-    $$restProps.class
+    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white", $$restProps.class
   )}
 >
   <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
   <div class="flex gap-2 min-h-[50px] flex-grow">
-    <p
-      class={clsx(
-        "font-bold self-center",
-        typeof value === "number" ? "text-5xl" : "text-4xl"
-      )}
-    >
-      {value}
-    </p>
+    <slot name="value">
+      <p
+        class={clsx(
+          "font-bold self-center",
+          typeof value === "number" ? "text-5xl" : "text-4xl"
+        )}
+      >
+        {value}
+      </p>
+    </slot>
     {#if last_value != undefined}
       <div class="flex flex-row">
         <div
