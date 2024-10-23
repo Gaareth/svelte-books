@@ -2,9 +2,9 @@
   //@ts-ignore
   import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
 
-  export let showModal: boolean; // boolean
+  export let showModal: boolean; 
 
-  let dialog: HTMLDialogElement; // HTMLDialogElement
+  let dialog: HTMLDialogElement; 
 
   $: if (dialog && showModal) dialog.showModal();
   $: if (!showModal && !!dialog) dialog.close();
@@ -18,23 +18,23 @@
   bind:this={dialog}
   on:close={() => (showModal = false)}
   on:click|self={() => dialog.close()}
-  class="rounded-md border border-blue-100 bg-white dark:bg-slate-500 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8"
+  class="rounded-md border border-blue-100 bg-white dark:bg-slate-700 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8"
   role="alertdialog"
 >
   <div on:click|stopPropagation>
     <div class="flex justify-between item-center gap-3">
       <slot name="header" />
       <!-- svelte-ignore a11y-autofocus -->
-      <button autofocus on:click={() => dialog.close()} title="Close modal">
+      <button autofocus on:click={() => dialog.close()} title="Close modal" class="!flex items-center">
         <span class="w-[24px] h-[24px] inline-block">
           <IoMdClose />
         </span>
       </button>
     </div>
-    <hr class="dark:border-slate-400"/>
+    <hr class="dark:border-slate-600"/>
 
     <slot/>
-    <hr class="mt-4 dark:border-slate-400"/>
+    <hr class="mt-4 dark:border-slate-600"/>
   </div>
 </dialog>
 

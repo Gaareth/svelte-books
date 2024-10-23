@@ -15,7 +15,8 @@
 
 <div
   class={twMerge(
-    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white", $$restProps.class
+    "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
+    $$restProps.class
   )}
 >
   <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
@@ -27,10 +28,10 @@
           typeof value === "number" ? "text-5xl" : "text-4xl"
         )}
       >
-        {value}
+        {value.toLocaleString("en-US")}
       </p>
     </slot>
-    {#if last_value != undefined}
+    {#if last_value != undefined && value != undefined}
       <div class="flex flex-row">
         <div
           class={clsx(
@@ -49,9 +50,9 @@
         {#if typeof value == "number" && typeof last_value == "number"}
           <p class="self-center">
             {#if value > last_value}
-              +{value - last_value}
+              +{(value - last_value).toLocaleString("en-US")}
             {:else if value < last_value}
-              -{last_value - value}
+              -{(last_value - value).toLocaleString("en-US")}
             {:else}
               +/- 0
             {/if}

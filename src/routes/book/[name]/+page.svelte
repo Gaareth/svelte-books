@@ -181,7 +181,7 @@
           >
             <button
               class="btn-group-btn
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-white"
+              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600"
               type="button"
               on:click={() => {
                 edit = !edit;
