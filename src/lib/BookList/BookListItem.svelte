@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookRating } from "$appTypes";
+  import type { BookFullType } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -13,8 +13,9 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
   import { MAX_RATING } from "../../constants";
+  import Pages from "$lib/icons/pages.svelte";
 
-  export let book: BookRating;
+  export let book: BookFullType;
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
   export let allow_deletion: boolean | undefined = true;
@@ -79,12 +80,10 @@
     style="height: 98%;"
   />
   <div
-    class="book-item-grid {book.rating
-      ? 'sm:grid-cols-5 grid-cols-3'
-      : 'sm:grid-cols-4 grid-cols-2'}"
+    class="book-item-grid"
   >
     <div
-      class="flex justify-center item flex-col h-full col-span-full sm:col-span-1 max-h-36"
+      class="flex justify-center item flex-col h-full col-span-full sm:col-span-2 max-h-36"
     >
       <a
         href="/book/{book_url}"
@@ -105,7 +104,14 @@
     {#if book.rating}
       <div class="flex sm:gap-2 gap-1 items-center justify-end">
         <p>{book.rating.stars} / {MAX_RATING}</p>
-        <div class="icon"><IoIosStar /></div>
+        <span class="icon"><IoIosStar /></span>
+      </div>
+    {/if}
+
+    {#if book.bookApiData?.pageCount}
+      <div class="flex sm:gap-2 gap-1 items-center justify-end">
+        <p>{book.bookApiData.pageCount}</p>
+        <span aria-label="number of pages"><Pages /></span>
       </div>
     {/if}
 
@@ -169,12 +175,11 @@
   .book-item-grid {
     display: grid;
     flex-grow: 1;
-    grid-template-rows: repeat(3, minmax(0, 1fr));
     gap: 0.5rem;
     row-gap: 0;
     align-items: center;
     height: 100%;
-    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr))
   }
 
   @media (min-width: 640px) {
