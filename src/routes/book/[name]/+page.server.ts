@@ -73,6 +73,7 @@ const saveSchema = z.object({
     z.number().optional()
   ),
   apiVolumeId: z.string().optional(),
+  wordsPerPage: z.coerce.number().nonnegative().optional(),
 });
 
 function undefinedToNull<Type>(any: Type | undefined): Type | null {
@@ -205,6 +206,7 @@ export const actions = {
         bookSeries,
         bookSeriesId,
         apiVolumeId,
+        wordsPerPage,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -286,6 +288,7 @@ export const actions = {
           },
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
+          wordsPerPage,
         },
       });
 

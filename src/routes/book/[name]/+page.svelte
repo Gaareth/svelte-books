@@ -418,6 +418,15 @@
             </div>
           </section>
 
+          <section>
+            <InputNumber
+              value={book.wordsPerPage}
+              name="wordsPerPage"
+              displayName="Words per page estimate"
+              error={(form?.errors?.wordsPerPage ?? [undefined])[0]}
+            />
+          </section>
+
           <div class="min-[500px]:flex min-[500px]:justify-end">
             <button
               formaction="?/save"

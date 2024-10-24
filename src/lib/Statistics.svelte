@@ -131,10 +131,10 @@
   </div>
   <div class="text-secondary text-base">
     {#if selected_option == "pages" && pagecount_accuracy < 1}
-      <p>{pagecount_accuracy * 100}% Accuracy</p>
+      <p>{(pagecount_accuracy * 100).toFixed(2)}% Accuracy</p>
       <p>{books_without_pagecount.length} books without pagecount</p>
     {:else if selected_option == "words" && wordcount_accuracy < 1}
-      <div class="-mb-1">{wordcount_accuracy * 100}% Accuracy</div>
+      <div class="-mb-1">{(wordcount_accuracy * 100).toFixed(2)}% Accuracy</div>
       <div>
         {books_without_words.length} books without words per page info. See
         <button
@@ -237,15 +237,7 @@
   {/if}
 </div>
 
-<!-- <style>
-  /* @media screen and (max-width: 640px) {
-    .stats-wrapper {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-  } */
-</style> -->
-
-<!-- <style lang="postcss">
+<style lang="postcss">
   .btn-group-btn {
     @apply dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700;
   }
@@ -254,4 +246,13 @@
     @apply dark:bg-slate-700 bg-gray-50;
   }
 </style>
- -->
+
+<!-- <style>
+  /* @media screen and (max-width: 640px) {
+    .stats-wrapper {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  } */
+</style> -->
+
+ 
