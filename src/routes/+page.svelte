@@ -7,10 +7,9 @@
   import type { BookFullType } from "../app";
   export let data: {
     books: BookFullType[];
-    most_read_category: [string, number];
+    most_read_categories: [string, number][];
     all_category_names: { name: string }[];
   };
-  let most_read_category = data.most_read_category;
 
   let chance = 20;
   let random = Math.floor(Math.random() * chance);
@@ -31,10 +30,13 @@
 >
   My Book List
 </h1>
+
 {#if $page.data.session}
-  <Statistics books={data.books} {most_read_category} />
+  <Statistics books={data.books} most_read_categories={data.most_read_categories} />
 {/if}
+
 <div class="my-5" />
+
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
 <BookList
   books={data.books}
@@ -50,7 +52,6 @@
       background-position: 100% 0%;
     }
   }
-
 
   @media (max-width: 650px) {
     .background-pattern {
@@ -79,7 +80,6 @@
     opacity: 0.15;
     /* background-color: rgb(215 147 23); */
   }
-
 
   :is(.dark .background-pattern-overlay) {
     background: radial-gradient(circle, transparent 70%, rgb(30, 41, 59));

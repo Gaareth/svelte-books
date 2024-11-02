@@ -5,13 +5,15 @@
   import TabGroup from "./TabGroup.svelte";
   import type { BookFullType } from "../app";
   import Stats from "./Stats.svelte";
-  import { sum } from "./utils";
+  import { sum, tupleToDataset } from "./utils";
   import Book from "./icons/book.svelte";
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
+  import { Bar } from "svelte-chartjs";
+  import Charts from "./Charts.svelte";
 
   export let books: BookFullType[];
-  export let most_read_category: [string, number];
+  export let most_read_categories: [string, number][];
 
   const AVERAGE_NUM_WORDS_PER_PAGE = 250;
   const AVERAGE_NUM_PAGES_PER_BOOK = 350;
@@ -97,6 +99,8 @@
   };
 
   let selected_option: "books" | "pages" | "words" = "books";
+
+  let showModalCats = false;
 </script>
 
 <div class="flex gap-5 items-center">
@@ -163,7 +167,7 @@
 
 <div class="flex flex-wrap gap-1 stats-wrapper">
   {#if selected_option == "books"}
-    <Stats name="total books read" value={books.length}></Stats>
+    <Stats name="total books read" value={books.length} />
   {:else if selected_option == "pages"}
     <Stats name="total pages read">
       <div slot="value" class="flex gap-1 items-center">
@@ -229,13 +233,42 @@
   {#if books.length > 0}
     <Stats name="most read author" value={most_read_author()} />
   {/if}
-  {#if books.length > 0 && most_read_category[0] !== undefined}
+  {#if books.length > 0 && most_read_categories[0] !== undefined}
     <Stats
-      name="most read genre/category"
-      value={most_read_category[0] + " (" + most_read_category[1] + ")"}
-    />
+      value={most_read_categories[0][0] +
+        " (" +
+        most_read_categories[0][1] +
+        ")"}
+    >
+      <div class="flex justify-between" slot="name">
+        <p class="text-gray-500 dark:text-gray-400 text-base">
+          most read genre/category
+        </p>
+        <button
+          class="border rounded p-1 dark:border-slate-600"
+          on:click={() => (showModalCats = true)}
+        >
+          <span><Words /></span>
+        </button>
+      </div>
+    </Stats>
   {/if}
 </div>
+
+<Modal bind:showModal={showModalCats}>
+  <div class="" slot="header">
+    <p class="font-medium sm:text-lg">Books without words per page info</p>
+  </div>
+  <Charts data={most_read_categories} />
+</Modal>
+
+<!-- <style>
+  /* @media screen and (max-width: 640px) {
+    .stats-wrapper {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  } */
+</style> -->
 
 <style lang="postcss">
   .btn-group-btn {
@@ -246,13 +279,3 @@
     @apply dark:bg-slate-700 bg-gray-50;
   }
 </style>
-
-<!-- <style>
-  /* @media screen and (max-width: 640px) {
-    .stats-wrapper {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-  } */
-</style> -->
-
- 

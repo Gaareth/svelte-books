@@ -77,3 +77,10 @@ export const replaceStateWithQuery = (values: Record<string, string>) => {
   }
   history.replaceState(history.state, "", url);
 };
+
+export const tupleToDataset = (data: [any, number][], label: string) => {
+  return {
+    labels: data.map((t) => t[0]),
+    datasets: [{ data: data.map((t) => t[1]), label }],
+  };
+};

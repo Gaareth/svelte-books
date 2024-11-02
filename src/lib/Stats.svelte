@@ -8,7 +8,7 @@
   import clsx from "clsx";
   import { twMerge } from "tailwind-merge";
 
-  export let name: string;
+  export let name: string | undefined = undefined;
   export let value: number | string | undefined = undefined;
   export let last_value: typeof value | undefined = undefined;
 </script>
@@ -19,7 +19,10 @@
     $$restProps.class
   )}
 >
-  <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
+  <slot name="name">
+    <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
+  </slot>
+
   <div class="flex gap-2 min-h-[50px] flex-grow">
     <slot name="value">
       <p

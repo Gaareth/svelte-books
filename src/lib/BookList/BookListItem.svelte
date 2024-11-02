@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookFullType } from "$appTypes";
+  import type { BookFullType, BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
