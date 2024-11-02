@@ -1,16 +1,15 @@
 <script lang="ts">
   import Modal from "./Modal.svelte";
-  import { page } from "$app/stores";
   import { twMerge } from "tailwind-merge";
-  import TabGroup from "./TabGroup.svelte";
   import type { BookFullType } from "../app";
   import Stats from "./Stats.svelte";
-  import { sum, tupleToDataset } from "./utils";
+  import { sum } from "./utils";
   import Book from "./icons/book.svelte";
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
-  import { Bar } from "svelte-chartjs";
   import Charts from "./Charts.svelte";
+  //@ts-ignore
+  import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
 
   export let books: BookFullType[];
   export let most_read_categories: [string, number][];
@@ -32,9 +31,9 @@
       )
     );
 
-  let books_without_pagecount = books
-    .map((b) => b.bookApiData?.pageCount)
-    .filter((pc) => pc == null);
+  let books_without_pagecount = books.filter(
+    (b) => b.bookApiData?.pageCount == null
+  );
   let num_pages = count_pages(books);
   let pagecount_accuracy = 1 - books_without_pagecount.length / books.length;
 
@@ -83,7 +82,7 @@
   let pages_last_year = count_pages(books_last_year);
   let words_last_year = count_words(books_last_year);
 
-  let most_read_author = () => {
+  let calc_most_read_authors = () => {
     let authors = books.map((b) => b.author);
     let author_occur: { [key: string]: number } = {};
     authors.forEach((a: string) =>
@@ -91,16 +90,16 @@
     );
 
     var sortedArray = Object.entries(author_occur).sort(
-      ([, a], [, b]) => a - b
+      ([, a], [, b]) => b - a
     );
-    const entry: [string, number] = sortedArray[sortedArray.length - 1];
-    const author_string = `${entry[0]} (${entry[1]})`;
-    return author_string;
+    return sortedArray;
   };
+  let most_read_authors = calc_most_read_authors();
 
   let selected_option: "books" | "pages" | "words" = "books";
 
   let showModalCats = false;
+  let showModalAuthors = false;
 </script>
 
 <div class="flex gap-5 items-center">
@@ -135,37 +134,53 @@
   </div>
   <div class="text-secondary text-base">
     {#if selected_option == "pages" && pagecount_accuracy < 1}
-      <p>{(pagecount_accuracy * 100).toFixed(2)}% Accuracy</p>
-      <p>{books_without_pagecount.length} books without pagecount</p>
+      <div class="-mb-1">{(pagecount_accuracy * 100).toFixed(2)}% Accuracy</div>
+      <div>
+        {books_without_pagecount.length} books without pagecount. See
+        <button
+          class="!text-base hover:underline"
+          on:click={() => (showModal = true)}
+        >
+          all
+        </button>
+      </div>
     {:else if selected_option == "words" && wordcount_accuracy < 1}
       <div class="-mb-1">{(wordcount_accuracy * 100).toFixed(2)}% Accuracy</div>
       <div>
         {books_without_words.length} books without words per page info. See
         <button
           class="!text-base hover:underline"
-          on:click={() => (showModal = true)}>all</button
+          on:click={() => (showModal = true)}
         >
+          all
+        </button>
       </div>
     {/if}
   </div>
 </div>
 
 <Modal bind:showModal>
-  <div class="" slot="header">
-    <p class="font-medium sm:text-lg">Books without words per page info</p>
+  <div slot="header">
+    <p class="font-medium sm:text-lg">
+      {#if selected_option == "pages"}
+        Books without page count
+      {:else}
+        Books without words per page info
+      {/if}
+    </p>
   </div>
   <ul class="list-disc p-2 sm:w-[30rem]">
-    {#each books_without_words as book}
+    {#each selected_option == "pages" ? books_without_pagecount : books_without_words as book}
       <li>
-        <a href="book/{book.name}?edit=true" class="hover:underline"
-          >{book.name}</a
-        >
+        <a href="book/{book.name}?edit=true" class="hover:underline">
+          {book.name}
+        </a>
       </li>
     {/each}
   </ul>
 </Modal>
 
-<div class="flex flex-wrap gap-1 stats-wrapper">
+<div class="flex flex-wrap gap-1 sm:gap-2 sm:my-2 stats-wrapper">
   {#if selected_option == "books"}
     <Stats name="total books read" value={books.length} />
   {:else if selected_option == "pages"}
@@ -229,9 +244,23 @@
   {/if}
 </div>
 
-<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-1 mt-1">
+<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-1 sm:gap-2">
   {#if books.length > 0}
-    <Stats name="most read author" value={most_read_author()} />
+    <Stats
+      value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
+    >
+      <div class="flex justify-between" slot="name">
+        <p class="text-gray-500 dark:text-gray-400 text-base">
+          most read author
+        </p>
+        <button
+          class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
+          on:click={() => (showModalAuthors = true)}
+        >
+          <span class="w-5 block"><IoIosStats /></span>
+        </button>
+      </div>
+    </Stats>
   {/if}
   {#if books.length > 0 && most_read_categories[0] !== undefined}
     <Stats
@@ -245,21 +274,30 @@
           most read genre/category
         </p>
         <button
-          class="border rounded p-1 dark:border-slate-600"
+          class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
           on:click={() => (showModalCats = true)}
         >
-          <span><Words /></span>
+          <span class="w-5 block"><IoIosStats /></span>
         </button>
       </div>
     </Stats>
   {/if}
 </div>
 
-<Modal bind:showModal={showModalCats}>
-  <div class="" slot="header">
-    <p class="font-medium sm:text-lg">Books without words per page info</p>
+<Modal bind:showModal={showModalCats} className="w-[900px]">
+  <div slot="header">
+    <p class="font-medium sm:text-lg">Most read categories</p>
   </div>
+
   <Charts data={most_read_categories} />
+</Modal>
+
+<Modal bind:showModal={showModalAuthors} className="w-[900px]">
+  <div slot="header">
+    <p class="font-medium sm:text-lg">Most read authors</p>
+  </div>
+
+  <Charts data={most_read_authors} />
 </Modal>
 
 <!-- <style>
