@@ -61,6 +61,7 @@
   let books_this_month: BookFullType[] = books_read_per_month(
     now.getMonth() + 1
   );
+  
   let pages_this_month = count_pages(books_this_month);
   let words_this_month = count_words(books_this_month);
 
@@ -180,7 +181,7 @@
   </ul>
 </Modal>
 
-<div class="flex flex-wrap gap-1 sm:gap-2 sm:my-2 stats-wrapper">
+<div class="flex flex-wrap gap-1 sm:gap-2 sm:mb-2 stats-wrapper">
   {#if selected_option == "books"}
     <Stats name="total books read" value={books.length} />
   {:else if selected_option == "pages"}
