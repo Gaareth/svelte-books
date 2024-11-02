@@ -10,8 +10,8 @@ import bcrypt from "bcrypt";
 
 export const handle = SvelteKitAuth({
   pages: {
-      signIn: "/login",
-      signOut: "/logout",
+    signIn: "/login",
+    signOut: "/logout",
   },
   providers: [
     CredentialsProvider({
@@ -27,13 +27,12 @@ export const handle = SvelteKitAuth({
             name: "DEV",
           };
         }
-       
+
         const account = await prisma.account.findFirst({
           where: {
             username: credentials.username,
           },
         });
-        
 
         if (!account) {
           return null;

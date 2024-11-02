@@ -26,7 +26,7 @@ https://unpkg.com/language-icons/icons/LANGUAGE_CODE.svg
 In HTML, for example:
 
 ```html
-<img alt="English" src="https://unpkg.com/language-icons/icons/en.svg">
+<img alt="English" src="https://unpkg.com/language-icons/icons/en.svg" />
 ```
 
 Icons are also available on NPM:
@@ -38,7 +38,7 @@ npm install language-icons
 They are in the `./icons` folder, you can use an SVG loader to import them:
 
 ```js
-import English from "./node_modules/language-icons/icons/en.svg"
+import English from "./node_modules/language-icons/icons/en.svg";
 ```
 
 ## ⭐ Why

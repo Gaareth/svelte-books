@@ -1,6 +1,6 @@
 <script>
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
-import { Moon } from "svelte-loading-spinners";
+  import { Moon } from "svelte-loading-spinners";
 </script>
 
 <div class="item-border p-2 my-2 flex items-center">

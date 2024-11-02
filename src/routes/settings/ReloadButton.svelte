@@ -36,7 +36,7 @@
         update();
         loading = false;
         evtSource.close();
-        
+
         // @ts-ignore
         const { success, booksUpdated } = result.data;
 

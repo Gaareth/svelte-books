@@ -1,4 +1,9 @@
-import { type RequestHandler, error, json, type ServerLoadEvent } from "@sveltejs/kit";
+import {
+  type RequestHandler,
+  error,
+  json,
+  type ServerLoadEvent,
+} from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils.js";
 import {
@@ -302,9 +307,8 @@ export const actions = {
     if (!session) {
       throw error(401);
     }
-    const formData = (await request.formData());
+    const formData = await request.formData();
     const connect_all = formData.get("connect-all") == "on";
-    
 
     SSE_EVENT.items = 0;
     SSE_EVENT.msg = "";
@@ -340,9 +344,9 @@ export const actions = {
 //   // return json({success: false})
 // }
 
-export async function load({ locals }: ServerLoadEvent) {  
+export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.getSession();
-  if (!(session)) {
+  if (!session) {
     throw error(401);
   }
 }

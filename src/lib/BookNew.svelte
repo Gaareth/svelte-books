@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Rating from './Rating.svelte';
+  import Rating from "./Rating.svelte";
   import BookApiDetails from "./BookApiSelection/BookApiDetails.svelte";
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
@@ -18,7 +18,7 @@
   import type { queriedBookFull } from "$appTypes";
   import InputNumber from "./InputNumber.svelte";
   import { unknown } from "zod";
-  import { MAX_RATING } from '../constants';
+  import { MAX_RATING } from "../constants";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -46,7 +46,15 @@
 
     const response = await fetch(endpoint, {
       method: "POST",
-      body: JSON.stringify({ name, author, listName, volumeId, read_now, rating, words_per_page }),
+      body: JSON.stringify({
+        name,
+        author,
+        listName,
+        volumeId,
+        read_now,
+        rating,
+        words_per_page,
+      }),
       headers: {
         "content-type": "application/json",
       },
@@ -142,7 +150,7 @@
           <summary>more</summary>
           <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
             <label for="rating">Rating:</label>
-            <Rating rating_max={MAX_RATING} editable={true} bind:rating/>
+            <Rating rating_max={MAX_RATING} editable={true} bind:rating />
 
             <label for="words-per-page">Words per page:</label>
             <input

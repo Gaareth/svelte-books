@@ -18,8 +18,14 @@
       <p>Categories: {data.categories.map((c) => c.name).join(" | ")}</p>
       <p>Publisher: {data.publisher} ({data.publishedDate})</p>
       <div class="flex items-center gap-2">
-        <p>Language: </p>
-      <span><img class="w-6" src={`/language-icons/icons/${data.language}.svg`} alt={`${data.language} language icon`}></span>
+        <p>Language:</p>
+        <span
+          ><img
+            class="w-6"
+            src={`/language-icons/icons/${data.language}.svg`}
+            alt={`${data.language} language icon`}
+          /></span
+        >
       </div>
       <p>ISBN13: {data.isbn_13}</p>
     </div>

@@ -40,10 +40,9 @@ export const searchHandler = <T extends Record<PropertyKey, any>>(
   });
 
   const searchTerm = store.search.toLowerCase() || "";
-  store.filtered = searcher.search(searchTerm)
-  store.filtered = store.filtered.filter(store.filter)
+  store.filtered = searcher.search(searchTerm);
+  store.filtered = store.filtered.filter(store.filter);
   // console.log("fuzyy sorting");
-  
 
   store.filtered = store.filtered.sort(store.sort);
 };

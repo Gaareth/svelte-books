@@ -4,7 +4,9 @@
   "repository": "https://github.com/AnandChowdhary/language-icons",
   "author": "Anand Chowdhary <mail@anandchowdhary.com>",
   "license": "MIT",
-  "files": ["icons"],
+  "files": [
+    "icons"
+  ],
   "scripts": {
     "build": "tsc && node dist/index.js",
     "watch": "onchange 'colors.json' -- yarn build"

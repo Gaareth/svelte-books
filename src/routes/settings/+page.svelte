@@ -12,7 +12,6 @@
 
   let currentStatus: typeof SSE_EVENT | undefined = undefined;
 
-
   //TODO: toast
 </script>
 

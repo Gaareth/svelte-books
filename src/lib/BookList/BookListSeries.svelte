@@ -2,11 +2,12 @@
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
-  import type { BookRating } from "$appTypes";
-  import BookListItem from "./BookListItem.svelte";
+  import type { BookFullType, BookRating } from "$appTypes";
+  import BookListItem, { BookListItemType } from "./BookListItem.svelte";
 
-  export let books: BookRating[];
-  export let on_delete: ((b: BookRating) => unknown) | undefined = undefined;
+  export let books: BookListItemType[];
+  export let on_delete: ((b: BookListItemType) => unknown) | undefined =
+    undefined;
   export let allow_deletion = false;
 </script>
 

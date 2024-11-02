@@ -33,7 +33,7 @@
     on:click={click_outside}
     on:keydown
     role="button"
-    tabindex=0
+    tabindex="0"
   >
     <slot name="dropdown" />
   </div>

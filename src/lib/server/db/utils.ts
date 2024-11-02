@@ -7,7 +7,6 @@ export async function getBookLists() {
   return prisma.bookList.findMany();
 }
 
-
 export async function loadBooks() {
   const data = {
     books: await prisma.book.findMany({
@@ -18,8 +17,8 @@ export async function loadBooks() {
         rating: true,
         bookApiData: {
           include: {
-            categories: true
-          }
+            categories: true,
+          },
         },
       },
     }),

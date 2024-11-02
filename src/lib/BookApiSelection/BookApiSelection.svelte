@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+  import { page } from "$app/stores";
   //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
   import BookApiSkeleton from "./BookApiSkeleton.svelte";

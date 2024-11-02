@@ -14,43 +14,20 @@
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type {
-    BookApiDataCategories,
-    BookFullType,
-    BookRating,
-  } from "../../../app";
+  import type { BookFull, BookFullType, BookRating } from "../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
   import Image from "$lib/Image.svelte";
 
   import { MAX_RATING } from "../../../constants";
+  import { BookListItemType } from "$lib/BookList/BookListItem.svelte";
 
   export let data: PageData;
 
-  type BookAll = Prisma.BookGetPayload<{
-    include: {
-      rating: true;
-      bookSeries: {
-        include: {
-          books: {
-            include: {
-              rating: true;
-            };
-          };
-        };
-      };
-      bookApiData: {
-        include: {
-          categories: true;
-        };
-      };
-    };
-  }>;
-
   // let book: BookAll;
-  let book: BookAll = data.book;
-  let books: BookRating[] = data.books;
+  let book: BookFull = data.book;
+  let books: BookFull[] = data.books;
 
   // let no_rating = !data.book?.rating;
   let no_rating = false;
@@ -132,7 +109,7 @@
   };
 
   let series_error: string | undefined = undefined;
-  const on_delete = (b: BookRating) => {
+  const on_delete = (b: BookListItemType) => {
     const index = book.bookSeries?.books.indexOf(b);
 
     if (index === undefined) {

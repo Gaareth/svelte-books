@@ -233,7 +233,7 @@
 
     end_filter = new Date();
     end_filter.setMonth(end_filter.getMonth() - offset + 1); // one month to much
-    end_filter.setDate(0);  // => set to last day of previous month
+    end_filter.setDate(0); // => set to last day of previous month
   };
 
   const filterLastMonth = () => {

@@ -15,7 +15,7 @@
   $: search_term = $page.url.searchParams.get("q") ?? "";
   // $: {
   //   console.log($page.url.searchParams.get("q"));
-    
+
   //   $page.url.searchParams
   // }
 
@@ -25,7 +25,7 @@
     let params = $page.url.searchParams;
     params.set("q", query);
     goto(`?${params}`, {
-      noScroll: true
+      noScroll: true,
     });
     // replaceStateWithQuery({q: query})
   };

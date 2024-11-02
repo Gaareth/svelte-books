@@ -9,11 +9,17 @@
   import { isDarkModeEnabled, tupleToDataset } from "./utils";
   import { theme } from "./stores/stores";
 
-
   let chart: any;
   export let data: [any, number][];
 
-  let displayData = tupleToDataset(data.slice(0, 10), "# books read");
+  let displayData: {
+    labels: any[];
+    datasets: {
+      data: number[];
+      label: string;
+      backgroundColor?: string | undefined;
+    }[];
+  } = tupleToDataset(data.slice(0, 10), "# books read");
   let bgColor = "#9966FF";
   displayData.datasets[0].backgroundColor = bgColor;
 
@@ -38,6 +44,7 @@
   data={displayData}
   {options}
   on:click={(e) => {
+    // @ts-ignore
     const el = getElementAtEvent(chart, e);
     const labelIndex = el[0].index;
     data.splice(labelIndex, 1);

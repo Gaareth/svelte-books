@@ -1,22 +1,22 @@
 <script lang="ts">
-    import type { queriedBookFull } from "$appTypes";
-    import { createEventDispatcher, type EventDispatcher } from "svelte";
+  import type { queriedBookFull } from "$appTypes";
+  import { createEventDispatcher, type EventDispatcher } from "svelte";
 
-    import BookApi from "./BookApi.svelte";
-  
-    export let volumeId: string | undefined;
-    export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+  import BookApi from "./BookApi.svelte";
 
-    export let open = true;
-    export let summary_text = "Add API data?";
-    export let query: string | undefined = undefined;
+  export let volumeId: string | undefined;
+  export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
 
-    const dispatch = createEventDispatcher();
-  </script>
-  
-  <details {open}>
-    <summary class="text-lg">{summary_text}</summary>
-    <div>
-      <BookApi bind:getBookPromise bind:volumeId bind:query {dispatch} />
-    </div>
-  </details>  
+  export let open = true;
+  export let summary_text = "Add API data?";
+  export let query: string | undefined = undefined;
+
+  const dispatch = createEventDispatcher();
+</script>
+
+<details {open}>
+  <summary class="text-lg">{summary_text}</summary>
+  <div>
+    <BookApi bind:getBookPromise bind:volumeId bind:query {dispatch} />
+  </div>
+</details>

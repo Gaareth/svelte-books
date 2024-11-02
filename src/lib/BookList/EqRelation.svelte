@@ -9,17 +9,16 @@
 <span class="btn-group">
   <label>
     <span>=</span>
-    <input type="radio" name="rel" >
+    <input type="radio" name="rel" />
   </label>
   <label>
     <span>&lt;</span>
-    <input type="radio" name="rel" >
+    <input type="radio" name="rel" />
   </label>
   <label>
     <span>&gt;</span>
-    <input type="radio" name="rel" >
+    <input type="radio" name="rel" />
   </label>
-
 </span>
 
 <style lang="postcss">

@@ -1,6 +1,6 @@
 <script lang="ts">
   export let data;
-  let csrfToken = data.csrfToken;  
+  let csrfToken = data.csrfToken;
 </script>
 
 <svelte:head>
@@ -12,7 +12,7 @@
     <input name="csrfToken" type="hidden" value={csrfToken} />
 
     <button
-      class="transition-colors uppercase font-bold 
+      class="transition-colors uppercase font-bold
       hover:bg-transparent dark:hover:bg-blue-600 hover:text-black dark:hover:text-white
 
         px-10 py-3 bg-blue-700 border border-blue-700 text-white rounded-md"

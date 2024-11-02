@@ -1,12 +1,12 @@
 <script lang="ts">
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
   import Image from "$lib/Image.svelte";
-  
+
   import { delay } from "$lib/utils";
   //@ts-ignore
   import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
   //@ts-ignore
-  import IoMdOpen from 'svelte-icons/io/IoMdOpen.svelte'
+  import IoMdOpen from "svelte-icons/io/IoMdOpen.svelte";
   import clsx from "clsx";
   import { browser } from "$app/environment";
   import type { queriedBookFull } from "$appTypes";
@@ -38,7 +38,10 @@
 
 {#if back_button}
   <button
-    on:click={() => {apiBookSelected = false; dispatch && dispatch("back")}}
+    on:click={() => {
+      apiBookSelected = false;
+      dispatch && dispatch("back");
+    }}
     class="mt-5 flex flex-row items-center gap-1"
     type="button"
   >
@@ -56,7 +59,9 @@
     {@const isbn_13 = info.industryIdentifiers?.find(
       (t) => t.type == "ISBN_13"
     )?.identifier}
-    {@const categories = info.categories ? info.categories?.join(" | ") : "uncategorized"}
+    {@const categories = info.categories
+      ? info.categories?.join(" | ")
+      : "uncategorized"}
     <div
       class="item-border p-2 my-2 flex flex-wrap items-center gap-4 relative"
       bind:this={item_ref}
@@ -80,7 +85,12 @@
             {#if info.subtitle}
               ({info.subtitle})
             {/if}
-            <a class="pl-1" target="_blank" href="http://books.google.de/books?id={volumeId}" title="Open on books.google.de">
+            <a
+              class="pl-1"
+              target="_blank"
+              href="http://books.google.de/books?id={volumeId}"
+              title="Open on books.google.de"
+            >
               <span class="w-4 h-4 block">
                 <IoMdOpen />
               </span>

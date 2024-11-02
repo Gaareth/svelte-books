@@ -83,7 +83,11 @@
           <summary>Books updated:</summary>
           <ul class="list-disc">
             {#each formErrors.updatedBookNames as name}
-              <li class="ml-10"><a class="hover:underline text-base" href="/book/{name}">{name}</a></li>
+              <li class="ml-10">
+                <a class="hover:underline text-base" href="/book/{name}"
+                  >{name}</a
+                >
+              </li>
             {/each}
           </ul>
         </details>

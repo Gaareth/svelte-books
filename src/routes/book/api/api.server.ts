@@ -19,13 +19,13 @@ export async function queryBooksFull(
 export async function queryBooks(query: string): Promise<queriedBook[]> {
   const fields = "items(id, volumeInfo(title, authors, subtitle, imageLinks))";
   const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=lite&fields=${fields}&orderBy=relevance&key=${BOOKS_API_KEY}`;
-  
+
   console.log(url);
-  
+
   const json = await (await fetch(url)).json();
   console.log(json);
   if (json.error !== undefined) {
-    return json
+    return json;
   }
   return json.items;
 }

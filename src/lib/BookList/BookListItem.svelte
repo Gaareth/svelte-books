@@ -1,10 +1,20 @@
 <script context="module" lang="ts">
   export type ItemDeleteEvent = { book: BookRating };
+  export type BookListItemType = Prisma.BookGetPayload<{
+    include: {
+      rating: true;
+      bookApiData: {
+        include: {
+          categories: true;
+        };
+      };
+    };
+  }>;
 </script>
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookFullType, BookRating } from "$appTypes";
+  import type { BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -14,8 +24,10 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
   import { MAX_RATING } from "../../constants";
   import Pages from "$lib/icons/pages.svelte";
+  import { Prisma } from "@prisma/client";
 
-  export let book: BookFullType;
+  export let book: BookListItemType;
+
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
   export let allow_deletion: boolean | undefined = true;
@@ -79,9 +91,7 @@
     )} rounded-md"
     style="height: 98%;"
   />
-  <div
-    class="book-item-grid"
-  >
+  <div class="book-item-grid">
     <div
       class="flex justify-center item flex-col h-full col-span-full sm:col-span-2 max-h-36"
     >
@@ -147,7 +157,7 @@
                 <span
                   class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
                 >
-                  <IoMdTrash alt="red trash can"/>
+                  <IoMdTrash alt="red trash can" />
                 </span>
               </button>
             {/if}
@@ -179,7 +189,7 @@
     row-gap: 0;
     align-items: center;
     height: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr))
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   }
 
   @media (min-width: 640px) {

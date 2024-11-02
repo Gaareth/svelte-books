@@ -47,6 +47,25 @@ export async function load(page: ServerLoadEvent) {
   const books = await prisma.book.findMany({
     include: {
       rating: true,
+      bookSeries: {
+        include: {
+          books: {
+            include: {
+              rating: true,
+              bookApiData: {
+                include: {
+                  categories: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      bookApiData: {
+        include: {
+          categories: true,
+        },
+      },
     },
   });
 

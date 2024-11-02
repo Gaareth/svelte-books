@@ -9,7 +9,7 @@ export async function POST(req: RequestEvent) {
 
   const { id } = await req.request.json();
   if (id === undefined) {
-    throw error(400)
+    throw error(400);
   }
 
   const book = await prisma.book.findUnique({

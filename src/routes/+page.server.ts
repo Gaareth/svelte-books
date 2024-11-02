@@ -14,13 +14,16 @@ export async function load() {
 
   const all_category_names = await prisma.bookCategory.findMany({
     select: {
-      name: true
-    }
+      name: true,
+    },
   });
-    
+
   return {
     books: (await loadBooks()).books,
-    most_read_categories: most_read_categories.map(c => [c.name, c._count.books]),
+    most_read_categories: most_read_categories.map((c) => [
+      c.name,
+      c._count.books,
+    ]),
     all_category_names,
   };
 }

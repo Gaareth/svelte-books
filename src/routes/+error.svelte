@@ -3,10 +3,8 @@
 
   const errorMsgs = {
     401: "Looks like you are not allowed to access this content.",
-    400:
-      "You either manipulated the request (bad) or something is wrong with your client or our deployed javascript (also bad).",
-    500:
-      "This looks like our fault. We are tremendously (yeah really) sorry. Please message me (look in the footer), for feedback.",
+    400: "You either manipulated the request (bad) or something is wrong with your client or our deployed javascript (also bad).",
+    500: "This looks like our fault. We are tremendously (yeah really) sorry. Please message me (look in the footer), for feedback.",
   };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

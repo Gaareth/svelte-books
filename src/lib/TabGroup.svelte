@@ -14,12 +14,12 @@
     </ul>
   </div>
   <div class={twMerge(current_tab != 0 ? "hidden" : "")}>
-    <slot name="tab0"></slot>
+    <slot name="tab0" />
   </div>
   <div class={twMerge(current_tab != 1 ? "hidden" : "")}>
-    <slot name="tab1"></slot>
+    <slot name="tab1" />
   </div>
   <div class={twMerge(current_tab != 2 ? "hidden" : "")}>
-    <slot name="tab2"></slot>
+    <slot name="tab2" />
   </div>
 </div>

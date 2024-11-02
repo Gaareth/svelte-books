@@ -61,12 +61,14 @@ export async function POST(req: RequestEvent) {
             },
           },
         },
-        rating: rating ? {
-          create: {
-            stars: rating,
-            comment: undefined,
-          },
-        } : undefined,
+        rating: rating
+          ? {
+              create: {
+                stars: rating,
+                comment: undefined,
+              },
+            }
+          : undefined,
       },
     });
 

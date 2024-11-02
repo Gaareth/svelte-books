@@ -32,7 +32,10 @@
 </h1>
 
 {#if $page.data.session}
-  <Statistics books={data.books} most_read_categories={data.most_read_categories} />
+  <Statistics
+    books={data.books}
+    most_read_categories={data.most_read_categories}
+  />
 {/if}
 
 <div class="my-5" />

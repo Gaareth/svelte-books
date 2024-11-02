@@ -31,7 +31,7 @@
           typeof value === "number" ? "text-5xl" : "text-4xl"
         )}
       >
-        {value.toLocaleString("en-US")}
+        {(value || NaN).toLocaleString("en-US")}
       </p>
     </slot>
     {#if last_value != undefined && value != undefined}

@@ -54,7 +54,7 @@
   <div class="mt-6 sm:flex sm:gap-4">
     <button
       class="inline-block w-full {getColor()} rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto
-      border 
+      border
       border-slate-400 hover:border-slate-500"
       on:click={() => dispatch("primary")}
     >
@@ -64,8 +64,8 @@
     <button
       class="mt-2 inline-block w-full rounded-md bg-gray-100 px-5 py-2 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300
       dark:bg-slate-600 dark:text-white dark:border-slate-500 dark:hover:bg-slate-500"
-      on:click={() => {        
-        showModal = false
+      on:click={() => {
+        showModal = false;
       }}
     >
       {btn2_msg}
