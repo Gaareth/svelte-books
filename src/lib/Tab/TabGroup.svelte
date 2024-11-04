@@ -8,6 +8,8 @@
     selectedTab: ReturnType<typeof writable>;
     selectedPanel: ReturnType<typeof writable>;
     currentTabIdx: ReturnType<typeof writable<number>>;
+    btnClass: string;
+    btnSelectedClass: string;
   }
 </script>
 
