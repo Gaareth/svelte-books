@@ -19,13 +19,14 @@
   import InputNumber from "./InputNumber.svelte";
   import { unknown } from "zod";
   import { MAX_RATING } from "../constants";
+  import { onMount } from "svelte";
 
   export let endpoint = "/book/create";
   export let listName: string;
   export let authors: string[];
   $: authors = [...new Set(authors)];
 
-  let new_book = false;
+  let new_book_open = false;
   let name = "";
   let author = "";
   let read_now = false;
@@ -93,6 +94,17 @@
       api_query = name + " " + author;
     }
   }
+
+  const toggleContent = () => {
+    new_book_open = !new_book_open;
+    localStorage.setItem("BookNewCollapseState", String(new_book_open));
+  }
+
+  onMount(() => {
+    console.log(localStorage.getItem("BookNewCollapseState"));
+    
+    new_book_open = localStorage.getItem("BookNewCollapseState") == "true";
+  });
 </script>
 
 {#if $page.data.session}
@@ -102,15 +114,15 @@
     <div class="flex justify-between">
       <h2 class="text-xl flex items-center justify-center">Add new book</h2>
       <button
-        on:click={() => (new_book = !new_book)}
+        on:click={toggleContent}
         class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
         dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500"
       >
-        {new_book ? "Cancel" : "Open"}
+        {new_book_open ? "Cancel" : "Open"}
       </button>
     </div>
 
-    <div hidden={!new_book}>
+    <div hidden={!new_book_open}>
       <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
         <label for="name">Name:</label>
         <input

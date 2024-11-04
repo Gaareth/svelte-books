@@ -1,20 +1,10 @@
 <script context="module" lang="ts">
   export type ItemDeleteEvent = { book: BookRating };
-  export type BookListItemType = Prisma.BookGetPayload<{
-    include: {
-      rating: true;
-      bookApiData: {
-        include: {
-          categories: true;
-        };
-      };
-    };
-  }>;
 </script>
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookRating } from "$appTypes";
+  import type {  BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -26,7 +16,7 @@
   import Pages from "$lib/icons/pages.svelte";
   import { Prisma } from "@prisma/client";
 
-  export let book: BookListItemType;
+  export let book: any;
 
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;

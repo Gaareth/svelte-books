@@ -14,14 +14,13 @@
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type { BookFull, BookFullType, BookRating } from "../../../app";
+  import type { BookFull, BookFullType, BookListItemType, BookRating } from "../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
   import Image from "$lib/Image.svelte";
 
   import { MAX_RATING } from "../../../constants";
-  import { BookListItemType } from "$lib/BookList/BookListItem.svelte";
 
   export let data: PageData;
 

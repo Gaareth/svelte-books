@@ -6,7 +6,7 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { prisma } from "$lib/server/prisma";
 
-import bcrypt from "bcrypt";
+import * as argon2 from "argon2";
 
 export const handle = SvelteKitAuth({
   pages: {
@@ -38,10 +38,11 @@ export const handle = SvelteKitAuth({
           return null;
         }
 
-        const matching = await bcrypt.compare(
+        const matching = await argon2.verify(
           credentials.password,
           account.password_hash
         );
+
         if (matching) {
           return {
             id: account.id,
