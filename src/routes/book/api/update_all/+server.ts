@@ -8,7 +8,7 @@ export async function GET({ request, locals }) {
   console.log(SSE_EVENT);
   const session = await locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 
   return event(async (emit) => {

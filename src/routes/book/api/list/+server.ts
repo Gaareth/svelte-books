@@ -4,12 +4,12 @@ import { queryBooks } from "../api.server";
 export const GET: RequestHandler = async ({ url, locals }) => {
   const session = await locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 
   const query = url.searchParams.get("query");
   if (query === null) {
-    throw error(400);
+    error(400);
   }
 
   const data = await queryBooks(query);
@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     // return new Promise((resolve, reject) => {
     //     reject(new Error(json.error.message))
     // });
-    throw error(0, "arsch");
+    error(0, "arsch");
   }
 
   return json(data);

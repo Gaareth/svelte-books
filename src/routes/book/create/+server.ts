@@ -18,7 +18,7 @@ const createSchema = z.object({
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 
   const result = createSchema.safeParse(await req.request.json());
@@ -125,5 +125,5 @@ export async function POST(req: RequestEvent) {
 
     return json({ success: true });
   }
-  throw error(400);
+  error(400);
 }

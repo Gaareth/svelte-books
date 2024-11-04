@@ -4,11 +4,11 @@ import { getBookApiData } from "../../api.server";
 export const GET: RequestHandler = async ({ params, locals }) => {
   const session = await locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
   const volumeId = params.volumeId;
   if (volumeId === null || volumeId === undefined) {
-    throw error(400);
+    error(400);
   }
 
   const data = await getBookApiData(volumeId);

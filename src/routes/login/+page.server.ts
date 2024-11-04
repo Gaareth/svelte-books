@@ -2,7 +2,7 @@ import { redirect, type ServerLoadEvent } from "@sveltejs/kit";
 
 export async function load(page: ServerLoadEvent) {
   if (await page.locals.getSession()) {
-    throw redirect(303, "/");
+    redirect(303, "/");
   }
 
   const csrfTokenResponse = await page.fetch("/auth/csrf");

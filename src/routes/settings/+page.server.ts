@@ -283,7 +283,7 @@ export const actions = {
   reload: async ({ locals }) => {
     const session = await locals.getSession();
     if (!session) {
-      throw error(401);
+      error(401);
     }
 
     SSE_EVENT.items = 0;
@@ -305,7 +305,7 @@ export const actions = {
   try_add: async ({ locals, request }) => {
     const session = await locals.getSession();
     if (!session) {
-      throw error(401);
+      error(401);
     }
     const formData = await request.formData();
     const connect_all = formData.get("connect-all") == "on";
@@ -347,6 +347,6 @@ export const actions = {
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 }

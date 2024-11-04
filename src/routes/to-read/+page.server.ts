@@ -4,7 +4,7 @@ import { prisma } from "$lib/server/prisma";
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 
   const data = {

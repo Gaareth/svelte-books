@@ -41,7 +41,7 @@ export async function load(page: ServerLoadEvent) {
   const bookLists = await getBookLists();
 
   if (!book) {
-    throw error(404, { message: "Not found" });
+    error(404, { message: "Not found" });
   }
 
   const books = await prisma.book.findMany({
@@ -149,7 +149,7 @@ async function updateBookSeries(
     });
 
     if (currentBookSeries === null) {
-      throw error(400);
+      error(400);
     }
 
     const currentBookSeriesNamesArray = currentBookSeries.books.map(
@@ -195,7 +195,7 @@ export const actions = {
   save: async (event: RequestEvent) => {
     const session = await event.locals.getSession();
     if (!session) {
-      throw error(401);
+      error(401);
     }
 
     const formData = Object.fromEntries(await event.request.formData());
@@ -313,7 +313,7 @@ export const actions = {
 
       console.log("nnew book:", book);
 
-      throw redirect(302, "/book/" + encodeURIComponent(book.name));
+      redirect(302, "/book/" + encodeURIComponent(book.name));
     }
 
     const { fieldErrors: errors } = result.error.flatten();

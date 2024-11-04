@@ -5,7 +5,7 @@ import { prisma } from "$lib/server/prisma";
 export async function POST(req: RequestEvent) {
   const session = await req.locals.getSession();
   if (!session) {
-    throw error(401);
+    error(401);
   }
 
   const { id } = await req.request.json();
