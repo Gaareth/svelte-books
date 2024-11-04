@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
-  import { delay } from "$lib/utils";
   import type { queriedBook } from "$appTypes";
   import type { EventDispatcher } from "svelte";
 
@@ -101,6 +99,8 @@
                 hover:bg-gray-50 dark:hover:bg-slate-500
                 text-base flex-row items-center gap-1"
                 on:click={() => {
+                  console.log(dispatch);
+                  
                   apiBookSelected = true;
                   dispatch("select");
                 }}

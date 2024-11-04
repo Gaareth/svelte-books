@@ -3,23 +3,33 @@
 
   export let current_tab = 0;
   export let tabs: string[];
+
+  const switchTab = (i: number) => {
+    current_tab = i;
+  }
 </script>
 
 <div class={$$restProps.class}>
   <div>
     <ul class="flex gap-1">
       {#each tabs as tabname, i}
-        <button on:click={() => (current_tab = i)}>{tabname}</button>
+        <button on:click={() => switchTab(i)} type="button">{tabname}</button>
       {/each}
     </ul>
   </div>
-  <div class={twMerge(current_tab != 0 ? "hidden" : "")}>
+  <div class={twMerge(current_tab != 0 ? "hidden" : "", "tab")}>
     <slot name="tab0" />
   </div>
-  <div class={twMerge(current_tab != 1 ? "hidden" : "")}>
+  <div class={twMerge(current_tab != 1 ? "hidden" : "", "tab")}>
     <slot name="tab1" />
   </div>
   <div class={twMerge(current_tab != 2 ? "hidden" : "")}>
     <slot name="tab2" />
   </div>
 </div>
+
+<style>
+  .tab {
+    transition: 0.9s ease-in-out;
+  }
+</style>

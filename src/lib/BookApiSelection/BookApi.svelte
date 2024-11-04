@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { queriedBookFull } from "$appTypes";
-  import type { EventDispatcher } from "svelte";
+  import { createEventDispatcher, type EventDispatcher } from "svelte";
   // import { createEventDispatcher, type EventDispatcher } from "svelte";
   import BookApiConfirm from "./BookApiConfirm.svelte";
   import BookApiSelection from "./BookApiSelection.svelte";
 
-  export let volumeId: string | undefined;
-  export let dispatch: EventDispatcher<any>;
+  export let volumeId: string | undefined = undefined;
+  export let dispatch: EventDispatcher<any> = createEventDispatcher();
   export let query: string | undefined = undefined;
 
   let apiBookSelected: boolean = false;

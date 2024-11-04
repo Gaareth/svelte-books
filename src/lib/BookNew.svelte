@@ -1,4 +1,6 @@
 <script lang="ts">
+  import TabPanels from "./Tab/TabPanels.svelte";
+  import TabPanel from "./Tab/TabPanel.svelte";
   import Rating from "./Rating.svelte";
   import BookApiDetails from "./BookApiSelection/BookApiDetails.svelte";
   import { invalidateAll } from "$app/navigation";
@@ -19,7 +21,11 @@
   import InputNumber from "./InputNumber.svelte";
   import { unknown } from "zod";
   import { MAX_RATING } from "../constants";
-  import { onMount } from "svelte";
+  import { onMount, type EventDispatcher } from "svelte";
+  import { twMerge } from "tailwind-merge";
+  import ToggleGroup from "./ToggleGroup.svelte";
+  import TabGroup from "./Tab/TabGroup.svelte";
+  import Tab from "./Tab/Tab.svelte";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -98,17 +104,48 @@
   const toggleContent = () => {
     new_book_open = !new_book_open;
     localStorage.setItem("BookNewCollapseState", String(new_book_open));
-  }
+  };
 
   onMount(() => {
     console.log(localStorage.getItem("BookNewCollapseState"));
-    
+
     new_book_open = localStorage.getItem("BookNewCollapseState") == "true";
   });
+
+  let selectedOption: "read" | "reading" | "to read" = "read";
+
+  let showMore = false;
+  let selectedOptionFinished: "last month" | "this month" | "today";
+
+  $: finishedDate = (() => {
+    const now = new Date();
+    let date;
+
+    switch (selectedOptionFinished) {
+      case "last month":
+        date = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        break;
+      case "this month":
+        date = new Date(now.getFullYear(), now.getMonth(), 1);
+        break;
+      case "today":
+        date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        break;
+      default:
+        return undefined;
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const dtString = `${year}-${month}-${day}`;
+    // Format the date to 'YYYY-MM-DD'
+    return dtString;
+  })();
 </script>
 
 {#if $page.data.session}
-  <div
+  <form
     class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white"
   >
     <div class="flex justify-between">
@@ -122,48 +159,135 @@
       </button>
     </div>
 
-    <div hidden={!new_book_open}>
-      <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
-        <label for="name">Name:</label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          class="input dark:bg-slate-600 dark:border-slate-500"
-          bind:value={name}
-        />
-        <label for="author">Author:</label>
-        <!-- <input
-        id="author"
-        name="author"
-        type="text"
-        class="input dark:bg-slate-600 dark:border-slate-500"
-        bind:value={author}
-      /> -->
-        <AutoComplete
-          items={authors}
-          bind:text={author}
-          create={true}
-          id="author"
-          name="author"
-          class="input dark:bg-slate-600 dark:border-slate-500"
-        />
+    <form hidden={!new_book_open}>
+      <p>Have you already read the book?</p>
+      <ToggleGroup
+        options={["read", "reading", "to read"]}
+        groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+        btnClass="px-4 py-1 dark:hover:bg-slate-500"
+        btnSelectedClass="dark:bg-slate-500"
+        bind:selectedOption
+      />
 
-        <label for="read_now">Read this month</label>
-        <input
-          type="checkbox"
-          id="read_now"
-          class="rounded"
-          name="read_now"
-          bind:checked={read_now}
-        />
+      <!-- <div class="grid grid-cols-2 max-w-[28rem] mx-auto mt-5 mb-3">
+        <button
+          type="button"
+          class="border-b dark:border-slate-500"
+          on:click={() => (selectedTab = "search")}
+        >
+          Search using google books
+        </button>
+        <button type="button" on:click={() => (selectedTab = "manually")}>
+          Enter manually
+        </button>
+      </div> -->
 
-        <details>
-          <summary>more</summary>
-          <div class="grid grid-cols-2 grid-rows-2 pt-2 items-center gap-1">
+      <TabGroup
+        btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-400 dark:hover:text-slate-100"
+        btnSelectedClass="border-b-2 dark:border-slate-500 dark:text-slate-100"
+      >
+        <div class="flex justify-center">
+          <Tab>search</Tab>
+          <Tab>manually</Tab>
+        </div>
+
+        <TabPanels className="">
+          <TabPanel className="px-0.5">
+            <p class="-mb-1">Search using google books</p>
+            <BookApi
+              bind:getBookPromise
+              bind:query={api_query}
+              on:select={() => (showMore = true)}
+            />
+          </TabPanel>
+          <TabPanel className="px-0.5">
+            <p>Enter info manually</p>
+            <div class="grid grid-cols-2 grid-rows-2 items-center gap-1">
+              <label for="name">Name:</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                class="input dark:bg-slate-600 dark:border-slate-500"
+                bind:value={name}
+              />
+              <label for="author">Author:</label>
+              <!-- <input
+                id="author"
+                name="author"
+                type="text"
+                class="input dark:bg-slate-600 dark:border-slate-500"
+                bind:value={author}
+              /> -->
+              <AutoComplete
+                items={authors}
+                bind:text={author}
+                create={true}
+                id="author"
+                name="author"
+                class="input dark:bg-slate-600 dark:border-slate-500"
+              />
+            </div>
+          </TabPanel>
+        </TabPanels>
+      </TabGroup>
+
+      {#if showMore || (name.length > 0 && author.length > 0) || true}
+        <div
+          class="grid grid-cols-2 sm:grid-cols-4 pt-2 items-center gap-4 gap-x-5"
+        >
+          {#if selectedOption == "reading" || selectedOption == "read"}
+            <p class="col-span-2 sm:col-span-1">Date started:</p>
+            <div
+              class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
+            >
+              <ToggleGroup
+                options={["last month", "this month", "today"]}
+                groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+                btnClass="px-2 dark:hover:bg-slate-500"
+                btnSelectedClass="dark:bg-slate-500"
+                bind:selectedOption={selectedOptionFinished}
+                defaultOption={1}
+              />
+
+              <input
+                bind:value={finishedDate}
+                type="date"
+                name="finished"
+                class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
+              />
+            </div>
+          {/if}
+
+          {#if selectedOption == "read"}
+            <p class="col-span-2 sm:col-span-1">Date Read/finished:</p>
+            <div
+              class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
+            >
+              <ToggleGroup
+                options={["last month", "this month", "today"]}
+                groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+                btnClass="px-2 dark:hover:bg-slate-500"
+                btnSelectedClass="dark:bg-slate-500"
+                bind:selectedOption={selectedOptionFinished}
+                defaultOption={1}
+              />
+
+              <input
+                bind:value={finishedDate}
+                type="date"
+                name="finished"
+                class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
+              />
+            </div>
+          {/if}
+
+          <div class="col-span-2 grid grid-cols-2 gap-1">
             <label for="rating">Rating:</label>
             <Rating rating_max={MAX_RATING} editable={true} bind:rating />
+          </div>
 
+          <div class="col-span-2 grid grid-cols-2 gap-1">
             <label for="words-per-page">Words per page:</label>
             <input
               id="words-per-page"
@@ -173,35 +297,8 @@
               bind:value={words_per_page}
             />
           </div>
-        </details>
-      </div>
-
-      <div class="flex justify-center mb-4 mt-5">
-        <button
-          on:click={take_over}
-          class="my-2 flex btn-generic items-center group btn-generic-color-2"
-          disabled={!(name.length > 0 && author.length > 0) &&
-            getBookPromise === undefined}
-        >
-          take over data
-          <span class="group-disabled:w-0 w-8 self-center block">
-            {#if getBookPromise !== undefined}
-              <ArrowUp />
-            {:else if name.length > 0 && author.length > 0}
-              <ArrowDown />
-            {/if}
-          </span>
-        </button>
-      </div>
-
-      <div>
-        <BookApiDetails
-          bind:getBookPromise
-          bind:volumeId
-          bind:query={api_query}
-          bind:open={api_open}
-        />
-      </div>
+        </div>
+      {/if}
 
       <div class="flex justify-end">
         <button
@@ -209,6 +306,7 @@
           class="btn-primary-black mt-5 mb-1 transition-all"
           title="Add new book"
           disabled={!has_content}
+          type="button"
         >
           {#if loading}
             <div>
@@ -218,6 +316,16 @@
           Save new book
         </button>
       </div>
-    </div>
-  </div>
+    </form>
+  </form>
 {/if}
+
+<style lang="postcss">
+  .btn-group-btn {
+    @apply dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700;
+  }
+
+  .btn-group-selected {
+    @apply dark:bg-slate-700 bg-gray-50;
+  }
+</style>
