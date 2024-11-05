@@ -20,6 +20,6 @@
 	<slot></slot>
 {/if} -->
 
-<div class={twMerge("min-w-full", className)} bind:this={thisPanel}>
+<div hidden={$selectedPanel !== panel} class={twMerge("min-w-full", className)} bind:this={thisPanel}>
     <slot />
 </div>

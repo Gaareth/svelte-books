@@ -184,13 +184,12 @@
 
       <TabGroup
         btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-400 dark:hover:text-slate-100"
-        btnSelectedClass="border-b-2 dark:border-slate-500 dark:text-slate-100"
+        btnSelectedClass="dark:text-slate-100"
+        sliderClass="border-b-2 dark:border-slate-500"
+        tabNames={["search", "manually"]}
+        animate={false}
       >
-        <div class="flex justify-center">
-          <Tab>search</Tab>
-          <Tab>manually</Tab>
-        </div>
-
+    
         <TabPanels className="">
           <TabPanel className="px-0.5">
             <p class="-mb-1">Search using google books</p>

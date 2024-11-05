@@ -4,12 +4,11 @@
   import { twMerge } from "tailwind-merge";
   export let className: string | undefined = undefined;
 
-  const t = {};
-  const { currentTabIdx } = getContext<TabsContext>(TABS);
+  const { currentTabIdx, animate } = getContext<TabsContext>(TABS);
 </script>
 
 <div
-  style={`transform: translateX(-${100 * $currentTabIdx}%)`}
+  style={animate ? `transform: translateX(-${100 * $currentTabIdx}%)` : ""}
   class={twMerge("panels-wrapper", className)}
 >
   <slot />

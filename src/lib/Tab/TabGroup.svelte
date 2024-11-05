@@ -18,6 +18,7 @@
   import { setContext, onDestroy } from "svelte";
   import { writable } from "svelte/store";
   import { twMerge } from "tailwind-merge";
+  import Tab from "./Tab.svelte";
 
   const tabs: any[] = [];
   const panels: any[] = [];
@@ -30,6 +31,12 @@
   export let className: string | undefined = undefined;
   export let btnClass: string | undefined = undefined;
   export let btnSelectedClass: string | undefined = undefined;
+  export let sliderClass: string | undefined = undefined;
+  export let animate: boolean = true;
+
+
+  let offsetLeft = writable(0);
+  let tabWidth = writable(0);
 
   setContext(TABS, {
     registerTab: (tab: any) => {
@@ -82,9 +89,31 @@
 
     btnClass,
     btnSelectedClass,
+
+    offsetLeft,
+    tabWidth,
+
+    animate
   });
+
+  export let tabNames: string[];
 </script>
 
-<div class={twMerge("overflow-x-hidden", className)}>
+<div class={twMerge(animate && "overflow-x-hidden", className)}>
+  <div class="flex justify-center">
+    <div class="relative">
+      {#each tabNames as tab, i (tab)}
+        <Tab>{tab}</Tab>
+      {/each}
+
+      <span
+        class="absolute bottom-0 flex overflow-hidden rounded-3xl transition-all duration-300"
+        style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}
+      >
+        <span class={twMerge("h-full w-full", sliderClass)} />
+      </span>
+     
+    </div>
+  </div>
   <slot />
 </div>
