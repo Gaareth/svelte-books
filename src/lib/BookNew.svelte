@@ -26,6 +26,7 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import TabGroup from "./Tab/TabGroup.svelte";
   import Tab from "./Tab/Tab.svelte";
+  import { backInOut, circIn, circInOut, circOut, cubicInOut, cubicOut, elasticInOut, linear, sineIn, sineInOut, sineOut } from "svelte/easing";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -142,181 +143,205 @@
     // Format the date to 'YYYY-MM-DD'
     return dtString;
   })();
+
+  function slideHeight(node, { duration = 500 }) {
+    const style = getComputedStyle(node);
+    const height = parseFloat(style.height);
+
+    return {
+      duration,
+      css: t => `height: ${t * height}px; overflow: hidden;`,
+      easing: sineInOut
+    };
+  }
 </script>
 
 {#if $page.data.session}
-  <form
+  <div
     class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white"
   >
+    <!-- <legend hidden={!new_book_open}>Add new book</legend> -->
     <div class="flex justify-between">
-      <h2 class="text-xl flex items-center justify-center">Add new book</h2>
+      <h2
+        class={twMerge(
+          "text-2xl flex items-center justify-center ease-in-out duration-500",
+          new_book_open && "-translate-y-[32px] text-xl"
+        )}
+        style="transition: transform font-size;"
+      >
+        Add new book
+      </h2>
       <button
+        type="button"
         on:click={toggleContent}
-        class="rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
-        dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500"
+        class="ml-auto rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
+      dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500 min-w-24"
       >
         {new_book_open ? "Cancel" : "Open"}
       </button>
     </div>
 
-    <form hidden={!new_book_open}>
-      <p>Have you already read the book?</p>
-      <ToggleGroup
-        options={["read", "reading", "to read"]}
-        groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-        btnClass="px-4 py-1 dark:hover:bg-slate-500"
-        btnSelectedClass="dark:bg-slate-500"
-        bind:selectedOption
-      />
+    {#if new_book_open}
+      <div transition:slideHeight class="overflow-hidden">
+        <form>
+          <p>Have you already read the book?</p>
+          <ToggleGroup
+            options={["read", "reading", "to read"]}
+            groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+            btnClass="px-4 py-1 dark:hover:bg-slate-500"
+            btnSelectedClass="dark:bg-slate-500"
+            bind:selectedOption
+          />
 
-      <!-- <div class="grid grid-cols-2 max-w-[28rem] mx-auto mt-5 mb-3">
-        <button
-          type="button"
-          class="border-b dark:border-slate-500"
-          on:click={() => (selectedTab = "search")}
-        >
-          Search using google books
-        </button>
-        <button type="button" on:click={() => (selectedTab = "manually")}>
-          Enter manually
-        </button>
-      </div> -->
-
-      <TabGroup
-        btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-400 dark:hover:text-slate-100"
-        btnSelectedClass="dark:text-slate-100"
-        sliderClass="border-b-2 dark:border-slate-500"
-        tabNames={["search", "manually"]}
-        animate={false}
+          <!-- <div class="grid grid-cols-2 max-w-[28rem] mx-auto mt-5 mb-3">
+      <button
+        type="button"
+        class="border-b dark:border-slate-500"
+        on:click={() => (selectedTab = "search")}
       >
-    
-        <TabPanels className="">
-          <TabPanel className="px-0.5">
-            <p class="-mb-1">Search using google books</p>
-            <BookApi
-              bind:getBookPromise
-              bind:query={api_query}
-              on:select={() => (showMore = true)}
-            />
-          </TabPanel>
-          <TabPanel className="px-0.5">
-            <p>Enter info manually</p>
-            <div class="grid grid-cols-2 grid-rows-2 items-center gap-1">
-              <label for="name">Name:</label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                class="input dark:bg-slate-600 dark:border-slate-500"
-                bind:value={name}
-              />
-              <label for="author">Author:</label>
-              <!-- <input
-                id="author"
-                name="author"
-                type="text"
-                class="input dark:bg-slate-600 dark:border-slate-500"
-                bind:value={author}
-              /> -->
-              <AutoComplete
-                items={authors}
-                bind:text={author}
-                create={true}
-                id="author"
-                name="author"
-                class="input dark:bg-slate-600 dark:border-slate-500"
-              />
-            </div>
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+        Search using google books
+      </button>
+      <button type="button" on:click={() => (selectedTab = "manually")}>
+        Enter manually
+      </button>
+    </div> -->
 
-      {#if showMore || (name.length > 0 && author.length > 0) || true}
-        <div
-          class="grid grid-cols-2 sm:grid-cols-4 pt-2 items-center gap-4 gap-x-5"
-        >
-          {#if selectedOption == "reading" || selectedOption == "read"}
-            <p class="col-span-2 sm:col-span-1">Date started:</p>
-            <div
-              class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
-            >
-              <ToggleGroup
-                options={["last month", "this month", "today"]}
-                groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-                btnClass="px-2 dark:hover:bg-slate-500"
-                btnSelectedClass="dark:bg-slate-500"
-                bind:selectedOption={selectedOptionFinished}
-                defaultOption={1}
-              />
-
-              <input
-                bind:value={finishedDate}
-                type="date"
-                name="finished"
-                class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
-              />
-            </div>
-          {/if}
-
-          {#if selectedOption == "read"}
-            <p class="col-span-2 sm:col-span-1">Date Read/finished:</p>
-            <div
-              class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
-            >
-              <ToggleGroup
-                options={["last month", "this month", "today"]}
-                groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-                btnClass="px-2 dark:hover:bg-slate-500"
-                btnSelectedClass="dark:bg-slate-500"
-                bind:selectedOption={selectedOptionFinished}
-                defaultOption={1}
-              />
-
-              <input
-                bind:value={finishedDate}
-                type="date"
-                name="finished"
-                class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
-              />
-            </div>
-          {/if}
-
-          <div class="col-span-2 grid grid-cols-2 gap-1">
-            <label for="rating">Rating:</label>
-            <Rating rating_max={MAX_RATING} editable={true} bind:rating />
-          </div>
-
-          <div class="col-span-2 grid grid-cols-2 gap-1">
-            <label for="words-per-page">Words per page:</label>
-            <input
-              id="words-per-page"
-              name="words-per-page"
-              type="number"
+          <TabGroup
+            btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
+            btnSelectedClass="dark:text-slate-100 text-slate-900"
+            sliderClass="border-b-2 dark:border-slate-500 border-slate-400"
+            tabNames={["search", "manually"]}
+            animate={false}
+          >
+            <TabPanels className="">
+              <TabPanel className="px-0.5">
+                <p class="-mb-1">Search using google books</p>
+                <BookApi
+                  bind:getBookPromise
+                  bind:query={api_query}
+                  on:select={() => (showMore = true)}
+                />
+              </TabPanel>
+              <TabPanel className="px-0.5">
+                <p>Enter info manually</p>
+                <div class="grid grid-cols-2 grid-rows-2 items-center gap-1">
+                  <label for="name">Name:</label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    class="input dark:bg-slate-600 dark:border-slate-500"
+                    bind:value={name}
+                  />
+                  <label for="author">Author:</label>
+                  <!-- <input
+              id="author"
+              name="author"
+              type="text"
               class="input dark:bg-slate-600 dark:border-slate-500"
-              bind:value={words_per_page}
-            />
-          </div>
-        </div>
-      {/if}
+              bind:value={author}
+            /> -->
+                  <AutoComplete
+                    items={authors}
+                    bind:text={author}
+                    create={true}
+                    id="author"
+                    name="author"
+                    class="input dark:bg-slate-600 dark:border-slate-500"
+                  />
+                </div>
+              </TabPanel>
+            </TabPanels>
+          </TabGroup>
 
-      <div class="flex justify-end">
-        <button
-          on:click={newBook}
-          class="btn-primary-black mt-5 mb-1 transition-all"
-          title="Add new book"
-          disabled={!has_content}
-          type="button"
-        >
-          {#if loading}
-            <div>
-              <Moon size="20" color="white" duration="1s" />
+          {#if showMore || (name.length > 0 && author.length > 0)}
+            <div
+              class="grid grid-cols-2 sm:grid-cols-4 pt-2 items-center gap-4 gap-x-5"
+            >
+              {#if selectedOption == "reading" || selectedOption == "read"}
+                <p class="col-span-2 sm:col-span-1">Date started:</p>
+                <div
+                  class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
+                >
+                  <ToggleGroup
+                    options={["last month", "this month", "today"]}
+                    groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+                    btnClass="px-2 dark:hover:bg-slate-500"
+                    btnSelectedClass="dark:bg-slate-500"
+                    bind:selectedOption={selectedOptionFinished}
+                    defaultOption={1}
+                  />
+
+                  <input
+                    bind:value={finishedDate}
+                    type="date"
+                    name="finished"
+                    class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
+                  />
+                </div>
+              {/if}
+
+              {#if selectedOption == "read"}
+                <p class="col-span-2 sm:col-span-1">Date Read/finished:</p>
+                <div
+                  class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
+                >
+                  <ToggleGroup
+                    options={["last month", "this month", "today"]}
+                    groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
+                    btnClass="px-2 dark:hover:bg-slate-500"
+                    btnSelectedClass="dark:bg-slate-500"
+                    bind:selectedOption={selectedOptionFinished}
+                    defaultOption={1}
+                  />
+
+                  <input
+                    bind:value={finishedDate}
+                    type="date"
+                    name="finished"
+                    class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
+                  />
+                </div>
+              {/if}
+
+              <div class="col-span-2 grid grid-cols-2 gap-1">
+                <label for="rating">Rating:</label>
+                <Rating rating_max={MAX_RATING} editable={true} bind:rating />
+              </div>
+
+              <div class="col-span-2 grid grid-cols-2 gap-1">
+                <label for="words-per-page">Words per page:</label>
+                <input
+                  id="words-per-page"
+                  name="words-per-page"
+                  type="number"
+                  class="input dark:bg-slate-600 dark:border-slate-500"
+                  bind:value={words_per_page}
+                />
+              </div>
             </div>
           {/if}
-          Save new book
-        </button>
+
+          <div class="flex justify-end">
+            <button
+              on:click={newBook}
+              class="btn-primary-black mt-5 mb-1 transition-all"
+              title="Add new book"
+              disabled={!has_content}
+              type="button"
+            >
+              {#if loading}
+                <div>
+                  <Moon size="20" color="white" duration="1s" />
+                </div>
+              {/if}
+              Save new book
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </form>
+    {/if}
+  </div>
 {/if}
 
 <style lang="postcss">

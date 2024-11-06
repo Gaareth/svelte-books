@@ -22,7 +22,7 @@
     position: relative;
     min-width: 100%;
     padding: 0 0 0.75rem;
-    transition: all 0.45s ease-in-out;
+    transition: transform 0.45s ease-in-out;
     /* overflow: hidden; */
   }
 </style>

@@ -10,6 +10,7 @@
     currentTabIdx: ReturnType<typeof writable<number>>;
     btnClass: string;
     btnSelectedClass: string;
+    animate: boolean;
   }
 </script>
 
@@ -34,7 +35,6 @@
   export let sliderClass: string | undefined = undefined;
   export let animate: boolean = true;
 
-
   let offsetLeft = writable(0);
   let tabWidth = writable(0);
 
@@ -53,8 +53,6 @@
     },
 
     registerPanel: (panel: any) => {
-      console.log("el panel", panel);
-
       panels.push(panel);
       selectedPanel.update((current) => current || panel);
 
@@ -93,7 +91,7 @@
     offsetLeft,
     tabWidth,
 
-    animate
+    animate,
   });
 
   export let tabNames: string[];
@@ -112,7 +110,6 @@
       >
         <span class={twMerge("h-full w-full", sliderClass)} />
       </span>
-     
     </div>
   </div>
   <slot />
