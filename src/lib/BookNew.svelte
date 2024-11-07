@@ -26,7 +26,20 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import TabGroup from "./Tab/TabGroup.svelte";
   import Tab from "./Tab/Tab.svelte";
-  import { backInOut, circIn, circInOut, circOut, cubicInOut, cubicOut, elasticInOut, linear, sineIn, sineInOut, sineOut } from "svelte/easing";
+  import {
+    backInOut,
+    circIn,
+    circInOut,
+    circOut,
+    cubicInOut,
+    cubicOut,
+    elasticInOut,
+    linear,
+    sineIn,
+    sineInOut,
+    sineOut,
+  } from "svelte/easing";
+  import DateSelector from "./DateSelector.svelte";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -39,6 +52,7 @@
   let read_now = false;
   let rating: number;
   let words_per_page: number;
+  let datetimeStarted: { dateString: string; timeString: string | undefined };
 
   let loading = false;
 
@@ -51,6 +65,8 @@
 
   async function newBook() {
     loading = true;
+    console.log(datetimeStarted);
+    return;
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -73,6 +89,7 @@
 
     if (success) {
       invalidateAll();
+      toast.success("Successfully added book");
     } else {
       if (message) {
         toast.error(message);
@@ -116,42 +133,15 @@
   let selectedOption: "read" | "reading" | "to read" = "read";
 
   let showMore = false;
-  let selectedOptionFinished: "last month" | "this month" | "today";
 
-  $: finishedDate = (() => {
-    const now = new Date();
-    let date;
-
-    switch (selectedOptionFinished) {
-      case "last month":
-        date = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        break;
-      case "this month":
-        date = new Date(now.getFullYear(), now.getMonth(), 1);
-        break;
-      case "today":
-        date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        break;
-      default:
-        return undefined;
-    }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const dtString = `${year}-${month}-${day}`;
-    // Format the date to 'YYYY-MM-DD'
-    return dtString;
-  })();
-
-  function slideHeight(node, { duration = 500 }) {
+  function slideHeight(node: Element) {
     const style = getComputedStyle(node);
     const height = parseFloat(style.height);
 
     return {
-      duration,
-      css: t => `height: ${t * height}px; overflow: hidden;`,
-      easing: sineInOut
+      duration: 500,
+      css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
+      easing: sineInOut,
     };
   }
 </script>
@@ -160,7 +150,6 @@
   <div
     class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white"
   >
-    <!-- <legend hidden={!new_book_open}>Add new book</legend> -->
     <div class="flex justify-between">
       <h2
         class={twMerge(
@@ -182,7 +171,7 @@
     </div>
 
     {#if new_book_open}
-      <div transition:slideHeight class="overflow-hidden">
+      <div transition:slideHeight class="">
         <form>
           <p>Have you already read the book?</p>
           <ToggleGroup
@@ -192,19 +181,6 @@
             btnSelectedClass="dark:bg-slate-500"
             bind:selectedOption
           />
-
-          <!-- <div class="grid grid-cols-2 max-w-[28rem] mx-auto mt-5 mb-3">
-      <button
-        type="button"
-        class="border-b dark:border-slate-500"
-        on:click={() => (selectedTab = "search")}
-      >
-        Search using google books
-      </button>
-      <button type="button" on:click={() => (selectedTab = "manually")}>
-        Enter manually
-      </button>
-    </div> -->
 
           <TabGroup
             btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
@@ -235,12 +211,12 @@
                   />
                   <label for="author">Author:</label>
                   <!-- <input
-              id="author"
-              name="author"
-              type="text"
-              class="input dark:bg-slate-600 dark:border-slate-500"
-              bind:value={author}
-            /> -->
+                    id="author"
+                    name="author"
+                    type="text"
+                    class="input dark:bg-slate-600 dark:border-slate-500"
+                    bind:value={author}
+                  /> -->
                   <AutoComplete
                     items={authors}
                     bind:text={author}
@@ -254,55 +230,17 @@
             </TabPanels>
           </TabGroup>
 
-          {#if showMore || (name.length > 0 && author.length > 0)}
+          {#if showMore || (name.length > 0 && author.length > 0) || true}
             <div
               class="grid grid-cols-2 sm:grid-cols-4 pt-2 items-center gap-4 gap-x-5"
             >
               {#if selectedOption == "reading" || selectedOption == "read"}
-                <p class="col-span-2 sm:col-span-1">Date started:</p>
-                <div
-                  class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
-                >
-                  <ToggleGroup
-                    options={["last month", "this month", "today"]}
-                    groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-                    btnClass="px-2 dark:hover:bg-slate-500"
-                    btnSelectedClass="dark:bg-slate-500"
-                    bind:selectedOption={selectedOptionFinished}
-                    defaultOption={1}
-                  />
-
-                  <input
-                    bind:value={finishedDate}
-                    type="date"
-                    name="finished"
-                    class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
-                  />
-                </div>
+                <DateSelector label="Date started:" name="dateStarted" />
               {/if}
 
-              {#if selectedOption == "read"}
-                <p class="col-span-2 sm:col-span-1">Date Read/finished:</p>
-                <div
-                  class="flex flex-wrap gap-1 sm:gap-2 col-span-2 sm:col-span-3 sm:ml-auto justify-center sm:justify-normal -mt-2 sm:mt-0"
-                >
-                  <ToggleGroup
-                    options={["last month", "this month", "today"]}
-                    groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-                    btnClass="px-2 dark:hover:bg-slate-500"
-                    btnSelectedClass="dark:bg-slate-500"
-                    bind:selectedOption={selectedOptionFinished}
-                    defaultOption={1}
-                  />
-
-                  <input
-                    bind:value={finishedDate}
-                    type="date"
-                    name="finished"
-                    class="dark:border-slate-500 dark:bg-slate-600 rounded-md py-0"
-                  />
-                </div>
-              {/if}
+              <!-- {#if selectedOption == "read"}
+                <DateSelector label="Date Read/finished:" name="dateFinished" />
+              {/if} -->
 
               <div class="col-span-2 grid grid-cols-2 gap-1">
                 <label for="rating">Rating:</label>

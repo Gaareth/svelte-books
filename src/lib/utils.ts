@@ -39,7 +39,27 @@ export const sum = (list: any[]) => list.reduce((a, b) => a + b, 0);
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
 export function dateToYYYY_MM_DD(date: Date) {
-  return date.toISOString().split("T")[0];
+  // this ignores timezone
+  // return date.toISOString().split("T")[0];
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const dtString = `${year}-${month}-${day}`;
+  // Format the date to 'YYYY-MM-DD'
+  return dtString;
+}
+
+export function isValidDate(year: number, month: number, day: number): boolean {
+  // month is zero-based, so we create a date with the exact inputs
+  const date = new Date(year, month, day);
+
+  // Check if the date matches the input values
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month &&
+    date.getDate() === day
+  );
 }
 
 export function getBookReadDate(book: Book) {

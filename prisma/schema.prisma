@@ -44,15 +44,39 @@ model BookCategory {
   books BookApiData[]
 }
 
+model OptionalDatetime {
+  id       Int      @id @default(autoincrement())
+  fullDate DateTime
+  day      Int? // Optional day (1-31)
+  month    Int? // Optional month (1-12)
+  year     Int? // Optional year (e.g., 2024)
+
+  hour   Int?
+  minute Int?
+
+  timezone String? // Optional timezone offset (e.g., "+02:00", "-05:00", "UTC")
+
+  booksStarted  Book? @relation("dateStarted")
+  booksFinished Book? @relation("dateFinished")
+}
+
 model Book {
-  id           String    @id @default(cuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  name         String    @unique
-  author       String
-  coverImage   String?
-  monthRead    Int?
-  yearRead     Int?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name       String  @unique
+  author     String
+  coverImage String?
+
+  monthRead Int?
+  yearRead  Int?
+
+  dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
+  dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])
+  dateStartedId  Int?              @unique
+  dateFinishedId Int?              @unique
+
   bookListName String?
   bookList     BookList? @relation(fields: [bookListName], references: [name])
   rating       Rating?

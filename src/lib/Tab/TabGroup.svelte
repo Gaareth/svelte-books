@@ -98,7 +98,7 @@
 </script>
 
 <div class={twMerge(animate && "overflow-x-hidden", className)}>
-  <div class="flex justify-center">
+  <div class="flex justify-center my-2">
     <div class="relative">
       {#each tabNames as tab, i (tab)}
         <Tab>{tab}</Tab>
