@@ -231,23 +231,21 @@
           </TabGroup>
 
           {#if showMore || (name.length > 0 && author.length > 0) || true}
-            <div
-              class="grid grid-cols-2 sm:grid-cols-4 pt-2 items-center gap-4 gap-x-5"
-            >
+            <div class="grid grid-cols-2 gap-2">
               {#if selectedOption == "reading" || selectedOption == "read"}
-                <DateSelector label="Date started:" name="dateStarted" />
+                <label class="col-span-2 flex items-center justify-between"> Date started: <DateSelector /> </label>
               {/if}
 
-              <!-- {#if selectedOption == "read"}
-                <DateSelector label="Date Read/finished:" name="dateFinished" />
-              {/if} -->
+              {#if selectedOption == "read"}
+              <label class="col-span-2 flex items-center justify-between"> Date started: <DateSelector /> </label>
+              {/if}
 
-              <div class="col-span-2 grid grid-cols-2 gap-1">
+              <div class="">
                 <label for="rating">Rating:</label>
                 <Rating rating_max={MAX_RATING} editable={true} bind:rating />
               </div>
 
-              <div class="col-span-2 grid grid-cols-2 gap-1">
+              <div class="">
                 <label for="words-per-page">Words per page:</label>
                 <input
                   id="words-per-page"

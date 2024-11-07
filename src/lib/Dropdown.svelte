@@ -21,7 +21,7 @@
 
 <div class="dropdown" use:clickOutside on:click_outside={click_outside}>
   <button
-    class={twMerge("dropdown-btn flex      focus:ring-2", buttonClass)}
+    class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
     type="button"
     on:click={toggleOpen}
     bind:this={button_ref}

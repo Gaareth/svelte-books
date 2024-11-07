@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { clickOutside } from "./clickOutside";
   import ToggleGroup from "./ToggleGroup.svelte";
   import { dateToYYYY_MM_DD, isValidDate } from "./utils";
 
@@ -6,58 +7,64 @@
   export let name: string;
 
   export let datetime: {
-    dateString: string;
-    timeString: string;
-  } = { dateString: "", timeString: "" };
+    year: number;
+    month: number | undefined;
+    day: number | undefined;
+
+    hour: number | undefined;
+    minute: number | undefined;
+    timezoneOffset: number | undefined;
+  };
 
   let dateString: string | undefined = undefined;
+  $: {
+    const mo = month?.toString().padStart(2, "0") ?? "??";
+    const da = day?.toString().padStart(2, "0") ?? "??";
+
+    dateString =
+      year != null ? `${year}-${mo}-${da} ${timeString ?? "??:??"}` : "?";
+  }
 
   let selectedOption: "last month" | "this month" | "today" | undefined;
 
   let year: number;
-  let month: number;
+  let month: number | undefined;
   let day: number | undefined;
 
   let timeString: string | undefined;
 
+  $: {
+    datetime = {
+      year,
+      month,
+      day,
+      hour: Number(timeString?.split(":")[0]),
+      minute: Number(timeString?.split(":")[1]),
+      timezoneOffset: new Date().getTimezoneOffset(),
+    };
+  }
+
   let errorMessage: string | undefined;
 
-  let date2: Date = new Date();
-  // $: {
-  //   // date2 = new Date();
+  $: {
+    if (day != null && month != null && !isValidDate(year, month, day)) {
+      errorMessage = `${year}-${month.toString().padStart(2, "0")}-${day
+        .toString()
+        .padStart(2, "0")} does not exist`;
+    } else {
+      errorMessage = undefined;
+    }
 
-  //   date2.setFullYear(year);
-  //   date2.setMonth(month);
-  //   date2.setDate(day!);
-
-  //   // date2 = new Date(date2);
-  //   if (day != null && !isValidDate(year, month, day)) {
-  //     errorMessage = `${year}-${month.toString().padStart(2, "0")}-${day
-  //       .toString()
-  //       .padStart(2, "0")} does not exist`;
-  //   } else {
-  //     errorMessage = undefined;
-  //   }
-
-  //   console.log(date2);
-  //   console.log(optionToDate(selectedOption));
-
-  //   const quickselectDate = optionToDate(selectedOption);
-  //   if (
-  //     (selectedOption == "today" &&
-  //       date2.getTime() != quickselectDate?.getTime()) ||
-  //     (selectedOption != "today" && quickselectDate?.getMonth() != month) ||
-  //     (day != null && quickselectDate?.getFullYear)
-  //   ) {
-  //     selectedOption = undefined;
-  //   }
-  // }
-
-  // $: {
-  //   year; month; day;
-  //   selectedOption = undefined;
-  //   console.log("AAA");
-  // }
+    const quickselectDate = optionToDate(selectedOption);
+    if (
+      quickselectDate != null &&
+      (quickselectDate.year !== year ||
+        quickselectDate.month !== month ||
+        quickselectDate.day !== day)
+    ) {
+      selectedOption = undefined;
+    }
+  }
 
   const optionToDate = (option: typeof selectedOption) => {
     const now = new Date();
@@ -90,8 +97,6 @@
     let date = optionToDate(option);
     day = undefined;
 
-    console.log(date);
-    
     if (date !== undefined) {
       year = date?.year;
       month = date?.month;
@@ -135,122 +140,124 @@
   const days: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 </script>
 
-<label for="dateFinished" class="col-span-2 sm:col-span-1">
-  {label}
-</label>
 
 <div class="relative">
   <input
-    class="border"
+    class="btn-generic-color-2 rounded-md"
     type="text"
     value={dateString}
     on:click={togglePopover}
   />
-  <fieldset
-    class="max-w-96 w-auto z-10 absolute mt-1 p-3 border dark:bg-slate-700/90 flex flex-col bg-white/70 backdrop-blur"
-    hidden={showPopover}
-  >
-    <legend class="text-lg">Select Datetime</legend>
-    <div class="flex justify-center">
-      <ToggleGroup
-        options={["last month", "this month", "today"]}
-        groupClass="mb-2 inline-flex"
-        btnClass="px-2 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
-        btnSelectedClass="dark:bg-slate-500"
-        startClass="border-s rounded-s-md"
-        endClass="rounded-e-md"
-        bind:selectedOption
-        on:select={(ev) => {
-          console.log(ev.detail);
-          onQuickselect(ev.detail);
-        }}
-        defaultOption={1}
-      />
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <div class="col-span-2">
-        <label for="year">
-          Year
-          <span class="text-red-400" title="required">*</span></label
-        >
-        <input
-          type="number"
-          id="year"
-          bind:value={year}
-          required
-          placeholder="YYYY"
-          class="w-full btn-generic-color-2"
+  {#if showPopover}
+    <fieldset
+      class="max-w-96 w-auto z-10 absolute mt-1 p-3 border dark:border-slate-500 dark:bg-slate-700 flex flex-col bg-white"
+      on:click_outside={() => (showPopover = false)}
+      use:clickOutside
+    >
+      <legend class="text-lg">Select Datetime</legend>
+      <div class="flex justify-center">
+        <ToggleGroup
+          options={["last month", "this month", "today"]}
+          groupClass="mb-2 inline-flex"
+          btnClass="px-2 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
+          btnSelectedClass="dark:bg-slate-500 bg-gray-100"
+          startClass="border-s rounded-s-md"
+          endClass="rounded-e-md"
+          bind:selectedOption
+          on:select={(ev) => {
+            console.log(ev.detail);
+            onQuickselect(ev.detail);
+          }}
+          defaultOption={1}
         />
       </div>
 
-      <div class="flex gap-1">
-        <!-- Month (Optional) -->
-        <div>
-          <label for="month">Month</label>
-          <select id="month" bind:value={month} class="btn-generic-color-2">
-            <option value="">Select Month</option>
-            {#each months as { value, label }}
-              <option {value}>{label}</option>
-            {/each}
-          </select>
+      <div class="flex flex-col gap-2">
+        <div class="col-span-2">
+          <label for="year">
+            Year
+            <span class="text-red-400" title="required">*</span></label
+          >
+          <input
+            type="number"
+            id="year"
+            bind:value={year}
+            required
+            placeholder="YYYY"
+            class="w-full btn-generic-color-2"
+          />
         </div>
 
-        <!-- Day (Optional) -->
-        <div>
-          <label for="day">Day</label>
-          <select id="day" bind:value={day} class="btn-generic-color-2">
-            <option value={undefined}>Select Day</option>
-            {#each days as dayNumber}
-              <option value={dayNumber}>{dayNumber}</option>
-            {/each}
-          </select>
-        </div>
-      </div>
+        <div class="flex gap-1">
+          <!-- Month (Optional) -->
+          <div>
+            <label for="month">Month</label>
+            <select id="month" bind:value={month} class="btn-generic-color-2">
+              <option value="">Select Month</option>
+              {#each months as { value, label }}
+                <option {value}>{label}</option>
+              {/each}
+            </select>
+          </div>
 
-      <div>
-        <!-- time (Optional) -->
-        <div class="flex items-center">
-          <label for="minute">Time</label>
-          <div class="ml-auto pb-1">
-            <button
-              type="button"
-              class="border px-1 py-0 rounded-md text-base btn-generic btn-generic-color-2"
-              disabled={timeString == undefined}
-              on:click={() => {
-                timeString = undefined;
-              }}
-            >
-              clear
-            </button>
-            <button
-              type="button"
-              class="border px-1 py-0 rounded-md text-base btn-generic btn-generic-color-2"
-              on:click={() => {
-                const now = new Date();
-                timeString = now.getHours() + ":" + now.getMinutes();
-              }}
-            >
-              now
-            </button>
+          <!-- Day (Optional) -->
+          <div>
+            <label for="day">Day</label>
+            <select id="day" bind:value={day} class="btn-generic-color-2">
+              <option value={undefined}>Select Day</option>
+              {#each days as dayNumber}
+                <option value={dayNumber}>{dayNumber}</option>
+              {/each}
+            </select>
           </div>
         </div>
-        <input
-          type="time"
-          id="minute"
-          class="w-full btn-generic-color-2"
-          bind:value={timeString}
-        />
-      </div>
-      <!-- 
-      <label class="mt-5">
-        Datetime:
-        <input type="date" class="w-full" bind:value={dateString} />
-      </label> -->
 
-      <p hidden={errorMessage == null} class="text-error">{errorMessage}</p>
-    </div>
-  </fieldset>
+        <div>
+          <!-- time (Optional) -->
+          <div class="flex items-center">
+            <label for="minute">Time</label>
+            <div class="ml-auto pb-1">
+              <button
+                type="button"
+                class="border px-1 py-0 rounded-md text-base btn-generic btn-generic-color-2"
+                disabled={timeString == undefined}
+                on:click={() => {
+                  timeString = undefined;
+                }}
+              >
+                clear
+              </button>
+              <button
+                type="button"
+                class="border px-1 py-0 rounded-md text-base btn-generic btn-generic-color-2"
+                on:click={() => {
+                  const now = new Date();
+                  timeString = now.getHours() + ":" + now.getMinutes();
+                }}
+              >
+                now
+              </button>
+            </div>
+          </div>
+          <input
+            type="time"
+            id="minute"
+            class="w-full btn-generic-color-2"
+            bind:value={timeString}
+          />
+        </div>
+        <!-- 
+  <label class="mt-5">
+    Datetime:
+    <input type="date" class="w-full" bind:value={dateString} />
+  </label> -->
+
+        <p hidden={errorMessage == null} class="text-error !text-xl">
+          {errorMessage}
+        </p>
+      </div>
+    </fieldset>
+  {/if}
 </div>
 
 <!-- <div

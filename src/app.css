@@ -11,7 +11,7 @@
 }
 
 .autocomplete,
-.autocomplete > .input-container {
+.autocomplete>.input-container {
   @apply dark:bg-slate-700 dark:border-slate-600 rounded-md !important;
 }
 
@@ -89,7 +89,7 @@
   }
 
   .text-error {
-    @apply dark:text-red-500;
+    @apply text-[0.8rem] text-[#FF0000] dark:text-red-500;
   }
 
   .input-error {
@@ -118,9 +118,7 @@
     @apply inline-flex -space-x-px overflow-hidden rounded-md border shadow-sm;
   }
 
-  .text-error {
-    @apply text-[0.8rem] text-[#FF0000];
-  }
+
 
   .input {
     @apply border-gray-200 dark:border-slate-800 rounded-md sm:text-sm w-full;
