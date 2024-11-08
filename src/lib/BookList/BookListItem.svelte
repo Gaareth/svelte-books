@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type {  BookRating } from "$appTypes";
+  import type { BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -15,6 +15,8 @@
   import { MAX_RATING } from "../../constants";
   import Pages from "$lib/icons/pages.svelte";
   import { Prisma } from "@prisma/client";
+  import { twMerge } from "tailwind-merge";
+  import clsx from "clsx";
 
   export let book: any;
 
@@ -81,84 +83,87 @@
     )} rounded-md"
     style="height: 98%;"
   />
-  <div class="book-item-grid">
-    <div
-      class="flex justify-center item flex-col h-full col-span-full sm:col-span-2 max-h-36"
-    >
+  <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
+    <div class="col-span-full sm:col-span-3">
       <a
         href="/book/{book_url}"
         class="text-md underline-hover
-      text-ellipsis overflow-hidden">{book.name}</a
+    text-ellipsis overflow-hidden">{book.name}</a
       >
-    </div>
-    <div class="col-span-full sm:col-span-1 -mt-2 sm:mt-0">
-      <p class="text-gray-600 dark:text-slate-300">{book.author}</p>
+      <p class="text-gray-600 dark:text-slate-300 -mt-2">{book.author}</p>
     </div>
 
-    <div class="flex justify-end ml-5 sm:ml-0">
-      <p>
-        {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
-      </p>
-    </div>
-
-    {#if book.rating}
-      <div class="flex sm:gap-2 gap-1 items-center justify-end">
-        <p>{book.rating.stars} / {MAX_RATING}</p>
-        <span class="icon"><IoIosStar /></span>
+    <div
+      class="grid items-center col-span-full sm:col-span-5"
+      style={`
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  `}
+    >
+      <div class="flex justify-end ml-5 sm:ml-0">
+        <p>
+          {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
+        </p>
       </div>
-    {/if}
 
-    {#if book.bookApiData?.pageCount}
-      <div class="flex sm:gap-2 gap-1 items-center justify-end">
-        <p>{book.bookApiData.pageCount}</p>
-        <span aria-label="number of pages"><Pages /></span>
-      </div>
-    {/if}
+      {#if book.rating}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end">
+          <p>{book.rating.stars} / {MAX_RATING}</p>
+          <span class="icon"><IoIosStar /></span>
+        </div>
+      {/if}
 
-    {#if $page.data.session}
-      <div class="flex justify-end">
-        <span
-          class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
-          dark:bg-slate-600 dark:border-slate-700"
-        >
-          <a
-            class="group inline-block p-2 hover:bg-gray-50 focus:relative
-            dark:hover:bg-slate-500"
-            title="Edit book"
-            href="/book/{book_url}/?edit=true"
+      {#if book.bookApiData?.pageCount}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end">
+          <p>{book.bookApiData.pageCount}</p>
+          <span aria-label="number of pages"><Pages /></span>
+        </div>
+      {/if}
+
+      {#if $page.data.session}
+        <div class="flex justify-end">
+          <span
+            class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
+            dark:bg-slate-600 dark:border-slate-700"
           >
-            <span
-              class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+            <a
+              class="group inline-block p-2 hover:bg-gray-50 focus:relative
+              dark:hover:bg-slate-500"
+              title="Edit book"
+              href="/book/{book_url}/?edit=true"
             >
-              <IoMdSettings />
-            </span>
-          </a>
-
-          <slot name="delete">
-            {#if allow_deletion}
-              <button
-                class="group p-2 delete-button border-0"
-                title="Delete book"
-                type="button"
-                on:click={() => {
-                  dispatch("delete", { book });
-                }}
+              <span
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
               >
-                <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+                <IoMdSettings />
+              </span>
+            </a>
+
+            <slot name="delete">
+              {#if allow_deletion}
+                <button
+                  class="group p-2 delete-button border-0"
+                  title="Delete book"
+                  type="button"
+                  on:click={() => {
+                    dispatch("delete", { book });
+                  }}
                 >
-                  <IoMdTrash alt="red trash can" />
-                </span>
-              </button>
-            {/if}
-          </slot>
-        </span>
-      </div>
-    {:else}
-      <div class="flex justify-end">
-        <a class="underline-hover" href="/book/{book_url}">View</a>
-      </div>
-    {/if}
+                  <span
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
+                  >
+                    <IoMdTrash alt="red trash can" />
+                  </span>
+                </button>
+              {/if}
+            </slot>
+          </span>
+        </div>
+      {:else}
+        <div class="flex justify-end">
+          <a class="underline-hover" href="/book/{book_url}">View</a>
+        </div>
+      {/if}
+    </div>
   </div>
 </div>
 
@@ -175,11 +180,13 @@
   .book-item-grid {
     display: grid;
     flex-grow: 1;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
     gap: 0.5rem;
     row-gap: 0;
     align-items: center;
     height: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); */
+    grid-template-rows: auto;
   }
 
   @media (min-width: 640px) {
