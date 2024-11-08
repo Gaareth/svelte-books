@@ -21,10 +21,12 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <dialog
   bind:this={dialog}
-  on:close={() => (showModal = false)}
+  on:close|preventDefault={() => {
+    showModal = false;
+  }}
   on:click|self={() => dialog.close()}
   class={twMerge(
-    "relative rounded-md border border-blue-100 bg-white dark:bg-slate-700 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8",
+    "rounded-md border border-blue-100 bg-white dark:bg-slate-700 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8",
     className
   )}
   role="alertdialog"
@@ -36,7 +38,9 @@
     <!-- svelte-ignore a11y-autofocus -->
     <button
       autofocus
-      on:click={() => dialog.close()}
+      on:click|preventDefault={() => {
+        dialog.close();
+      }}
       title="Close modal"
       class="!flex items-center absolute top-1 right-1"
     >
