@@ -160,14 +160,16 @@
       >
         Add new book
       </h2>
-      <button
-        type="button"
-        on:click={toggleContent}
-        class="ml-auto rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
+      <div>
+        <button
+          type="button"
+          on:click={toggleContent}
+          class="ml-auto rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
       dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500 min-w-24"
-      >
-        {new_book_open ? "Cancel" : "Open"}
-      </button>
+        >
+          {new_book_open ? "Cancel" : "Open"}
+        </button>
+      </div>
     </div>
 
     {#if new_book_open}
@@ -233,11 +235,21 @@
           {#if showMore || (name.length > 0 && author.length > 0) || true}
             <div class="grid grid-cols-2 gap-2">
               {#if selectedOption == "reading" || selectedOption == "read"}
-                <label class="col-span-2 flex items-center justify-between"> Date started: <DateSelector /> </label>
+                <label
+                  class="col-span-2 flex flex-wrap items-center justify-between"
+                  for="dateStarted"
+                >
+                  Date started: <DateSelector id="dateStarted" className="w-full sm:w-auto"/>
+                </label>
               {/if}
 
               {#if selectedOption == "read"}
-              <label class="col-span-2 flex items-center justify-between"> Date started: <DateSelector /> </label>
+                <label
+                  class="col-span-2 flex flex-wrap items-center justify-between"
+                  for="dateEnd"
+                >
+                  Date read/finished: <DateSelector id="dateEnd" className="w-full sm:w-auto" />
+                </label>
               {/if}
 
               <div class="">
