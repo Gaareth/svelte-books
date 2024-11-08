@@ -3,67 +3,132 @@
   import { clickOutside } from "./clickOutside";
   import { twMerge } from "tailwind-merge";
   import Modal from "./Modal.svelte";
+  import { browser } from "$app/environment";
+  import { onMount, onDestroy } from "svelte";
 
+  export let className: string | undefined = undefined;
   export let buttonClass: string | undefined = undefined;
+  export let contentClass: string | undefined = undefined;
+  export let closeOnClick: boolean = true;
 
-  let open: boolean | undefined = undefined;
+  export let open: boolean = false;
   let trigger_ref: HTMLElement;
-  let tag = "button";
+
+  let showModal = false;
+  let width: number;
+
+  let dropdownWrapper: HTMLDivElement;
+  let dropdownContentWrapper: HTMLDivElement;
+
+  $: {
+    if (browser) {
+      // breakpoint: sm
+      showModal = open && width < 640;
+    }
+  }
+
+  onMount(() => {
+    width = document.documentElement.clientWidth;
+    window.addEventListener("resize", () => {
+      width = document.documentElement.clientWidth;
+      checkDropdownPosition();
+    });
+    window.addEventListener("scroll", checkDropdownPosition);
+  });
+
+  onDestroy(() => {
+    if (browser) {
+      window.removeEventListener("resize", checkDropdownPosition);
+      window.removeEventListener("scroll", checkDropdownPosition);
+    }
+  });
+
+  let openUpwards = false; // track dropdown direction
+  function checkDropdownPosition() {
+    if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
+
+    const triggerRect = dropdownWrapper.getBoundingClientRect();
+    const dropdownHeight = dropdownContentWrapper.scrollHeight + 75;
+
+    const spaceBelow = window.innerHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+
+    openUpwards = spaceBelow < dropdownHeight && spaceAbove > dropdownHeight;
+  }
 
   const toggleOpen = () => {
-    trigger_ref.focus();
+    // trigger_ref.focus();
 
     open = !open;
-    // breakpoint: sm
-    if (screen.width < 640) {
-      showModal = !showModal;
+    if (open) {
+      checkDropdownPosition();
     }
   };
 
   const click_outside = () => {
-    open = false;
+    if (!showModal) {
+      open = false;
+    }
   };
-
-  let showModal = false;
 </script>
 
-<div class="dropdown" use:clickOutside on:click_outside={click_outside}>
-  <svelte:element
-    this={tag}
-    class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
-    on:click={toggleOpen}
-    bind:this={trigger_ref}
-    role="button"
-    tabindex="0"
-    {...$$restProps}
-  >
-    <slot name="trigger" />
-  </svelte:element>
+<div
+  class={twMerge("dropdown", className)}
+  use:clickOutside
+  on:click_outside={click_outside}
+  bind:this={dropdownWrapper}
+>
+  <div>
+    <slot name="triggerWrapper">
+      <button
+        class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
+        on:click={toggleOpen}
+        bind:this={trigger_ref}
+        type="button"
+      >
+        <slot name="triggerContent" />
+      </button>
+    </slot>
+  </div>
+
   <div
     class={clsx(
       "dropdown-content",
       open == false ? "hidden-imp" : "",
-      "hidden sm:block"
+      "hidden sm:block",
+      contentClass
     )}
-    on:click={click_outside}
+    style={openUpwards
+      ? `
+      transform:  translateX(-50%) translateY(-${
+        (dropdownWrapper?.clientHeight ?? 0) + 10
+      }px); 
+      bottom: 0;
+    `
+      : ""}
+    on:click={(e) => {
+      e.preventDefault();
+      if (closeOnClick) {
+        click_outside();
+      }
+    }}
     on:keydown
     role="button"
     tabindex="0"
+    bind:this={dropdownContentWrapper}
   >
     <slot name="dropdown" />
   </div>
 </div>
 
-<div class="block sm:hidden">
-  <Modal bind:showModal showDividers={false} divClassName="!p-2">
-    <slot name="dropdown" />
-  </Modal>
-</div>
+<Modal bind:showModal showDividers={false} divClassName="!p-0">
+  <slot name="dropdown" />
+</Modal>
 
 <style>
   .hidden-imp {
     visibility: hidden !important;
-    transform: translateX(-50%) translateY(20px) !important;
+    transform: translateX(-50%) translateY(0%) !important;
     opacity: 0;
     transition: visibility 0s 2s, opacity 2s linear;
   }
@@ -79,7 +144,7 @@
 
   .dropdown-content {
     left: 50%;
-    visibility: hidden;
+    /* visibility: hidden; */
     /* display: none; */
 
     position: absolute;
@@ -91,15 +156,15 @@
     border-radius: 0.25rem;
     border-width: 1px;
 
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%) translateY(15px);
 
     transition: all 150ms linear;
   }
 
-  .dropdown:focus-within .dropdown-content {
+  /* .dropdown:focus-within .dropdown-content {
     visibility: visible;
     transform: translateX(-50%) translateY(10%);
-  }
+  } */
 
   :is(.dark .dropdown-content) {
     background-color: #374151;
