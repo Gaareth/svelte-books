@@ -75,7 +75,7 @@
 
 <Dropdown buttonClass="outline-none">
   <span
-    slot="button"
+    slot="trigger"
     title="Change theme"
     aria-label="open theme changer dropdown"
     class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block

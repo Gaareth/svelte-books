@@ -2,34 +2,49 @@
   import clsx from "clsx";
   import { clickOutside } from "./clickOutside";
   import { twMerge } from "tailwind-merge";
+  import Modal from "./Modal.svelte";
 
   export let buttonClass: string | undefined = undefined;
 
   let open: boolean | undefined = undefined;
-  let button_ref: HTMLElement;
+  let trigger_ref: HTMLElement;
+  let tag = "button";
 
   const toggleOpen = () => {
-    button_ref.focus();
+    trigger_ref.focus();
 
     open = !open;
+    // breakpoint: sm
+    if (screen.width < 640) {
+      showModal = !showModal;
+    }
   };
 
   const click_outside = () => {
     open = false;
   };
+
+  let showModal = false;
 </script>
 
 <div class="dropdown" use:clickOutside on:click_outside={click_outside}>
-  <button
+  <svelte:element
+    this={tag}
     class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
-    type="button"
     on:click={toggleOpen}
-    bind:this={button_ref}
+    bind:this={trigger_ref}
+    role="button"
+    tabindex="0"
+    {...$$restProps}
   >
-    <slot name="button" />
-  </button>
+    <slot name="trigger" />
+  </svelte:element>
   <div
-    class={clsx("dropdown-content", open == false ? "hidden-imp" : "")}
+    class={clsx(
+      "dropdown-content",
+      open == false ? "hidden-imp" : "",
+      "hidden sm:block"
+    )}
     on:click={click_outside}
     on:keydown
     role="button"
@@ -37,6 +52,12 @@
   >
     <slot name="dropdown" />
   </div>
+</div>
+
+<div class="block sm:hidden">
+  <Modal bind:showModal showDividers={false} divClassName="!p-2">
+    <slot name="dropdown" />
+  </Modal>
 </div>
 
 <style>

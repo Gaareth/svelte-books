@@ -5,6 +5,9 @@
 
   export let showModal: boolean;
   export let className: string | undefined = undefined;
+  export let divClassName: string | undefined = undefined;
+
+  export let showDividers = true;
 
   let dialog: HTMLDialogElement;
 
@@ -26,7 +29,7 @@
   )}
   role="alertdialog"
 >
-  <div on:click|stopPropagation>
+  <div on:click|stopPropagation class={divClassName}>
     <div class="flex justify-between item-center gap-3">
       <slot name="header" />
     </div>
@@ -41,10 +44,10 @@
         <IoMdClose />
       </span>
     </button>
-    <hr class="dark:border-slate-600" />
+    <hr class="dark:border-slate-600" hidden={!showDividers} />
 
     <slot />
-    <hr class="mt-4 dark:border-slate-600" />
+    <hr class="mt-4 dark:border-slate-600" hidden={!showDividers} />
   </div>
 </dialog>
 
