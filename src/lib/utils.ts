@@ -50,6 +50,7 @@ export function dateToYYYY_MM_DD(date: Date) {
   return dtString;
 }
 
+// month is zero based
 export function isValidDate(year: number, month: number, day: number): boolean {
   // month is zero-based, so we create a date with the exact inputs
   const date = new Date(year, month, day);
