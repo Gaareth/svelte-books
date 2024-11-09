@@ -46,7 +46,6 @@ model BookCategory {
 
 model OptionalDatetime {
   id       Int      @id @default(autoincrement())
-  fullDate DateTime
   day      Int? // Optional day (1-31)
   month    Int? // Optional month (1-12)
   year     Int? // Optional year (e.g., 2024)
@@ -54,7 +53,7 @@ model OptionalDatetime {
   hour   Int?
   minute Int?
 
-  timezone String? // Optional timezone offset (e.g., "+02:00", "-05:00", "UTC")
+  timezoneOffset String? // Optional timezone offset (e.g., "+02:00", "-05:00", "UTC")
 
   booksStarted  Book? @relation("dateStarted")
   booksFinished Book? @relation("dateFinished")
