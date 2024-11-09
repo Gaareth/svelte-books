@@ -1,5 +1,32 @@
+<script context="module" lang="ts">
+  export type OptionalDate =
+    | {
+        year: number;
+        month: number | undefined;
+        day: number | undefined;
+
+        hour: number | undefined;
+        minute: number | undefined;
+        timezoneOffset: number | undefined;
+      }
+    | undefined
+    | null;
+
+  export const formatOptionalDate = (d: OptionalDate) => {
+    if (d == null || d.year == null) return "?";
+
+    const mo = d.month?.toString().padStart(2, "0") ?? "??";
+    const da = d.day?.toString().padStart(2, "0") ?? "??";
+
+    const hour = d.hour?.toString().padStart(2, "0") ?? "??";
+    const minute = d.minute?.toString().padStart(2, "0") ?? "??";
+
+    const timeString = `${hour}:${minute}`;
+    return `${d.year}-${mo}-${da} ${timeString}`;
+  };
+</script>
+
 <script lang="ts">
-  import { string } from "zod";
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
   import { dateToYYYY_MM_DD, isValidDate } from "./utils";
@@ -7,23 +34,11 @@
   export let id: string | undefined = undefined;
   export let className: string | undefined = undefined;
 
-  let datetime: {
-    year: number;
-    month: number | undefined;
-    day: number | undefined;
-
-    hour: number | undefined;
-    minute: number | undefined;
-    timezoneOffset: number | undefined;
-  };
+  export let datetime: OptionalDate;
 
   let dateString: string | undefined = undefined;
   $: {
-    const mo = month?.toString().padStart(2, "0") ?? "??";
-    const da = day?.toString().padStart(2, "0") ?? "??";
-
-    dateString =
-      year != null ? `${year}-${mo}-${da} ${timeString ?? "??:??"}` : "?";
+    dateString = formatOptionalDate(datetime);
   }
 
   let selectedOption: "last month" | "this month" | "today" | undefined;
@@ -35,14 +50,19 @@
   let timeString: string | undefined;
 
   $: {
-    datetime = {
-      year,
-      month,
-      day,
-      hour: Number(timeString?.split(":")[0]),
-      minute: Number(timeString?.split(":")[1]),
-      timezoneOffset: new Date().getTimezoneOffset(),
-    };
+    if (year == null) {
+      datetime = undefined;
+    } else {
+      datetime = {
+        year,
+        month,
+        day,
+        hour: Number(timeString?.split(":")[0]),
+        minute: Number(timeString?.split(":")[1]),
+        timezoneOffset: new Date().getTimezoneOffset(),
+      };
+    }
+    console.log(datetime);
   }
 
   let errorMessage: string | undefined;

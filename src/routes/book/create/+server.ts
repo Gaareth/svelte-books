@@ -10,8 +10,8 @@ const optionalDatetimeSchema = z.object({
   month: z.number().int().min(1).max(12).optional(), 
   year: z.number().int().min(0).optional(),
 
-  hour: z.number().int().min(0).max(23).optional(),
-  minute: z.number().int().min(0).max(59).optional(),
+  hour: z.number().int().min(0).max(23).nullish(),
+  minute: z.number().int().min(0).max(59).nullish(),
 
   timezone: z.number().min(0).optional(), // Optional timezoneoffset in minutes
 });
@@ -20,7 +20,7 @@ const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
   rating: z.number().optional(),
-  words_per_page: z.number().optional(),
+  wordsPerPage: z.number().optional(),
   listName: z.string().trim().min(1),
   volumeId: z.string().trim().optional(),
   dateStarted: optionalDatetimeSchema.optional(),
@@ -33,15 +33,20 @@ export async function POST(req: RequestEvent) {
     error(401);
   }
 
-  const result = createSchema.safeParse(await req.request.json());
+  const json_data = await req.request.json();
+  console.log(json_data);
+  
+  const result = createSchema.safeParse(json_data);
   console.log(result);
+  // console.log(result.error);
+  // TODO: return schema parsing errors 
 
   if (result.success) {
     const {
       name,
       author,
       rating,
-      words_per_page,
+      wordsPerPage,
       listName,
       volumeId,
       dateStarted,
@@ -62,6 +67,7 @@ export async function POST(req: RequestEvent) {
       data: {
         name,
         author,
+        wordsPerPage,
         dateStarted: {
           create: dateStarted
         },

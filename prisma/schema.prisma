@@ -48,7 +48,7 @@ model OptionalDatetime {
   id       Int      @id @default(autoincrement())
   day      Int? // Optional day (1-31)
   month    Int? // Optional month (1-12)
-  year     Int? // Optional year (e.g., 2024)
+  year     Int?
 
   hour   Int?
   minute Int?
@@ -68,8 +68,8 @@ model Book {
   author     String
   coverImage String?
 
-  monthRead Int?
-  yearRead  Int?
+  // monthRead Int?
+  // yearRead  Int?
 
   dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
   dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])

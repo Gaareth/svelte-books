@@ -39,7 +39,7 @@
     sineInOut,
     sineOut,
   } from "svelte/easing";
-  import DateSelector from "./DateSelector.svelte";
+  import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
 
   export let endpoint = "/book/create";
   export let listName: string;
@@ -51,8 +51,9 @@
   let author = "";
   let read_now = false;
   let rating: number;
-  let words_per_page: number;
-  let datetimeStarted: { dateString: string; timeString: string | undefined };
+  let wordsPerPage: number;
+  let dateStarted: OptionalDate;
+  let dateFinished: OptionalDate;
 
   let loading = false;
 
@@ -65,8 +66,6 @@
 
   async function newBook() {
     loading = true;
-    console.log(datetimeStarted);
-    return;
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -77,7 +76,9 @@
         volumeId,
         read_now,
         rating,
-        words_per_page,
+        wordsPerPage,
+        dateStarted,
+        dateFinished,
       }),
       headers: {
         "content-type": "application/json",
@@ -239,7 +240,11 @@
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateStarted"
                 >
-                  Date started: <DateSelector id="dateStarted" className="w-full sm:w-auto"/>
+                  Date started: <DateSelector
+                    id="dateStarted"
+                    className="w-full sm:w-auto"
+                    bind:datetime={dateStarted}
+                  />
                 </label>
               {/if}
 
@@ -248,7 +253,11 @@
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateEnd"
                 >
-                  Date read/finished: <DateSelector id="dateEnd" className="w-full sm:w-auto" />
+                  Date read/finished: <DateSelector
+                    id="dateEnd"
+                    className="w-full sm:w-auto"
+                    bind:datetime={dateFinished}
+                  />
                 </label>
               {/if}
 
@@ -264,7 +273,7 @@
                   name="words-per-page"
                   type="number"
                   class="input dark:bg-slate-600 dark:border-slate-500"
-                  bind:value={words_per_page}
+                  bind:value={wordsPerPage}
                 />
               </div>
             </div>

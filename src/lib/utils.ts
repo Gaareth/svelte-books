@@ -1,5 +1,6 @@
 import type { Book } from "@prisma/client";
 import type { THEME } from "./stores/stores";
+import type { BookDate } from "$appTypes";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -63,15 +64,21 @@ export function isValidDate(year: number, month: number, day: number): boolean {
   );
 }
 
-export function getBookReadDate(book: Book) {
-  if (book.yearRead === null) {
+export function getBookReadDate(book: BookDate) {
+  if (book.dateFinished?.year == null) {
     return null;
   }
-  return new Date(book.yearRead, (book.monthRead ?? 0) - 1);
+  return new Date(
+    book.dateFinished?.year,
+    (book.dateFinished?.month ?? 0) - 1,
+    book.dateFinished.day ?? 1,
+    book.dateFinished.hour ?? 0,
+    book.dateFinished.minute ?? 0
+  );
 }
 
 // function sortBooksBy
-export function sortBooksDefault(a: Book, b: Book) {
+export function sortBooksDefault(a: BookDate, b: BookDate) {
   const read_date_a = getBookReadDate(a);
   const read_date_b = getBookReadDate(b);
 

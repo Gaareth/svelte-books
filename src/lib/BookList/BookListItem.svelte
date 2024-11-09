@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookRating } from "$appTypes";
+  import type { BookListItemType, BookRating } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -17,8 +17,9 @@
   import { Prisma } from "@prisma/client";
   import { twMerge } from "tailwind-merge";
   import clsx from "clsx";
+  import { formatOptionalDate } from "$lib/DateSelector.svelte";
 
-  export let book: any;
+  export let book: BookListItemType;
 
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
@@ -101,7 +102,7 @@
     >
       <div class="flex justify-end ml-5 sm:ml-0">
         <p>
-          {book.yearRead ?? "?"} / {book.monthRead ? "0" + book.monthRead : "?"}
+          {formatOptionalDate(book.dateFinished)}
         </p>
       </div>
 
