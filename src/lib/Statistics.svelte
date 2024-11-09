@@ -181,7 +181,7 @@
   </ul>
 </Modal>
 
-<div class="flex flex-wrap gap-1 sm:gap-2 sm:mb-2 stats-wrapper">
+<div class="flex flex-wrap gap-1 sm:gap-2 mb-2 stats-wrapper">
   {#if selected_option == "books"}
     <Stats name="total books read" value={books.length} />
   {:else if selected_option == "pages"}
