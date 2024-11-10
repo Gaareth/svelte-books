@@ -73,14 +73,19 @@
     allowed_categories_filter = JSON.parse(params.get("categories") ?? "[]");
     rating_filter =
       params.get("rating") !== null ? Number(params.get("rating")!) : undefined;
+
     start_filter =
       params.get("start_date") !== null
         ? new Date(params.get("start_date")!)
         : undefined;
+    start_filter?.setHours(0, 0, 0, 0); // time is not 00:00, UTC reasons
+
     end_filter =
       params.get("end_date") !== null
         ? new Date(params.get("end_date")!)
         : undefined;
+    end_filter?.setHours(0, 0, 0, 0);
+
     lang_filter = params.get("lang") ?? "all";
 
     // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
@@ -136,11 +141,8 @@
       Math.floor(b.rating?.stars ?? 0) == rating_filter;
 
     let f_start = (b: BookFullType) => {
-      const startDate = optionalToDate(b.dateStarted ?? b.dateFinished);
-      if (startDate) {
-        console.log(startDate);
-        console.log(b);
-      }
+      const startDate =
+        optionalToDate(b.dateStarted ?? b.dateFinished) ?? b.createdAt;
 
       return (
         start_filter === undefined ||
@@ -149,9 +151,10 @@
     };
 
     let f_end = (b: BookFullType) => {
-      const endDate = optionalToDate(b.dateFinished ?? b.dateStarted);
+      const endDate =
+        optionalToDate(b.dateFinished ?? b.dateStarted) ?? b.createdAt;
       return (
-        end_filter === undefined || (endDate != null && end_filter >= endDate) || true
+        end_filter === undefined || (endDate != null && end_filter >= endDate)
       );
     };
 
@@ -238,10 +241,12 @@
     start_filter = new Date();
     start_filter.setMonth(start_filter.getMonth() - offset);
     start_filter.setDate(1);
+    start_filter?.setHours(0, 0, 0, 0);
 
     end_filter = new Date();
     end_filter.setMonth(end_filter.getMonth() - offset + 1); // one month to much
     end_filter.setDate(0); // => set to last day of previous month
+    end_filter?.setHours(0, 0, 0, 0);
   };
 
   const filterLastMonth = () => {
@@ -257,11 +262,13 @@
     start_filter.setFullYear(start_filter.getFullYear() - offset);
     start_filter.setDate(1);
     start_filter.setMonth(0);
+    start_filter?.setHours(0, 0, 0, 0);
 
     end_filter = new Date();
     end_filter.setFullYear(end_filter.getFullYear() - offset);
     end_filter.setDate(0); // calculates last day
     end_filter.setMonth(11);
+    end_filter?.setHours(0, 0, 0, 0);
   };
 
   const filterLastYear = () => {
@@ -370,17 +377,17 @@
           <input
             type="date"
             class="default-border"
-            value={start_filter?.toISOString().split("T")[0]}
+            value={start_filter && dateToYYYY_MM_DD(start_filter)}
             on:change={(e) => (start_filter = parseDateInput(e))}
           />
         </label>
 
         <label class="flex flex-col">
-          End date {end_filter?.toISOString().split("T")[0]}
+          End date {end_filter && dateToYYYY_MM_DD(end_filter)}
           <input
             type="date"
             class="default-border"
-            value={end_filter?.toISOString().split("T")[0]}
+            value={end_filter && dateToYYYY_MM_DD(end_filter)}
             on:change={(e) => (end_filter = parseDateInput(e))}
           />
         </label>
