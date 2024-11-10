@@ -9,6 +9,7 @@
   import {
     dateToYYYY_MM_DD,
     getBookReadDate,
+    optionalToDate,
     sortBooksDefault,
   } from "$lib/utils";
   import { onMount } from "svelte";
@@ -126,26 +127,33 @@
     }
   };
 
+  // apply filter
   const filter = () => {
+    // filter functions
+
     let f_rating = (b: BookFullType) =>
       rating_filter === undefined ||
       Math.floor(b.rating?.stars ?? 0) == rating_filter;
+
     let f_start = (b: BookFullType) => {
+      const startDate = optionalToDate(b.dateStarted ?? b.dateFinished);
+      if (startDate) {
+        console.log(startDate);
+        console.log(b);
+      }
+
       return (
         start_filter === undefined ||
-        (b.yearRead != null &&
-          b.monthRead &&
-          b.yearRead >= start_filter.getFullYear() &&
-          b.monthRead >= start_filter.getMonth() + 1)
+        (startDate != null && start_filter <= startDate)
       );
     };
 
-    let f_end = (b: BookFullType) =>
-      end_filter === undefined ||
-      (b.yearRead != null &&
-        b.monthRead &&
-        b.yearRead <= end_filter.getFullYear() &&
-        b.monthRead <= end_filter.getMonth() + 1);
+    let f_end = (b: BookFullType) => {
+      const endDate = optionalToDate(b.dateFinished ?? b.dateStarted);
+      return (
+        end_filter === undefined || (endDate != null && end_filter >= endDate) || true
+      );
+    };
 
     let f_category = (b: BookFullType) =>
       allowed_categories_filter === undefined ||

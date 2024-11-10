@@ -1,6 +1,7 @@
 import type { Book } from "@prisma/client";
 import type { THEME } from "./stores/stores";
 import type { BookDate } from "$appTypes";
+import type { OptionalDate } from "./DateSelector.svelte";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -64,17 +65,22 @@ export function isValidDate(year: number, month: number, day: number): boolean {
   );
 }
 
-export function getBookReadDate(book: BookDate) {
-  if (book.dateFinished?.year == null) {
+export function optionalToDate(o: OptionalDate) {
+  if (o == null) {
     return null;
   }
+
   return new Date(
-    book.dateFinished?.year,
-    (book.dateFinished?.month ?? 0) - 1,
-    book.dateFinished.day ?? 1,
-    book.dateFinished.hour ?? 0,
-    book.dateFinished.minute ?? 0
+    o.year,
+    (o.month ?? 0) - 1,
+    o.day ?? 1,
+    o.hour ?? 0,
+    o.minute ?? 0
   );
+}
+
+export function getBookReadDate(book: BookDate) {
+  return optionalToDate(book.dateFinished);
 }
 
 // function sortBooksBy

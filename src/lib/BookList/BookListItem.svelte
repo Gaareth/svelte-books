@@ -18,6 +18,10 @@
   import { twMerge } from "tailwind-merge";
   import clsx from "clsx";
   import { formatOptionalDate } from "$lib/DateSelector.svelte";
+  import { date } from "zod";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
+  import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
 
   export let book: BookListItemType;
 
@@ -101,8 +105,17 @@
   `}
     >
       <div class="flex justify-end ml-5 sm:ml-0">
-        <p>
-          {formatOptionalDate(book.dateFinished)}
+        <p class="flex items-center gap-1">
+          {#if book.dateFinished}
+            {formatOptionalDate(book.dateFinished, false, false)}
+            <span class="icon" title="date read"><EventDone /></span>
+          {:else if book.dateStarted}
+            {formatOptionalDate(book.dateStarted, false, false)}
+            <span class="icon" title="date started"><EventProgress /></span>
+          {:else}
+            {book.createdAt.toLocaleString()}
+            <span class="icon" title="date added"><CalenderAdd /></span>
+          {/if}
         </p>
       </div>
 

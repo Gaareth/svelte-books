@@ -52,16 +52,16 @@
     month = month == 0 ? 12 : month;
     return books.filter(
       (b) =>
-        b.yearRead == now.getFullYear() &&
-        b.monthRead !== null &&
-        b.monthRead == month
+        b.dateFinished?.year == now.getFullYear() &&
+        b.dateFinished.month !== null &&
+        b.dateFinished.month == month
     );
   };
 
   let books_this_month: BookFullType[] = books_read_per_month(
     now.getMonth() + 1
   );
-  
+
   let pages_this_month = count_pages(books_this_month);
   let words_this_month = count_words(books_this_month);
 
@@ -70,7 +70,7 @@
   let words_last_month = count_words(books_last_month);
 
   let books_read_per_year = (year: number): BookFullType[] => {
-    return books.filter((b) => b.yearRead == year);
+    return books.filter((b) => b.dateFinished?.year == year);
   };
 
   let books_this_year: BookFullType[] = books_read_per_year(now.getFullYear());

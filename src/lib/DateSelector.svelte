@@ -2,27 +2,35 @@
   export type OptionalDate =
     | {
         year: number;
-        month: number | undefined;
-        day: number | undefined;
+        month: number | undefined | null;
+        day: number | undefined | null;
 
-        hour: number | undefined;
-        minute: number | undefined;
-        timezoneOffset: number | undefined;
+        hour: number | undefined | null;
+        minute: number | undefined | null;
+        timezoneOffset: number | undefined | null;
       }
     | undefined
     | null;
 
-  export const formatOptionalDate = (d: OptionalDate) => {
+  export const formatOptionalDate = (
+    d: OptionalDate,
+    includeTime: boolean = true,
+    showQuestionmarks: boolean = true
+  ) => {
     if (d == null || d.year == null) return "?";
 
-    const mo = d.month?.toString().padStart(2, "0") ?? "??";
-    const da = d.day?.toString().padStart(2, "0") ?? "??";
+    const placeholder = showQuestionmarks ? "??" : "";
 
-    const hour = d.hour?.toString().padStart(2, "0") ?? "??";
-    const minute = d.minute?.toString().padStart(2, "0") ?? "??";
+    const mo = d.month?.toString().padStart(2, "0") ?? placeholder;
+    const da = d.day?.toString().padStart(2, "0") ?? placeholder;
+    const dateString = `${d.year}-${mo}-${da}`;
+
+    const hour =
+      d.hour != null ? d.hour?.toString().padStart(2, "0") : placeholder;
+    const minute = d.minute?.toString().padStart(2, "0") ?? placeholder;
 
     const timeString = `${hour}:${minute}`;
-    return `${d.year}-${mo}-${da} ${timeString}`;
+    return dateString + (includeTime ? " " + timeString : "");
   };
 </script>
 
@@ -57,8 +65,8 @@
         year,
         month,
         day,
-        hour: Number(timeString?.split(":")[0]),
-        minute: Number(timeString?.split(":")[1]),
+        hour: timeString != null ? Number(timeString.split(":")[0]) : null,
+        minute: timeString != null ? Number(timeString.split(":")[1]) : null,
         timezoneOffset: new Date().getTimezoneOffset(),
       };
     }

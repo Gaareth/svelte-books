@@ -48,12 +48,12 @@ model OptionalDatetime {
   id       Int      @id @default(autoincrement())
   day      Int? // Optional day (1-31)
   month    Int? // Optional month (1-12)
-  year     Int?
+  year     Int
 
   hour   Int?
   minute Int?
 
-  timezoneOffset String? // Optional timezone offset (e.g., "+02:00", "-05:00", "UTC")
+  timezoneOffset Int? // timezone offset minutes
 
   booksStarted  Book? @relation("dateStarted")
   booksFinished Book? @relation("dateFinished")

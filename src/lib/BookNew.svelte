@@ -17,7 +17,7 @@
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApi from "./BookApiSelection/BookApi.svelte";
-  import type { queriedBookFull } from "$appTypes";
+  import { DEFAULT_LISTS, type DEFAULT_LIST, type queriedBookFull } from "$appTypes";
   import InputNumber from "./InputNumber.svelte";
   import { unknown } from "zod";
   import { MAX_RATING } from "../constants";
@@ -40,9 +40,14 @@
     sineOut,
   } from "svelte/easing";
   import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
+  import EventDone from "./icons/EventDone.svelte";
+  import EventProgress from "./icons/EventProgress.svelte";
+  import Pages from "./icons/pages.svelte";
+
 
   export let endpoint = "/book/create";
-  export let listName: string;
+  export let listName: DEFAULT_LIST = "Read";
+
   export let authors: string[];
   $: authors = [...new Set(authors)];
 
@@ -131,8 +136,6 @@
     new_book_open = localStorage.getItem("BookNewCollapseState") == "true";
   });
 
-  let selectedOption: "read" | "reading" | "to read" = "read";
-
   let showMore = false;
 
   function slideHeight(node: Element) {
@@ -178,11 +181,11 @@
         <form>
           <p>Have you already read the book?</p>
           <ToggleGroup
-            options={["read", "reading", "to read"]}
+            options={[...DEFAULT_LISTS]}
             groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-            btnClass="px-4 py-1 dark:hover:bg-slate-500"
+            btnClass="px-4 py-1 dark:hover:bg-slate-500 lowercase"
             btnSelectedClass="dark:bg-slate-500"
-            bind:selectedOption
+            bind:selectedOption={listName}
           />
 
           <TabGroup
@@ -235,12 +238,19 @@
 
           {#if showMore || (name.length > 0 && author.length > 0) || true}
             <div class="grid grid-cols-2 gap-2">
-              {#if selectedOption == "reading" || selectedOption == "read"}
+              {#if listName == "Reading" || listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateStarted"
                 >
-                  Date started: <DateSelector
+                  <div class="icon-wrapper">
+                    <span class="w-5 block" title="date read">
+                      <EventProgress />
+                    </span>
+                    Date started:
+                  </div>
+
+                  <DateSelector
                     id="dateStarted"
                     className="w-full sm:w-auto"
                     bind:datetime={dateStarted}
@@ -248,12 +258,19 @@
                 </label>
               {/if}
 
-              {#if selectedOption == "read"}
+              {#if listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateEnd"
                 >
-                  Date read/finished: <DateSelector
+                  <div class="icon-wrapper">
+                    <span class="w-5 block" title="date read">
+                      <EventDone />
+                    </span>
+                    Date read/finished:
+                  </div>
+
+                  <DateSelector
                     id="dateEnd"
                     className="w-full sm:w-auto"
                     bind:datetime={dateFinished}
@@ -261,13 +278,18 @@
                 </label>
               {/if}
 
-              <div class="">
+              <div class="mt-1">
                 <label for="rating">Rating:</label>
                 <Rating rating_max={MAX_RATING} editable={true} bind:rating />
               </div>
 
-              <div class="">
-                <label for="words-per-page">Words per page:</label>
+              <div class="mt-1">
+                <label for="words-per-page" class="icon-wrapper">
+                  <span class="w-5 block" title="date read">
+                    <Pages />
+                  </span>
+                  Words per page:
+                </label>
                 <input
                   id="words-per-page"
                   name="words-per-page"

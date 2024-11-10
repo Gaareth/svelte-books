@@ -120,4 +120,6 @@ export type queriedBookFull = {
   };
 };
 
+export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
+export type DEFAULT_LIST = typeof DEFAULT_LISTS[number];
 export {};

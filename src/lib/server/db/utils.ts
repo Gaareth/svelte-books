@@ -15,6 +15,8 @@ export async function loadBooks() {
       },
       include: {
         rating: true,
+        dateStarted: true,
+        dateFinished: true,
         bookApiData: {
           include: {
             categories: true,

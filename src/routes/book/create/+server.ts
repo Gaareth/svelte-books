@@ -4,11 +4,12 @@ import { z } from "zod";
 import { prisma } from "$lib/server/prisma";
 import { getBookApiData } from "../api/api.server";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
+import { DEFAULT_LISTS } from "$appTypes";
 
 const optionalDatetimeSchema = z.object({  
   day: z.number().int().min(1).max(31).optional(), 
   month: z.number().int().min(1).max(12).optional(), 
-  year: z.number().int().min(0).optional(),
+  year: z.number().int().min(0),
 
   hour: z.number().int().min(0).max(23).nullish(),
   minute: z.number().int().min(0).max(59).nullish(),
@@ -21,7 +22,7 @@ const createSchema = z.object({
   author: z.string().trim().min(1),
   rating: z.number().optional(),
   wordsPerPage: z.number().optional(),
-  listName: z.string().trim().min(1),
+  listName: z.enum(DEFAULT_LISTS),
   volumeId: z.string().trim().optional(),
   dateStarted: optionalDatetimeSchema.optional(),
   dateFinished: optionalDatetimeSchema.optional(),

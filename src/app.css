@@ -76,6 +76,10 @@
 }
 
 @layer utilities {
+  .icon-wrapper {
+    @apply flex items-center gap-1 sm:gap-2
+  }
+
   .animate-drop-click {
     @apply transition ease-in translate-y-[0.1rem] duration-75;
   }
