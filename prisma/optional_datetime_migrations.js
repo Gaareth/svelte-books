@@ -3,13 +3,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function fillDateFinished() {
-  // Get all books that have a yearRead and monthRead
+  // Get all books that have a yearRead
   const books = await prisma.book.findMany({
     where: {
       yearRead: {
-        not: null,
-      },
-      monthRead: {
         not: null,
       },
     },
@@ -20,7 +17,7 @@ async function fillDateFinished() {
     const { yearRead, monthRead } = book;
 
     // Ensure both year and month are present before proceeding
-    if (yearRead && monthRead) {
+    if (yearRead) {
       // Create a new OptionalDatetime entry
       const optionalDatetime = await prisma.optionalDatetime.create({
         data: {
