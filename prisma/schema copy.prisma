@@ -68,8 +68,8 @@ model Book {
   author     String
   coverImage String?
 
-  monthRead Int?
-  yearRead  Int?
+  // monthRead Int?
+  // yearRead  Int?
 
   dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
   dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])

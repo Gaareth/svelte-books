@@ -11,8 +11,30 @@ CREATE TABLE "BookList" (
 );
 
 -- CreateTable
-CREATE TABLE "BookSeries" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+CREATE TABLE "Book" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "name" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "coverImage" TEXT,
+    "monthRead" INTEGER,
+    "yearRead" INTEGER,
+    "bookListName" TEXT,
+    "bookSeriesId" INTEGER,
+    "bookApiDataId" TEXT,
+    "wordsPerPage" INTEGER,
+    CONSTRAINT "Book_bookApiDataId_fkey" FOREIGN KEY ("bookApiDataId") REFERENCES "BookApiData" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "Book_bookSeriesId_fkey" FOREIGN KEY ("bookSeriesId") REFERENCES "BookSeries" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "Book_bookListName_fkey" FOREIGN KEY ("bookListName") REFERENCES "BookList" ("name") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Rating" (
+    "stars" REAL NOT NULL,
+    "bookId" TEXT NOT NULL,
+    "comment" TEXT,
+    CONSTRAINT "Rating_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -35,29 +57,8 @@ CREATE TABLE "BookCategory" (
 );
 
 -- CreateTable
-CREATE TABLE "Book" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "name" TEXT NOT NULL,
-    "author" TEXT NOT NULL,
-    "coverImage" TEXT,
-    "monthRead" INTEGER,
-    "yearRead" INTEGER,
-    "bookListName" TEXT,
-    "bookSeriesId" INTEGER,
-    "bookApiDataId" TEXT,
-    CONSTRAINT "Book_bookListName_fkey" FOREIGN KEY ("bookListName") REFERENCES "BookList" ("name") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "Book_bookSeriesId_fkey" FOREIGN KEY ("bookSeriesId") REFERENCES "BookSeries" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "Book_bookApiDataId_fkey" FOREIGN KEY ("bookApiDataId") REFERENCES "BookApiData" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "Rating" (
-    "stars" REAL NOT NULL,
-    "bookId" TEXT NOT NULL,
-    "comment" TEXT,
-    CONSTRAINT "Rating_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE "BookSeries" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
 );
 
 -- CreateTable
