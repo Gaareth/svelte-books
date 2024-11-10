@@ -15,11 +15,10 @@
   export const formatOptionalDate = (
     d: OptionalDate,
     includeTime: boolean = true,
-    showQuestionmarks: boolean = true
   ) => {
     if (d == null || d.year == null) return "?";
 
-    const placeholder = showQuestionmarks ? "??" : "";
+    const placeholder = "??";
 
     const mo = d.month?.toString().padStart(2, "0") ?? placeholder;
     const da = d.day?.toString().padStart(2, "0") ?? placeholder;

@@ -17,7 +17,11 @@
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import BookApi from "./BookApiSelection/BookApi.svelte";
-  import { DEFAULT_LISTS, type DEFAULT_LIST, type queriedBookFull } from "$appTypes";
+  import {
+    DEFAULT_LISTS,
+    type DEFAULT_LIST,
+    type queriedBookFull,
+  } from "$appTypes";
   import InputNumber from "./InputNumber.svelte";
   import { unknown } from "zod";
   import { MAX_RATING } from "../constants";
@@ -43,7 +47,7 @@
   import EventDone from "./icons/EventDone.svelte";
   import EventProgress from "./icons/EventProgress.svelte";
   import Pages from "./icons/pages.svelte";
-
+  import Words from "./icons/words.svelte";
 
   export let endpoint = "/book/create";
   export let listName: DEFAULT_LIST = "Read";
@@ -112,10 +116,14 @@
   }
 
   let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+  $: {
+    getBookPromise;
+    take_over();
+  }
   async function take_over() {
     if (getBookPromise !== undefined) {
       let data = await getBookPromise;
-      // console.log(data);
+      console.log(data);
       name = data?.volumeInfo.title || "";
 
       author = data?.volumeInfo.authors[0] || "";
@@ -183,8 +191,8 @@
           <ToggleGroup
             options={[...DEFAULT_LISTS]}
             groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-            btnClass="px-4 py-1 dark:hover:bg-slate-500 lowercase"
-            btnSelectedClass="dark:bg-slate-500"
+            btnClass="px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
+            btnSelectedClass="dark:bg-slate-500 bg-gray-100"
             bind:selectedOption={listName}
           />
 
@@ -195,13 +203,17 @@
             tabNames={["search", "manually"]}
             animate={false}
           >
+            <!-- TODO: tabtrigger info if there is a book selected -->
             <TabPanels className="">
               <TabPanel className="px-0.5">
                 <p class="-mb-1">Search using google books</p>
                 <BookApi
+                  bind:volumeId
                   bind:getBookPromise
                   bind:query={api_query}
-                  on:select={() => (showMore = true)}
+                  on:select={() => {
+                    showMore = true;
+                  }}
                 />
               </TabPanel>
               <TabPanel className="px-0.5">
@@ -212,7 +224,7 @@
                     id="name"
                     name="name"
                     type="text"
-                    class="input dark:bg-slate-600 dark:border-slate-500"
+                    class="rounded-md dark:bg-slate-600 dark:border-slate-500"
                     bind:value={name}
                   />
                   <label for="author">Author:</label>
@@ -229,14 +241,14 @@
                     create={true}
                     id="author"
                     name="author"
-                    class="input dark:bg-slate-600 dark:border-slate-500"
+                    class="input border-gray-500 dark:bg-slate-600 dark:border-slate-500"
                   />
                 </div>
               </TabPanel>
             </TabPanels>
           </TabGroup>
 
-          {#if showMore || (name.length > 0 && author.length > 0) || true}
+          {#if showMore || (name.length > 0 && author.length > 0)}
             <div class="grid grid-cols-2 gap-2">
               {#if listName == "Reading" || listName == "Read"}
                 <label
@@ -286,7 +298,7 @@
               <div class="mt-1">
                 <label for="words-per-page" class="icon-wrapper">
                   <span class="w-5 block" title="date read">
-                    <Pages />
+                    <Words />
                   </span>
                   Words per page:
                 </label>
@@ -294,7 +306,7 @@
                   id="words-per-page"
                   name="words-per-page"
                   type="number"
-                  class="input dark:bg-slate-600 dark:border-slate-500"
+                  class="rounded-md dark:bg-slate-600 dark:border-slate-500"
                   bind:value={wordsPerPage}
                 />
               </div>

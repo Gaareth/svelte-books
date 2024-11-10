@@ -17,7 +17,10 @@
   import { Prisma } from "@prisma/client";
   import { twMerge } from "tailwind-merge";
   import clsx from "clsx";
-  import { formatOptionalDate } from "$lib/DateSelector.svelte";
+  import {
+    formatOptionalDate,
+    type OptionalDate,
+  } from "$lib/DateSelector.svelte";
   import { date } from "zod";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
@@ -74,6 +77,24 @@
     }
     return hash;
   }
+
+  const formatShort = (d: OptionalDate) => {
+    if (d == null || d.year == null) return "?";
+
+    const mo = d.month?.toString().padStart(2, "0");
+    const da = d.day?.toString().padStart(2, "0");
+    let dateString = `${d.year}`;
+
+    if (mo) {
+      dateString += `-${mo}`;
+    }
+
+    if (da) {
+      dateString += `-${da}`;
+    }
+
+    return dateString;
+  };
 </script>
 
 <div
@@ -92,49 +113,47 @@
     <div class="col-span-full sm:col-span-3">
       <a
         href="/book/{book_url}"
-        class="text-md underline-hover
-    text-ellipsis overflow-hidden">{book.name}</a
+        class="text-md text-ellipsis overflow-hidden leading-3">{book.name}</a
       >
-      <p class="text-gray-600 dark:text-slate-300 -mt-2">{book.author}</p>
+      <p class="text-gray-600 dark:text-slate-300 -mt-1">{book.author}</p>
     </div>
 
-    <div
-      class="grid items-center col-span-full sm:col-span-5"
-      style={`
-      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  `}
-    >
-      <div class="flex justify-end ml-5 sm:ml-0">
+    <div class="flex items-center col-span-full sm:col-span-5">
+      <div class="flex justify-end ml-5 sm:ml-0 flex-1">
         <p class="flex items-center gap-1">
           {#if book.dateFinished}
-            {formatOptionalDate(book.dateFinished, false, false)}
+            {formatShort(book.dateFinished)}
             <span class="icon" title="date read"><EventDone /></span>
           {:else if book.dateStarted}
-            {formatOptionalDate(book.dateStarted, false, false)}
+            {formatShort(book.dateStarted)}
             <span class="icon" title="date started"><EventProgress /></span>
           {:else}
-            {book.createdAt.toLocaleString()}
-            <span class="icon" title="date added"><CalenderAdd /></span>
+            <span class="flex-shrink leading-4"
+              >{book.createdAt.toLocaleString()}</span
+            >
+            <span class="icon flex-shrink-0" title="date added">
+              <CalenderAdd />
+            </span>
           {/if}
         </p>
       </div>
 
       {#if book.rating}
-        <div class="flex sm:gap-2 gap-1 items-center justify-end">
+        <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
           <p>{book.rating.stars} / {MAX_RATING}</p>
           <span class="icon"><IoIosStar /></span>
         </div>
       {/if}
 
       {#if book.bookApiData?.pageCount}
-        <div class="flex sm:gap-2 gap-1 items-center justify-end">
+        <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
           <p>{book.bookApiData.pageCount}</p>
           <span aria-label="number of pages"><Pages /></span>
         </div>
       {/if}
 
       {#if $page.data.session}
-        <div class="flex justify-end">
+        <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
           <span
             class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
             dark:bg-slate-600 dark:border-slate-700"
