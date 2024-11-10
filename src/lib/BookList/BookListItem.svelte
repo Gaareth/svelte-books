@@ -19,6 +19,7 @@
   import clsx from "clsx";
   import {
     formatOptionalDate,
+    formatShort,
     type OptionalDate,
   } from "$lib/DateSelector.svelte";
   import { date } from "zod";
@@ -77,24 +78,6 @@
     }
     return hash;
   }
-
-  const formatShort = (d: OptionalDate) => {
-    if (d == null || d.year == null) return "?";
-
-    const mo = d.month?.toString().padStart(2, "0");
-    const da = d.day?.toString().padStart(2, "0");
-    let dateString = `${d.year}`;
-
-    if (mo) {
-      dateString += `-${mo}`;
-    }
-
-    if (da) {
-      dateString += `-${da}`;
-    }
-
-    return dateString;
-  };
 </script>
 
 <div

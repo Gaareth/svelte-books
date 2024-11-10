@@ -21,11 +21,15 @@ export async function load(page: ServerLoadEvent) {
     },
     include: {
       rating: true,
+      dateStarted: true,
+      dateFinished: true,
       bookSeries: {
         include: {
           books: {
             include: {
               rating: true,
+              dateStarted: true,
+              dateFinished: true,
             },
           },
         },
@@ -47,11 +51,15 @@ export async function load(page: ServerLoadEvent) {
   const books = await prisma.book.findMany({
     include: {
       rating: true,
+      dateStarted: true,
+      dateFinished: true,
       bookSeries: {
         include: {
           books: {
             include: {
               rating: true,
+              dateStarted: true,
+              dateFinished: true,
               bookApiData: {
                 include: {
                   categories: true,

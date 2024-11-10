@@ -14,7 +14,7 @@
 
   export const formatOptionalDate = (
     d: OptionalDate,
-    includeTime: boolean = true,
+    includeTime: boolean = true
   ) => {
     if (d == null || d.year == null) return "?";
 
@@ -30,6 +30,35 @@
 
     const timeString = `${hour}:${minute}`;
     return dateString + (includeTime ? " " + timeString : "");
+  };
+
+  export const formatShort = (
+    d: OptionalDate,
+    includeTime: boolean = false
+  ) => {
+    if (d == null || d.year == null) return "?";
+
+    const mo = d.month?.toString().padStart(2, "0");
+    const da = d.day?.toString().padStart(2, "0");
+    let dateString = `${d.year}`;
+
+    if (mo) {
+      dateString += `-${mo}`;
+    }
+
+    if (da) {
+      dateString += `-${da}`;
+    }
+
+    if (includeTime && d.hour != null && d.minute != null) {
+      const hour = d.hour?.toString().padStart(2, "0");
+      const minute = d.minute?.toString().padStart(2, "0");
+
+      const timeString = `${hour}:${minute}`;
+      dateString += " " + timeString;
+    }
+
+    return dateString;
   };
 </script>
 
@@ -69,7 +98,7 @@
         timezoneOffset: new Date().getTimezoneOffset(),
       };
     }
-    console.log(datetime);
+    console.log("dt", datetime);
   }
 
   let errorMessage: string | undefined;

@@ -14,13 +14,21 @@
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type { BookFull, BookFullType, BookListItemType, BookRating } from "../../../app";
+  import type {
+    BookFull,
+    BookFullType,
+    BookListItemType,
+    BookRating,
+  } from "../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
   import Image from "$lib/Image.svelte";
 
   import { MAX_RATING } from "../../../constants";
+  import DateSelector, { formatShort } from "$lib/DateSelector.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
+  import EventDone from "$lib/icons/EventDone.svelte";
 
   export let data: PageData;
 
@@ -206,10 +214,10 @@
         <div class="attribute-stats">
           <p>Author: {book.author}</p>
           <p>
-            Read in (month): {book.monthRead ?? "-"}
+            Started: {formatShort(book.dateStarted, true)}
           </p>
           <p>
-            Read in (year): {book.yearRead ?? "-"}
+            Read: {formatShort(book.dateFinished, true)}
           </p>
           <p>
             Added: {book.createdAt.toLocaleDateString()}
@@ -268,25 +276,43 @@
             name="author"
             error={(form?.errors?.author ?? [undefined])[0]}
           />
-          <InputSelect
-            value={book.monthRead}
-            displayName="Read in (month)"
-            name={"month"}
-            error={(form?.errors?.month ?? [undefined])[0]}
-          >
-            {#each Array(12) as _, month}
-              <option value={month + 1}>
-                {months[month]}
-              </option>
-            {/each}
-          </InputSelect>
 
-          <InputNumber
-            value={book.yearRead}
-            name="year"
-            displayName="Read in (year)"
-            error={(form?.errors?.year ?? [undefined])[0]}
-          />
+          <label
+            class="col-span-2 flex flex-wrap items-center justify-between"
+            for="dateStarted"
+          >
+            <div class="icon-wrapper">
+              <span class="w-5 block" title="date started">
+                <EventProgress />
+              </span>
+              Date started:
+            </div>
+
+            <!-- <DateSelector
+              id="dateStarted"
+              className="w-full sm:w-auto"
+              bind:datetime={book.dateStarted}
+            /> -->
+          </label>
+
+          <label
+            class="col-span-2 flex flex-wrap items-center justify-between"
+            for="dateFinished"
+          >
+            <div class="icon-wrapper">
+              <span class="w-5 block" title="date read">
+                <EventDone />
+              </span>
+              Date read:
+            </div>
+
+            {book.dateFinished?.year}
+            <!-- <DateSelector
+              id="dateFinished"
+              className="w-full sm:w-auto"
+              bind:datetime={book.dateFinished}
+            /> -->
+          </label>
 
           <!-- <InputSelect
             value={book.yearRead}

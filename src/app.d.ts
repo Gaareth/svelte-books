@@ -62,11 +62,15 @@ export type BookListItemType = Prisma.BookGetPayload<{
 export type BookFull = Prisma.BookGetPayload<{
   include: {
     rating: true;
+    dateStarted: true;
+    dateFinished: true;
     bookSeries: {
       include: {
         books: {
           include: {
             rating: true;
+            dateStarted: true;
+            dateFinished: true;
             bookApiData: {
               include: {
                 categories: true;
@@ -121,5 +125,5 @@ export type queriedBookFull = {
 };
 
 export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
-export type DEFAULT_LIST = typeof DEFAULT_LISTS[number];
+export type DEFAULT_LIST = (typeof DEFAULT_LISTS)[number];
 export {};
