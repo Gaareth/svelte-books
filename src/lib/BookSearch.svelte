@@ -8,11 +8,11 @@
   import { replaceStateWithQuery } from "./utils";
   export let search_term = "";
 
-  // onMount(() => {
-  //   search_term = $page.url.searchParams.get("q") ?? "";
-  // })
+  onMount(() => {
+    search_term = $page.url.searchParams.get("q") ?? "";
+  })
 
-  $: search_term = $page.url.searchParams.get("q") ?? "";
+  // $: search_term = $page.url.searchParams.get("q") ?? "";
   // $: {
   //   console.log($page.url.searchParams.get("q"));
 
@@ -22,6 +22,8 @@
   const onKeyUp = (e: Event) => {
     if (!e.target) return;
     let query = (e.target as HTMLInputElement).value;
+    search_term = query;
+
     let params = $page.url.searchParams;
     params.set("q", query);
     goto(`?${params}`, {
