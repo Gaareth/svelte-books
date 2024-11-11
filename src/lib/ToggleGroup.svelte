@@ -9,9 +9,10 @@
   export let endClass: string | undefined = undefined;
 
   export let options: string[];
-  export let defaultOption: number = 0;
+  export let defaultOption: number | undefined = undefined;
 
-  export let selectedOption: string | undefined = options[defaultOption];
+  export let selectedOption: string | undefined =
+    defaultOption != null ? options[defaultOption] : undefined;
 
   const dispatch = createEventDispatcher();
 </script>

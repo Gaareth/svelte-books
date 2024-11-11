@@ -77,7 +77,7 @@
     dateString = formatOptionalDate(datetime);
   }
 
-  let selectedOption: "last month" | "this month" | "today" | undefined;
+  let selectedOption: "last month" | "this month" | "today" | undefined = undefined;
 
   let year: number;
   let month: number | undefined;
@@ -86,9 +86,8 @@
   let timeString: string | undefined;
 
   $: {
-    if (year == null) {
+    if (year != null) {
       datetime = undefined;
-    } else {
       datetime = {
         year,
         month,
@@ -98,7 +97,6 @@
         timezoneOffset: new Date().getTimezoneOffset(),
       };
     }
-    console.log("dt", datetime);
   }
 
   let errorMessage: string | undefined;
@@ -117,14 +115,19 @@
       errorMessage = undefined;
     }
 
-    const quickselectDate = optionToDate(selectedOption);
-    if (
-      quickselectDate != null &&
-      (quickselectDate.year !== year ||
-        quickselectDate.month !== month ||
-        quickselectDate.day !== day)
-    ) {
-      selectedOption = undefined;
+
+    if (selectedOption !== undefined) {
+      const quickselectDate = optionToDate(selectedOption);
+      
+      // reset selection if year or month, ... was changed and is not corresponding to a quick selection anymore
+      if (
+        quickselectDate != null &&
+        (quickselectDate.year !== year ||
+          quickselectDate.month !== month ||
+          quickselectDate.day !== day)
+      ) {
+        selectedOption = undefined;        
+      }
     }
   }
 
@@ -234,7 +237,6 @@
           console.log(ev.detail);
           onQuickselect(ev.detail);
         }}
-        defaultOption={1}
       />
     </div>
 
