@@ -345,17 +345,25 @@ export const actions = {
       // only delete if exist
       if (dateFinished == null || dateStarted == null) {
         const currentBook = await prisma.book.findUnique({ where: { id } });
-        await prisma.book.update({
-          where: { id },
-          data: {
-            dateStarted:
-              currentBook?.dateStartedId != null ? { delete: true } : undefined,
-            dateFinished:
-              currentBook?.dateFinishedId != null
-                ? { delete: true }
-                : undefined,
-          },
-        });
+        console.log("cb", currentBook);
+
+        if (currentBook?.dateStartedId != null && dateStarted == null) {
+          await prisma.book.update({
+            where: { id },
+            data: {
+              dateStarted: { delete: true },
+            },
+          });
+        }
+
+        if (currentBook?.dateFinishedId != null && dateFinished == null) {
+          await prisma.book.update({
+            where: { id },
+            data: {
+              dateFinished: { delete: true },
+            },
+          });
+        }
       }
 
       const book = await prisma.book.update({
@@ -402,12 +410,7 @@ export const actions = {
     }
 
     const { fieldErrors: errors } = result.error.flatten();
-    console.log(errors);
-    Object.entries(errors).forEach(([key, messages]) => {
-      messages.forEach((message) => {
-        console.log(`Error at path: ${key}, Message: ${message}`);
-      });
-    });
+
     return {
       data: formData,
       errors,
