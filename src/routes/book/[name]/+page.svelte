@@ -33,7 +33,8 @@
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import InputAny from "$lib/InputAny.svelte";
-  import { enhance } from "$app/forms";
+  import { applyAction, enhance } from "$app/forms";
+  import toast from "svelte-french-toast";
 
   export let data: PageData;
 
@@ -55,13 +56,6 @@
       book.bookSeries = { books: [], id: -1 }; // very bad :(
     }
 
-    // if (book.dateStarted == null) {
-    //   book.dateStarted = { id: -1, ...DEFAULT_OPTIONAL_DATETIME, year: -1 };
-    // }
-
-    // if (book.dateFinished == null) {
-    //   book.dateFinished = { id: -1, ...DEFAULT_OPTIONAL_DATETIME, year: -1 };
-    // }
 
     console.log("book changed");
   }
@@ -147,6 +141,23 @@
   //     });
   //   });
   // });
+
+  //TODO: cleanup
+
+  const authorError =
+    form?.errors != null && "author" in form?.errors
+      ? form?.errors?.author?.[0]
+      : undefined;
+
+  const listNameError =
+    form?.errors != null && "listName" in form?.errors
+      ? form?.errors?.listName?.[0]
+      : undefined;
+
+  const wordsPerPageError =
+    form?.errors != null && "wordsPerPage" in form?.errors
+      ? form?.errors?.wordsPerPage?.[0]
+      : undefined;
 </script>
 
 <svelte:head>
@@ -158,20 +169,15 @@
     action="?/save"
     method="POST"
     id="form-book"
-    use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-      // `formElement` is this `<form>` element
-      // `formData` is its `FormData` object that's about to be submitted
-      // `action` is the URL to which the form is posted
-      // calling `cancel()` will prevent the submission
-      // `submitter` is the `HTMLElement` that caused the form to be submitted
-      console.log(formData);
-      // formData.set("author", "johm");
+    use:enhance={() => {
+      return async ({ result }) => {
+        if (result.type != "failure") {
+          toast.success("Successfully edited book");
+        } else {
+          toast.error("Failed editing book");
+        }
 
-      return async ({ result, update }) => {
-        // `result` is an `ActionResult` object
-        // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-        console.log(result);
-        await invalidateAll();
+        await applyAction(result);
       };
     }}
   >
@@ -290,15 +296,10 @@
             name="name"
             error={(form?.errors?.name ?? [undefined])[0]}
           />
-          <InputText
-            value={book.author}
-            name="author"
-            error={(form?.errors?.author ?? [undefined])[0]}
-          />
+          <InputText value={book.author} name="author" error={authorError} />
 
           <InputAny
             name="dateStarted"
-            error={(form?.errors?.name ?? [undefined])[0]}
           >
             <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date started">
@@ -319,7 +320,6 @@
 
           <InputAny
             name="dateFinished"
-            error={(form?.errors?.name ?? [undefined])[0]}
           >
             <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date read">
@@ -355,7 +355,7 @@
             value={book.bookListName}
             displayName="List"
             name={"listName"}
-            error={(form?.errors?.listName ?? [undefined])[0]}
+            error={listNameError}
           >
             {#each bookLists as list}
               <option value={list.name}>
@@ -449,7 +449,7 @@
               value={book.wordsPerPage}
               name="wordsPerPage"
               displayName="Words per page estimate"
-              error={(form?.errors?.wordsPerPage ?? [undefined])[0]}
+              error={wordsPerPageError}
             />
           </section>
 

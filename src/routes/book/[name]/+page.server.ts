@@ -4,7 +4,7 @@ import {
   getBookLists,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, redirect, type ServerLoadEvent } from "@sveltejs/kit";
+import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { getBookApiData } from "../api/api.server";
@@ -289,12 +289,12 @@ export const actions = {
 
       const allBooks = await prisma.book.findMany();
       if (allBooks.find((b) => b.name == name && b.id != id) !== undefined) {
-        return {
+        return fail(400, {
           data: formData,
           errors: {
             name: ["Book names have to be unique"],
           },
-        };
+        });
       }
 
       let apiData;
@@ -411,9 +411,9 @@ export const actions = {
 
     const { fieldErrors: errors } = result.error.flatten();
 
-    return {
+    return fail(400, {
       data: formData,
       errors,
-    };
+    });
   },
 };
