@@ -9,8 +9,10 @@ datasource db {
 
 model Account {
   id            String @id @default(cuid())
-  username      String
+  username      String @unique
   password_hash String
+
+  books Book[]
 }
 
 model BookList {
@@ -45,10 +47,10 @@ model BookCategory {
 }
 
 model OptionalDatetime {
-  id       Int      @id @default(autoincrement())
-  day      Int? // Optional day (1-31)
-  month    Int? // Optional month (1-12)
-  year     Int
+  id    Int  @id @default(autoincrement())
+  day   Int? // Optional day (1-31)
+  month Int? // Optional month (1-12)
+  year  Int
 
   hour   Int?
   minute Int?
@@ -87,6 +89,9 @@ model Book {
   bookApiDataId String?
 
   wordsPerPage Int?
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
 }
 
 model Rating {

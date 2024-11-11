@@ -2,7 +2,8 @@ import { error, type ServerLoadEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals }: ServerLoadEvent) {
-  const session = await locals.getSession();
+  const session = await locals.auth();
+  
   if (!session) {
     error(401);
   }

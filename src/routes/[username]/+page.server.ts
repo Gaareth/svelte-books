@@ -1,7 +1,13 @@
-import { loadBooks } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
 
-export async function load() {
+export async function load({ locals, params  }: ServerLoadEvent) {
+
+  const session = await locals.auth();
+  if (!session) {
+    error(401);
+  }
+
   const most_read_categories = await prisma.bookCategory.findMany({
     include: {
       _count: {
@@ -19,7 +25,7 @@ export async function load() {
   });
 
   return {
-    books: (await loadBooks()).books,
+    books: (await loadBooks(session?.user?.id)).books,
     currentlyReading: (await loadBooks("Reading")).books,
     most_read_categories: most_read_categories.map((c) => [
       c.name,

@@ -4,7 +4,7 @@
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
   import clsx from "clsx";
-  import type { BookFullType } from "../app";
+  import type { BookFullType } from "../../app";
   import BookListReading from "$lib/BookList/BookListReading.svelte";
 
   export let data: {
