@@ -63,12 +63,15 @@
 </script>
 
 <script lang="ts">
+  import { twMerge } from "tailwind-merge";
+
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
   import { dateToYYYY_MM_DD, isValidDate } from "./utils";
 
   export let id: string | undefined = undefined;
   export let className: string | undefined = undefined;
+  export let inputClassName: string | undefined = undefined;
 
   export let datetime: OptionalDate;
 
@@ -77,7 +80,8 @@
     dateString = formatOptionalDate(datetime);
   }
 
-  let selectedOption: "last month" | "this month" | "today" | undefined = undefined;
+  let selectedOption: "last month" | "this month" | "today" | undefined =
+    undefined;
 
   let year: number;
   let month: number | undefined;
@@ -115,10 +119,9 @@
       errorMessage = undefined;
     }
 
-
     if (selectedOption !== undefined) {
       const quickselectDate = optionToDate(selectedOption);
-      
+
       // reset selection if year or month, ... was changed and is not corresponding to a quick selection anymore
       if (
         quickselectDate != null &&
@@ -126,7 +129,7 @@
           quickselectDate.month !== month ||
           quickselectDate.day !== day)
       ) {
-        selectedOption = undefined;        
+        selectedOption = undefined;
       }
     }
   }
@@ -212,7 +215,7 @@
   bind:open={showPopover}
 >
   <input
-    class="btn-generic-color-2 rounded-md w-full sm:w-auto"
+    class={twMerge(inputClassName)}
     value={dateString}
     on:click={togglePopover}
     slot="triggerWrapper"

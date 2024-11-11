@@ -78,18 +78,16 @@
   on:click_outside={click_outside}
   bind:this={dropdownWrapper}
 >
-  <div>
-    <slot name="triggerWrapper">
-      <button
-        class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
-        on:click={toggleOpen}
-        bind:this={trigger_ref}
-        type="button"
-      >
-        <slot name="triggerContent" />
-      </button>
-    </slot>
-  </div>
+  <slot name="triggerWrapper">
+    <button
+      class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
+      on:click={toggleOpen}
+      bind:this={trigger_ref}
+      type="button"
+    >
+      <slot name="triggerContent" />
+    </button>
+  </slot>
 
   <div
     class={clsx(

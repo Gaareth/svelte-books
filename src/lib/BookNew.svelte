@@ -265,6 +265,7 @@
                   <DateSelector
                     id="dateStarted"
                     className="w-full sm:w-auto"
+                    inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
                     bind:datetime={dateStarted}
                   />
                 </label>
@@ -285,6 +286,7 @@
                   <DateSelector
                     id="dateEnd"
                     className="w-full sm:w-auto"
+                    inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
                     bind:datetime={dateFinished}
                   />
                 </label>
