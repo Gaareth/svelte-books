@@ -40,6 +40,10 @@ export function getErrorMessage(error: unknown) {
 export const sum = (list: any[]) => list.reduce((a, b) => a + b, 0);
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
+export function undefinedToNull<Type>(any: Type | undefined): Type | null {
+  return any === undefined ? null : any;
+}
+
 export function dateToYYYY_MM_DD(date: Date) {
   // this ignores timezone
   // return date.toISOString().split("T")[0];
@@ -65,8 +69,8 @@ export function isValidDate(year: number, month: number, day: number): boolean {
   );
 }
 
-export function optionalToDate(o: OptionalDate) {
-  if (o == null) {
+export function optionalToDate(o: OptionalDate | null) {
+  if (o?.year == null) {
     return null;
   }
 

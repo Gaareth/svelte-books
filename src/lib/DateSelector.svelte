@@ -1,16 +1,23 @@
 <script context="module" lang="ts">
-  export type OptionalDate =
-    | {
-        year: number;
-        month: number | undefined | null;
-        day: number | undefined | null;
+  export type OptionalDate = {
+    year: number | undefined;
+    month: number | null;
+    day: number | null;
 
-        hour: number | undefined | null;
-        minute: number | undefined | null;
-        timezoneOffset: number | undefined | null;
-      }
-    | undefined
-    | null;
+    hour: number | null;
+    minute: number | null;
+    timezoneOffset: number | null;
+  };
+
+  export const DEFAULT_OPTIONAL_DATETIME = {
+    year: undefined,
+    month: null,
+    day: null,
+
+    hour: null,
+    minute: null,
+    timezoneOffset: null,
+  };
 
   export const formatOptionalDate = (
     d: OptionalDate,
@@ -32,8 +39,15 @@
     return dateString + (includeTime ? " " + timeString : "");
   };
 
+  export const formatTime = (d: OptionalDate) => {
+    const hour = d.hour?.toString().padStart(2, "0");
+    const minute = d.minute?.toString().padStart(2, "0");
+
+    return `${hour}:${minute}`;
+  };
+
   export const formatShort = (
-    d: OptionalDate,
+    d: OptionalDate | null,
     includeTime: boolean = false
   ) => {
     if (d == null || d.year == null) return "?";
@@ -51,11 +65,7 @@
     }
 
     if (includeTime && d.hour != null && d.minute != null) {
-      const hour = d.hour?.toString().padStart(2, "0");
-      const minute = d.minute?.toString().padStart(2, "0");
-
-      const timeString = `${hour}:${minute}`;
-      dateString += " " + timeString;
+      dateString += " " + formatTime(d);
     }
 
     return dateString;
@@ -68,12 +78,29 @@
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
   import { dateToYYYY_MM_DD, isValidDate } from "./utils";
+  import { onMount } from "svelte";
 
   export let id: string | undefined = undefined;
+  export let name: string | undefined = undefined;
+
   export let className: string | undefined = undefined;
   export let inputClassName: string | undefined = undefined;
 
   export let datetime: OptionalDate;
+
+  $: {
+    if (datetime == null) {
+      datetime = {
+        year: undefined,
+        month: null,
+        day: null,
+
+        hour: null,
+        minute: null,
+        timezoneOffset: null,
+      };
+    }
+  }
 
   let dateString: string | undefined = undefined;
   $: {
@@ -83,23 +110,23 @@
   let selectedOption: "last month" | "this month" | "today" | undefined =
     undefined;
 
-  let year: number;
-  let month: number | undefined;
-  let day: number | undefined;
+  // let year: number;
+  // let month: number | undefined;
+  // let day: number | undefined;
 
   let timeString: string | undefined;
 
   $: {
-    if (year != null) {
-      datetime = undefined;
-      datetime = {
-        year,
-        month,
-        day,
-        hour: timeString != null ? Number(timeString.split(":")[0]) : null,
-        minute: timeString != null ? Number(timeString.split(":")[1]) : null,
-        timezoneOffset: new Date().getTimezoneOffset(),
-      };
+    if (timeString != null) {
+      datetime.hour = Number(timeString.split(":")[0]);
+      datetime.minute = Number(timeString.split(":")[1]);
+    }
+
+    if (datetime != null && datetime.hour != null && datetime.minute != null) {
+      timeString = formatTime(datetime);
+    } else {
+      // timeString = undefined;
+      // console.log("undf");
     }
   }
 
@@ -107,12 +134,14 @@
 
   $: {
     if (
-      year != null &&
-      day != null &&
-      month != null &&
-      !isValidDate(year, month - 1, day)
+      datetime.year != null &&
+      datetime.day != null &&
+      datetime.month != null &&
+      !isValidDate(datetime.year, datetime.month - 1, datetime.day)
     ) {
-      errorMessage = `${year}-${month.toString().padStart(2, "0")}-${day
+      errorMessage = `${datetime.year}-${datetime.month
+        .toString()
+        .padStart(2, "0")}-${datetime.day
         .toString()
         .padStart(2, "0")} does not exist`;
     } else {
@@ -125,9 +154,9 @@
       // reset selection if year or month, ... was changed and is not corresponding to a quick selection anymore
       if (
         quickselectDate != null &&
-        (quickselectDate.year !== year ||
-          quickselectDate.month !== month ||
-          quickselectDate.day !== day)
+        (quickselectDate.year !== datetime.year ||
+          quickselectDate.month !== datetime.month ||
+          quickselectDate.day !== datetime.day)
       ) {
         selectedOption = undefined;
       }
@@ -142,14 +171,14 @@
         return {
           year: now.getFullYear(),
           month: now.getMonth() - 1 + 1,
-          day: undefined,
+          day: null,
         };
 
       case "this month":
         return {
           year: now.getFullYear(),
           month: now.getMonth() + 1,
-          day: undefined,
+          day: null,
         };
 
       case "today":
@@ -163,12 +192,11 @@
 
   const onQuickselect = (option: typeof selectedOption) => {
     let date = optionToDate(option);
-    day = undefined;
-
-    if (date !== undefined) {
-      year = date?.year;
-      month = date?.month;
-      day = date?.day;
+    datetime.day = null;
+    if (date != null) {
+      datetime.year = date.year;
+      datetime.month = date.month;
+      datetime.day = date.day;
     }
 
     // const dtString = dateToYYYY_MM_DD(date);
@@ -254,9 +282,10 @@
         <input
           type="number"
           id="year"
-          bind:value={year}
+          bind:value={datetime.year}
           placeholder="YYYY"
           class="w-full btn-generic-color-2"
+          name={`${name}[year]`}
         />
       </div>
 
@@ -264,8 +293,13 @@
         <!-- Month (Optional) -->
         <div>
           <label for="month">Month</label>
-          <select id="month" bind:value={month} class="btn-generic-color-2">
-            <option value="">Select Month</option>
+          <select
+            id="month"
+            bind:value={datetime.month}
+            class="btn-generic-color-2"
+            name={`${name}[month]`}
+          >
+            <option value={null}>Select Month</option>
             {#each months as { value, label }}
               <option {value}>{label}</option>
             {/each}
@@ -275,8 +309,13 @@
         <!-- Day (Optional) -->
         <div>
           <label for="day">Day</label>
-          <select id="day" bind:value={day} class="btn-generic-color-2">
-            <option value={undefined}>Select Day</option>
+          <select
+            id="day"
+            bind:value={datetime.day}
+            class="btn-generic-color-2"
+            name={`${name}[day]`}
+          >
+            <option value={null}>Select Day</option>
             {#each days as dayNumber}
               <option value={dayNumber}>{dayNumber}</option>
             {/each}
@@ -296,6 +335,8 @@
               on:click={(e) => {
                 e.preventDefault();
                 timeString = undefined;
+                datetime.hour = null;
+                datetime.minute = null;
               }}
             >
               clear
@@ -315,6 +356,9 @@
             </button>
           </div>
         </div>
+
+        <input type="hidden" name={`${name}[hour]`} value={datetime.hour} />
+        <input type="hidden" name={`${name}[minute]`} value={datetime.minute} />
 
         <input
           type="time"

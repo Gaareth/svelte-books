@@ -5,17 +5,7 @@ import { prisma } from "$lib/server/prisma";
 import { getBookApiData } from "../api/api.server";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { DEFAULT_LISTS } from "$appTypes";
-
-const optionalDatetimeSchema = z.object({  
-  day: z.number().int().min(1).max(31).optional(), 
-  month: z.number().int().min(1).max(12).optional(), 
-  year: z.number().int().min(0),
-
-  hour: z.number().int().min(0).max(23).nullish(),
-  minute: z.number().int().min(0).max(59).nullish(),
-
-  timezone: z.number().min(0).optional(), // Optional timezoneoffset in minutes
-});
+import { optionalDatetimeSchema } from "../../../schemas";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
@@ -36,11 +26,11 @@ export async function POST(req: RequestEvent) {
 
   const json_data = await req.request.json();
   console.log(json_data);
-  
+
   const result = createSchema.safeParse(json_data);
   console.log(result);
-  // console.log(result.error);
-  // TODO: return schema parsing errors 
+  console.log(result.error);
+  // TODO: return schema parsing errors
 
   if (result.success) {
     const {
@@ -51,7 +41,7 @@ export async function POST(req: RequestEvent) {
       listName,
       volumeId,
       dateStarted,
-      dateFinished
+      dateFinished,
     } = result.data;
 
     const book_exist = await prisma.book.findFirst({ where: { name } });
@@ -63,17 +53,16 @@ export async function POST(req: RequestEvent) {
     }
     // } catch { /* errors if bookApiData does not exits. Will be created in the next create call below.*/ }
     // return json({ success: true });
-    const now = new Date();
     await prisma.book.create({
       data: {
         name,
         author,
         wordsPerPage,
         dateStarted: {
-          create: dateStarted
+          create: dateStarted ?? undefined,
         },
         dateFinished: {
-          create: dateFinished
+          create: dateFinished ?? undefined,
         },
         bookList: {
           connectOrCreate: {
@@ -154,4 +143,3 @@ async function addApiData(volumeId: string | undefined, name: string) {
     }
   }
 }
-

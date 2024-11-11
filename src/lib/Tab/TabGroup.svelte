@@ -11,6 +11,8 @@
     btnClass: string;
     btnSelectedClass: string;
     animate: boolean;
+    offsetLeft: ReturnType<typeof writable<number>>;
+    tabWidth: ReturnType<typeof writable<number>>
   }
 </script>
 

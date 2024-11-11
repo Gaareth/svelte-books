@@ -6,7 +6,7 @@
   import Rating from "./../../../lib/Rating.svelte";
   import type { BookList, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
   import InputSelect from "$lib/InputSelect.svelte";
   //@ts-ignore
@@ -26,9 +26,14 @@
   import Image from "$lib/Image.svelte";
 
   import { MAX_RATING } from "../../../constants";
-  import DateSelector, { formatShort } from "$lib/DateSelector.svelte";
+  import DateSelector, {
+    DEFAULT_OPTIONAL_DATETIME,
+    formatShort,
+  } from "$lib/DateSelector.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
+  import InputAny from "$lib/InputAny.svelte";
+  import { enhance } from "$app/forms";
 
   export let data: PageData;
 
@@ -49,6 +54,16 @@
     if (book.bookSeries === null && edit) {
       book.bookSeries = { books: [], id: -1 }; // very bad :(
     }
+
+    // if (book.dateStarted == null) {
+    //   book.dateStarted = { id: -1, ...DEFAULT_OPTIONAL_DATETIME, year: -1 };
+    // }
+
+    // if (book.dateFinished == null) {
+    //   book.dateFinished = { id: -1, ...DEFAULT_OPTIONAL_DATETIME, year: -1 };
+    // }
+
+    console.log("book changed");
   }
 
   // console.log(data.book.bookSeries?.books);
@@ -64,21 +79,6 @@
   // $: rating = book?.rating ?? { stars: 0, comment: "" };
   // $: rating_stars = rating.stars;
   // $: rating_comment = rating.comment;
-
-  let months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
   let open_delete = false;
 
@@ -154,7 +154,27 @@
 </svelte:head>
 
 <div class="mt-5">
-  <form method="POST" id="form-book">
+  <form
+    action="?/save"
+    method="POST"
+    id="form-book"
+    use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+      // `formElement` is this `<form>` element
+      // `formData` is its `FormData` object that's about to be submitted
+      // `action` is the URL to which the form is posted
+      // calling `cancel()` will prevent the submission
+      // `submitter` is the `HTMLElement` that caused the form to be submitted
+      console.log(formData);
+      // formData.set("author", "johm");
+
+      return async ({ result, update }) => {
+        // `result` is an `ActionResult` object
+        // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+        console.log(result);
+        await invalidateAll();
+      };
+    }}
+  >
     {#if $page.data.session}
       <div class="flex justify-center mb-2 sm:mb-0">
         <input type="hidden" name="id" value={book.id} />
@@ -183,7 +203,6 @@
             </button>
             {#if edit}
               <button
-                formaction="?/save"
                 class="btn-group-btn text-blue-700
               dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-blue-500"
               >
@@ -277,42 +296,47 @@
             error={(form?.errors?.author ?? [undefined])[0]}
           />
 
-          <label
-            class="col-span-2 flex flex-wrap items-center justify-between"
-            for="dateStarted"
+          <InputAny
+            name="dateStarted"
+            error={(form?.errors?.name ?? [undefined])[0]}
           >
-            <div class="icon-wrapper">
+            <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date started">
                 <EventProgress />
               </span>
               Date started:
             </div>
 
-            <!-- <DateSelector
+            <DateSelector
+              slot="input"
               id="dateStarted"
-              className="w-full sm:w-auto"
-              bind:datetime={book.dateStarted}
-            /> -->
-          </label>
+              name="dateStarted"
+              inputClassName="!w-full !input"
+              className="w-full"
+              datetime={book.dateStarted ?? DEFAULT_OPTIONAL_DATETIME}
+            />
+          </InputAny>
 
-          <label
-            class="col-span-2 flex flex-wrap items-center justify-between"
-            for="dateFinished"
+          <InputAny
+            name="dateFinished"
+            error={(form?.errors?.name ?? [undefined])[0]}
           >
-            <div class="icon-wrapper">
+            <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date read">
                 <EventDone />
               </span>
               Date read:
             </div>
 
-            {book.dateFinished?.year}
-            <!-- <DateSelector
+            <DateSelector
               id="dateFinished"
-              className="w-full sm:w-auto"
-              bind:datetime={book.dateFinished}
-            /> -->
-          </label>
+              name="dateFinished"
+              inputClassName="!w-full !input"
+              className="w-full"
+              slot="input"
+              datetime={book.dateFinished ?? DEFAULT_OPTIONAL_DATETIME}
+            />
+          </InputAny>
 
           <!-- <InputSelect
             value={book.yearRead}

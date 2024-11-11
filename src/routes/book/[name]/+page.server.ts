@@ -8,7 +8,8 @@ import { error, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { getBookApiData } from "../api/api.server";
-import type { queriedBookFull } from "$appTypes";
+import { type queriedBookFull } from "$appTypes";
+import { optionalDatetimeSchema } from "../../../schemas";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -85,14 +86,13 @@ export async function load(page: ServerLoadEvent) {
   };
 }
 
+//TODO: reuse
 const saveSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
   comment: z.string().trim().optional(),
   stars: z.coerce.number().min(0).max(5),
-  month: z.coerce.number().min(0).max(12).optional(),
-  year: z.coerce.number().min(0).max(5000).optional(),
   listName: z.string(),
   bookSeries: z.string().array(),
   bookSeriesId: z.preprocess(
@@ -101,11 +101,9 @@ const saveSchema = z.object({
   ),
   apiVolumeId: z.string().optional(),
   wordsPerPage: z.coerce.number().nonnegative().optional(),
+  dateStarted: optionalDatetimeSchema.nullish(),
+  dateFinished: optionalDatetimeSchema.nullish(),
 });
-
-function undefinedToNull<Type>(any: Type | undefined): Type | null {
-  return any === undefined ? null : any;
-}
 
 function parseFormArray(
   formData: { [k: string]: FormDataEntryValue },
@@ -120,6 +118,41 @@ function parseFormArray(
 
   return values;
 }
+
+type NestedObject = { [key: string]: any };
+// date[time][hour] => {date: {time: {hour: value}}}
+function buildObject(keys: string[], value: any): NestedObject {
+  return keys
+    .reverse()
+    .reduce((acc: NestedObject, key: string, index: number) => {
+      if (index === 0) {
+        return { [key]: value }; // Add the value at the deepest level
+      }
+      return { [key]: acc }; // Build the nested structure for the other keys
+    }, {});
+}
+
+function parseFormObject(
+  formData: { [k: string]: FormDataEntryValue },
+  attribute: string
+) {
+  let object = {};
+
+  const regexObject = /([a-zA-Z]+)(\[[a-zA-Z]+\])+/;
+  const regexKeys = /\[([a-zA-Z]+)\]/g; // Matches any word inside square brackets
+
+  for (const [key, value] of Object.entries(formData)) {
+    const match = key.match(regexObject);
+
+    if (match && attribute == match[1]) {
+      const matches = [...key.matchAll(regexKeys)].map((m) => m[1]);
+      object = { ...object, ...buildObject(matches, value) };
+    }
+  }
+
+  return object;
+}
+
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
 async function updateBookSeries(
   id: string,
@@ -206,7 +239,19 @@ export const actions = {
       error(401);
     }
 
-    const formData = Object.fromEntries(await event.request.formData());
+    const f = await event.request.formData();
+    console.log(f);
+
+    const formData = Object.fromEntries(f);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    formData["dateStarted"] = parseFormObject(formData, "dateStarted");
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    formData["dateFinished"] = parseFormObject(formData, "dateFinished");
+
     console.log(formData);
     if (formData.year == "") {
       delete formData.year;
@@ -227,13 +272,14 @@ export const actions = {
         author,
         comment,
         stars,
-        month,
-        year,
+
         listName,
         bookSeries,
         bookSeriesId,
         apiVolumeId,
         wordsPerPage,
+        dateStarted,
+        dateFinished,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -295,13 +341,44 @@ export const actions = {
           },
         });
       }
+
+      // only delete if exist
+      if (dateFinished == null || dateStarted == null) {
+        const currentBook = await prisma.book.findUnique({ where: { id } });
+        await prisma.book.update({
+          where: { id },
+          data: {
+            dateStarted:
+              currentBook?.dateStartedId != null ? { delete: true } : undefined,
+            dateFinished:
+              currentBook?.dateFinishedId != null
+                ? { delete: true }
+                : undefined,
+          },
+        });
+      }
+
       const book = await prisma.book.update({
         where: { id },
         data: {
           name,
           author,
-          monthRead: undefinedToNull(month),
-          yearRead: undefinedToNull(year),
+          dateStarted: dateStarted
+            ? {
+                upsert: {
+                  update: dateStarted,
+                  create: dateStarted,
+                },
+              }
+            : undefined,
+          dateFinished: dateFinished
+            ? {
+                upsert: {
+                  update: dateFinished,
+                  create: dateFinished,
+                },
+              }
+            : undefined,
           rating: {
             upsert: {
               update: { stars: stars, comment },
@@ -326,7 +403,11 @@ export const actions = {
 
     const { fieldErrors: errors } = result.error.flatten();
     console.log(errors);
-
+    Object.entries(errors).forEach(([key, messages]) => {
+      messages.forEach((message) => {
+        console.log(`Error at path: ${key}, Message: ${message}`);
+      });
+    });
     return {
       data: formData,
       errors,
