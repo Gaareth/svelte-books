@@ -92,13 +92,13 @@ const saveSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
   comment: z.string().trim().optional(),
-  stars: z.coerce.number().min(0).max(5),
+  stars: z.coerce.number().min(0).max(5).optional(),
   listName: z.string(),
   bookSeries: z.string().array(),
   bookSeriesId: z.preprocess(
     (s) => (s != "" ? Number(s) : undefined),
     z.number().optional()
-  ),
+  ).optional(),
   apiVolumeId: z.string().optional(),
   wordsPerPage: z.coerce.number().nonnegative().optional(),
   dateStarted: optionalDatetimeSchema.nullish(),
@@ -252,7 +252,6 @@ export const actions = {
     // @ts-ignore
     formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
-    console.log(formData);
     if (formData.year == "") {
       delete formData.year;
     }
@@ -263,7 +262,6 @@ export const actions = {
     formData["bookSeries"] = bookSeries;
 
     const result = saveSchema.safeParse(formData);
-    console.log(result);
 
     if (result.success) {
       const {
@@ -387,7 +385,7 @@ export const actions = {
                 },
               }
             : undefined,
-          rating: {
+          rating: stars && {
             upsert: {
               update: { stars: stars, comment },
               create: { stars: stars, comment },
@@ -410,10 +408,13 @@ export const actions = {
     }
 
     const { fieldErrors: errors } = result.error.flatten();
+    console.log(errors);
+    
 
     return fail(400, {
       data: formData,
       errors,
     });
   },
-};
+  
+} satisfies Actions;

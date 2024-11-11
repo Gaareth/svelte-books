@@ -5,8 +5,12 @@
   import Statistics from "$lib/Statistics.svelte";
   import clsx from "clsx";
   import type { BookFullType } from "../app";
+  import BookListReading from "$lib/BookList/BookListReading.svelte";
+
   export let data: {
     books: BookFullType[];
+    currentlyReading: BookFullType[];
+
     most_read_categories: [string, number][];
     all_category_names: { name: string }[];
   };
@@ -39,6 +43,12 @@
 {/if}
 
 <div class="my-5" />
+
+<div class="mb-10">
+  <BookListReading
+    books={data.currentlyReading}
+  />
+</div>
 
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
 <BookList

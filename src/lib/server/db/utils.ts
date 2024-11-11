@@ -7,11 +7,11 @@ export async function getBookLists() {
   return prisma.bookList.findMany();
 }
 
-export async function loadBooks() {
+export async function loadBooks(listName = "Read") {
   const data = {
     books: await prisma.book.findMany({
       where: {
-        bookListName: "Read",
+        bookListName: listName,
       },
       include: {
         rating: true,

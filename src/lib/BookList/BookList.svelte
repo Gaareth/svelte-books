@@ -19,6 +19,7 @@
   import { page } from "$app/stores";
 
   export let books: BookFullType[];
+  export let showSearch = true;
 
   const searchStore = createSearchStore(books);
   let added_book = false;
@@ -76,7 +77,7 @@
   <h2 class="flex items-end text-2xl -mb-1 {showOptions ? 'invisible' : ''}">
     Books
   </h2>
-  {#if books.length > 0}
+  {#if books.length > 0 && showSearch}
     <div class="flex gap-2 justify-between">
       <BookSearch bind:search_term={$searchStore.search} />
       <button

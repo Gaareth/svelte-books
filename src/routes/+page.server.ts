@@ -20,6 +20,7 @@ export async function load() {
 
   return {
     books: (await loadBooks()).books,
+    currentlyReading: (await loadBooks("Reading")).books,
     most_read_categories: most_read_categories.map((c) => [
       c.name,
       c._count.books,
