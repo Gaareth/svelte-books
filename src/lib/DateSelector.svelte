@@ -248,6 +248,7 @@
     on:click={togglePopover}
     slot="triggerWrapper"
     {id}
+    readonly
   />
 
   <div
