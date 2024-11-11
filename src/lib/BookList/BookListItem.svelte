@@ -157,7 +157,7 @@
             <slot name="delete">
               {#if allow_deletion}
                 <button
-                  class="group p-2 delete-button border-0"
+                  class="group p-2 delete-button !border-0"
                   title="Delete book"
                   type="button"
                   on:click={() => {
@@ -175,7 +175,7 @@
           </span>
         </div>
       {:else}
-        <div class="flex justify-end">
+        <div class="hidden sm:flex justify-end ms-2">
           <a class="underline-hover" href="/book/{book_url}">View</a>
         </div>
       {/if}
