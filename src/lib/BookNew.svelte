@@ -168,7 +168,7 @@
           "text-2xl flex items-center justify-center ease-in-out duration-500",
           new_book_open && "-translate-y-[32px] text-xl"
         )}
-        style="transition: transform font-size;"
+        style="transition-property: transform, font-size;"
       >
         Add new book
       </h2>
