@@ -11,6 +11,7 @@
   import Dropdown from "./Dropdown.svelte";
   import { isDarkModeEnabled } from "./utils";
   import { onMount } from "svelte";
+  import { twMerge } from "tailwind-merge";
 
   const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"];
 
@@ -64,10 +65,13 @@
     apply();
   };
 
+  let prefersDark: boolean;
   if (browser) {
     if ("theme" in localStorage) {
       theme.set(localStorage.theme);
     }
+
+    prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     apply(false);
   }
@@ -94,7 +98,10 @@
     class="p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200"
   >
     <li>
-      <button on:click={applyDarkMode} class="theme-dropdown-button hover:!text-purple-400">
+      <button
+        on:click={applyDarkMode}
+        class="theme-dropdown-button hover:!text-purple-400"
+      >
         <span>
           <IoIosMoon />
         </span>
@@ -102,19 +109,30 @@
       </button>
     </li>
     <li>
-      <button on:click={applyLightMode} class="theme-dropdown-button hover:!text-yellow-500 dark:hover:!text-yellow-200">
+      <button
+        on:click={applyLightMode}
+        class="theme-dropdown-button hover:!text-yellow-500 dark:hover:!text-yellow-200"
+      >
         <span>
           <IoIosSunny />
         </span>
-        Light</button
-      >
+        Light
+      </button>
     </li>
     <li>
-      <button on:click={applySystem} class="theme-dropdown-button">
+      <button
+        on:click={applySystem}
+        class={twMerge(
+          "theme-dropdown-button",
+          prefersDark
+            ? "hover:!text-purple-400"
+            : "hover:!text-yellow-500 dark:hover:!text-yellow-200"
+        )}
+      >
         <span>
           <IoIosDesktop />
-        </span>System</button
-      >
+        </span>System
+      </button>
     </li>
   </ul>
 </Dropdown>

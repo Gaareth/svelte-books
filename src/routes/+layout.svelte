@@ -22,8 +22,10 @@
         <a
           class="text-gray-500 dark:text-gray-400
         hover:text-[#F2440D] dark:hover:text-[#f67c56]"
-          href="/">Home</a
+          href="/"
         >
+          Home
+        </a>
         {#if $page.data.session}
           <a class="nav-a" href="/to-read">To-Read</a>
           <a class="nav-a" href="/settings">Settings</a>
