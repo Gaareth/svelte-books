@@ -7,11 +7,26 @@ export async function getBookLists() {
   return prisma.bookList.findMany();
 }
 
-export async function loadBooks(accountId: string, listName = "Read") {
+// Define the input types using a discriminated union to ensure only one identifier is provided
+type GetAccountById = {
+  accountId: string;
+  accountUsername?: never;
+};
+
+type GetAccountByUsername = {
+  accountUsername: string;
+  accountId?: never;
+};
+
+type GetAccountParams = GetAccountById | GetAccountByUsername;
+
+export async function loadBooks(accountId: string | undefined, username: string | undefined, listName = "Read") {
   const data = {
     books: await prisma.book.findMany({
       where: {
-        accountId,
+        account: {
+          username: ""
+        },
         bookListName: listName,
       },
       include: {

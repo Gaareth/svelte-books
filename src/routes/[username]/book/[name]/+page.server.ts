@@ -9,7 +9,7 @@ import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { getBookApiData } from "../api/api.server";
 import { type queriedBookFull } from "$appTypes";
-import { optionalDatetimeSchema } from "../../../schemas";
+import { optionalDatetimeSchema } from "../../../../schemas";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -19,6 +19,7 @@ export async function load(page: ServerLoadEvent) {
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
+      accountId: 
     },
     include: {
       rating: true,
