@@ -5,7 +5,7 @@
   import BookSearch from "../BookSearch.svelte";
   //@ts-ignore
   import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-  import type { BookFullType } from "$appTypes";
+  import type { BookFullType, BookListItemType } from "$appTypes";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
@@ -15,7 +15,7 @@
   import { enhance } from "$app/forms";
   import { page } from "$app/stores";
 
-  export let books: BookFullType[];
+  export let books: BookListItemType[];
 
   const sentences = [
     "Add a book, mate!",

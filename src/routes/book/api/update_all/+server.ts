@@ -6,7 +6,7 @@ import { SSE_EVENT } from "./sse";
 
 export async function GET({ request, locals }) {
   console.log(SSE_EVENT);
-  const session = await locals.getSession();
+  const session = await locals.auth();
   if (!session) {
     error(401);
   }

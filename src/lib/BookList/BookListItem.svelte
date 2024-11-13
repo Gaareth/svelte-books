@@ -95,7 +95,7 @@
   <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
     <div class="col-span-full sm:col-span-3">
       <a
-        href="/book/{book_url}"
+        href="book/{book_url}"
         class="text-md text-ellipsis overflow-hidden leading-3">{book.name}</a
       >
       <p class="text-gray-600 dark:text-slate-300 -mt-1">{book.author}</p>
@@ -176,7 +176,7 @@
         </div>
       {:else}
         <div class="hidden sm:flex justify-end ms-2">
-          <a class="underline-hover" href="/book/{book_url}">View</a>
+          <a class="underline-hover" href="book/{book_url}">View</a>
         </div>
       {/if}
     </div>

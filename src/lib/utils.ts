@@ -44,6 +44,10 @@ export function undefinedToNull<Type>(any: Type | undefined): Type | null {
   return any === undefined ? null : any;
 }
 
+export function nullToUndefined<Type>(any: Type | null): Type | undefined {
+  return any === null ? undefined : any;
+}
+
 export function dateToYYYY_MM_DD(date: Date) {
   // this ignores timezone
   // return date.toISOString().split("T")[0];

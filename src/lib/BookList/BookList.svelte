@@ -4,7 +4,7 @@
   import { fade, scale } from "svelte/transition";
   import BookSearch from "../BookSearch.svelte";
 
-  import type { BookFullType } from "$appTypes";
+  import type { BookFullType, BookListItemType } from "$appTypes";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
@@ -18,14 +18,21 @@
   import Filtering from "./Filtering.svelte";
   import { page } from "$app/stores";
 
-  export let books: BookFullType[];
+  export let books: BookListItemType[];
   export let showSearch = true;
 
   const searchStore = createSearchStore(books);
   let added_book = false;
 
   let languages_used: string[];
-  export let category_names: string[]; // not reactive
+  let category_names: string[] = [
+    ...new Set(
+      books
+        .map((b) => b.bookApiData?.categories.map((c) => c.name))
+        .flat()
+        .filter((n) => n != null)
+    ),
+  ];
 
   $: {
     added_book = true;

@@ -6,14 +6,9 @@
   import clsx from "clsx";
   import type { BookFullType } from "../../app";
   import BookListReading from "$lib/BookList/BookListReading.svelte";
+  import type { PageData } from "./$types";
 
-  export let data: {
-    books: BookFullType[];
-    currentlyReading: BookFullType[];
-
-    most_read_categories: [string, number][];
-    all_category_names: { name: string }[];
-  };
+  export let data: PageData;
 
   let chance = 20;
   let random = Math.floor(Math.random() * chance);
@@ -38,7 +33,6 @@
 {#if $page.data.session}
   <Statistics
     books={data.books}
-    most_read_categories={data.most_read_categories}
   />
 {/if}
 
@@ -53,7 +47,6 @@
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
 <BookList
   books={data.books}
-  category_names={data.all_category_names.map((c) => c.name)}
 />
 
 <style>

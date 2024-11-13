@@ -20,19 +20,27 @@ type GetAccountByUsername = {
 
 type GetAccountParams = GetAccountById | GetAccountByUsername;
 
-export async function loadBooks(accountId: string | undefined, username: string | undefined, listName = "Read") {
+export async function loadBooks(
+  accountParams: GetAccountParams,
+  listName: string | undefined = "Read"
+) {
+  const { accountId, accountUsername } = accountParams;
+
+  const whereClause = {
+    ...(accountId
+      ? { accountId }
+      : { account: { username: accountUsername as string } }),
+    bookListName: listName,
+  };
+
   const data = {
     books: await prisma.book.findMany({
-      where: {
-        account: {
-          username: ""
-        },
-        bookListName: listName,
-      },
+      where: whereClause,
       include: {
         rating: true,
         dateStarted: true,
         dateFinished: true,
+        bookList: true,
         bookApiData: {
           include: {
             categories: true,

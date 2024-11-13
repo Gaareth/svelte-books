@@ -2,7 +2,7 @@ import { type RequestHandler, error, json } from "@sveltejs/kit";
 import { getBookApiData } from "../../api.server";
 
 export const GET: RequestHandler = async ({ params, locals }) => {
-  const session = await locals.getSession();
+  const session = await locals.auth();
   if (!session) {
     error(401);
   }

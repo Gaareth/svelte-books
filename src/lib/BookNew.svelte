@@ -49,7 +49,7 @@
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
 
-  export let endpoint = "/book/create";
+  export let endpoint = "book/create";
   export let listName: DEFAULT_LIST = "Read";
 
   export let authors: string[];

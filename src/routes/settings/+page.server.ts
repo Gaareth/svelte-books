@@ -6,14 +6,11 @@ import {
 } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils.js";
-import {
-  getBookApiData,
-  queryBooks,
-  queryBooksFull,
-} from "../book/api/api.server";
+
 import type { Book, BookApiData } from "@prisma/client";
 import type { queriedBookFull } from "$appTypes";
 import { arrMax, delay, getErrorMessage, zip } from "$lib/utils";
+import { getBookApiData, queryBooksFull } from "../book/api/api.server";
 import { SSE_EVENT } from "../book/api/update_all/sse";
 
 type bookDiff = {
@@ -35,6 +32,8 @@ async function updateData() {
   SSE_EVENT.max = bookDataList.length;
 
   for (const book of bookDataList) {
+    await delay(2000);
+
     const { id, title } = book;
     SSE_EVENT.msg = "Updating: " + title;
     SSE_EVENT.items = SSE_EVENT.items + 1;
@@ -105,7 +104,7 @@ async function updateData() {
     //   oldValue: 1,
     //   newValue: 2,
     // });
-    // await delay(100);
+
     booksUpdated += 1;
   }
 
@@ -281,7 +280,7 @@ export type settingsApiReloadResult = {
 
 export const actions = {
   reload: async ({ locals }) => {
-    const session = await locals.getSession();
+    const session = await locals.auth();
     if (!session) {
       error(401);
     }
@@ -303,7 +302,7 @@ export const actions = {
   },
 
   try_add: async ({ locals, request }) => {
-    const session = await locals.getSession();
+    const session = await locals.auth();
     if (!session) {
       error(401);
     }

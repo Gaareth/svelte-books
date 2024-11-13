@@ -26,5 +26,4 @@ export const optionalDatetimeSchema = z
 
     timezone: z.coerce.number().min(0).nullish(), // Optional timezoneoffset in minutes
   })
-  .transform((data) => (data.year === null ? null : data))
-  .nullish();
+  .transform((data) => (data.year === null ? null : data));

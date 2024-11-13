@@ -1,7 +1,6 @@
 <script lang="ts">
   import Modal from "./Modal.svelte";
   import { twMerge } from "tailwind-merge";
-  import type { BookFullType } from "../app";
   import Stats from "./Stats.svelte";
   import { sum } from "./utils";
   import Book from "./icons/book.svelte";
@@ -10,19 +9,56 @@
   import Charts from "./Charts.svelte";
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
+  import { Prisma } from "@prisma/client";
+  type BookStatistics = Prisma.BookGetPayload<{
+    include: {
+      bookList: true;
+      dateStarted: true;
+      dateFinished: true;
+      rating: true;
+      bookApiData: {
+        include: {
+          categories: true;
+        };
+      };
+    };
+  }>;
+  export let books: BookStatistics[];
+  books = books.filter((b) => b.bookList?.name == "Read");
 
-  export let books: BookFullType[];
-  export let most_read_categories: [string, number][];
+  function calc_most_read_categories(
+    books: BookStatistics[]
+  ): [string, number][] {
+    const category_count_map = new Map<string, number>();
+
+    // Count each category across all books
+    books.forEach((book: BookStatistics) => {
+      book.bookApiData?.categories.forEach(({ name: category_name }) => {
+        category_count_map.set(
+          category_name,
+          (category_count_map.get(category_name) || 0) + 1
+        );
+      });
+    });
+
+    // Convert the map to an array of tuples and sort by count in descending order
+    return Array.from(category_count_map).sort(
+      ([, countA], [, countB]) => countB - countA
+    );
+  }
+
+  const most_read_categories: [string, number][] =
+    calc_most_read_categories(books);
 
   const AVERAGE_NUM_WORDS_PER_PAGE = 250;
   const AVERAGE_NUM_PAGES_PER_BOOK = 350;
 
-  const count_pages = (books: BookFullType[]) =>
+  const count_pages = (books: BookStatistics[]) =>
     sum(
       books.map((b) => b.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK)
     );
 
-  const count_words = (books: BookFullType[]) =>
+  const count_words = (books: BookStatistics[]) =>
     sum(
       books.map(
         (b) =>
@@ -48,7 +84,7 @@
 
   let now = new Date();
 
-  let books_read_per_month = (month: number): BookFullType[] => {
+  let books_read_per_month = (month: number): BookStatistics[] => {
     month = month == 0 ? 12 : month;
     return books.filter(
       (b) =>
@@ -58,32 +94,34 @@
     );
   };
 
-  let books_this_month: BookFullType[] = books_read_per_month(
+  let books_this_month: BookStatistics[] = books_read_per_month(
     now.getMonth() + 1
   );
 
   let pages_this_month = count_pages(books_this_month);
   let words_this_month = count_words(books_this_month);
 
-  let books_last_month: BookFullType[] = books_read_per_month(now.getMonth());
+  let books_last_month: BookStatistics[] = books_read_per_month(now.getMonth());
   let pages_last_month = count_pages(books_last_month);
   let words_last_month = count_words(books_last_month);
 
-  let books_read_per_year = (year: number): BookFullType[] => {
+  let books_read_per_year = (year: number): BookStatistics[] => {
     return books.filter((b) => b.dateFinished?.year == year);
   };
 
-  let books_this_year: BookFullType[] = books_read_per_year(now.getFullYear());
+  let books_this_year: BookStatistics[] = books_read_per_year(
+    now.getFullYear()
+  );
   let pages_this_year = count_pages(books_this_year);
   let words_this_year = count_words(books_this_year);
 
-  let books_last_year: BookFullType[] = books_read_per_year(
+  let books_last_year: BookStatistics[] = books_read_per_year(
     now.getFullYear() - 1
   );
   let pages_last_year = count_pages(books_last_year);
   let words_last_year = count_words(books_last_year);
 
-  let calc_most_read_authors = () => {
+  let calc_most_read_authors = (books: BookStatistics[]) => {
     let authors = books.map((b) => b.author);
     let author_occur: { [key: string]: number } = {};
     authors.forEach((a: string) =>
@@ -95,7 +133,7 @@
     );
     return sortedArray;
   };
-  let most_read_authors = calc_most_read_authors();
+  $: most_read_authors = calc_most_read_authors(books);
 
   let selected_option: "books" | "pages" | "words" = "books";
 

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import BookApiData from "./../../../lib/Book/BookApiData.svelte";
+  import BookApiData from "./../../../../lib/Book/BookApiData.svelte";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
-  import Rating from "./../../../lib/Rating.svelte";
-  import type { BookList, Prisma } from "@prisma/client";
+  import Rating from "./../../../../lib/Rating.svelte";
+  import type { Book, BookList, Prisma } from "@prisma/client";
   import { page } from "$app/stores";
   import { goto, invalidateAll } from "$app/navigation";
   import InputText from "$lib/InputText.svelte";
@@ -19,13 +19,13 @@
     BookFullType,
     BookListItemType,
     BookRating,
-  } from "../../../app";
+  } from "../../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
   import Image from "$lib/Image.svelte";
 
-  import { MAX_RATING } from "../../../constants";
+  import { MAX_RATING } from "../../../../constants";
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
     formatShort,
@@ -40,7 +40,7 @@
 
   // let book: BookAll;
   let book: BookFull = data.book;
-  let books: BookFull[] = data.books;
+  let books: BookListItemType[] = data.books;
 
   // let no_rating = !data.book?.rating;
   let no_rating = false;
@@ -55,7 +55,6 @@
     if (book.bookSeries === null && edit) {
       book.bookSeries = { books: [], id: -1 }; // very bad :(
     }
-
 
     console.log("book changed");
   }
@@ -298,9 +297,7 @@
           />
           <InputText value={book.author} name="author" error={authorError} />
 
-          <InputAny
-            name="dateStarted"
-          >
+          <InputAny name="dateStarted">
             <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date started">
                 <EventProgress />
@@ -318,9 +315,7 @@
             />
           </InputAny>
 
-          <InputAny
-            name="dateFinished"
-          >
+          <InputAny name="dateFinished">
             <div class="icon-wrapper" slot="label">
               <span class="w-5 block" title="date read">
                 <EventDone />

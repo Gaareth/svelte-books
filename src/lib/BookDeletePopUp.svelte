@@ -10,7 +10,7 @@
 
   const deleteBook = (event: any) => {
     let res = new Promise((resolve, reject) => {
-      fetch("/book/" + encodeURIComponent(deletionBook.name) + "/delete", {
+      fetch("book/" + encodeURIComponent(deletionBook.name) + "/delete", {
         method: "POST",
         body: JSON.stringify({ id: deletionBook.id }),
       }).then((response) => {

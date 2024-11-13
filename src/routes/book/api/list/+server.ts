@@ -2,7 +2,7 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { queryBooks } from "../api.server";
 
 export const GET: RequestHandler = async ({ url, locals }) => {
-  const session = await locals.getSession();
+  const session = await locals.auth();
   if (!session) {
     error(401);
   }

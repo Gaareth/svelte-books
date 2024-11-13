@@ -3,10 +3,9 @@
 
   import ReloadButton from "./ReloadButton.svelte";
 
-  import type { SSE_EVENT } from "../book/api/update_all/sse.js";
-
   import AddApiButton from "./AddApiButton.svelte";
   import ApiResult from "./ApiResult.svelte";
+  import type { SSE_EVENT } from "../book/api/update_all/sse";
 
   export let form;
 

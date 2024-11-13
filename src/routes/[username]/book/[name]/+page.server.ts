@@ -2,24 +2,33 @@ import {
   extractBookApiData,
   extractCategories,
   getBookLists,
+  loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
+import {
+  error,
+  fail,
+  redirect,
+  type ServerLoadEvent,
+} from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
-import { getBookApiData } from "../api/api.server";
+import { getBookApiData } from "../../../book/api/api.server";
 import { type queriedBookFull } from "$appTypes";
 import { optionalDatetimeSchema } from "../../../../schemas";
+import { checkBookAuth } from "../../../../auth";
+import type { Actions } from './$types';
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
+  const accountId = await checkBookAuth(page.locals, params);
 
   const edit = page.url.searchParams.get("edit");
 
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
-      accountId: 
+      accountId,
     },
     include: {
       rating: true,
@@ -50,34 +59,7 @@ export async function load(page: ServerLoadEvent) {
     error(404, { message: "Not found" });
   }
 
-  const books = await prisma.book.findMany({
-    include: {
-      rating: true,
-      dateStarted: true,
-      dateFinished: true,
-      bookSeries: {
-        include: {
-          books: {
-            include: {
-              rating: true,
-              dateStarted: true,
-              dateFinished: true,
-              bookApiData: {
-                include: {
-                  categories: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      bookApiData: {
-        include: {
-          categories: true,
-        },
-      },
-    },
-  });
+  const books = (await loadBooks({ accountId }, undefined)).books;
 
   return {
     book,
@@ -96,10 +78,9 @@ const saveSchema = z.object({
   stars: z.coerce.number().min(0).max(5).optional(),
   listName: z.string(),
   bookSeries: z.string().array(),
-  bookSeriesId: z.preprocess(
-    (s) => (s != "" ? Number(s) : undefined),
-    z.number().optional()
-  ).optional(),
+  bookSeriesId: z
+    .preprocess((s) => (s != "" ? Number(s) : undefined), z.number().optional())
+    .optional(),
   apiVolumeId: z.string().optional(),
   wordsPerPage: z.coerce.number().nonnegative().optional(),
   dateStarted: optionalDatetimeSchema.nullish(),
@@ -235,7 +216,7 @@ async function updateBookSeries(
 
 export const actions = {
   save: async (event: RequestEvent) => {
-    const session = await event.locals.getSession();
+    const session = await event.locals.auth();
     if (!session) {
       error(401);
     }
@@ -386,12 +367,15 @@ export const actions = {
                 },
               }
             : undefined,
-          rating: stars && {
-            upsert: {
-              update: { stars: stars, comment },
-              create: { stars: stars, comment },
-            },
-          },
+          rating:
+            stars !== undefined
+              ? {
+                  upsert: {
+                    update: { stars: stars, comment },
+                    create: { stars: stars, comment },
+                  },
+                }
+              : undefined,
           bookList: {
             connect: {
               name: listName,
@@ -410,12 +394,10 @@ export const actions = {
 
     const { fieldErrors: errors } = result.error.flatten();
     console.log(errors);
-    
 
     return fail(400, {
       data: formData,
       errors,
     });
   },
-  
 } satisfies Actions;
