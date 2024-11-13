@@ -13,10 +13,12 @@ vite.config.ts.timestamp-*
 *.db-journal
 # .sql
 dev.db
-seed.js
+
 # prisma/migrations
 *.tar
 validation-tests/
 db-backups/
 *.xcf
 .vscode/
+
+#seed.js
