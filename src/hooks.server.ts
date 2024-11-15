@@ -21,13 +21,6 @@ export const handle = SvelteKitAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        if (import.meta.env.DEV) {
-          return {
-            id: 0,
-            name: "DEV",
-          };
-        }
-
         const account = await prisma.account.findFirst({
           where: {
             username: credentials.username,
@@ -35,12 +28,18 @@ export const handle = SvelteKitAuth({
         });
 
         if (!account) {
+          if (import.meta.env.DEV) {
+            return {
+              id: 0,
+              name: "DEV",
+            };
+          }
           return null;
         }
 
         const matching = await argon2.verify(
-          credentials.password,
-          account.password_hash
+          account.password_hash,
+          credentials.password
         );
 
         if (matching) {

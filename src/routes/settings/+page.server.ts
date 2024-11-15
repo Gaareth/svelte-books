@@ -11,7 +11,10 @@ import type { Book, BookApiData } from "@prisma/client";
 import type { queriedBookFull } from "$appTypes";
 import { arrMax, delay, getErrorMessage, zip } from "$lib/utils";
 import { getBookApiData, queryBooksFull } from "../book/api/api.server";
-import { SSE_EVENT } from "../book/api/update_all/sse";
+import { SSE_DATA, type SSE_EVENT } from "../book/api/update_all/sse";
+import { getAccountByUsername, getAccountIdfromSession } from "../../auth";
+
+export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 
 type bookDiff = {
   bookName: string;
@@ -19,8 +22,9 @@ type bookDiff = {
   oldValue: unknown;
   newValue: unknown;
 };
+
 /// Updates existing apiData by querying google
-async function updateData() {
+async function updateData(accountId: string) {
   const existingCategoryNames = (await prisma.bookCategory.findMany()).map(
     ({ name }) => name
   );
@@ -28,15 +32,26 @@ async function updateData() {
   const diffs: bookDiff[] = [];
   let booksUpdated = 0;
 
-  const bookDataList = await prisma.bookApiData.findMany();
-  SSE_EVENT.max = bookDataList.length;
+  const bookDataList = await prisma.bookApiData.findMany({
+    where: {
+      book: {
+        some: {
+          accountId,
+        },
+      },
+    },
+  });
+
+  console.log("bookdatalist", bookDataList.length);
+
+  SSE_DATA[accountId].max = bookDataList.length;
 
   for (const book of bookDataList) {
-    await delay(2000);
+    // await delay(1000);
 
     const { id, title } = book;
-    SSE_EVENT.msg = "Updating: " + title;
-    SSE_EVENT.items = SSE_EVENT.items + 1;
+    SSE_DATA[accountId].msg = "Updating: " + title;
+    SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
     const apiData = await getBookApiData(id);
     const extractedData = extractBookApiData(apiData);
     const categories = extractCategories(apiData);
@@ -83,7 +98,7 @@ async function updateData() {
           // @ts-ignore
           [props[1], extractedData[props[1]]],
         ];
-        console.log(entries);
+        // console.log(entries);
 
         const oldKV = entries[0];
 
@@ -98,12 +113,6 @@ async function updateData() {
         }
       }
     );
-    // diffs.push({
-    //   bookName: title,
-    //   propName: "a",
-    //   oldValue: 1,
-    //   newValue: 2,
-    // });
 
     booksUpdated += 1;
   }
@@ -116,7 +125,8 @@ type errorBooksType = {
   error: string;
   volumeId: string | undefined;
 }[];
-async function createConnections(connect_all: boolean) {
+
+async function createConnections(accountId: string, connect_all: boolean) {
   const scoreMap: Record<string, number> = {
     publishedDate: 1,
     publisher: 1,
@@ -130,10 +140,11 @@ async function createConnections(connect_all: boolean) {
     where: {
       bookApiDataId: connect_all ? undefined : null, // for whatever reason, undefined applies to all entries (kinda make sense lol)
       bookListName: "Read",
+      accountId,
     },
   });
-  console.log(unconnectedBooks.length);
-  SSE_EVENT.max = unconnectedBooks.length;
+  console.log("num books to connect", unconnectedBooks.length);
+  SSE_DATA[accountId].max = unconnectedBooks.length;
 
   const createConnection = async (
     volumeId: string,
@@ -220,9 +231,9 @@ async function createConnections(connect_all: boolean) {
   const errorsBooks: errorBooksType = [];
 
   for (const book of unconnectedBooks) {
-    // console.log("book: " + book.name);
-    SSE_EVENT.msg = "Adding: " + book.name;
-    SSE_EVENT.items = SSE_EVENT.items + 1;
+    console.log("book: " + book.name);
+    SSE_DATA[accountId].msg = "Adding: " + book.name;
+    SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
 
     // try {
     //   throw Error("oh no");
@@ -230,30 +241,30 @@ async function createConnections(connect_all: boolean) {
     //   errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
     // }
 
-    // const res = await findVolumeId(book);
+    const res = await findVolumeId(book);
     // console.log(res);
 
-    // if (res === undefined) {
-    //   errorsBooks.push({
-    //     book,
-    //     error: "No volumeID found",
-    //     volumeId: undefined,
-    //   });
-    // } else {
-    //   const { volumeId, score } = res;
-    //   console.log("Book: " + book.name + ", Score: " + score);
+    if (res === undefined) {
+      errorsBooks.push({
+        book,
+        error: "No volumeID found",
+        volumeId: undefined,
+      });
+    } else {
+      const { volumeId, score } = res;
+      console.log("Book: " + book.name + ", Score: " + score);
 
-    //   try {
-    //     createConnection(volumeId, book.name);
-    //     booksUpdated += 1;
-    //   } catch (e) {
-    //     errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
-    //     console.log(e);
-    //   }
-    // }
+      try {
+        createConnection(volumeId, book.name);
+        // booksUpdated += 1;
+      } catch (e) {
+        errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
+        console.log(e);
+      }
+    }
 
     updatedBookNames.push(book.name);
-    await delay(200);
+    // await delay(200);
     // break;
   }
 
@@ -281,39 +292,32 @@ export type settingsApiReloadResult = {
 export const actions = {
   reload: async ({ locals }) => {
     const session = await locals.auth();
-    if (!session) {
-      error(401);
-    }
+    const accountId = await getAccountIdfromSession(session);
 
-    SSE_EVENT.items = 0;
-    SSE_EVENT.msg = "";
-    SSE_EVENT.max = 0;
+    SSE_DATA[accountId] = { items: 0, msg: "", max: 0, id: "reload" };
 
-    const diffs = await updateData();
-    // console.log(SSE_EVENT);
+    const diffs = await updateData(accountId);
+    // console.log(SSE_DATA[accountId]);
 
     const response: settingsApiReloadResult = {
       success: true,
       ...diffs,
     };
 
-    SSE_EVENT.msg = "done";
+    SSE_DATA[accountId].msg = "done";
     return response;
   },
 
   try_add: async ({ locals, request }) => {
     const session = await locals.auth();
-    if (!session) {
-      error(401);
-    }
+    const accountId = await getAccountIdfromSession(session);
+
     const formData = await request.formData();
     const connect_all = formData.get("connect-all") == "on";
 
-    SSE_EVENT.items = 0;
-    SSE_EVENT.msg = "";
-    SSE_EVENT.max = 0;
+    SSE_DATA[accountId] = { items: 0, msg: "", max: 0, id: "try_add" };
 
-    const result = await createConnections(connect_all);
+    const result = await createConnections(accountId, connect_all);
     const response: settingsApiCreateResult = {
       success: result.errorsBooks.length == 0 ? true : false,
       ...result,
@@ -321,7 +325,7 @@ export const actions = {
 
     // console.log(response);
     // console.log(JSON.stringify(response));
-    SSE_EVENT.msg = "done";
+    SSE_DATA[accountId].msg = "done";
     return response;
   },
 };
@@ -344,7 +348,7 @@ export const actions = {
 // }
 
 export async function load({ locals }: ServerLoadEvent) {
-  const session = await locals.getSession();
+  const session = await locals.auth();
   if (!session) {
     error(401);
   }

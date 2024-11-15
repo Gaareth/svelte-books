@@ -9,7 +9,7 @@
 
   export let form;
 
-  let currentStatus: typeof SSE_EVENT | undefined = undefined;
+  let currentStatus: SSE_EVENT | undefined = undefined;
 
   //TODO: toast
 </script>

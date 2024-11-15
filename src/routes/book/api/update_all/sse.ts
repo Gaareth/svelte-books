@@ -1,3 +1,5 @@
-export type SSE_EVENT = { msg: string; max: number; items: number };
+import type { SETTINGS_SSE_ACTIONS } from "../../../settings/+page.server";
 
-export const SSE_DATA: Map<string, SSE_EVENT> = new Map();
+export type SSE_EVENT = { msg: string; max: number; items: number; id: SETTINGS_SSE_ACTIONS };
+
+export const SSE_DATA: { [accountId: string]: SSE_EVENT } = {};

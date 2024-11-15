@@ -34,7 +34,7 @@ const books = [
 ];
 
 async function createAccount() {
-  const hash = await argon2.hash(process.env.password, 12);
+  const hash = await argon2.hash(process.env.password);
   return await prisma.account.create({
     data: {
       username: process.env.username,
@@ -82,7 +82,7 @@ async function main() {
   await prisma.account.create({
     data: {
       username: "bob",
-      password_hash: "john",
+      password_hash: await argon2.hash("bob"),
     },
   });
 

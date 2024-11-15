@@ -6,6 +6,7 @@
 
   // @ts-ignore
   import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
+  import type { SSE_EVENT } from "../book/api/update_all/sse";
 
   let loading = false;
   let evtSource: EventSource;
@@ -20,9 +21,11 @@
       // console.log(decodeURIComponent(event.data));
 
       currentStatus = JSON.parse(decodeURIComponent(event.data));
-      // console.log(currentStatus);
+      console.log(currentStatus);
 
-      loading = currentStatus.msg != "done";
+      if (currentStatus!.id == "try_add") {
+        loading = currentStatus!.msg != "done";
+      }
 
       // if (currentStatus.msg == "done") {
       //   evtSource.close();
@@ -30,7 +33,7 @@
     };
   });
 
-  export let currentStatus: any;
+  export let currentStatus: SSE_EVENT | undefined;
 </script>
 
 <form

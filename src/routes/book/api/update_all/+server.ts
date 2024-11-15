@@ -2,27 +2,29 @@ import { delay } from "$lib/utils.js";
 import { error } from "@sveltejs/kit";
 
 import { event } from "sveltekit-sse";
-import { SSE_EVENT } from "./sse";
+import { SSE_DATA, type SSE_EVENT } from "./sse";
+import { getAccountByUsername, getAccountIdfromSession } from "../../../../auth";
 
 export async function GET({ request, locals }) {
-  console.log(SSE_EVENT);
   const session = await locals.auth();
-  if (!session) {
-    error(401);
-  }
+  const accountId = await getAccountIdfromSession(session);
+
 
   return event(async (emit) => {
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      if (SSE_EVENT.msg.length == 0) {
+      const userEventData = SSE_DATA[accountId];
+
+      // || userEventData?.msg.length == 0
+      if (userEventData == null) {
         emit("undefined");
         await delay(1000);
         continue;
       }
 
-      console.log("sending: ." + JSON.stringify(SSE_EVENT));
+      console.log("sending: ." + JSON.stringify(userEventData));
 
-      emit(JSON.stringify(SSE_EVENT));
+      emit(JSON.stringify(userEventData));
       await delay(500);
     }
   }).toResponse();

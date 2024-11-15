@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$lib/LoadingSpinner.svelte";
+  import { onMount } from "svelte";
   import toast from "svelte-french-toast";
 
   // @ts-ignore
@@ -9,10 +10,30 @@
   import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
   // @ts-ignore
   import RefreshIcon from "svelte-icons/io/IoMdRefresh.svelte";
+  import type { SSE_EVENT } from "../book/api/update_all/sse";
 
   let loading = false;
   let evtSource: EventSource;
-  export let currentStatus: any;
+  export let currentStatus: SSE_EVENT | undefined;
+
+  onMount(() => {
+    evtSource = new EventSource("/book/api/update_all/");
+    evtSource.onmessage = function (event) {
+      // console.log(event.data);
+      
+      if (event.data === "undefined") {
+        loading = false;
+        return;
+      }
+
+      currentStatus = JSON.parse(decodeURIComponent(event.data));
+      console.log(currentStatus);
+      
+      if (currentStatus!.id == "reload") {
+        loading = currentStatus!.msg != "done";
+      }
+    };
+  });
 </script>
 
 <div>
@@ -27,14 +48,7 @@
       // calling `cancel()` will prevent the submission
       // `submitter` is the `HTMLElement` that caused the form to be submitted
       loading = true;
-      evtSource = new EventSource("/book/api/update_all/");
-      evtSource.onmessage = function (event) {
-        // console.log(event.data);
-        if (event.data != "undefined") {
-          // console.log(event.data);
-          currentStatus = JSON.parse(decodeURIComponent(event.data));
-        }
-      };
+
       return async ({ result, update }) => {
         update();
         loading = false;
