@@ -17,6 +17,7 @@
 
   import Filtering from "./Filtering.svelte";
   import { page } from "$app/stores";
+  import Dropdown from "$lib/Dropdown.svelte";
 
   export let books: BookListItemType[];
   export let showSearch = true;
@@ -84,8 +85,8 @@
   <h2 class="flex items-end text-2xl -mb-1 {showOptions ? 'invisible' : ''}">
     Books
   </h2>
-  {#if books.length > 0 && showSearch}
-    <div class="flex gap-2 justify-between">
+  <div class="flex gap-1 sm:gap-2">
+    {#if books.length > 0 && showSearch}
       <BookSearch bind:search_term={$searchStore.search} />
       <button
         class="btn-generic-icon"
@@ -95,8 +96,23 @@
           <MoreIcon />
         </span>
       </button>
-    </div>
-  {/if}
+    {/if}
+    <!-- <Dropdown
+      buttonClass="btn-generic-icon"
+      contentClass="!border-0 !p-0 !bg-transparent"
+    >
+      <span class="w-5 block" slot="triggerContent">
+        <MoreIcon />
+      </span>
+
+      <div
+        slot="dropdown"
+        class="max-w-96 w-auto p-3 border rounded-md dark:border-slate-500 dark:bg-slate-700 flex flex-col bg-white"
+      >
+        hello
+      </div>
+    </Dropdown> -->
+  </div>
 </div>
 
 <div hidden={!showOptions}>

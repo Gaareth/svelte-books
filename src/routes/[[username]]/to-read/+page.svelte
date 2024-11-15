@@ -1,13 +1,10 @@
 <script lang="ts">
   import BookList from "$lib/BookList/BookList.svelte";
   import BookNew from "$lib/BookNew.svelte";
-  import type { PageData } from "../../$types";
+  import type { PageData } from "../$types";
   import type { BookFullType } from "../../../app";
 
-  export let data: {
-    books: BookFullType[];
-    category_names: { name: string }[];
-  };
+  export let data: PageData;
 </script>
 
 <svelte:head>

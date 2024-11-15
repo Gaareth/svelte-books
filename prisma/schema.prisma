@@ -12,12 +12,24 @@ model Account {
   username      String @unique
   password_hash String
 
+  isAdmin  Boolean @default(false)
+  isPublic Boolean @default(false)
+
   books Book[]
 }
+
+// enum Visibility {
+//   PUBLIC
+//   PRIVATE
+//   UNLISTED
+// }
 
 model BookList {
   name  String @id
   books Book[]
+
+  // visibility Visibility @default(PRIVATE)
+  visibility String?
 }
 
 model BookSeries {

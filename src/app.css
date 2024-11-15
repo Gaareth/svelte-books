@@ -96,6 +96,20 @@
     @apply text-[0.8rem] text-[#FF0000] dark:text-red-500;
   }
 
+
+  .text-secondary {
+    @apply text-gray-500 dark:text-slate-400;
+  }
+
+
+  .text-warning {
+    @apply dark:text-yellow-300 text-orange-500;
+  }
+
+  .border-warning {
+    @apply dark:border-yellow-400 border-yellow-400;
+  }
+
   .input-error {
     border-color: red;
   }
@@ -150,6 +164,11 @@
 
   .btn-generic:disabled {
     @apply cursor-not-allowed bg-gray-50 text-gray-600 dark:bg-slate-700 dark:text-gray-500;
+  }
+
+
+  .generic-border {
+    @apply border rounded-md  dark:border-slate-600 dark:text-white;
   }
 
   .btn-generic-color-2 {

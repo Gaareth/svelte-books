@@ -10,10 +10,12 @@
 
   export let options: string[];
   export let defaultOption: number | undefined = undefined;
+  export let unToggleable: boolean = false;
 
-  export let selectedOption: string | undefined =
+  export let selectedOption: Option | undefined | null =
     defaultOption != null ? options[defaultOption] : undefined;
 
+  type Option = (typeof options)[number];
   const dispatch = createEventDispatcher();
 </script>
 
@@ -29,8 +31,12 @@
         selectedOption == option && btnSelectedClass
       )}
       on:click={() => {
-        selectedOption = option;
-        dispatch("select", option);
+        if (selectedOption == option && unToggleable) {
+          selectedOption = undefined;
+        } else {
+          selectedOption = option;
+          dispatch("select", option);
+        }
       }}
     >
       {option}

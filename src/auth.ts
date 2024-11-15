@@ -47,7 +47,8 @@ export async function checkBookAuth(
     username = params.username;
   }
 
-  const accountId = (await getAccountByUsername(username))?.id;
+  const account = (await getAccountByUsername(username));
+  const accountId = account?.id;
 
   if (accountId == null) {
     error(StatusCodes.NOT_FOUND);
@@ -57,7 +58,7 @@ export async function checkBookAuth(
     error(StatusCodes.UNAUTHORIZED);
   }
 
-  if (session.user?.name != params.username && !import.meta.env.DEV) {
+  if (session.user?.name != username && !account?.isPublic) {
     error(StatusCodes.FORBIDDEN);
   }
 
