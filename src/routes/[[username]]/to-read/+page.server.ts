@@ -1,17 +1,15 @@
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
+import { checkBookAuth } from "../../../auth";
 
-export async function load({ locals }: ServerLoadEvent) {
-  const session = await locals.auth();
-  
-  if (!session) {
-    error(401);
-  }
+export async function load({ locals, params }: ServerLoadEvent) {
+  const accountId = await checkBookAuth(locals, params);
 
   const data = {
     books: await prisma.book.findMany({
       where: {
         bookListName: "To read",
+        accountId,
       },
       include: {
         rating: true,

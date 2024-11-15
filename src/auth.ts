@@ -1,6 +1,6 @@
 import { prisma } from "$lib/server/prisma";
 import type { Session } from "@auth/sveltekit";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 
 export async function getAccountIdfromSession(session: Session | null) {
@@ -33,16 +33,26 @@ export async function checkBookAuth(
   locals: App.Locals,
   params: Partial<Record<string, string>>
 ) {
+  const session = await locals.auth();
+  let username;
+
   if (params.username == null) {
-    error(StatusCodes.BAD_REQUEST);
+    if (session?.user?.name != null) {
+      username = session.user.name;
+    } else {
+      // error(StatusCodes.UNAUTHORIZED);
+      redirect(302, "/login" ); //TODO: add callbackurl
+    }
+  } else {
+    username = params.username;
   }
-  const accountId = (await getAccountByUsername(params.username))?.id;
+
+  const accountId = (await getAccountByUsername(username))?.id;
 
   if (accountId == null) {
     error(StatusCodes.NOT_FOUND);
   }
 
-  const session = await locals.auth();
   if (!session) {
     error(StatusCodes.UNAUTHORIZED);
   }

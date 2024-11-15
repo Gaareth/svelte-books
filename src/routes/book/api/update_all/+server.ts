@@ -22,7 +22,7 @@ export async function GET({ request, locals }) {
         continue;
       }
 
-      console.log("sending: ." + JSON.stringify(userEventData));
+      // console.log("sending: ." + JSON.stringify(userEventData));
 
       emit(JSON.stringify(userEventData));
       await delay(500);
