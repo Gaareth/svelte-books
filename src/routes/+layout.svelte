@@ -5,6 +5,7 @@
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
+  export let data;
 </script>
 
 <svelte:head>
@@ -29,6 +30,9 @@
         {#if $page.data.session}
           <a class="nav-a" href="/to-read">To-Read</a>
           <a class="nav-a" href="/settings">Settings</a>
+          {#if data.isAdmin}
+            <a class="nav-a" href="/admin">Admin</a>
+          {/if}
         {/if}
         <a class="nav-a" href="/about">About</a>
       </nav>

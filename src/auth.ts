@@ -2,6 +2,7 @@ import { prisma } from "$lib/server/prisma";
 import type { Session } from "@auth/sveltekit";
 import { error, redirect } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
+import * as argon2 from "argon2";
 
 export async function getAccountIdfromSession(session: Session | null) {
   let accountId = "dev";
@@ -79,4 +80,15 @@ export async function checkBookAuth(
   } else {
     error(StatusCodes.FORBIDDEN);
   }
+}
+
+export async function createAccount(username: string, password: string) {
+  const password_hash = await argon2.hash(password);
+
+  return await prisma.account.createMany({
+    data: {
+      username: username,
+      password_hash,
+    },
+  });
 }

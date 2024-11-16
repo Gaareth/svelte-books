@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let value: unknown;
+  export let value: unknown | undefined = undefined;
   export let name: string;
   export let displayName: string = name;
   // export let type: string = "text"

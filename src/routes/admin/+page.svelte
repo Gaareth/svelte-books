@@ -1,0 +1,148 @@
+<script lang="ts">
+  import { enhance } from "$app/forms";
+  import type { PageData } from "./$types";
+  import InputText from "$lib/InputText.svelte";
+  import InputAny from "$lib/InputAny.svelte";
+  import InputAll from "$lib/InputAll.svelte";
+  import { onMount } from "svelte";
+  //@ts-ignore
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+  //@ts-ignore
+  import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
+  import toast from "svelte-french-toast";
+  export let data: PageData;
+
+  let formValues: PageData = deepClone(data);
+  let initialValues: PageData = deepClone(data);
+
+  $: formValues = deepClone(data);
+
+  $: registrationCodes = formValues.serverSettings.registrationCodes;
+  $: registrationPossible = formValues.serverSettings.registrationPossible;
+
+  function deepClone<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  async function copyToClipboard(code: string) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(code);
+        console.log("Text copied to clipboard:", code);
+        toast.success("Copy registration link to clipboard");
+      } catch (err) {
+        console.error("Failed to copy text:", err);
+      }
+    } else {
+      console.warn("Clipboard API not supported.");
+    }
+  }
+</script>
+
+<form method="POST" use:enhance>
+  <div class="flex flex-col gap-6">
+    <h1 class="text-3xl">Registration</h1>
+    <div
+      class="gap-2 flex justify-between border generic-border p-4 items-center"
+    >
+      <div>
+        <p>Registration open</p>
+        <p class="text-secondary text-base">
+          Registration possible without codes.
+        </p>
+      </div>
+
+      <input
+        type="checkbox"
+        name="registrationOpen"
+        id=""
+        checked={registrationPossible}
+        on:change={() => {
+          registrationPossible = !registrationPossible;
+        }}
+      />
+    </div>
+
+    <div>
+      <div class="flex justify-between">
+        <h2 class="text-2xl">
+          Registration codes ({registrationCodes.length})
+        </h2>
+        <button
+          class="btn-generic px-5 sm:px-2 text-base"
+          formaction="?/addRegistrationCode"
+          type="submit"
+        >
+          Add
+        </button>
+      </div>
+
+      {#if registrationCodes.length > 0}
+        <div class="flex flex-col gap-3 sm:gap-2 mt-3">
+          {#each registrationCodes as code}
+            <form action="?/deleteRegistrationCode" method="POST" use:enhance>
+              <div class="flex items-center justify-between">
+
+                <a href={`/register/${code.code}`} class="underline-hover" target="_blank">
+                  {code.code}
+                </a>
+
+                <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
+                  <span
+                    class="inline-flex flex-row divide-x overflow-hidden rounded-md bg-white
+                    dark:bg-slate-700"
+                  >
+                    <button
+                      class="group inline-block p-2 hover:bg-gray-50 focus:relative
+                      dark:hover:bg-slate-500"
+                      title="copy"
+                      type="button"
+                      on:click={async () => await copyToClipboard(code.code)}
+                    >
+                      <span
+                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
+                      >
+                        <IoMdCopy alt="copy icon" />
+                      </span>
+                    </button>
+
+                    <button
+                      class="group p-2 btn-delete !border-0"
+                      title="Delete code"
+                    >
+                      <span
+                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
+                      >
+                        <IoMdTrash alt="red trash can" />
+                      </span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </form>
+          {/each}
+        </div>
+      {:else}
+        <p class="text-secondary text-base">No codes added</p>
+      {/if}
+    </div>
+
+    <div class="flex gap-2 justify-end">
+      <button
+        type="button"
+        class="btn-generic flex-1 sm:flex-initial"
+        on:click={async () => {
+          formValues = deepClone(initialValues);
+        }}
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn-primary-black w-36 flex justify-center flex-1 sm:flex-initial"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</form>

@@ -16,7 +16,7 @@
 
   <BookListItem {book}>
     <button
-      class="group p-2 delete-button"
+      class="group p-2 btn-delete focus:relative !border-0"
       title="Remove from series"
       type="button"
       slot="delete"
@@ -44,13 +44,3 @@
   }}
 /> -->
 
-<style lang="postcss">
-  .delete-button {
-    @apply hover:bg-red-200 dark:text-red-200
-            dark:bg-red-500 dark:border-red-500 
-            dark:hover:bg-red-400 dark:hover:border-red-400
-            bg-red-100 text-red-600
-            
-            focus:relative;
-  }
-</style>

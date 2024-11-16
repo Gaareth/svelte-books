@@ -157,7 +157,7 @@
             <slot name="delete">
               {#if allow_deletion}
                 <button
-                  class="group p-2 delete-button !border-0"
+                  class="group p-2 btn-delete hidden sm:inline-block !border-0"
                   title="Delete book"
                   type="button"
                   on:click={() => {
@@ -209,12 +209,5 @@
     .book-item-grid {
       grid-template-rows: repeat(1, minmax(0, 1fr));
     }
-  }
-
-  .delete-button {
-    @apply hover:bg-red-200 focus:relative bg-red-100 text-red-600
-            dark:bg-red-500 dark:border-red-500 dark:hover:bg-red-400 dark:hover:border-red-400
-            dark:text-red-200
-            hidden sm:inline-block;
   }
 </style>

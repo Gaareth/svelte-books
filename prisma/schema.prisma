@@ -7,6 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model RegistrationCode {
+  id   Int    @id @default(autoincrement())
+  code String @unique
+
+  ServerSettings   ServerSettings? @relation(fields: [serverSettingsId], references: [id])
+  serverSettingsId Int?
+}
+
+model ServerSettings {
+  id Int @id @unique @default(1)
+
+  registrationPossible Boolean            @default(false)
+  registrationCodes    RegistrationCode[]
+}
+
 model Account {
   id            String @id @default(cuid())
   username      String @unique

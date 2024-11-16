@@ -39,6 +39,15 @@ async function createAccount() {
     data: {
       username: process.env.username,
       password_hash: hash,
+      isAdmin: true,
+    },
+  });
+}
+
+async function createServerSettings() {
+  return await prisma.serverSettings.create({
+    data: {
+      registrationPossible: false,
     },
   });
 }
@@ -78,6 +87,7 @@ async function createList() {
 async function main() {
   let account = await createAccount();
   // return;
+  await createServerSettings();
 
   await prisma.account.create({
     data: {
