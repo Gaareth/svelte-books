@@ -21,6 +21,7 @@ import {
 } from "./apidata";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
+import { parseFormArray, parseFormObject } from "../../schemas";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 
@@ -69,13 +70,47 @@ export const actions = {
     const accountId = await getAccountIdfromSession(session);
     const formData = await request.formData();
 
-    // for (const [key, value] of formData.entries()) {
-    //   const match = key.match(/^list\[(.+)\]$/); // Matches keys like "list[List 1]"
-    //   if (match) {
-    //     const listName = match[1];
-    //     listData[listName] = value === "on"; // Convert "on" to `true`, others to `false`
-    //   }
-    // }
+    const formDataObject = Object.fromEntries(formData);
+    console.log(formDataObject);
+
+    const listNameVisibility = parseFormArray(
+      formDataObject,
+      "listNameVisibility"
+    );
+
+    const isPublic = formData.get("isPublic");
+    // console.log(isPublic);
+
+    if (isPublic != null) {
+      await prisma.account.update({
+        where: {
+          id: accountId,
+        },
+        data: {
+          isPublic: isPublic == "true",
+        },
+      });
+    }
+
+    for (const list of listNameVisibility) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const name = list[0];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const visibility = list[1];
+
+      await prisma.bookList.update({
+        where: {
+          name,
+        },
+        data: {
+          visibility,
+        },
+      });
+    }
+
+    return { success: true };
   },
 };
 
@@ -111,7 +146,6 @@ export async function load({ locals }: ServerLoadEvent) {
       },
     },
   });
-  console.log("LOAAAD");
 
   const isPublic = (
     await prisma.account.findUnique({

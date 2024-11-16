@@ -4,6 +4,7 @@
   const errorMsgs = {
     401: "Looks like you are not allowed to access this content.",
     400: "You either manipulated the request (bad) or something is wrong with your client or our deployed javascript (also bad).",
+    403: "This resource is private.",
     500: "This looks like our fault. We are tremendously (yeah really) sorry. Please message me (look in the footer), for feedback.",
   };
 

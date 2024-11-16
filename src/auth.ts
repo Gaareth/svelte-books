@@ -31,9 +31,14 @@ export async function getAccountByUsername(username: string) {
 
 export async function checkBookAuth(
   locals: App.Locals,
-  params: Partial<Record<string, string>>
+  params: Partial<Record<string, string>>,
+  bookListName: string | undefined = undefined
 ) {
   const session = await locals.auth();
+  const sessionAccount =
+    session?.user?.name != null
+      ? await getAccountByUsername(session?.user?.name)
+      : undefined;
   let username;
 
   if (params.username == null) {
@@ -41,13 +46,13 @@ export async function checkBookAuth(
       username = session.user.name;
     } else {
       // error(StatusCodes.UNAUTHORIZED);
-      redirect(302, "/login" ); //TODO: add callbackurl
+      redirect(302, "/login"); //TODO: add callbackurl
     }
   } else {
     username = params.username;
   }
 
-  const account = (await getAccountByUsername(username));
+  const account = await getAccountByUsername(username);
   const accountId = account?.id;
 
   if (accountId == null) {
@@ -58,9 +63,20 @@ export async function checkBookAuth(
     error(StatusCodes.UNAUTHORIZED);
   }
 
-  if (session.user?.name != username && !account?.isPublic) {
+  const bookListPublic =
+    bookListName &&
+    (await prisma.bookList.findUnique({ where: { name: bookListName } }))
+      ?.visibility == "public";
+
+  if (
+    session.user?.name == username ||
+    bookListPublic ||
+    (account?.isPublic && bookListName == null) ||
+    sessionAccount?.isAdmin ||
+    import.meta.env.DEV
+  ) {
+    return accountId;
+  } else {
     error(StatusCodes.FORBIDDEN);
   }
-
-  return accountId;
 }

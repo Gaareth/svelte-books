@@ -5,19 +5,18 @@ import {
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import {
-  error,
-  fail,
-  redirect,
-  type ServerLoadEvent,
-} from "@sveltejs/kit";
+import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { z } from "zod";
 import { getBookApiData } from "../../../book/api/api.server";
 import { type queriedBookFull } from "$appTypes";
-import { optionalDatetimeSchema } from "../../../../schemas";
+import {
+  optionalDatetimeSchema,
+  parseFormArray,
+  parseFormObject,
+} from "../../../../schemas";
 import { checkBookAuth } from "../../../../auth";
-import type { Actions } from './$types';
+import type { Actions } from "./$types";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -59,7 +58,7 @@ export async function load(page: ServerLoadEvent) {
     error(404, { message: "Not found" });
   }
 
-  const books = (await loadBooks({ accountId }, undefined)).books;
+  const books = (await loadBooks({ accountId }, "Read")).books;
 
   return {
     book,
@@ -86,54 +85,6 @@ const saveSchema = z.object({
   dateStarted: optionalDatetimeSchema.nullish(),
   dateFinished: optionalDatetimeSchema.nullish(),
 });
-
-function parseFormArray(
-  formData: { [k: string]: FormDataEntryValue },
-  attribute: string
-) {
-  const values = [];
-  for (const [key, value] of Object.entries(formData)) {
-    if (key.includes(attribute) && key.includes("[") && key.includes("]")) {
-      values.push(value);
-    }
-  }
-
-  return values;
-}
-
-type NestedObject = { [key: string]: any };
-// date[time][hour] => {date: {time: {hour: value}}}
-function buildObject(keys: string[], value: any): NestedObject {
-  return keys
-    .reverse()
-    .reduce((acc: NestedObject, key: string, index: number) => {
-      if (index === 0) {
-        return { [key]: value }; // Add the value at the deepest level
-      }
-      return { [key]: acc }; // Build the nested structure for the other keys
-    }, {});
-}
-
-function parseFormObject(
-  formData: { [k: string]: FormDataEntryValue },
-  attribute: string
-) {
-  let object = {};
-
-  const regexObject = /([a-zA-Z]+)(\[[a-zA-Z]+\])+/;
-  const regexKeys = /\[([a-zA-Z]+)\]/g; // Matches any word inside square brackets
-
-  for (const [key, value] of Object.entries(formData)) {
-    const match = key.match(regexObject);
-
-    if (match && attribute == match[1]) {
-      const matches = [...key.matchAll(regexKeys)].map((m) => m[1]);
-      object = { ...object, ...buildObject(matches, value) };
-    }
-  }
-
-  return object;
-}
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
 async function updateBookSeries(

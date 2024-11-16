@@ -12,9 +12,18 @@
   import type { PageData } from "./$types.js";
   import { twMerge } from "tailwind-merge";
   import { invalidateAll } from "$app/navigation";
+  import toast from "svelte-french-toast";
 
   export let form;
   export let data: PageData;
+  // let originalData = data;
+  // $: dataChanged = originalData != data;
+  // $: {
+  //   console.log("same", originalData == data);
+  //   console.log(data);
+  //   console.log(originalData);
+    
+  // }
 
   let currentStatus: SSE_EVENT | undefined = undefined;
 
@@ -30,6 +39,14 @@
     console.log(data.lists);
     console.log(data.globalVisibility);
   }
+
+  $: {
+    console.log(form);
+
+    if (form?.success) {
+      toast.success("Successfully applied changes");
+    }
+  }
 </script>
 
 <h1 class="text-5xl my-4">Settings</h1>
@@ -37,7 +54,7 @@
 <section>
   <h2>Visibility</h2>
 
-  <form use:enhance method="POST" action="/settings?/editVisibility">
+  <form method="POST" action="?/editVisibility" use:enhance>
     <div
       class="gap-2 flex justify-between border generic-border p-4 items-center"
     >
@@ -65,7 +82,7 @@
             data.lists[i].visibility = option;
           }
         }}
-        defaultOption={0}
+        defaultOption={data.globalVisibility == "private" ? 0 : 1}
       />
       <input
         type="hidden"
@@ -109,8 +126,10 @@
         class="btn-generic"
         on:click={async () => {
           await invalidateAll();
-        }}>Cancel</button
+        }}
       >
+        Cancel
+      </button>
       <button type="submit" class="btn-primary-black w-36 flex justify-center">
         Save
       </button>
