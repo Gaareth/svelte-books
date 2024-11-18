@@ -1,7 +1,7 @@
 import { redirect, type ServerLoadEvent } from "@sveltejs/kit";
 
 export async function load(page: ServerLoadEvent) {
-  if (await page.locals.getSession()) {
+  if (await page.locals.auth()) {
     redirect(303, "/");
   }
 

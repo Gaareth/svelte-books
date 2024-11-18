@@ -33,6 +33,21 @@ function generateRegistrationCode() {
 }
 
 export const actions = {
+  save: async (event: RequestEvent) => {
+    const formData = await event.request.formData();
+    const registrationOpen = formData.get("registrationOpen") != null;
+
+    await prisma.serverSettings.update({
+      where: {
+        id: 1,
+      },
+      data: {
+        registrationPossible: registrationOpen,
+      },
+    });
+
+    return { success: true };
+  },
   addRegistrationCode: async (event: RequestEvent) => {
     await prisma.serverSettings.update({
       where: {
@@ -50,6 +65,7 @@ export const actions = {
 
   deleteRegistrationCode: async (event: RequestEvent) => {
     const formData = Object.fromEntries(await event.request.formData());
+
     const schema = z.object({
       code: z.string(),
     });

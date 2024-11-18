@@ -5,7 +5,7 @@ import {
 } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
 import { z } from "zod";
-import { createAccount } from "../../../auth.js";
+import { hashPassword } from "../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const id = params.id;
@@ -16,11 +16,12 @@ export async function load({ locals, params }: ServerLoadEvent) {
   });
 
   const registrationCodes = serverSettings?.registrationCodes;
+  const validCode = registrationCodes?.find((c) => c.code == id);
 
   return {
-    showForm:
-      serverSettings?.registrationPossible ||
-      registrationCodes?.find((c) => c.code == id),
+    showForm: serverSettings?.registrationPossible || validCode != null,
+    validCode: validCode?.code,
+    invalidCode: validCode == null ? id : undefined,
   };
 }
 
@@ -45,8 +46,6 @@ export const actions = {
       const registrationCodes = serverSettings?.registrationCodes;
 
       const valid = registrationCodes?.find((c) => c.code == code);
-      console.log(valid);
-      console.log(registrationCodes);
 
       if (valid != null) {
         redirect(302, "/register/" + code);
@@ -63,25 +62,48 @@ export const actions = {
     const schema = z.object({
       username: z.string().min(1).max(64),
       password: z.string().min(8).max(256),
+      code: z.string().min(1),
     });
 
     const result = schema.safeParse(formData);
 
     if (result.success) {
-      const { username, password } = result.data;
+      const { username, password, code } = result.data;
+
+      const serverSettings = await prisma.serverSettings.findFirst({
+        include: {
+          registrationCodes: true,
+        },
+      });
+
+      if (!serverSettings?.registrationPossible) {
+        const registrationCodes = serverSettings?.registrationCodes;
+        const validCode = registrationCodes?.find((c) => c.code == code);
+        if (!validCode) {
+          return { success: false, message: "Invalid registration code" };
+        }
+      }
 
       const accountExists = await prisma.account.findFirst({
         where: { username },
       });
-      // todo: only show warning with are you sure or something.
+
       if (accountExists) {
         return {
           success: false,
-          message: "Username have to be unique.\nPlease choose another name",
+          message: "Usernames have to be unique.\nPlease choose another name",
         };
       }
 
-      await createAccount(username, password);
+      const { hash, salt } = await hashPassword(password);
+
+      await prisma.account.create({
+        data: {
+          username: username,
+          password_hash: hash,
+          password_salt: salt,
+        },
+      });
 
       redirect(302, "/login");
       // return { success: true };

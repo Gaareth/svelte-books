@@ -1,5 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { BookList, BookSeries, Prisma, PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
+import * as auth from "../src/auth";
+import { seedInitial } from "./seed-initial";
 
 const prisma = new PrismaClient();
 
@@ -33,51 +35,11 @@ const books = [
   },
 ];
 
-async function createAccount() {
-  const hash = await argon2.hash(process.env.password);
-  return await prisma.account.create({
-    data: {
-      username: process.env.username,
-      password_hash: hash,
-      isAdmin: true,
-    },
-  });
-}
-
-async function createServerSettings() {
-  return await prisma.serverSettings.create({
-    data: {
-      registrationPossible: false,
-    },
-  });
-}
-
 async function createSeries() {
-  const lists = [];
+  const lists: BookSeries[] = [];
 
-  const list1 = await prisma.bookSeries.create();
-
-  const list2 = await prisma.bookSeries.create();
-  lists.push(list1);
-  lists.push(list2);
-
-  return lists;
-}
-
-async function createList() {
-  const lists = [];
-
-  const list1 = await prisma.bookList.create({
-    data: {
-      name: "Read",
-    },
-  });
-
-  const list2 = await prisma.bookList.create({
-    data: {
-      name: "To read",
-    },
-  });
+  const list1 = await prisma.bookSeries.create({});
+  const list2 = await prisma.bookSeries.create({});
   lists.push(list1);
   lists.push(list2);
 
@@ -85,19 +47,8 @@ async function createList() {
 }
 
 async function main() {
-  let account = await createAccount();
-  // return;
-  await createServerSettings();
-
-  await prisma.account.create({
-    data: {
-      username: "bob",
-      password_hash: await argon2.hash("bob"),
-    },
-  });
-
+  const { account, lists } = await seedInitial();
   const series = await createSeries();
-  const lists = await createList();
   // return;
 
   for (const b of books) {

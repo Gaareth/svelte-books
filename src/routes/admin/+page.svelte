@@ -39,14 +39,27 @@
   }
 </script>
 
-<form method="POST" use:enhance>
+<form
+  method="POST"
+  use:enhance={() => {
+    return async ({ update, result }) => {
+      // @ts-ignore
+      if (result.data.success) {
+        toast.success("Successfully update data");
+      }
+
+      update({ reset: false });
+    };
+  }}
+  action="?/save"
+>
   <div class="flex flex-col gap-6">
     <h1 class="text-3xl">Registration</h1>
     <div
       class="gap-2 flex justify-between border generic-border p-4 items-center"
     >
       <div>
-        <p>Registration open</p>
+        <label for="registrationOpen">Registration open</label>
         <p class="text-secondary text-base">
           Registration possible without codes.
         </p>
@@ -55,9 +68,11 @@
       <input
         type="checkbox"
         name="registrationOpen"
-        id=""
+        id="registrationOpen"
         checked={registrationPossible}
         on:change={() => {
+          console.log("AAA");
+
           registrationPossible = !registrationPossible;
         }}
       />
@@ -81,9 +96,13 @@
         <div class="flex flex-col gap-3 sm:gap-2 mt-3">
           {#each registrationCodes as code}
             <form action="?/deleteRegistrationCode" method="POST" use:enhance>
+              <input type="hidden" name="code" value={code.code} />
               <div class="flex items-center justify-between">
-
-                <a href={`/register/${code.code}`} class="underline-hover" target="_blank">
+                <a
+                  href={`/register/${code.code}`}
+                  class="underline-hover"
+                  target="_blank"
+                >
                   {code.code}
                 </a>
 
@@ -109,6 +128,7 @@
                     <button
                       class="group p-2 btn-delete !border-0"
                       title="Delete code"
+                      type="submit"
                     >
                       <span
                         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"

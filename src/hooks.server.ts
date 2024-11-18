@@ -1,12 +1,10 @@
-/* eslint-disable */
-// @ts-nocheck
-// https://github.com/nextauthjs/next-auth/issues/6174
-
 import { SvelteKitAuth } from "@auth/sveltekit";
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { prisma } from "$lib/server/prisma";
 
 import * as argon2 from "argon2";
+import { verifyPassword } from "./auth";
+import { log } from "console";
 
 export const handle = SvelteKitAuth({
   pages: {
@@ -20,7 +18,14 @@ export const handle = SvelteKitAuth({
         username: { label: "Username", type: "text", placeholder: "username" },
         password: { label: "Password", type: "password" },
       },
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       async authorize(credentials, req) {
+        if (!credentials.username || !credentials.password) {
+          return null;
+        }
+
         const account = await prisma.account.findFirst({
           where: {
             username: credentials.username,
@@ -37,10 +42,14 @@ export const handle = SvelteKitAuth({
           return null;
         }
 
-        const matching = await argon2.verify(
-          account.password_hash,
-          credentials.password
+        console.log(credentials.password);
+        
+        const matching = await verifyPassword(
+          account,
+          credentials.password.toString()
         );
+        console.log(matching);
+        
 
         if (matching) {
           return {

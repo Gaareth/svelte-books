@@ -15,11 +15,11 @@
 <header aria-label="Site Header" class="shadow-sm bg-white dark:bg-slate-800">
   <div class="mx-auto max-w-screen-xl p-4">
     <div
-      class="flex items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col"
+      class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col"
     >
       <div class="flex lg:w-0 lg:flex-1" />
 
-      <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex">
+      <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex flex-wrap">
         <a
           class="text-gray-500 dark:text-gray-400
         hover:text-[#F2440D] dark:hover:text-[#f67c56]"

@@ -3,6 +3,8 @@ import type { Session } from "@auth/sveltekit";
 import { error, redirect } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 import * as argon2 from "argon2";
+import type { Account } from "@prisma/client";
+const { randomBytes } = await import("node:crypto");
 
 export async function getAccountIdfromSession(session: Session | null) {
   let accountId = "dev";
@@ -82,13 +84,19 @@ export async function checkBookAuth(
   }
 }
 
-export async function createAccount(username: string, password: string) {
-  const password_hash = await argon2.hash(password);
+export async function hashPassword(password: string) {
+  const salt = randomBytes(64).toString("hex");
+  const hash = await argon2.hash(password + salt);
 
-  return await prisma.account.createMany({
-    data: {
-      username: username,
-      password_hash,
-    },
-  });
+  return {
+    salt,
+    hash,
+  };
+}
+
+export async function verifyPassword(account: Account, password: string) {
+  return await argon2.verify(
+    account.password_hash,
+    password + account.password_salt
+  );
 }
