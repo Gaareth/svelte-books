@@ -17,7 +17,7 @@ export async function load({ locals }: ServerLoadEvent) {
   }
 
   const account = await getAccountByUsername(session?.user?.name);
-  if (!account?.isAdmin) {
+  if (!account?.isAdmin && !import.meta.env.DEV) {
     error(StatusCodes.FORBIDDEN);
   }
 
