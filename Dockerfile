@@ -19,3 +19,4 @@ COPY . .
 EXPOSE 3000
 CMD ["node", "-r", "dotenv/config", "build"]
 
+# exec time: 2m 37s including deploy

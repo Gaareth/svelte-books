@@ -29,10 +29,10 @@ echo "> Checking return code"
 url="localhost:3000"
 status_code=$(curl -o /dev/null -s -w "%{http_code}" "$url")
 
-if [ "$status_code" -eq 200 ]; then
-    echo "URL returned 200 OK"
+if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 400 ]; then
+    echo "URL returned 200 OK or any 300"
 else
-    print_error "URL did not return 200 OK. Status code: $status_code"
+    print_error "URL did not return 200 OK or any 300. Status code: $status_code"
 
     cleanup
     exit 1

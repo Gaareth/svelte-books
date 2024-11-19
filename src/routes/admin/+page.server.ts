@@ -49,7 +49,7 @@ export const actions = {
     return { success: true };
   },
   addRegistrationCode: async (event: RequestEvent) => {
-    await prisma.serverSettings.update({
+    return await prisma.serverSettings.update({
       where: {
         id: 1,
       },

@@ -71,8 +71,6 @@
         id="registrationOpen"
         checked={registrationPossible}
         on:change={() => {
-          console.log("AAA");
-
           registrationPossible = !registrationPossible;
         }}
       />

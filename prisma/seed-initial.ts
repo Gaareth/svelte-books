@@ -1,11 +1,11 @@
-import { BookList, PrismaClient } from "@prisma/client";
+import { PrismaClient, type BookList } from "@prisma/client";
 import * as auth from "../src/auth";
 import { DEFAULT_LISTS } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 
 const prisma = new PrismaClient();
 
-async function createAccount(admin = false) {
+export async function createAccount(admin = false) {
   const username = process.env.username;
   const password = process.env.password;
 
@@ -29,7 +29,7 @@ async function createAccount(admin = false) {
   });
 }
 
-async function createServerSettings() {
+export async function createServerSettings() {
   return await prisma.serverSettings.create({
     data: {
       registrationPossible: false,
@@ -37,7 +37,7 @@ async function createServerSettings() {
   });
 }
 
-async function createLists() {
+export async function createLists() {
   const lists: BookList[] = [];
 
   for (const name of DEFAULT_LISTS) {

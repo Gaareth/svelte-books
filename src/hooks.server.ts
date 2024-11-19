@@ -6,6 +6,25 @@ import * as argon2 from "argon2";
 import { verifyPassword } from "./auth";
 import { log } from "console";
 
+import { building } from "$app/environment";
+
+import * as seed from "../prisma/seed-initial";
+
+if (!building) {
+  try {
+    await seed.createLists();
+    console.log("created lists tables");
+  } catch (error) {
+    // # ignore
+  }
+  try {
+    await seed.createServerSettings();
+    console.log("created server settings");
+  } catch (e) {
+    // ignore
+  }
+}
+
 export const handle = SvelteKitAuth({
   pages: {
     signIn: "/login",
@@ -43,13 +62,12 @@ export const handle = SvelteKitAuth({
         }
 
         console.log(credentials.password);
-        
+
         const matching = await verifyPassword(
           account,
           credentials.password.toString()
         );
         console.log(matching);
-        
 
         if (matching) {
           return {
