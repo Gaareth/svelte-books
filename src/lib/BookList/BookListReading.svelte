@@ -8,7 +8,7 @@
   import type { BookFullType, BookListItemType } from "$appTypes";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import type { Book } from "@prisma/client";
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { flip } from "svelte/animate";
   import type { ItemDeleteEvent } from "./BookListItem.svelte";
   import BookListItem from "./BookListItem.svelte";
@@ -29,19 +29,21 @@
     "Hey, your library’s looking lonely. Add a book!",
     "Come on, start reading!",
   ];
-  const randomSentence =
-    sentences[Math.floor(Math.random() * sentences.length)];
+  let randomSentence = "";
+  onMount(() => {
+    randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+  });
 </script>
 
-{#if books.length < 1 && $page.data.session}
-  <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
-    <h2 class="flex items-end text-2xl -mb-1">
-      Currently Reading ({books.length})
-    </h2>
-  </div>
+<div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
+  <h2 class="flex items-end text-2xl -mb-1">
+    Currently Reading ({books.length})
+  </h2>
+</div>
 
+{#if books.length < 1 && $page.data.session}
   <p class="text-center text-4xl rotate-90">:(</p>
-  <p class="text-center text-gray-600 dark:text-slate-300">
+  <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
     {randomSentence}
   </p>
 {/if}
