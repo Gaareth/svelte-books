@@ -11,7 +11,7 @@
 }
 
 .autocomplete,
-.autocomplete>.input-container {
+.autocomplete > .input-container {
   @apply dark:bg-slate-700 dark:border-slate-600 rounded-md !important;
 }
 
@@ -77,7 +77,7 @@
 
 @layer utilities {
   .icon-wrapper {
-    @apply flex items-center gap-1 sm:gap-2
+    @apply flex items-center gap-1 sm:gap-2;
   }
 
   .animate-drop-click {
@@ -96,11 +96,9 @@
     @apply text-[1rem] text-[#FF0000] dark:text-red-500;
   }
 
-
   .text-secondary {
     @apply text-gray-500 dark:text-slate-400;
   }
-
 
   .text-warning {
     @apply dark:text-yellow-300 text-orange-500;
@@ -125,6 +123,17 @@
   .default-border {
     @apply border rounded-md dark:border-slate-600 border-gray-200;
   }
+
+  .center-screen {
+    position: absolute;
+    top: 50%;
+    height: 400px;
+    margin-top: -200px; /* Half of the height */
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw; /* Half of the width */
+    border-radius: 5px;
+  }
 }
 
 @layer components {
@@ -135,8 +144,6 @@
   .btn-group {
     @apply inline-flex -space-x-px overflow-hidden rounded-md border shadow-sm;
   }
-
-
 
   .input {
     @apply border-gray-200 dark:border-slate-800 rounded-md sm:text-sm w-full;

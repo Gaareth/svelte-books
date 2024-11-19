@@ -57,42 +57,62 @@
     </form>
   </div>
 {:else}
-  <div class="max-w-lg mx-auto my-4">
-    <h1 class="text-5xl text-center">Sign-up</h1>
-    <div class="flex gap-3 flex-col rounded-md mt-7 p-4">
-      {#if form?.message}
-        <p class="text-error text-center">{form?.message}</p>
-      {/if}
+  <div class="center-screen p-3 sm:p-6">
+    <div>
+      <h1 class="text-5xl text-center mb-10">Sign-up</h1>
+      <div class="relative flex flex-1 flex-col items-center justify-center">
+        <div class="mb-4">
+          {#if form?.message}
+            <p class="text-error text-center">{form?.message}</p>
+          {/if}
 
-      {#if form?.errors?.code}
-        <p class="text-error text-center">
-          Code: {form?.errors.code[0]}. You should only see this error if
-          something went pretty wrong.
-        </p>
-      {/if}
+          {#if form?.errors?.code}
+            <p class="text-error text-center">
+              Code: {form?.errors.code[0]}. You should only see this error if
+              something went pretty wrong.
+            </p>
+          {/if}
+        </div>
 
-      <form
-        method="POST"
-        action="?/register"
-        use:enhance={() => {
-          return async ({ update }) => {
-            update({ reset: false });
-          };
-        }}
-      >
-        <InputText
-          name="username"
-          error={(form?.errors?.username ?? [undefined])[0]}
-        />
-        <InputAll
-          name="password"
-          autocomplete="new-password"
-          type="password"
-          error={(form?.errors?.password ?? [undefined])[0]}
-        />
-        <button class="btn-submit w-full mt-4" type="submit"> register </button>
-        <input type="hidden" name="code" value="1" />
-      </form>
+        <form
+          method="POST"
+          action="?/register"
+          use:enhance={() => {
+            return async ({ update }) => {
+              update({ reset: false });
+            };
+          }}
+          class="w-full max-w-sm"
+        >
+          <div>
+            <InputText
+              name="username"
+              error={(form?.errors?.username ?? [undefined])[0]}
+            />
+          </div>
+
+          <div class="mt-4">
+            <InputAll
+              name="password"
+              autocomplete="new-password"
+              type="password"
+              error={(form?.errors?.password ?? [undefined])[0]}
+            />
+          </div>
+
+          <button class="btn-submit w-full mt-8" type="submit">
+            register
+          </button>
+          <input type="hidden" name="code" value={data.validCode} />
+          <p class="text-lg text-secondary mt-4">
+            Already have an account? <a
+              href="/login/"
+              class="dark:text-blue-400 text-blue-500 underline text-lg"
+              >Login here</a
+            >
+          </p>
+        </form>
+      </div>
     </div>
   </div>
 {/if}

@@ -10,10 +10,10 @@
   <title>Login</title>
 </svelte:head>
 
-<div class="relative ">
+<div class="center-screen p-3 sm:p-6">
   <div>
     <h1 class="text-5xl text-center mb-10">Login</h1>
-    <div class="relative flex flex-1 flex-col items-center justify-centerpt-12">
+    <div class="relative flex flex-1 flex-col items-center justify-center">
       <form
         method="post"
         action="/auth/callback/credentials"
@@ -22,12 +22,12 @@
         <p
           class="{error
             ? 'block'
-            : 'hidden'} text-error text-center font-bold text-xl my-3"
+            : 'hidden'} text-error text-center font-bold text-xl my-4"
         >
           Username or password are not correct
         </p>
         <input name="csrfToken" type="hidden" value={csrfToken} />
-        <div class="mb-6">
+        <div>
           <label for="username">Username</label>
           <input
             type="text"
@@ -37,7 +37,7 @@
             autocomplete="username"
           />
         </div>
-        <div class="mb-6">
+        <div class="mt-4">
           <label for="password">Password</label>
           <input
             autocomplete="current-password"
@@ -49,7 +49,7 @@
         </div>
 
         <button
-          class="w-full px-4 py-2 border border-blue-700 bg-blue-700 rounded-md
+          class="mt-8 w-full px-4 py-2 border border-blue-700 bg-blue-700 rounded-md
       font-bold uppercase text-white
       hover:bg-transparent hover:text-black
       dark:hover:bg-blue-600 dark:hover:text-white
@@ -58,6 +58,9 @@
         >
           login
         </button>
+        <p class="text-lg text-secondary mt-4">
+          Don't have an account yet? <a href="/register/" class="dark:text-blue-400 text-blue-500 underline text-lg">Sign up here</a>
+        </p>
       </form>
     </div>
   </div>
