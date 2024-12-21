@@ -308,7 +308,7 @@
                   id="words-per-page"
                   name="words-per-page"
                   type="number"
-                  class="rounded-md dark:bg-slate-600 dark:border-slate-500"
+                  class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full"
                   bind:value={wordsPerPage}
                 />
               </div>
