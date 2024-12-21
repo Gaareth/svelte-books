@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import { fade, scale } from "svelte/transition";
   import BookSearch from "../BookSearch.svelte";
@@ -14,6 +14,7 @@
   import BookListItem from "./BookListItem.svelte";
   import { enhance } from "$app/forms";
   import { page } from "$app/stores";
+  import toast from "svelte-french-toast";
 
   export let books: BookListItemType[];
 
@@ -50,7 +51,20 @@
 
 <div class="dark:bg-slate-800 bg-white">
   {#each books as book (book.id)}
-    <form action={`book/${book.name}?/save`} method="POST" use:enhance>
+    <form
+      action={`book/${book.name}?/save`}
+      method="POST"
+      use:enhance={() => {
+        return async ({ result, update }) => {
+          if (result.type === "redirect") {
+            invalidateAll();
+            toast.success(`Successfully added book to read`);
+          } else {
+            toast.error("Failed updating book :(");
+          }
+        };
+      }}
+    >
       <input type="hidden" name="id" value={book.id} />
 
       <input type="hidden" name="listName" value="Read" />
