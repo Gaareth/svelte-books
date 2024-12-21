@@ -42,6 +42,13 @@ export const handle = SvelteKitAuth({
       //@ts-ignore
       async authorize(credentials, req) {
         if (!credentials.username || !credentials.password) {
+          if (import.meta.env.DEV) {
+            return {
+              id: 0,
+              name: "DEV",
+            };
+          }
+
           return null;
         }
 
