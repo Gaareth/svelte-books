@@ -103,6 +103,8 @@
     right: 0;
     /* bottom: 0; */
     /* margin: auto; */
+
+    backdrop-filter: blur(2px);
   }
 
   .header-elnath {

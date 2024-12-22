@@ -141,7 +141,9 @@
   let showModalAuthors = false;
 </script>
 
-<div class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden">
+<div
+  class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden"
+>
   <div class="btn-group dark:border-slate-700">
     <button
       class={twMerge(
@@ -176,10 +178,7 @@
       <div class="-mb-1">{(pagecount_accuracy * 100).toFixed(2)}% Accuracy</div>
       <div>
         {books_without_pagecount.length} books without pagecount. See
-        <button
-          class="!text-base link-all"
-          on:click={() => (showModal = true)}
-        >
+        <button class="!text-base link-all" on:click={() => (showModal = true)}>
           all
         </button>
       </div>
@@ -187,10 +186,7 @@
       <div class="-mb-1">{(wordcount_accuracy * 100).toFixed(2)}% Accuracy</div>
       <div>
         {books_without_words.length} books without words per page info. See
-        <button
-          class="!text-base link-all"
-          on:click={() => (showModal = true)}
-        >
+        <button class="!text-base link-all" on:click={() => (showModal = true)}>
           all
         </button>
       </div>
@@ -221,9 +217,13 @@
 
 <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 stats-wrapper">
   {#if selected_option == "books"}
-    <Stats name="total books read" value={books.length} />
+    <Stats
+      name="total books read"
+      value={books.length}
+      class="!bg-transparent backdrop-blur"
+    />
   {:else if selected_option == "pages"}
-    <Stats name="total pages read">
+    <Stats name="total pages read" class="!bg-transparent backdrop-blur">
       <div slot="value" class="flex gap-1 items-center">
         <p class="text-4xl font-bold self-center">
           {num_pages.toLocaleString("en-US")}
@@ -231,7 +231,7 @@
       </div>
     </Stats>
   {:else}
-    <Stats name="total words read">
+    <Stats name="total words read" class="!bg-transparent backdrop-blur">
       <div slot="value" class="flex flex-wrap gap-1 items-center">
         <p class="text-3xl font-bold self-center break-all">
           {num_words.toLocaleString("en-US")}
@@ -245,18 +245,21 @@
       name="books read this month"
       value={books_this_month.length}
       last_value={books_last_month.length}
+      class="!bg-transparent backdrop-blur"
     />
   {:else if selected_option == "pages"}
     <Stats
       name="pages read this month"
       value={pages_this_month}
       last_value={pages_last_month}
+      class="!bg-transparent backdrop-blur"
     />
   {:else}
     <Stats
       name="words read this month"
       value={words_this_month}
       last_value={words_last_month}
+      class="!bg-transparent backdrop-blur"
     />
   {/if}
 
@@ -266,18 +269,21 @@
         name="books read this year"
         value={books_this_year.length}
         last_value={books_last_year.length}
+        class="!bg-transparent backdrop-blur"
       />
     {:else if selected_option == "pages"}
       <Stats
         name="pages read this year"
         value={pages_this_year}
         last_value={pages_last_year}
+        class="!bg-transparent backdrop-blur"
       />
     {:else}
       <Stats
         name="words read this year"
         value={words_this_year}
         last_value={words_last_year}
+        class="!bg-transparent backdrop-blur"
       />
     {/if}
   {/if}
@@ -287,6 +293,7 @@
   {#if books.length > 0}
     <Stats
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
+      class="!bg-transparent backdrop-blur"
     >
       <div class="flex justify-between" slot="name">
         <p class="text-gray-500 dark:text-gray-400 text-base">
@@ -307,6 +314,7 @@
         " (" +
         most_read_categories[0][1] +
         ")"}
+      class="!bg-transparent backdrop-blur"
     >
       <div class="flex justify-between" slot="name">
         <p class="text-gray-500 dark:text-gray-400 text-base">
