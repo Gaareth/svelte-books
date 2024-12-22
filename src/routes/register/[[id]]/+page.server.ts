@@ -76,9 +76,10 @@ export const actions = {
         },
       });
 
+      const registrationCodes = serverSettings?.registrationCodes;
+      const validCode = registrationCodes?.find((c) => c.code == code);
+
       if (!serverSettings?.registrationPossible) {
-        const registrationCodes = serverSettings?.registrationCodes;
-        const validCode = registrationCodes?.find((c) => c.code == code);
         if (!validCode) {
           return { success: false, message: "Invalid registration code" };
         }
@@ -104,6 +105,18 @@ export const actions = {
           password_salt: salt,
         },
       });
+
+      if (validCode) {
+        await prisma.registrationCode.update({
+          where: {
+            code,
+          },
+          data: {
+            timesUsed: validCode?.timesUsed + 1,
+          },
+        });
+      }
+      //TODO: add logic to delete if maxUsed have been reached
 
       redirect(302, "/login");
       // return { success: true };

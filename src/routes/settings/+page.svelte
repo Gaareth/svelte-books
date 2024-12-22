@@ -22,7 +22,7 @@
   //   console.log("same", originalData == data);
   //   console.log(data);
   //   console.log(originalData);
-    
+
   // }
 
   let currentStatus: SSE_EVENT | undefined = undefined;
@@ -56,14 +56,14 @@
 
   <form method="POST" action="?/editVisibility" use:enhance>
     <div
-      class="gap-2 flex justify-between border generic-border p-4 items-center"
+      class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center"
     >
       <div>
         <p>Global visibilty</p>
         <p class="text-secondary text-base">
           Applies to all lists as a fallback value.
           {#if !allAsGlobal}
-            <span class="text-warning text-base"
+            <span class="text-warning text-base hidden sm:inline"
               >Warning: Atleast one list is different.</span
             >
           {/if}
@@ -91,12 +91,19 @@
       />
     </div>
 
-    <h3 class="text-2xl font-medium mt-4 mb-2">Lists</h3>
+    <div class="flex items-center justify-between mt-4 mb-2">
+      <h3 class="text-2xl font-medium">Lists</h3>
+      {#if !allAsGlobal}
+        <span class="text-warning text-base inline sm:hidden"
+          >Warning: Atleast one list is different.</span
+        >
+      {/if}
+    </div>
     <div class="flex flex-col gap-2">
       {#each data.lists as list, i}
         <div
           class={twMerge(
-            "gap-2 flex justify-between border generic-border p-4 items-center",
+            "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",
             data.lists[i].visibility != data.globalVisibility &&
               data.lists[i].visibility &&
               "border-warning"

@@ -8,8 +8,10 @@ datasource db {
 }
 
 model RegistrationCode {
-  id   Int    @id @default(autoincrement())
-  code String @unique
+  id        Int    @id @default(autoincrement())
+  code      String @unique
+  timesUsed Int    @default(0)
+  // maxUses   Int    // null is infinite
 
   ServerSettings   ServerSettings? @relation(fields: [serverSettingsId], references: [id])
   serverSettingsId Int?

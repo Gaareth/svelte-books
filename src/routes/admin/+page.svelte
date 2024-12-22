@@ -10,6 +10,7 @@
   //@ts-ignore
   import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
   import toast from "svelte-french-toast";
+  import EyePlus from "$lib/icons/eye-plus.svelte";
   export let data: PageData;
 
   let formValues: PageData = deepClone(data);
@@ -72,6 +73,7 @@
         on:change={() => {
           registrationPossible = !registrationPossible;
         }}
+        class="rounded"
       />
     </div>
 
@@ -94,7 +96,7 @@
           {#each registrationCodes as code}
             <form action="?/deleteRegistrationCode" method="POST" use:enhance>
               <input type="hidden" name="code" value={code.code} />
-              <div class="flex items-center justify-between">
+              <div class="flex gap-2 items-center justify-between">
                 <a
                   href={`/register/${code.code}`}
                   class="underline-hover"
@@ -102,6 +104,11 @@
                 >
                   {code.code}
                 </a>
+
+                <p class="ml-5 text-secondary text-base flex items-center gap-1" title="times used">
+                  {code.timesUsed} 
+                  <span class="block w-4"><EyePlus /></span>
+                </p>
 
                 <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
                   <span
