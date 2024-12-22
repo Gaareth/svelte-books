@@ -141,8 +141,8 @@
   let showModalAuthors = false;
 </script>
 
-<div class="flex gap-5 items-center">
-  <div class="btn-group mb-1 dark:border-slate-700">
+<div class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden">
+  <div class="btn-group dark:border-slate-700">
     <button
       class={twMerge(
         "btn-group-btn flex items-center gap-1",
@@ -177,7 +177,7 @@
       <div>
         {books_without_pagecount.length} books without pagecount. See
         <button
-          class="!text-base hover:underline"
+          class="!text-base link-all"
           on:click={() => (showModal = true)}
         >
           all
@@ -188,7 +188,7 @@
       <div>
         {books_without_words.length} books without words per page info. See
         <button
-          class="!text-base hover:underline"
+          class="!text-base link-all"
           on:click={() => (showModal = true)}
         >
           all
@@ -283,7 +283,7 @@
   {/if}
 </div>
 
-<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-1 sm:gap-2">
+<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">
   {#if books.length > 0}
     <Stats
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
@@ -354,5 +354,9 @@
 
   .btn-group-selected {
     @apply dark:bg-slate-700 bg-gray-50;
+  }
+
+  .link-all {
+    @apply text-slate-600 dark:text-slate-300 hover:underline;
   }
 </style>
