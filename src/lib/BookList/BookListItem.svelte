@@ -102,7 +102,7 @@
     </div>
 
     <div class="flex items-center col-span-full sm:col-span-5">
-      <div class="flex justify-end ml-5 sm:ml-0 flex-1">
+      <div class="flex justify-end flex-1">
         <p class="flex items-center gap-1">
           {#if book.dateFinished}
             {formatShort(book.dateFinished)}
