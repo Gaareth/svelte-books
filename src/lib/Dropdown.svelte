@@ -58,6 +58,7 @@
 
   const toggleOpen = () => {
     // trigger_ref.focus();
+    console.log("open");
 
     open = !open;
     if (open) {
@@ -66,6 +67,9 @@
   };
 
   const click_outside = () => {
+    console.log("clicked outside");
+    // open = false;
+
     if (!showModal) {
       open = false;
     }
@@ -119,8 +123,25 @@
   </div>
 </div>
 
-<Modal bind:showModal showDividers={false} divClassName="!p-0">
-  <slot name="dropdown" />
+<Modal
+  bind:showModal
+  showDividers={false}
+  divClassName="!p-0"
+  on:closed={() => (open = false)}
+>
+  <div
+    on:keydown
+    role="button"
+    tabindex="-1"
+    on:click={(e) => {
+      e.preventDefault();
+      if (closeOnClick) {
+        open = false;
+      }
+    }}
+  >
+    <slot name="dropdown" />
+  </div>
 </Modal>
 
 <style>

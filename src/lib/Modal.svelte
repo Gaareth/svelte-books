@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   //@ts-ignore
   import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
   import { twMerge } from "tailwind-merge";
@@ -11,8 +13,15 @@
 
   let dialog: HTMLDialogElement;
 
+  const dispatch = createEventDispatcher();
+
+
   $: if (dialog && showModal) dialog.showModal();
-  $: if (!showModal && !!dialog) dialog.close();
+  $: if (!showModal && !!dialog) {
+    dialog.close();
+    dispatch("closed");
+  };
+
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
