@@ -4,6 +4,7 @@ import { checkBookAuth } from "../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const accountId = await checkBookAuth(locals, params, "To read");
+  const username = params.username;
 
   const data = {
     books: await prisma.book.findMany({
@@ -25,5 +26,5 @@ export async function load({ locals, params }: ServerLoadEvent) {
     }),
   };
 
-  return data;
+  return {...data, username};
 }

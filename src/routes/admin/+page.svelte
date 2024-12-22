@@ -161,5 +161,21 @@
         Save
       </button>
     </div>
+
+    <section>
+      <h2 class="text-3xl">Users</h2>
+      <ul>
+        {#each data.users as user}
+          <li>
+            <span class="text-lg pe-5">{user.username}</span>
+            <div class="inline">
+              Lists:
+              <a href={`/${user.username}`} class="text-base hover:underline">read,</a>
+              <a href={`/${user.username}/to-read`} class="text-base hover:underline">to-read</a>
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </section>
   </div>
 </form>

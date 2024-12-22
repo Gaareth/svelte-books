@@ -27,27 +27,26 @@
     random != 0 ? "header-elnath" : "header-cloister"
   )}
 >
-  My Book List
+  {#if $page.data.session?.user?.name == data.username || data.username == null}
+    my
+  {:else}
+    {data.username}'s
+  {/if}
+  Book List
 </h1>
 
 {#if $page.data.session}
-  <Statistics
-    books={data.books}
-  />
+  <Statistics books={data.books} />
 {/if}
 
 <div class="my-5" />
 
 <div class="mb-10">
-  <BookListReading
-    books={data.currentlyReading}
-  />
+  <BookListReading books={data.currentlyReading} />
 </div>
 
 <BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
-<BookList
-  books={data.books}
-/>
+<BookList books={data.books} />
 
 <style>
   @keyframes pan {

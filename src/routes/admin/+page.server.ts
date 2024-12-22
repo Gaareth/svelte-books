@@ -25,7 +25,9 @@ export async function load({ locals }: ServerLoadEvent) {
     include: { registrationCodes: true },
   });
 
-  return { serverSettings };
+  const users = await prisma.account.findMany();
+
+  return { serverSettings, users };
 }
 
 function generateRegistrationCode() {

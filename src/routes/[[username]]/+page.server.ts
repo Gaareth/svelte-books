@@ -4,9 +4,11 @@ import { checkBookAuth } from "../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const accountId = await checkBookAuth(locals, params, "Read");
+  const username = params.username;
 
   return {
     books: (await loadBooks({ accountId }, "Read")).books,
     currentlyReading: (await loadBooks({ accountId }, "Reading")).books,
+    username
   };
 }
