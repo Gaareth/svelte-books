@@ -89,7 +89,7 @@
     {#if books.length > 0 && showSearch}
       <BookSearch bind:search_term={$searchStore.search} />
       <button
-        class="btn-generic-icon"
+        class="btn-generic-icon ml-auto"
         on:click={() => (showOptions = !showOptions)}
       >
         <span class="w-5 block">
