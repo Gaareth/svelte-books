@@ -57,6 +57,7 @@
     "dotenv": "^16.3.1",
     "fuzzy-search": "^3.2.1",
     "language-icons": "^0.3.0",
+    "parse-nested-form-data": "^1.0.0",
     "svelte-chartjs": "^3.1.5",
     "svelte-french-toast": "^1.2.0",
     "svelte-icons": "^2.1.0",

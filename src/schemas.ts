@@ -122,10 +122,11 @@ export function parseFormArray(
   const regexObject = /([a-zA-Z]+)\[(.*)\]+/;
 
   for (const [key, value] of Object.entries(formData)) {
-
     const match = key.match(regexObject);
 
     if (match && attribute == match[1]) {
+      console.log(match);
+      
       if (match[2].length == 0) {
         values.push(value);
       } else {

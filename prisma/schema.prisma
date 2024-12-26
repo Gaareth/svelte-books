@@ -91,6 +91,18 @@ model OptionalDatetime {
   booksFinished Book? @relation("dateFinished")
 }
 
+model Graph {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  data    String
+  labels  String
+  details String
+
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+}
+
 model Book {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -122,6 +134,8 @@ model Book {
 
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
+
+  storyGraphs Graph[]
 }
 
 model Rating {

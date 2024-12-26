@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { scale } from "svelte/transition";
   import {
     Chart,
     getDatasetAtEvent,
@@ -6,11 +7,13 @@
     getElementsAtEvent,
   } from "svelte-chartjs";
   import "chart.js/auto";
-  import { isDarkModeEnabled, tupleToDataset } from "./utils";
   import { theme } from "./stores/stores";
+  import { scales, type ChartTypeRegistry } from "chart.js/auto";
+  import { defaultBgColor, tupleToDataset } from "../chartUtils";
 
   let chart: any;
   export let data: [any, number][];
+  export let type: keyof ChartTypeRegistry = "bar";
 
   let displayData: {
     labels: any[];
@@ -20,8 +23,8 @@
       backgroundColor?: string | undefined;
     }[];
   } = tupleToDataset(data.slice(0, 10), "# books read");
-  let bgColor = "#9966FF";
-  displayData.datasets[0].backgroundColor = bgColor;
+
+  displayData.datasets[0].backgroundColor = defaultBgColor;
 
   $: fgColor = $theme == "dark" ? "white" : "dark";
 
@@ -39,7 +42,7 @@
 </script>
 
 <Chart
-  type="bar"
+  {type}
   bind:chart
   data={displayData}
   {options}
@@ -50,7 +53,7 @@
     data.splice(labelIndex, 1);
 
     displayData = tupleToDataset(data.slice(0, 10), "# books read");
-    displayData.datasets[0].backgroundColor = bgColor;
+    displayData.datasets[0].backgroundColor = defaultBgColor;
   }}
   {...$$restProps}
 />

@@ -15,13 +15,14 @@
 
   const dispatch = createEventDispatcher();
 
-
-  $: if (dialog && showModal) dialog.showModal();
+  $: if (dialog && showModal) {
+    dialog.showModal();
+    dispatch("opened");
+  }
   $: if (!showModal && !!dialog) {
     dialog.close();
     dispatch("closed");
-  };
-
+  }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

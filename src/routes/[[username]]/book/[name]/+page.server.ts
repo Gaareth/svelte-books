@@ -7,7 +7,7 @@ import {
 import { prisma } from "$lib/server/prisma";
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
-import { z } from "zod";
+import { z, ZodIssueCode } from "zod";
 import { getBookApiData } from "../../../book/api/api.server";
 import { type queriedBookFull } from "$appTypes";
 import {
@@ -17,6 +17,7 @@ import {
 } from "../../../../schemas";
 import { checkBookAuth } from "../../../../auth";
 import type { Actions } from "./$types";
+import { parseFormData } from "parse-nested-form-data";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -40,6 +41,11 @@ export async function load(page: ServerLoadEvent) {
               rating: true,
               dateStarted: true,
               dateFinished: true,
+              bookApiData: {
+                include: {
+                  categories: true,
+                },
+              },
             },
           },
         },
@@ -49,6 +55,7 @@ export async function load(page: ServerLoadEvent) {
           categories: true,
         },
       },
+      storyGraphs: true,
     },
   });
 
@@ -68,6 +75,28 @@ export async function load(page: ServerLoadEvent) {
   };
 }
 
+const parseJsonPreprocessor = (value: any, ctx: z.RefinementCtx) => {
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: (e as Error).message,
+      });
+    }
+  }
+
+  return value;
+};
+
+const storyGraphSchema = z.object({
+  title: z.string(),
+  labels: z.preprocess(parseJsonPreprocessor, z.string().array()),
+  details: z.preprocess(parseJsonPreprocessor, z.string().array()),
+  data: z.preprocess(parseJsonPreprocessor, z.number().nullable().array()),
+});
+
 //TODO: reuse
 const saveSchema = z.object({
   id: z.string(),
@@ -84,6 +113,7 @@ const saveSchema = z.object({
   wordsPerPage: z.coerce.number().nonnegative().optional(),
   dateStarted: optionalDatetimeSchema.nullish(),
   dateFinished: optionalDatetimeSchema.nullish(),
+  graphs: storyGraphSchema.optional(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -176,6 +206,7 @@ export const actions = {
     console.log(f);
 
     const formData = Object.fromEntries(f);
+    // console.log("1", formData);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -185,18 +216,24 @@ export const actions = {
     // @ts-ignore
     formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    formData["graphs"] = parseFormObject(formData, "graphs");
+
     if (formData.year == "") {
       delete formData.year;
     }
-    // console.log(formData);
-    const bookSeries = parseFormArray(formData, "books");
+
+    const bookSeries = f.getAll("books[]");
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["bookSeries"] = bookSeries;
+    // console.log(formData);
 
     const result = saveSchema.safeParse(formData);
 
     if (result.success) {
+      // return;
       const {
         id,
         name,
@@ -211,6 +248,7 @@ export const actions = {
         wordsPerPage,
         dateStarted,
         dateFinished,
+        graphs,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -335,8 +373,27 @@ export const actions = {
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,
+          storyGraphs: {
+            deleteMany: {}, // delete all
+          },
         },
       });
+
+      // todo: extend for multiple
+      if (graphs != null) {
+        const g = await prisma.graph.create({
+          data: {
+            data: JSON.stringify(graphs.data),
+            labels: JSON.stringify(graphs.labels),
+            details: JSON.stringify(graphs.details),
+            title: graphs.title,
+            bookId: book.id,
+          },
+        });
+        console.log(graphs);
+
+        console.log("graph", g);
+      }
 
       console.log("nnew book:", book);
 

@@ -35,11 +35,12 @@
   import InputAny from "$lib/InputAny.svelte";
   import { applyAction, enhance } from "$app/forms";
   import toast from "svelte-french-toast";
+  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
 
   export let data: PageData;
 
   // let book: BookAll;
-  let book: BookFull = data.book;
+  let book = data.book;
   let books: BookListItemType[] = data.books;
 
   // let no_rating = !data.book?.rating;
@@ -142,6 +143,18 @@
   // });
 
   //TODO: cleanup
+
+  let tensionGraph =
+    book.storyGraphs.length > 0
+      ? {
+          labels: JSON.parse(book.storyGraphs[0].labels),
+          details: JSON.parse(book.storyGraphs[0].details),
+          data: JSON.parse(book.storyGraphs[0].data),
+          title: book.storyGraphs[0].title,
+        }
+      : {
+          title: "tension", // the rest is default in the component
+        };
 
   const authorError =
     form?.errors != null && "author" in form?.errors
@@ -446,6 +459,39 @@
               displayName="Words per page estimate"
               error={wordsPerPageError}
             />
+          </section>
+
+          <section class="mt-5">
+            <h2 class="text-xl mb-1">Story graphs</h2>
+            <div class="default-border p-2">
+              <LineChartDrawer
+                allowEdits={true}
+                bind:title={tensionGraph.title}
+                bind:labels={tensionGraph.labels}
+                bind:details={tensionGraph.details}
+                bind:data={tensionGraph.data}
+              />
+              <input
+                type="hidden"
+                name="graphs[title]"
+                value={tensionGraph.title}
+              />
+              <input
+                type="hidden"
+                name="graphs[labels]"
+                value={JSON.stringify(tensionGraph.labels)}
+              />
+              <input
+                type="hidden"
+                name="graphs[details]"
+                value={JSON.stringify(tensionGraph.details)}
+              />
+              <input
+                type="hidden"
+                name="graphs[data]"
+                value={JSON.stringify(tensionGraph.data)}
+              />
+            </div>
           </section>
 
           <div class="min-[500px]:flex min-[500px]:justify-end">
