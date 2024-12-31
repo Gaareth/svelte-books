@@ -68,8 +68,11 @@ export async function checkBookAuth(
 
   const bookListPublic =
     bookListName &&
-    (await prisma.bookList.findUnique({ where: { name: bookListName } }))
-      ?.visibility == "public";
+    (
+      await prisma.bookList.findUnique({
+        where: { name_accountId: { name: bookListName, accountId } },
+      })
+    )?.visibility == "public";
 
   if (
     session.user?.name == username ||

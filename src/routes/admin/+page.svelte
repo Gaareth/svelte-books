@@ -105,8 +105,11 @@
                   {code.code}
                 </a>
 
-                <p class="ml-5 text-secondary text-base flex items-center gap-1" title="times used">
-                  {code.timesUsed} 
+                <p
+                  class="ml-5 text-secondary text-base flex items-center gap-1"
+                  title="times used"
+                >
+                  {code.timesUsed}
                   <span class="block w-4"><EyePlus /></span>
                 </p>
 
@@ -171,18 +174,25 @@
 
     <section>
       <h2 class="text-3xl">Users</h2>
-      <ul>
+      <div class="flex flex-col gap-1">
         {#each data.users as user}
-          <li>
-            <span class="text-lg pe-5">{user.username}</span>
-            <div class="inline">
-              Lists:
-              <a href={`/${user.username}`} class="text-base hover:underline">read,</a>
-              <a href={`/${user.username}/to-read`} class="text-base hover:underline">to-read</a>
+          <div class="default-border flex gap-1 items-center p-3">
+            <a class="text-lg hover:underline flex-1" href="/{user.username}">
+              {user.username}
+            </a>
+
+            <div class="flex gap-1 sm:gap-2 flex-1">
+              {#each user.lists as list}
+                <a
+                  href="/{user.username}/lists/{list?.name}"
+                  class="hover:underline">{list?.name}</a
+                >
+                |
+              {/each}
             </div>
-          </li>
+          </div>
         {/each}
-      </ul>
+      </div>
     </section>
   </div>
 </form>

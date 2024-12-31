@@ -102,7 +102,10 @@ export const actions = {
 
       await prisma.bookList.update({
         where: {
-          name,
+          name_accountId: {
+            name,
+            accountId,
+          },
         },
         data: {
           visibility,
@@ -136,8 +139,13 @@ export async function load({ locals }: ServerLoadEvent) {
   if (session?.user?.name == null) {
     error(401);
   }
+  const account = await getAccountByUsername(session.user.name);
+  if (account == null) {
+    error(StatusCodes.UNAUTHORIZED);
+  }
 
   const lists = await prisma.bookList.findMany({
+    where: { accountId: account.id },
     include: {
       _count: {
         select: {

@@ -30,12 +30,16 @@ export async function loadBooks(
     ...(accountId
       ? { accountId }
       : { account: { username: accountUsername as string } }),
-    bookListName: listName,
   };
 
   const data = {
     books: await prisma.book.findMany({
-      where: whereClause,
+      where: {
+        ...whereClause,
+        bookList: {
+          name: listName,
+        },
+      },
       include: {
         rating: true,
         dateStarted: true,

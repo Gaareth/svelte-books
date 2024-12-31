@@ -115,7 +115,10 @@ type errorBooksType = {
   volumeId: string | undefined;
 }[];
 
-export async function createConnections(accountId: string, connect_all: boolean) {
+export async function createConnections(
+  accountId: string,
+  connect_all: boolean
+) {
   const scoreMap: Record<string, number> = {
     publishedDate: 1,
     publisher: 1,
@@ -128,7 +131,9 @@ export async function createConnections(accountId: string, connect_all: boolean)
   const unconnectedBooks = await prisma.book.findMany({
     where: {
       bookApiDataId: connect_all ? undefined : null, // for whatever reason, undefined applies to all entries (kinda make sense lol)
-      bookListName: "Read",
+      bookList: {
+        name: "Read",
+      },
       accountId,
     },
   });

@@ -6,6 +6,7 @@ import {
 import { prisma } from "$lib/server/prisma";
 import { z } from "zod";
 import { hashPassword } from "../../../auth";
+import { createLists } from "../../../../prisma/seed-initial";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const id = params.id;
@@ -98,13 +99,16 @@ export const actions = {
 
       const { hash, salt } = await hashPassword(password);
 
-      await prisma.account.create({
+      const account = await prisma.account.create({
         data: {
           username: username,
           password_hash: hash,
           password_salt: salt,
         },
       });
+
+      // create default lists, like read, to-read
+      await createLists(account.id);
 
       if (validCode) {
         await prisma.registrationCode.update({

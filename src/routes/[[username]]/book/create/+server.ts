@@ -47,12 +47,12 @@ export async function POST(req: RequestEvent) {
       });
     }
 
-
-    await prisma.bookList.upsert({
-      where: { name: listName },
+    const bookList = await prisma.bookList.upsert({
+      where: { name_accountId: { accountId, name: listName } },
       update: {}, // No update needed if it exists
       create: {
         name: listName,
+        accountId,
       },
     });
 
@@ -90,7 +90,7 @@ export async function POST(req: RequestEvent) {
         name,
         author,
         wordsPerPage,
-        bookListName: listName,
+        bookListId: bookList.id,
         rating: optionalRating,
         dateStartedId: dateStartedId,
         dateFinishedId: dateFinishedId,

@@ -12,14 +12,20 @@
   <title>{$page.data.title || "Books - Gareth"}</title>
 </svelte:head>
 
-<header aria-label="Site Header" class="shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md">
+<header
+  aria-label="Site Header"
+  class="shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
+>
   <div class="mx-auto max-w-screen-xl p-4">
     <div
       class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col"
     >
       <div class="flex lg:w-0 lg:flex-1" />
 
-      <nav aria-label="Site Nav" class="gap-8 text-md font-medium flex flex-wrap">
+      <nav
+        aria-label="Site Nav"
+        class="gap-8 text-md font-medium flex flex-wrap"
+      >
         <a
           class="text-gray-500 dark:text-gray-400
         hover:text-[#F2440D] dark:hover:text-[#f67c56]"
@@ -28,11 +34,12 @@
           Home
         </a>
         {#if $page.data.session}
-          <a class="nav-a" href="/to-read">To-Read</a>
+          <a class="nav-a" href="/lists/To read">To-Read</a>
           <a class="nav-a" href="/settings">Settings</a>
           {#if data.isAdmin}
             <a class="nav-a" href="/admin">Admin</a>
           {/if}
+          <a class="nav-a" href="/users">Users</a>
         {/if}
         <a class="nav-a" href="/about">About</a>
       </nav>

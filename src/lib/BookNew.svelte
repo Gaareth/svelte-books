@@ -50,7 +50,7 @@
   import Words from "./icons/words.svelte";
 
   export let endpoint = "/book/create";
-  export let listName: DEFAULT_LIST = "Read";
+  export let listName: DEFAULT_LIST | string = "Read";
 
   export let authors: string[];
   $: authors = [...new Set(authors)];

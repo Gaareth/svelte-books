@@ -13,6 +13,7 @@
   import { twMerge } from "tailwind-merge";
   import { invalidateAll } from "$app/navigation";
   import toast from "svelte-french-toast";
+  import type { Visibility } from "../../prismaTypes";
 
   export let form;
   export let data: PageData;
@@ -28,13 +29,12 @@
   let currentStatus: SSE_EVENT | undefined = undefined;
 
   //TODO: toast
-  type visibility = "public" | "private";
   // let globalVisibility = "private";
 
   let allAsGlobal;
   $: allAsGlobal = data.lists
     .filter((v) => v.visibility != null)
-    .every((v) => (v.visibility as visibility) == data.globalVisibility);
+    .every((v) => (v.visibility as Visibility) == data.globalVisibility);
   $: {
     console.log(data.lists);
     console.log(data.globalVisibility);

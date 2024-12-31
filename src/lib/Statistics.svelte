@@ -152,7 +152,7 @@
       )}
       on:click={() => (selected_option = "books")}
     >
-      <span><Book /></span>books
+      <span class="w-5"><Book /></span>books
     </button>
     <button
       class={twMerge(
@@ -161,7 +161,7 @@
       )}
       on:click={() => (selected_option = "pages")}
     >
-      <span><Pages /></span>pages
+      <span class="w-5"><Pages /></span>pages
     </button>
     <button
       class={twMerge(
@@ -170,7 +170,7 @@
       )}
       on:click={() => (selected_option = "words")}
     >
-      <span><Words /></span>words
+      <span class="w-5"><Words /></span>words
     </button>
   </div>
   <div class="text-secondary text-base">

@@ -1,7 +1,7 @@
 import { BookList, BookSeries, Prisma, PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
 import * as auth from "../src/auth";
-import { seedInitial } from "./seed-initial";
+import { createLists, seedInitial } from "./seed-initial";
 
 const prisma = new PrismaClient();
 
@@ -46,10 +46,30 @@ async function createSeries() {
   return lists;
 }
 
+async function createDummyAccounts() {
+  const createDummyAccount = async (username: string) => {
+    const acc = await prisma.account.create({
+      data: {
+        username: username,
+        password_hash: "hash",
+        password_salt: "salt",
+        isAdmin: false,
+      },
+    });
+
+    await createLists(acc.id);
+  };
+
+  await createDummyAccount("Carlos");
+  await createDummyAccount("JS Bach");
+}
+
 async function main() {
   const { account, lists } = await seedInitial();
   const series = await createSeries();
   // return;
+
+  await createDummyAccounts();
 
   for (const b of books) {
     await prisma.book.create({
@@ -57,7 +77,10 @@ async function main() {
         ...b,
         bookList: {
           connect: {
-            name: lists[0].name,
+            name_accountId: {
+              accountId: account.id,
+              name: lists[0].name,
+            },
           },
         },
         account: {
@@ -75,7 +98,7 @@ async function main() {
       author: "chukc nockis",
       bookList: {
         connect: {
-          name: lists[0].name,
+          id: lists[0].id,
         },
       },
       bookSeries: {
@@ -97,7 +120,7 @@ async function main() {
       author: "chukc nockis",
       bookList: {
         connect: {
-          name: lists[0].name,
+          id: lists[0].id,
         },
       },
       bookSeries: {

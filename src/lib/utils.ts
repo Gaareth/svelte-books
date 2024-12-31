@@ -124,3 +124,41 @@ export const replaceStateWithQuery = (values: Record<string, string>) => {
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
+
+
+// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+export function uniq<T>(a: T[]): T[] {
+  const prims: Record<string, Set<unknown>> = {
+    boolean: new Set(),
+    number: new Set(),
+    string: new Set(),
+  };
+  const objs: T[] = [];
+
+  return a.filter((item) => {
+    const type = typeof item;
+    if (type in prims) {
+      if (prims[type].has(item)) {
+        return false;
+      }
+      prims[type].add(item);
+      return true;
+    } else {
+      if (objs.includes(item)) {
+        return false;
+      }
+      objs.push(item);
+      return true;
+    }
+  });
+}
+
+export function uniqBy<T, K>(a: T[], key: (item: T) => K): T[] {
+  const seen: Record<string, boolean> = {};
+
+  return a.filter((item) => {
+    const k = key(item) as unknown as string; // Ensure compatibility with `Record<string, boolean>`
+    return Object.prototype.hasOwnProperty.call(seen, k) ? false : (seen[k] = true);
+  });
+}
+

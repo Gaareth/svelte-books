@@ -11,12 +11,12 @@ import { building } from "$app/environment";
 import * as seed from "../prisma/seed-initial";
 
 if (!building) {
-  try {
+ /*  try {
     await seed.createLists();
     console.log("created lists tables");
   } catch (error) {
     // # ignore
-  }
+  } */
   try {
     await seed.createServerSettings();
     console.log("created server settings");

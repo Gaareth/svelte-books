@@ -30,10 +30,13 @@ model Account {
   password_hash String
   password_salt String @default("")
 
-  isAdmin  Boolean @default(false)
-  isPublic Boolean @default(false)
+  isAdmin        Boolean @default(false)
+  isPublic       Boolean @default(false)
+  onlyToLoggedIn Boolean @default(false)
 
   books Book[]
+
+  bookList BookList[]
 }
 
 // enum Visibility {
@@ -43,11 +46,17 @@ model Account {
 // }
 
 model BookList {
-  name  String @id
+  id    Int    @id @default(autoincrement())
+  name  String
   books Book[]
 
   // visibility Visibility @default(PRIVATE)
-  visibility String?
+  visibility String @default("private")
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  @@unique([name, accountId])
 }
 
 model BookSeries {
@@ -120,9 +129,10 @@ model Book {
   dateStartedId  Int?              @unique
   dateFinishedId Int?              @unique
 
-  bookListName String?
-  bookList     BookList? @relation(fields: [bookListName], references: [name])
-  rating       Rating?
+  // bookListName String?
+  bookListId Int?
+  bookList   BookList? @relation(fields: [bookListId], references: [id])
+  rating     Rating?
 
   bookSeriesId Int?
   bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])

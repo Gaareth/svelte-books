@@ -37,7 +37,7 @@ export async function createServerSettings() {
   });
 }
 
-export async function createLists() {
+export async function createLists(accountId: string) {
   const lists: BookList[] = [];
 
   for (const name of DEFAULT_LISTS) {
@@ -45,6 +45,7 @@ export async function createLists() {
       await prisma.bookList.create({
         data: {
           name,
+          accountId,
         },
       })
     );
@@ -54,9 +55,10 @@ export async function createLists() {
 }
 
 export async function seedInitial() {
+  const account = await createAccount(true);
   return {
-    account: await createAccount(true),
+    account,
     serverSettings: await createServerSettings(),
-    lists: await createLists(),
+    lists: await createLists(account.id),
   };
 }

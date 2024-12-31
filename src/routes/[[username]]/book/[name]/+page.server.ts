@@ -34,6 +34,7 @@ export async function load(page: ServerLoadEvent) {
       rating: true,
       dateStarted: true,
       dateFinished: true,
+      bookList: true,
       bookSeries: {
         include: {
           books: {
@@ -197,10 +198,7 @@ async function updateBookSeries(
 
 export const actions = {
   save: async (event: RequestEvent) => {
-    const session = await event.locals.auth();
-    if (!session) {
-      error(401);
-    }
+    const accountId = await checkBookAuth(event.locals, event.params);
 
     const f = await event.request.formData();
     console.log(f);
@@ -367,7 +365,10 @@ export const actions = {
               : undefined,
           bookList: {
             connect: {
-              name: listName,
+              name_accountId: {
+                name: listName,
+                accountId,
+              },
             },
           },
           bookApiData:

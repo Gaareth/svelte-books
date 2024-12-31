@@ -25,7 +25,24 @@ export async function load({ locals }: ServerLoadEvent) {
     include: { registrationCodes: true },
   });
 
-  const users = await prisma.account.findMany();
+  const accounts = await prisma.account.findMany({
+    where: {},
+    include: {
+      books: {
+        select: {
+          bookList: true,
+        },
+      },
+      bookList: true,
+    },
+  });
+
+  const users = accounts.map((a) => {
+    return {
+      username: a.username,
+      lists: a.bookList,
+    };
+  });
 
   return { serverSettings, users };
 }
