@@ -3,9 +3,6 @@ import { prisma } from "$lib/server/prisma";
 import { sortBooksDefault } from "$lib/utils";
 import type { Book } from "@prisma/client";
 
-export async function getBookLists() {
-  return prisma.bookList.findMany();
-}
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {

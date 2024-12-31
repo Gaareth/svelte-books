@@ -1,7 +1,6 @@
 import {
   extractBookApiData,
   extractCategories,
-  getBookLists,
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
@@ -60,7 +59,11 @@ export async function load(page: ServerLoadEvent) {
     },
   });
 
-  const bookLists = await getBookLists();
+  const bookLists = await prisma.bookList.findMany({
+    where: {
+      accountId,
+    },
+  });
 
   if (!book) {
     error(404, { message: "Not found" });
