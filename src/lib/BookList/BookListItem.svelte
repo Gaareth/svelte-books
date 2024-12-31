@@ -102,7 +102,7 @@
     </div>
 
     <div class="flex items-center col-span-full sm:col-span-5">
-      <div class="flex justify-end flex-1">
+      <div class="flex flex-1">
         <p class="flex items-center gap-1">
           {#if book.dateFinished}
             {formatShort(book.dateFinished)}
@@ -111,9 +111,9 @@
             {formatShort(book.dateStarted)}
             <span class="icon" title="date started"><EventProgress /></span>
           {:else}
-            <span class="flex-shrink leading-4"
-              >{book.createdAt.toLocaleString()}</span
-            >
+            <span class="flex-shrink leading-4">
+              {book.createdAt.toLocaleString()}
+            </span>
             <span class="icon flex-shrink-0" title="date added">
               <CalenderAdd />
             </span>
