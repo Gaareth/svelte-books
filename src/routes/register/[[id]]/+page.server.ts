@@ -61,9 +61,9 @@ export const actions = {
     const formData = Object.fromEntries(await event.request.formData());
 
     const schema = z.object({
-      username: z.string().min(1).max(64),
+      username: z.string().min(1).max(64).trim(),
       password: z.string().min(8).max(256),
-      code: z.string().min(1),
+      code: z.string().min(1).trim(),
     });
 
     const result = schema.safeParse(formData);

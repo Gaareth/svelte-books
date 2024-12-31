@@ -53,6 +53,8 @@
   export let listName: DEFAULT_LIST | string = "Read";
 
   export let authors: string[];
+  export let booksTitles: string[];
+
   $: authors = [...new Set(authors)];
 
   let new_book_open = false;
@@ -250,6 +252,18 @@
 
           {#if showMore || (name.length > 0 && author.length > 0)}
             <div class="grid grid-cols-2 gap-2">
+             <!--  <label
+                class="col-span-2 flex flex-wrap items-center justify-between"
+              >
+                <div class="icon-wrapper">
+                  <span class="w-5 block" title="date read">
+                    <EventProgress />
+                  </span>
+                  Reread:
+                </div>
+
+                <input type="checkbox" name="" id="" />
+              </label> -->
               {#if listName == "Reading" || listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
