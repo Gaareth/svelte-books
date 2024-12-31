@@ -94,7 +94,6 @@
   .done-button {
     @apply hover:bg-green-300 focus:relative bg-green-200 text-green-600
               dark:bg-green-600 dark:hover:bg-green-500
-              dark:text-green-200
-              hidden sm:inline-block;
+              dark:text-green-200;
   }
 </style>
