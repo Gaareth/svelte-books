@@ -38,14 +38,14 @@ export async function POST(req: RequestEvent) {
     const dateStarted = nullToUndefined(result.data.dateStarted);
     const dateFinished = nullToUndefined(result.data.dateFinished);
 
-    const book_exist = await prisma.book.findFirst({ where: { name } });
+    /* const book_exist = await prisma.book.findFirst({ where: { name } });
     // todo: only show warning with are you sure or something.
     if (book_exist) {
       return json({
         success: false,
         message: "Books titles have to be unique.\nPlease use another title",
       });
-    }
+    } */
 
     const bookList = await prisma.bookList.upsert({
       where: { name_accountId: { accountId, name: listName } },
@@ -84,7 +84,7 @@ export async function POST(req: RequestEvent) {
           }
         : undefined;
 
-    await prisma.book.create({
+    const book = await prisma.book.create({
       data: {
         accountId,
         name,
@@ -97,13 +97,13 @@ export async function POST(req: RequestEvent) {
       },
     });
 
-    await addApiData(volumeId, name);
+    await addApiData(volumeId, book.id);
 
     return json({ success: true });
   }
   error(400);
 }
-async function addApiData(volumeId: string | undefined, name: string) {
+async function addApiData(volumeId: string | undefined, bookId: string) {
   if (volumeId !== undefined) {
     const apiData = await getBookApiData(volumeId);
     console.log(apiData);
@@ -123,7 +123,7 @@ async function addApiData(volumeId: string | undefined, name: string) {
     }
 
     await prisma.book.update({
-      where: { name },
+      where: { id: bookId },
       data: {
         bookApiData: {
           connectOrCreate: {

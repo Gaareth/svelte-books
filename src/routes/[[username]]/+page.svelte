@@ -45,7 +45,7 @@
   <BookListReading books={data.currentlyReading} />
 </div>
 
-<BookNew listName={"Read"} authors={data.books.map((b) => b.author)} />
+<BookNew listName={"Read"} books={data.books ?? []} />
 <BookList books={data.books} />
 
 <style>

@@ -48,12 +48,15 @@
   import EventProgress from "./icons/EventProgress.svelte";
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
+  import type { Book, Prisma } from "@prisma/client";
 
   export let endpoint = "/book/create";
   export let listName: DEFAULT_LIST | string = "Read";
 
-  export let authors: string[];
-  export let booksTitles: string[];
+  export let books: Prisma.BookGetPayload<{ include: { bookList: true } }>[];
+
+  let authors: string[] = books.map((b) => b.author);
+  let bookTitles: string[] = books.map((b) => b.name);
 
   $: authors = [...new Set(authors)];
 
@@ -252,18 +255,12 @@
 
           {#if showMore || (name.length > 0 && author.length > 0)}
             <div class="grid grid-cols-2 gap-2">
-             <!--  <label
-                class="col-span-2 flex flex-wrap items-center justify-between"
-              >
-                <div class="icon-wrapper">
-                  <span class="w-5 block" title="date read">
-                    <EventProgress />
-                  </span>
-                  Reread:
-                </div>
-
-                <input type="checkbox" name="" id="" />
-              </label> -->
+              {#if books.some((b) => b.name === name && b.author === author && b.bookList?.name == listName)}
+                <p class="text-warning text-base col-span-2">
+                  Info: A book with this name (and author) is already in this
+                  list.
+                </p>
+              {/if}
               {#if listName == "Reading" || listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
