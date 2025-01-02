@@ -22,10 +22,7 @@
     {data.listName} LIST
   </h1>
 
-  <BookNew
-    listName={listName}
-    authors={(data.books ?? []).map((b) => b.author)}
-  />
+  <BookNew {listName} books={data.books ?? []} />
   <BookList books={data.books ?? []} />
 {:else}
   <h1 class="text-center text-5xl my-4 mb-6">This list does not exist</h1>

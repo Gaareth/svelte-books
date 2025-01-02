@@ -142,7 +142,7 @@ export async function createConnections(
 
   const createConnection = async (
     volumeId: string,
-    bookName: string
+    bookId: string
   ): Promise<BookApiData> => {
     const dataExists = await prisma.bookApiData.findUnique({
       where: {
@@ -158,7 +158,7 @@ export async function createConnections(
         data: {
           book: {
             connect: {
-              name: bookName,
+              id: bookId,
             },
           },
         },
@@ -172,7 +172,7 @@ export async function createConnections(
           ...extractedData,
           book: {
             connect: {
-              name: bookName,
+              id: bookId,
             },
           },
           categories: {
@@ -249,7 +249,7 @@ export async function createConnections(
       console.log("Book: " + book.name + ", Score: " + score);
 
       try {
-        createConnection(volumeId, book.name);
+        createConnection(volumeId, book.id);
         // booksUpdated += 1;
       } catch (e) {
         errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
