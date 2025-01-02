@@ -24,6 +24,18 @@ Create .env file similar to `env.example`.
 ## Todos
 
 - private books
-- spannend stats draw yourself
+- spannend stats draw yourself - check
+    - let user add more graphs
 - auto google api connection
 - add or remove google api
+
+- update googleapi values
+
+- crud for lists
+
+- statistics page
+- books read over time or github like graph
+- per month, year, day etc
+
+- fix last month selector when is january? 
+- fix optionaldate unique
