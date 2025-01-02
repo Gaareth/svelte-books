@@ -96,8 +96,8 @@ model OptionalDatetime {
 
   timezoneOffset Int? // timezone offset minutes
 
-  booksStarted  Book? @relation("dateStarted")
-  booksFinished Book? @relation("dateFinished")
+  booksStarted  Book[] @relation("dateStarted")
+  booksFinished Book[] @relation("dateFinished")
 }
 
 model Graph {
@@ -126,8 +126,8 @@ model Book {
 
   dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
   dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])
-  dateStartedId  Int?              @unique
-  dateFinishedId Int?              @unique
+  dateStartedId  Int?
+  dateFinishedId Int?
 
   // bookListName String?
   bookListId Int?
