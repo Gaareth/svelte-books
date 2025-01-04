@@ -109,7 +109,7 @@
     `
       : ""}
     on:click={(e) => {
-      e.preventDefault();
+      // e.preventDefault();
       if (closeOnClick) {
         click_outside();
       }
@@ -134,7 +134,7 @@
     role="button"
     tabindex="-1"
     on:click={(e) => {
-      e.preventDefault();
+      //e.preventDefault();
       if (closeOnClick) {
         open = false;
       }

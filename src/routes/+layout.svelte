@@ -3,6 +3,8 @@
   import { page } from "$app/stores";
   import { Toaster } from "svelte-french-toast";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  import Dropdown from "$lib/Dropdown.svelte";
+  import IconAccount from "$lib/icons/IconAccount.svelte";
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
   export let data;
@@ -35,11 +37,9 @@
         </a>
         {#if $page.data.session}
           <a class="nav-a" href="/lists/To read">To-Read</a>
-          <a class="nav-a" href="/settings">Settings</a>
           {#if data.isAdmin}
             <a class="nav-a" href="/admin">Admin</a>
           {/if}
-          <a class="nav-a" href="/users">Users</a>
         {/if}
         <a class="nav-a" href="/about">About</a>
       </nav>
@@ -48,17 +48,44 @@
         <div class="flex flex-row-reverse xl:flex-row">
           <div class="flex gap-4 items-center">
             {#if $page.data.session}
-              <span class="signedInText">
-                <small>Signed in as</small><br />
-                <strong>{$page.data.session.user?.name}</strong>
-              </span>
-              <div>
-                <a
-                  href="/auth/signout"
-                  class="auth-button"
-                  data-sveltekit-preload-data="off">Sign out</a
+              <Dropdown contentClass="!py-0" closeOnClick={false}>
+                <button
+                  slot="triggerContent"
+                  type="button"
+                  aria-label="open account dropdown"
+                  title="Account"
                 >
-              </div>
+                  <span class="block w-8 text-secondary">
+                    <IconAccount />
+                  </span>
+                </button>
+                <div
+                  slot="dropdown"
+                  class=" w-56 sm:w-36"
+                  id="dropdown-account"
+                >
+                  <div class="">
+                    <div class="p-2 pb-1">
+                      <p class="text-center font-bold">
+                        {$page.data.session.user?.name}
+                      </p>
+                    </div>
+                    <hr />
+                    <div class="py-2 flex flex-col gap-1 text-secondary">
+                      <a href="/settings"> Settings </a>
+                      <a href="/users">all users</a>
+                    </div>
+                    <hr />
+                    <div class="py-2">
+                      <a
+                        href="/auth/signout"
+                        class="whitespace-nowrap"
+                        data-sveltekit-preload-data="off">Sign out</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </Dropdown>
             {:else}
               <div>
                 <a class="auth-button" href="/auth/signin"> Log in </a>
@@ -111,5 +138,9 @@
 
   .nav-a {
     @apply text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300;
+  }
+
+  #dropdown-account a {
+    @apply px-4 block dark:hover:bg-slate-500 hover:bg-gray-100;
   }
 </style>
