@@ -122,7 +122,8 @@ const saveSchema = z.object({
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
 async function updateBookSeries(
-  id: string,
+  bookId: string,
+  accountId: string,
   bookSeries: string[],
   bookSeriesId: number | undefined
 ) {
@@ -130,19 +131,29 @@ async function updateBookSeries(
     return;
   }
 
-  type UniqueInput = "name" | "id";
+  type UniqueInput = "id";
+
+  // removes books in the provided bookSeries[] that do not belong to the specified user
+  const filterOwnBooks = async (bId: string) => {
+    const book = await prisma.book.findUnique({
+      where: {
+        id: bId,
+      },
+    });
+    return book?.accountId == accountId;
+  };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const bookSeriesNames: { [key in UniqueInput]: string }[] = bookSeries.map(
-    (n) => Object.fromEntries([["name", n]])
-  );
+  const bookSeriesIds: { [key in UniqueInput]: string }[] = bookSeries
+    .filter(filterOwnBooks)
+    .map((n) => Object.fromEntries([["id", n]]));
 
   if (bookSeriesId === undefined) {
     await prisma.bookSeries.create({
       data: {
         books: {
-          connect: [...bookSeriesNames, { id }],
+          connect: [...bookSeriesIds, { id: bookId }],
         },
       },
     });
@@ -160,8 +171,8 @@ async function updateBookSeries(
       error(400);
     }
 
-    const currentBookSeriesNamesArray = currentBookSeries.books.map(
-      (b) => b.name
+    const currentBookSeriesIdsArray = currentBookSeries.books.map(
+      (b) => b.id
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -175,24 +186,24 @@ async function updateBookSeries(
     // console.log(bookSeriesNames);
     // console.log(bookSeriesNames);
 
-    const oldSeries = currentBookSeriesNamesArray.filter(
-      (bookName) => !bookSeries.includes(bookName)
+    const oldSeries = currentBookSeriesIdsArray.filter(
+      (bId) => !bookSeries.includes(bId)
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const oldSeriesNames: { [key in UniqueInput]: string }[] = oldSeries.map(
-      (n) => Object.fromEntries([["name", n]])
+    const oldSeriesIds: { [key in UniqueInput]: string }[] = oldSeries.map(
+      (n) => Object.fromEntries([["id", n]])
     );
 
     // console.log("DISconnecting: ");
-    // console.log(oldSeriesNames);
+    // console.log(oldSeriesIds);
 
     await prisma.bookSeries.update({
       where: { id: bookSeriesId },
       data: {
         books: {
-          connect: bookSeriesNames,
-          disconnect: oldSeriesNames,
+          connect: bookSeriesIds,
+          disconnect: oldSeriesIds,
         },
       },
     });
@@ -254,7 +265,7 @@ export const actions = {
 
       // don't update if only the book itself is in the series
       if (!(bookSeries.length == 1 && bookSeries[0] == name)) {
-        await updateBookSeries(id, bookSeries, bookSeriesId);
+        await updateBookSeries(id, accountId, bookSeries, bookSeriesId);
       }
 
       const allBooks = await prisma.book.findMany();
@@ -394,9 +405,9 @@ export const actions = {
             bookId: book.id,
           },
         });
-        console.log(graphs);
+        // console.log(graphs);
 
-        console.log("graph", g);
+        // console.log("graph", g);
       }
 
       console.log("nnew book:", book);

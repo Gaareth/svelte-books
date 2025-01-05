@@ -12,7 +12,7 @@
 </script>
 
 {#each books as book, i (book.id)}
-  <input type="hidden" name={`books[]`} value={book.name} />
+  <input type="hidden" name={`books[]`} value={book.id} />
 
   <BookListItem {book}>
     <button
