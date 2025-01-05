@@ -1,6 +1,6 @@
 import type { queriedBookFull } from "$appTypes";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import { zip, arrMax, getErrorMessage } from "$lib/utils";
+import { arrMax, getErrorMessage, zip } from "$lib/utils";
 import type { Book, BookApiData } from "@prisma/client";
 import { getBookApiData, queryBooksFull } from "../book/api/api.server";
 import { SSE_DATA } from "../book/api/update_all/sse";

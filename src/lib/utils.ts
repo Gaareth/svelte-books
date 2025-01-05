@@ -1,7 +1,6 @@
-import type { Book } from "@prisma/client";
-import type { THEME } from "./stores/stores";
 import type { BookDate } from "$appTypes";
 import type { OptionalDate } from "./DateSelector.svelte";
+import type { THEME } from "./stores/stores";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

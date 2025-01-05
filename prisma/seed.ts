@@ -1,6 +1,4 @@
-import { BookList, BookSeries, Prisma, PrismaClient } from "@prisma/client";
-import * as argon2 from "argon2";
-import * as auth from "../src/auth";
+import { BookSeries, PrismaClient } from "@prisma/client";
 import { createLists, seedInitial } from "./seed-initial";
 
 const prisma = new PrismaClient();

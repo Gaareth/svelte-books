@@ -1,5 +1,4 @@
 import { PrismaClient, type BookList } from "@prisma/client";
-import * as auth from "../src/auth";
 import { DEFAULT_LISTS } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 

@@ -5,18 +5,11 @@ import {
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
 import { z, ZodIssueCode } from "zod";
-import { getBookApiData } from "../../../book/api/api.server";
-import { type queriedBookFull } from "$appTypes";
-import {
-  optionalDatetimeSchema,
-  parseFormArray,
-  parseFormObject,
-} from "../../../../schemas";
 import { checkBookAuth } from "../../../../auth";
-import type { Actions } from "./$types";
-import { parseFormData } from "parse-nested-form-data";
+import { optionalDatetimeSchema, parseFormObject } from "../../../../schemas";
+import { getBookApiData } from "../../../book/api/api.server";
+import type { Actions, RequestEvent } from "./$types";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;

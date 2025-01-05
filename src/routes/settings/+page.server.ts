@@ -1,27 +1,16 @@
-import {
-  type RequestHandler,
-  error,
-  json,
-  type ServerLoadEvent,
-} from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils.js";
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
 
-import type { Book, BookApiData } from "@prisma/client";
-import type { queriedBookFull } from "$appTypes";
-import { arrMax, delay, getErrorMessage, zip } from "$lib/utils";
-import { getBookApiData, queryBooksFull } from "../book/api/api.server";
-import { SSE_DATA, type SSE_EVENT } from "../book/api/update_all/sse";
-import { getAccountByUsername, getAccountIdfromSession } from "../../auth";
-import {
-  updateData,
-  type settingsApiReloadResult,
-  createConnections,
-  type settingsApiCreateResult,
-} from "./apidata";
 import { StatusCodes } from "http-status-codes";
-import { z } from "zod";
-import { parseFormArray, parseFormObject } from "../../schemas";
+import { getAccountByUsername, getAccountIdfromSession } from "../../auth";
+import { parseFormArray } from "../../schemas";
+import { SSE_DATA } from "../book/api/update_all/sse";
+import {
+  createConnections,
+  updateData,
+  type settingsApiCreateResult,
+  type settingsApiReloadResult,
+} from "./apidata";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 

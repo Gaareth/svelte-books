@@ -1,13 +1,13 @@
-import { error, json } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
-import { z } from "zod";
-import { prisma } from "$lib/server/prisma";
-import { getBookApiData } from "../../../book/api/api.server";
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { DEFAULT_LISTS } from "$appTypes";
-import { optionalDatetimeSchema } from "../../../../schemas";
-import { checkBookAuth } from "../../../../auth";
+import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
+import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
+import { error, json } from "@sveltejs/kit";
+import { z } from "zod";
+import { checkBookAuth } from "../../../../auth";
+import { optionalDatetimeSchema } from "../../../../schemas";
+import { getBookApiData } from "../../../book/api/api.server";
+import type { RequestEvent } from "./$types";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),

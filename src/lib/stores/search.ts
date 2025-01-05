@@ -1,6 +1,5 @@
 // import { sortBooksDefault } from "$lib/utils";
 // import type { Book } from "@prisma/client";
-import type { BookFullType } from "$appTypes";
 import FuzzySearch from "fuzzy-search";
 import { writable } from "svelte/store";
 

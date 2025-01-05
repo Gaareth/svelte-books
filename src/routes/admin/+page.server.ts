@@ -1,14 +1,9 @@
-import {
-  error,
-  redirect,
-  type RequestEvent,
-  type ServerLoadEvent,
-} from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
-import { getAccountByUsername } from "../../auth";
+import { error, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import { getAccountByUsername } from "../../auth";
 
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.auth();

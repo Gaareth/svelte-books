@@ -1,12 +1,12 @@
+import { prisma } from "$lib/server/prisma";
 import {
   redirect,
   type RequestEvent,
   type ServerLoadEvent,
 } from "@sveltejs/kit";
-import { prisma } from "$lib/server/prisma";
 import { z } from "zod";
-import { hashPassword } from "../../../auth";
 import { createLists } from "../../../../prisma/seed-initial";
+import { hashPassword } from "../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const id = params.id;

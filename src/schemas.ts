@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from "zod";
+import { z } from "zod";
 
 export const numericString = (schema: z.ZodTypeAny) =>
   z.preprocess((a) => {

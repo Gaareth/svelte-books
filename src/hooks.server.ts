@@ -1,10 +1,8 @@
-import { SvelteKitAuth } from "@auth/sveltekit";
-import CredentialsProvider from "@auth/core/providers/credentials";
 import { prisma } from "$lib/server/prisma";
+import CredentialsProvider from "@auth/core/providers/credentials";
+import { SvelteKitAuth } from "@auth/sveltekit";
 
-import * as argon2 from "argon2";
 import { verifyPassword } from "./auth";
-import { log } from "console";
 
 import { building } from "$app/environment";
 

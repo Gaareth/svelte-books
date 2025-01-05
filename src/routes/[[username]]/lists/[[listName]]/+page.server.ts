@@ -1,7 +1,7 @@
-import { error, type ServerLoadEvent } from "@sveltejs/kit";
-import { prisma } from "$lib/server/prisma";
-import { checkBookAuth } from "../../../../auth";
 import { loadBooks } from "$lib/server/db/utils";
+import { prisma } from "$lib/server/prisma";
+import { type ServerLoadEvent } from "@sveltejs/kit";
+import { checkBookAuth } from "../../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const username = params.username;

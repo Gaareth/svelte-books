@@ -1,7 +1,5 @@
-import type { ServerLoadEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/server/prisma";
-import type { Visibility } from "../../prismaTypes";
-import { uniq, uniqBy } from "$lib/utils";
+import type { ServerLoadEvent } from "@sveltejs/kit";
 import { getAccountByUsername } from "../../auth";
 
 export async function load({ locals }: ServerLoadEvent) {
