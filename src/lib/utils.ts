@@ -120,11 +120,9 @@ export const replaceStateWithQuery = (values: Record<string, string>) => {
   history.replaceState(history.state, "", url);
 };
 
-
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
-
 
 // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
 export function uniq<T>(a: T[]): T[] {
@@ -158,7 +156,8 @@ export function uniqBy<T, K>(a: T[], key: (item: T) => K): T[] {
 
   return a.filter((item) => {
     const k = key(item) as unknown as string; // Ensure compatibility with `Record<string, boolean>`
-    return Object.prototype.hasOwnProperty.call(seen, k) ? false : (seen[k] = true);
+    return Object.prototype.hasOwnProperty.call(seen, k)
+      ? false
+      : (seen[k] = true);
   });
 }
-

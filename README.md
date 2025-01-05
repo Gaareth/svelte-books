@@ -25,7 +25,7 @@ Create .env file similar to `env.example`.
 
 - private books
 - spannend stats draw yourself - check
-    - let user add more graphs
+  - let user add more graphs
 - auto google api connection
 - add or remove google api
 
@@ -37,5 +37,5 @@ Create .env file similar to `env.example`.
 - books read over time or github like graph
 - per month, year, day etc
 
-- fix last month selector when is january? 
+- fix last month selector when is january?
 - fix optionaldate unique

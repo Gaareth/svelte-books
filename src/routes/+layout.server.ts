@@ -14,6 +14,6 @@ export const load: LayoutServerLoad = async (event) => {
     session,
     isAdmin: account?.isAdmin,
   };
-  
+
   return data;
 };

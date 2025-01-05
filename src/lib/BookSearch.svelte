@@ -10,7 +10,7 @@
 
   onMount(() => {
     search_term = $page.url.searchParams.get("q") ?? "";
-  })
+  });
 
   // $: search_term = $page.url.searchParams.get("q") ?? "";
   // $: {

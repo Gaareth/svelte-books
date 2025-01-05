@@ -30,7 +30,7 @@
   let clientWidth: number;
 
   $: if ($selectedTab == thisTab) {
-    $tabWidth = clientWidth;    
+    $tabWidth = clientWidth;
   }
 </script>
 

@@ -3,12 +3,14 @@ import { error } from "@sveltejs/kit";
 
 import { event } from "sveltekit-sse";
 import { SSE_DATA, type SSE_EVENT } from "./sse";
-import { getAccountByUsername, getAccountIdfromSession } from "../../../../auth";
+import {
+  getAccountByUsername,
+  getAccountIdfromSession,
+} from "../../../../auth";
 
 export async function GET({ request, locals }) {
   const session = await locals.auth();
   const accountId = await getAccountIdfromSession(session);
-
 
   return event(async (emit) => {
     // eslint-disable-next-line no-constant-condition

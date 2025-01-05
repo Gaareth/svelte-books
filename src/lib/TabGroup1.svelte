@@ -6,7 +6,7 @@
 
   const switchTab = (i: number) => {
     current_tab = i;
-  }
+  };
 </script>
 
 <div class={$$restProps.class}>

@@ -3,7 +3,6 @@ import { prisma } from "$lib/server/prisma";
 import { sortBooksDefault } from "$lib/utils";
 import type { Book } from "@prisma/client";
 
-
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
   accountId: string;

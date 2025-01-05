@@ -360,7 +360,7 @@
           </InputSelect> -->
 
           <InputSelect
-            value={ book.bookList?.name}
+            value={book.bookList?.name}
             displayName="List"
             name={"listName"}
             error={listNameError}

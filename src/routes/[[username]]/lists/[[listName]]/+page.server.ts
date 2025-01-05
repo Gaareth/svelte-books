@@ -24,7 +24,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
   }
 
   const data = {
-    books: (await loadBooks({accountId}, listName)).books,
+    books: (await loadBooks({ accountId }, listName)).books,
     category_names: await prisma.bookCategory.findMany({
       select: {
         name: true,

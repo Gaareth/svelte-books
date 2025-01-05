@@ -100,7 +100,7 @@
                 text-base flex-row items-center gap-1"
                 on:click={() => {
                   console.log(dispatch);
-                  
+
                   apiBookSelected = true;
                   dispatch("select");
                 }}

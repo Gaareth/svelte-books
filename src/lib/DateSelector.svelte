@@ -166,12 +166,12 @@
   const optionToDate = (option: typeof selectedOption) => {
     const now = new Date();
     // now.getMonth() returns zero based months, this function returns 1 based months
-    
+
     switch (option) {
       case "last month":
         return {
           year: now.getFullYear(),
-          month: now.getMonth() == 0 ? 12 : (now.getMonth() - 1 + 1),
+          month: now.getMonth() == 0 ? 12 : now.getMonth() - 1 + 1,
           day: null,
         };
 

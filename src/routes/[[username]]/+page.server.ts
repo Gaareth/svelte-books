@@ -9,6 +9,6 @@ export async function load({ locals, params }: ServerLoadEvent) {
   return {
     books: (await loadBooks({ accountId }, "Read")).books,
     currentlyReading: (await loadBooks({ accountId }, "Reading")).books,
-    username
+    username,
   };
 }

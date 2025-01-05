@@ -11,12 +11,16 @@
 
 <div class="mt-2 flex flex-col gap-1">
   {#each data.users as user}
-    <div class="default-border flex gap-1 items-center  p-3">
-      <a class="text-lg hover:underline flex-1" href="/{user.username}">{user.username}</a>
+    <div class="default-border flex gap-1 items-center p-3">
+      <a class="text-lg hover:underline flex-1" href="/{user.username}"
+        >{user.username}</a
+      >
 
       <div class="flex gap-1 sm:gap-2 flex-1">
         {#each user.lists as list}
-          <a href="/{user.username}/lists/{list?.name}" class="hover:underline">{list?.name}</a>
+          <a href="/{user.username}/lists/{list?.name}" class="hover:underline"
+            >{list?.name}</a
+          >
           |
         {/each}
       </div>

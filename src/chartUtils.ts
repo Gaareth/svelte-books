@@ -6,4 +6,3 @@ export const tupleToDataset = (data: [any, number][], label: string) => {
 };
 
 export const defaultBgColor = "#9966FF";
-

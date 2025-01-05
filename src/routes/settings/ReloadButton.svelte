@@ -20,7 +20,7 @@
     evtSource = new EventSource("/book/api/update_all/");
     evtSource.onmessage = function (event) {
       // console.log(event.data);
-      
+
       if (event.data === "undefined") {
         loading = false;
         return;
@@ -28,7 +28,7 @@
 
       currentStatus = JSON.parse(decodeURIComponent(event.data));
       console.log(currentStatus);
-      
+
       if (currentStatus!.id == "reload") {
         loading = currentStatus!.msg != "done";
       }

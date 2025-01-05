@@ -56,15 +56,13 @@
                   title="Account"
                   class=""
                 >
-                  <span class="block w-8 text-secondary hover:text-secondary-hover">
+                  <span
+                    class="block w-8 text-secondary hover:text-secondary-hover"
+                  >
                     <IconAccount />
                   </span>
                 </button>
-                <div
-                  slot="dropdown"
-                  class="w-56 sm:w-36"
-                  id="dropdown-account"
-                >
+                <div slot="dropdown" class="w-56 sm:w-36" id="dropdown-account">
                   <div class="">
                     <div class="p-1">
                       <p class="text-center font-bold">
@@ -146,6 +144,6 @@
   }
 
   #dropdown-account hr {
-    @apply dark:border-slate-400 border-gray-300
+    @apply dark:border-slate-400 border-gray-300;
   }
 </style>

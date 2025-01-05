@@ -171,9 +171,7 @@ async function updateBookSeries(
       error(400);
     }
 
-    const currentBookSeriesIdsArray = currentBookSeries.books.map(
-      (b) => b.id
-    );
+    const currentBookSeriesIdsArray = currentBookSeries.books.map((b) => b.id);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

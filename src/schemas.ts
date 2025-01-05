@@ -126,7 +126,7 @@ export function parseFormArray(
 
     if (match && attribute == match[1]) {
       console.log(match);
-      
+
       if (match[2].length == 0) {
         values.push(value);
       } else {
