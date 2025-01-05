@@ -124,14 +124,14 @@
       {#if book.rating}
         <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
           <p>{book.rating.stars} / {MAX_RATING}</p>
-          <span class="icon"><IoIosStar /></span>
+          <span class="icon" aria-label="stars"><IoIosStar /></span>
         </div>
       {/if}
 
       {#if book.bookApiData?.pageCount}
         <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
           <p>{book.bookApiData.pageCount}</p>
-          <span aria-label="number of pages"><Pages /></span>
+          <span aria-label="number of pages" class="icon"><Pages /></span>
         </div>
       {/if}
 

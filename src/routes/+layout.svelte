@@ -36,7 +36,7 @@
           Home
         </a>
         {#if $page.data.session}
-          <a class="nav-a" href="/lists/To Read">To-Read</a>
+          <a class="nav-a" href="/lists/To read">To-Read</a>
           {#if data.isAdmin}
             <a class="nav-a" href="/admin">Admin</a>
           {/if}
