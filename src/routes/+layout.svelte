@@ -54,24 +54,25 @@
                   type="button"
                   aria-label="open account dropdown"
                   title="Account"
+                  class=""
                 >
-                  <span class="block w-8 text-secondary">
+                  <span class="block w-8 text-secondary hover:text-secondary-hover">
                     <IconAccount />
                   </span>
                 </button>
                 <div
                   slot="dropdown"
-                  class=" w-56 sm:w-36"
+                  class="w-56 sm:w-36"
                   id="dropdown-account"
                 >
                   <div class="">
-                    <div class="p-2 pb-1">
+                    <div class="p-1">
                       <p class="text-center font-bold">
                         {$page.data.session.user?.name}
                       </p>
                     </div>
                     <hr />
-                    <div class="py-2 flex flex-col gap-1 text-secondary">
+                    <div class="py-2 flex flex-col gap-1 text-secondary-2">
                       <a href="/settings"> Settings </a>
                       <a href="/users">all users</a>
                     </div>
@@ -141,6 +142,10 @@
   }
 
   #dropdown-account a {
-    @apply px-4 block dark:hover:bg-slate-500 hover:bg-gray-100;
+    @apply px-4 block dark:hover:bg-slate-500 hover:bg-gray-200;
+  }
+
+  #dropdown-account hr {
+    @apply dark:border-slate-400 border-gray-300
   }
 </style>

@@ -37,7 +37,5 @@ export async function load({ locals }: ServerLoadEvent) {
     };
   });
 
-  console.log(users);
-
   return { users };
 }
