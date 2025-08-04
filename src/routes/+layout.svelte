@@ -49,19 +49,15 @@
           <div class="flex gap-4 items-center">
             {#if $page.data.session}
               <Dropdown contentClass="!py-0" closeOnClick={false}>
-                <button
+                <span
                   slot="triggerContent"
-                  type="button"
                   aria-label="open account dropdown"
                   title="Account"
-                  class=""
+                  class="block w-8 text-secondary hover:text-secondary-hover"
                 >
-                  <span
-                    class="block w-8 text-secondary hover:text-secondary-hover"
-                  >
-                    <IconAccount />
-                  </span>
-                </button>
+                  <IconAccount />
+                </span>
+
                 <div slot="dropdown" class="w-56 sm:w-36" id="dropdown-account">
                   <div class="">
                     <div class="p-1">
