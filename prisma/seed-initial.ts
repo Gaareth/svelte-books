@@ -8,22 +8,6 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-export async function createDevAccount() {
-  if (process.env.DEV === "True") {
-    await prisma.account.create({
-      data: {
-        id: "0",
-        username: "DEV",
-        isAdmin: true,
-        isPublic: true,
-        onlyToLoggedIn: false,
-        password_hash: "",
-        password_salt: "",
-      },
-    });
-  }
-}
-
 export async function createAccount(admin = false) {
   const username = process.env.username;
   const password = process.env.password;
@@ -74,10 +58,6 @@ export async function createLists(accountId: string) {
 }
 
 export async function seedInitial() {
-  if (process.env.DEV === "True") {
-    await createDevAccount();
-  }
-
   const account = await createAccount(true);
   return {
     account,
