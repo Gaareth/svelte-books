@@ -52,7 +52,7 @@
 <div class="dark:bg-slate-800 bg-white">
   {#each books as book (book.id)}
     <form
-      action={`book/${book.name}?/save`}
+      action={`book/${book.name}?/readNow`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
@@ -66,10 +66,6 @@
       }}
     >
       <input type="hidden" name="id" value={book.id} />
-
-      <input type="hidden" name="listName" value="Read" />
-      <input type="hidden" name="name" value={book.name} />
-      <input type="hidden" name="author" value={book.author} />
 
       <BookListItem {book}>
         <button

@@ -110,7 +110,7 @@ const saveSchema = z.object({
   wordsPerPage: z.coerce.number().nonnegative().optional(),
   dateStarted: optionalDatetimeSchema.nullish(),
   dateFinished: optionalDatetimeSchema.nullish(),
-  graphs: storyGraphSchema.optional(),
+  graphs: storyGraphSchema.nullish(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -202,6 +202,51 @@ async function updateBookSeries(
 }
 
 export const actions = {
+  readNow: async (event: RequestEvent) => {
+    const accountId = await checkBookAuth(event.locals, event.params);
+    const f = await event.request.formData();
+    const readNowSchema = z.object({
+      id: z.string(),
+    });
+    const result = readNowSchema.safeParse(Object.fromEntries(f));
+    if (!result.success) {
+      console.error("Validation failed:", result.error);
+      return fail(400, {
+        data: Object.fromEntries(f),
+        errors: result.error.flatten().fieldErrors,
+      });
+    }
+
+    const { id } = result.data;
+    const now = new Date();
+    const book = await prisma.book.update({
+      where: { id },
+      data: {
+        dateFinished: {
+          create: {
+            day: now.getDate(),
+            month: now.getMonth() + 1,
+            year: now.getFullYear(),
+            hour: now.getHours(),
+            minute: now.getMinutes(),
+            // timezoneOffset: now.getTimezoneOffset(),
+          },
+        },
+
+        bookList: {
+          connect: {
+            name_accountId: {
+              name: "Read",
+              accountId,
+            },
+          },
+        },
+      },
+    });
+
+    redirect(302, "/book/" + encodeURIComponent(book.name));
+  },
+
   save: async (event: RequestEvent) => {
     const accountId = await checkBookAuth(event.locals, event.params);
 
@@ -219,9 +264,12 @@ export const actions = {
     // @ts-ignore
     formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["graphs"] = parseFormObject(formData, "graphs");
+    // only add graphs if they are present
+    if (f.has("graphs")) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      formData["graphs"] = parseFormObject(formData, "graphs");
+    }
 
     if (formData.year == "") {
       delete formData.year;
@@ -231,7 +279,7 @@ export const actions = {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["bookSeries"] = bookSeries;
-    // console.log(formData);
+    console.log("to be checked formData: ", formData);
 
     const result = saveSchema.safeParse(formData);
 
@@ -407,7 +455,8 @@ export const actions = {
     }
 
     const { fieldErrors: errors } = result.error.flatten();
-    console.log(errors);
+    console.log("Errors:", errors);
+    console.log("Issues:", result.error.issues);
 
     return fail(400, {
       data: formData,

@@ -306,7 +306,9 @@
           <InputText
             value={book.name}
             name="name"
-            error={(form?.errors?.name ?? [undefined])[0]}
+            error={form?.errors && "name" in form.errors
+              ? form.errors.name?.[0]
+              : undefined}
           />
           <InputText value={book.author} name="author" error={authorError} />
 
