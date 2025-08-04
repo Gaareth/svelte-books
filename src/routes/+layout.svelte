@@ -99,7 +99,7 @@
 <main class="pb-20 px-2 md:px-0">
   <Toaster />
 
-  <div class="container max-w-3xl mx-auto">
+  <div class="container max-w-3xl mx-auto w-">
     <slot />
   </div>
 </main>

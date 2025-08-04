@@ -36,6 +36,11 @@
   import { applyAction, enhance } from "$app/forms";
   import toast from "svelte-french-toast";
   import LineChartDrawer from "$lib/LineChartDrawer.svelte";
+  import Pages from "$lib/icons/pages.svelte";
+  import Words from "$lib/icons/words.svelte";
+  import Calendar from "$lib/icons/Calender.svelte";
+  import Language from "$lib/icons/Language.svelte";
+  import Pill from "$lib/Pill.svelte";
 
   export let data: PageData;
 
@@ -176,7 +181,7 @@
   <title>{book.name}</title>
 </svelte:head>
 
-<div class="mt-5">
+<div class="absolute left-0 right-0 mt-5 max-w-6xl mx-auto z-0">
   <form
     action="?/save"
     method="POST"
@@ -194,7 +199,7 @@
     }}
   >
     {#if $page.data.session}
-      <div class="flex justify-center mb-2 sm:mb-0">
+      <!-- <div class="flex justify-center mb-2 sm:mb-0">
         <input type="hidden" name="id" value={book.id} />
 
         <div class="sm:flex sm:flex-col sm:gap-1">
@@ -237,18 +242,97 @@
             </button>
           </span>
         </div>
-      </div>
+      </div> -->
     {/if}
-    <div class="flex justify-between flex-col-reverse sm:flex-row mb-2 sm:mb-0">
-      {#if thumbnailUrl != null}
-        <Image src={thumbnailUrl} alt="thumbnail" />
-      {/if}
-      <h1 class="text-4xl overflow-hidden text-ellipsis">{book.name}</h1>
+    <div class="grid grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
+      <div class="item-border-no-hover p-4">
+        <div>
+          {#if thumbnailUrl != null}
+            <!-- <Image src={thumbnailUrl} alt="thumbnail" /> -->
+            <Image
+              src={"https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-256w.webp"}
+              alt="thumbnail"
+              class="rounded-md"
+            />
+          {:else}
+            <Image
+              src={"/cover.png"}
+              alt="thumbnail"
+              class="rounded-md w-full h-full object-cover"
+            />
+          {/if}
+        </div>
+
+        <div class="mt-3 text-secondary flex flex-col">
+          <span class="text-base leading-tight"
+            >Publisher: {book.bookApiData?.publisher ?? "Unknown"}</span
+          >
+          <span class="text-base leading-tight"
+            >ISBN: {book.bookApiData?.isbn_13 ?? "Unknown"}</span
+          >
+          <span class="text-base leading-tight"
+            >Language: {book.bookApiData?.language ?? "Unknown"}</span
+          >
+        </div>
+      </div>
+
+      <div class="item-border-no-hover p-4 flex flex-col">
+        <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
+          {book.name}
+        </h1>
+        <span class="-mt-1 dark:text-slate-100 text-gray-500"
+          >{book.author}</span
+        >
+
+        <div class="mt-2 flex flex-wrap gap-4">
+          <span class="flex items-center gap-1">
+            {book.bookApiData?.pageCount}
+            <span class="w-5 block mt-0.5"><Pages /></span>
+          </span>
+
+          <span class="text-base flex items-center mb-[0.075rem]">•</span>
+
+          <!-- <span class="flex items-center gap-1">
+            {book.bookApiData?.language}
+            <span class="w-5 block mt-0.5"><Language /></span>
+          </span>  -->
+
+          <!-- <span class="flex items-center gap-1">
+            Publisher:
+            {book.bookApiData?.publisher}
+          </span> -->
+
+          {#if book.wordsPerPage != null}
+            <span class="flex items-center gap-1">
+              {book.wordsPerPage}
+              <span class="w-5 block mt-0.5"><Words /></span>
+            </span>
+            <span class="text-base flex items-center mb-[0.075rem]">•</span>
+          {/if}
+
+          <span class="flex items-center gap-1">
+            {book.bookApiData?.publishedDate}
+            <span class="w-5 block"><Calendar /></span>
+          </span>
+        </div>
+
+        <p class="mt-2 mb-2 text-secondary line-clamp-7">
+          <!-- {book.bookApiData?.description ?? "No description available."} -->
+        </p>
+
+        <div class="mt-2 flex flex-wrap gap-1">
+          {#each book.bookApiData?.categories ?? [] as category}
+            <Pill className="dark:bg-slate-600">
+              {category.name}
+            </Pill>
+          {/each}
+        </div>
+      </div>
     </div>
 
     {#if !edit}
       <div>
-        <div class="attribute-stats">
+        <!-- <div class="attribute-stats">
           <p>Author: {book.author}</p>
           <p>
             Started: {formatShort(book.dateStarted, true)}
@@ -262,9 +346,9 @@
           </p>
         </div>
 
-        <BookApiData data={book.bookApiData} />
+        <BookApiData data={book.bookApiData} /> -->
 
-        <div class="my-7">
+        <!-- <div class="my-7">
           {#if book.rating && !no_rating}
             <section class="flex gap-2 items-center">
               <h2 class="text-xl">Rating</h2>
@@ -297,7 +381,7 @@
               </div>
             </section>
           {/if}
-        </div>
+        </div> -->
       </div>
     {:else}
       <!-- Inputs -->
