@@ -42,12 +42,12 @@ export const handle = SvelteKitAuth({
         if (!credentials.username || !credentials.password) {
           if (import.meta.env.DEV) {
             return {
-              id: 0,
+              id: "0",
               name: "DEV",
             };
+          } else {
+            return null;
           }
-
-          return null;
         }
 
         const account = await prisma.account.findFirst({
@@ -57,12 +57,6 @@ export const handle = SvelteKitAuth({
         });
 
         if (!account) {
-          if (import.meta.env.DEV) {
-            return {
-              id: 0,
-              name: "DEV",
-            };
-          }
           return null;
         }
 
