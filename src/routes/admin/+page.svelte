@@ -45,7 +45,7 @@
     return async ({ update, result }) => {
       // @ts-ignore
       if (result.data.success) {
-        toast.success("Successfully update data");
+        toast.success("Successfully updated data");
       }
 
       update({ reset: false });

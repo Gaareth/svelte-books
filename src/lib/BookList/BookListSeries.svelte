@@ -3,7 +3,7 @@
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
   import type { BookFullType, BookListItemType, BookRating } from "$appTypes";
-  import BookListItem from "./BookListItem.svelte";
+  import BookListItem from "./ReadingListItem.svelte";
 
   export let books: BookListItemType[];
   export let on_delete: ((b: BookListItemType) => unknown) | undefined =

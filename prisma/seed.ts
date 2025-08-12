@@ -7,34 +7,22 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-const books = [
-  {
-    name: "firstbook",
-    author: "john doe",
-    monthRead: 4,
-    yearRead: 2022,
-    rating: {
-      create: { stars: 1 },
-    },
-  },
-  {
-    name: "second",
-    author: "dohn joe",
-    monthRead: 4,
-    yearRead: 2022,
-    rating: {
-      create: { stars: 3 },
-    },
-  },
-  {
-    name: "thied book",
-    author: "john doe",
-    monthRead: 4,
-    yearRead: 2022,
-    rating: {
-      create: { stars: 5 },
-    },
-  },
+const books: { name: string; author: string }[] = [
+  { name: "To Kill a Mockingbird", author: "Harper Lee" },
+  { name: "1984", author: "George Orwell" },
+  { name: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+  { name: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling" },
+  { name: "The Lord of the Rings", author: "J.R.R. Tolkien" },
+  { name: "Pride and Prejudice", author: "Jane Austen" },
+  { name: "The Catcher in the Rye", author: "J.D. Salinger" },
+  { name: "Moby-Dick", author: "Herman Melville" },
+  { name: "War and Peace", author: "Leo Tolstoy" },
+  { name: "The Hobbit", author: "J.R.R. Tolkien" },
+  { name: "Crime and Punishment", author: "Fyodor Dostoevsky" },
+  { name: "Brave New World", author: "Aldous Huxley" },
+  { name: "The Adventures of Huckleberry Finn", author: "Mark Twain" },
+  { name: "Jane Eyre", author: "Charlotte Brontë" },
+  { name: "Wuthering Heights", author: "Emily Brontë" },
 ];
 
 async function createSeries() {
@@ -66,25 +54,11 @@ async function createDummyAccounts() {
   await createDummyAccount("JS Bach");
 }
 
-async function main() {
-  const { account, lists } = await seedInitial();
-  const series = await createSeries();
-  // return;
-
-  await createDummyAccounts();
-
-  for (const b of books) {
-    await prisma.book.create({
+async function createBooks(account) {
+  for (const bookData of books) {
+    const createdBook = await prisma.book.create({
       data: {
-        ...b,
-        bookList: {
-          connect: {
-            name_accountId: {
-              accountId: account.id,
-              name: lists[0].name,
-            },
-          },
-        },
+        ...bookData,
         account: {
           connect: {
             id: account.id,
@@ -92,51 +66,58 @@ async function main() {
         },
       },
     });
+
+    await prisma.readingActivity.create({
+      data: {
+        account: {
+          connect: {
+            id: account.id,
+          },
+        },
+        book: {
+          connect: {
+            id: createdBook.id,
+          },
+        },
+        status: "finished",
+        dateStarted: {
+          create: {
+            day: 1,
+            month: 1,
+            year: 2020,
+            hour: 12,
+            minute: 0,
+            timezoneOffset: 0,
+          },
+        },
+        dateFinished: {
+          create: {
+            day: 1,
+            month: 1,
+            year: 2021,
+            hour: 12,
+            minute: 0,
+            timezoneOffset: 0,
+          },
+        },
+        rating: {
+          create: {
+            stars: Math.floor(Math.random() * 5) + 1,
+            comment: "This is a dummy rating",
+          },
+        },
+      },
+    });
   }
+}
 
-  await prisma.book.create({
-    data: {
-      name: "in series",
-      author: "chukc nockis",
-      bookList: {
-        connect: {
-          id: lists[0].id,
-        },
-      },
-      bookSeries: {
-        connect: {
-          id: series[0].id,
-        },
-      },
-      account: {
-        connect: {
-          id: account.id,
-        },
-      },
-    },
-  });
+async function main() {
+  const { account, lists } = await seedInitial();
+  const series = await createSeries();
+  // return;
 
-  await prisma.book.create({
-    data: {
-      name: "in series 2",
-      author: "chukc nockis",
-      bookList: {
-        connect: {
-          id: lists[0].id,
-        },
-      },
-      bookSeries: {
-        connect: {
-          id: series[0].id,
-        },
-      },
-      account: {
-        connect: {
-          id: account.id,
-        },
-      },
-    },
-  });
+  await createDummyAccounts();
+  await createBooks(account);
 }
 
 main()
@@ -151,3 +132,47 @@ main()
 
     process.exit(1);
   });
+
+// await prisma.book.create({
+//     data: {
+//       name: "in series",
+//       author: "chukc nockis",
+//       bookList: {
+//         connect: {
+//           id: lists[0].id,
+//         },
+//       },
+//       bookSeries: {
+//         connect: {
+//           id: series[0].id,
+//         },
+//       },
+//       account: {
+//         connect: {
+//           id: account.id,
+//         },
+//       },
+//     },
+//   });
+
+//   await prisma.book.create({
+//     data: {
+//       name: "in series 2",
+//       author: "chukc nockis",
+//       bookList: {
+//         connect: {
+//           id: lists[0].id,
+//         },
+//       },
+//       bookSeries: {
+//         connect: {
+//           id: series[0].id,
+//         },
+//       },
+//       account: {
+//         connect: {
+//           id: account.id,
+//         },
+//       },
+//     },
+//   });

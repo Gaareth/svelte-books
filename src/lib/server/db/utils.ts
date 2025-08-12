@@ -1,6 +1,6 @@
-import type { queriedBookFull } from "$appTypes";
+import type { queriedBookFull, READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
-import { sortBooksDefault } from "$lib/utils";
+import { sortReadingActivity } from "$lib/utils";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
@@ -27,31 +27,69 @@ export async function loadBooks(
       : { account: { username: accountUsername as string } }),
   };
 
-  const data = {
-    books: await prisma.book.findMany({
-      where: {
-        ...whereClause,
-        bookList: {
-          name: listName,
+  const books = await prisma.book.findMany({
+    where: {
+      ...whereClause,
+      bookList: {
+        name: listName,
+      },
+    },
+    include: {
+      bookList: true,
+      bookApiData: {
+        include: {
+          categories: true,
         },
       },
-      include: {
-        rating: true,
-        dateStarted: true,
-        dateFinished: true,
-        bookList: true,
-        bookApiData: {
-          include: {
-            categories: true,
+      readingActivity: {
+        include: {
+          dateStarted: true,
+          dateFinished: true,
+          rating: true,
+          storyGraphs: true,
+        },
+      },
+    },
+  });
+
+  return books;
+}
+
+export async function getReadingActivity(
+  accountParams: GetAccountParams,
+  status: READING_STATUS | undefined = undefined
+) {
+  const { accountId, accountUsername } = accountParams;
+
+  const whereClause = {
+    ...(accountId
+      ? { accountId }
+      : { account: { username: accountUsername as string } }),
+  };
+
+  const readingActivity = await prisma.readingActivity.findMany({
+    where: {
+      ...whereClause,
+      status: status,
+    },
+    include: {
+      dateStarted: true,
+      dateFinished: true,
+      rating: true,
+      book: {
+        include: {
+          bookList: true,
+          bookApiData: {
+            include: {
+              categories: true,
+            },
           },
         },
       },
-    }),
-  };
+    },
+  });
 
-  data.books = data.books.sort(sortBooksDefault);
-
-  return data;
+  return readingActivity.sort(sortReadingActivity);
 }
 
 export function extractCategories(apiData: queriedBookFull): string[] {

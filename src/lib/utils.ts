@@ -1,4 +1,5 @@
-import type { BookDate } from "$appTypes";
+import type { ReadingActivityWithDates } from "$appTypes";
+import { sineInOut } from "svelte/easing";
 import type { OptionalDate } from "./DateSelector.svelte";
 import type { THEME } from "./stores/stores";
 
@@ -86,14 +87,17 @@ export function optionalToDate(o: OptionalDate | null) {
   );
 }
 
-export function getBookReadDate(book: BookDate) {
-  return optionalToDate(book.dateFinished);
+export function getReadDate(readingActivity: ReadingActivityWithDates) {
+  return optionalToDate(readingActivity.dateFinished) ?? null;
 }
 
 // function sortBooksBy
-export function sortBooksDefault(a: BookDate, b: BookDate) {
-  const read_date_a = getBookReadDate(a);
-  const read_date_b = getBookReadDate(b);
+export function sortReadingActivity(
+  a: ReadingActivityWithDates,
+  b: ReadingActivityWithDates
+) {
+  const read_date_a = getReadDate(a);
+  const read_date_b = getReadDate(b);
 
   let date_a: Date = read_date_a ?? a.createdAt;
   let date_b: Date = read_date_b ?? b.createdAt;
@@ -159,4 +163,57 @@ export function uniqBy<T, K>(a: T[], key: (item: T) => K): T[] {
       ? false
       : (seen[k] = true);
   });
+}
+
+export function slideHeight(node: Element) {
+  const style = getComputedStyle(node);
+  const height = parseFloat(style.height);
+
+  return {
+    duration: 500,
+    css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
+    easing: sineInOut,
+  };
+}
+
+export function dateDiffFormatted(
+  date1: Date | string | null,
+  date2: Date | string | null
+): string {
+  if (!date1 || !date2) {
+    return "N/A";
+  }
+
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+
+  let diffMs = Math.abs(d1.getTime() - d2.getTime());
+  const seconds = Math.floor(diffMs / 1000);
+
+  if (seconds < 60) {
+    return `${seconds} second${seconds !== 1 ? "s" : ""}`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hour${hours !== 1 ? "s" : ""}`;
+  }
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) {
+    return `${days} day${days !== 1 ? "s" : ""}`;
+  }
+
+  const months = Math.floor(days / 30);
+  if (months < 12) {
+    return `${months} month${months !== 1 ? "s" : ""}`;
+  }
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years !== 1 ? "s" : ""}`;
 }

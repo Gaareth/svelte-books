@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { BookListItemType } from "$appTypes";
-  import BookListItem, { type ItemDeleteEvent } from "./BookListItem.svelte";
+  import type { ReadingListItemType } from "$appTypes";
+  import BookListItem, { type ItemDeleteEvent } from "./ReadingListItem.svelte";
 
-  export let books: BookListItemType[];
+  export let books: ReadingListItemType[];
   export let on_delete:
     | ((e: CustomEvent<ItemDeleteEvent>) => unknown)
     | undefined = undefined;

@@ -1,11 +1,12 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import BookList from "$lib/BookList/BookList.svelte";
+
+  import clsx from "clsx";
+
+  import BookListReading from "$lib/BookList/BookListReading.svelte";
+  import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
-  import clsx from "clsx";
-  import type { BookFullType } from "../../app";
-  import BookListReading from "$lib/BookList/BookListReading.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -36,17 +37,21 @@
 </h1>
 
 {#if $page.data.session}
-  <Statistics books={data.books} />
+  <Statistics readingActivities={data.readingActivity} />
 {/if}
 
 <div class="my-5" />
 
 <div class="mb-10">
-  <BookListReading books={data.currentlyReading} />
+  <BookListReading
+    readingActivities={data.readingActivity.filter(
+      (e) => e.status === "reading"
+    )}
+  />
 </div>
 
-<BookNew listName={"Read"} books={data.books ?? []} />
-<BookList books={data.books} />
+<BookNew listName={"Read"} readingActivities={data.readingActivity ?? []} />
+<ReadingList entries={data.readingActivity} />
 
 <style>
   @keyframes pan {

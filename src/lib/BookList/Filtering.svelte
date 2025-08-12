@@ -6,12 +6,7 @@
     BookFullType,
     BookIncludeCategory,
   } from "$appTypes";
-  import {
-    dateToYYYY_MM_DD,
-    getBookReadDate,
-    optionalToDate,
-    sortBooksDefault,
-  } from "$lib/utils";
+  import { dateToYYYY_MM_DD, optionalToDate } from "$lib/utils";
   import { onMount } from "svelte";
   import { MAX_RATING } from "../../constants";
   import SortOrder from "./SortOrder.svelte";

@@ -30,33 +30,23 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import TabGroup from "./Tab/TabGroup.svelte";
   import Tab from "./Tab/Tab.svelte";
-  import {
-    backInOut,
-    circIn,
-    circInOut,
-    circOut,
-    cubicInOut,
-    cubicOut,
-    elasticInOut,
-    linear,
-    sineIn,
-    sineInOut,
-    sineOut,
-  } from "svelte/easing";
+
   import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
   import EventDone from "./icons/EventDone.svelte";
   import EventProgress from "./icons/EventProgress.svelte";
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
   import type { Book, Prisma } from "@prisma/client";
+  import { slideHeight } from "./utils";
 
   export let endpoint = "/book/create";
   export let listName: DEFAULT_LIST | string = "Read";
 
-  export let books: Prisma.BookGetPayload<{ include: { bookList: true } }>[];
+  export let readingActivities: Prisma.ReadingActivityGetPayload<{
+    include: { book: { include: { bookList: true } } };
+  }>[];
 
-  let authors: string[] = books.map((b) => b.author);
-  let bookTitles: string[] = books.map((b) => b.name);
+  let authors: string[] = readingActivities.map((e) => e.book.author);
 
   $: authors = [...new Set(authors)];
 
@@ -150,17 +140,6 @@
   });
 
   let showMore = false;
-
-  function slideHeight(node: Element) {
-    const style = getComputedStyle(node);
-    const height = parseFloat(style.height);
-
-    return {
-      duration: 500,
-      css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
-      easing: sineInOut,
-    };
-  }
 </script>
 
 {#if $page.data.session}
@@ -255,7 +234,7 @@
 
           {#if showMore || (name.length > 0 && author.length > 0)}
             <div class="grid grid-cols-2 gap-2">
-              {#if books.some((b) => b.name === name && b.author === author && b.bookList?.name == listName)}
+              {#if readingActivities.some((e) => e.book.name === name && e.book.author === author && e.book.bookList?.name == listName)}
                 <p class="text-warning text-base col-span-2">
                   Info: A book with this name (and author) is already in this
                   list.

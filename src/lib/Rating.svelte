@@ -4,7 +4,7 @@
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
 
-  export let rating: number;
+  export let rating: number | undefined;
   export let rating_max: number;
   export let editable = false;
 
@@ -30,7 +30,7 @@
 
 <div class="flex flex-row flex-wrap">
   {#each Array(rating_max) as _, i}
-    {#if i + 1 <= rating}
+    {#if i + 1 <= (rating ?? 0)}
       <button
         class="icon"
         disabled={!editable}

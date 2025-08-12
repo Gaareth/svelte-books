@@ -1,22 +1,18 @@
 <script lang="ts">
-  import { goto, invalidateAll } from "$app/navigation";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import { fade, scale } from "svelte/transition";
-  import BookSearch from "../BookSearch.svelte";
+  import { invalidateAll } from "$app/navigation";
+
   //@ts-ignore
   import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-  import type { BookFullType, BookListItemType } from "$appTypes";
-  import { createSearchStore, searchHandler } from "$lib/stores/search";
-  import type { Book } from "@prisma/client";
-  import { onDestroy, onMount } from "svelte";
-  import { flip } from "svelte/animate";
-  import type { ItemDeleteEvent } from "./BookListItem.svelte";
-  import BookListItem from "./BookListItem.svelte";
+  import type { ReadingListItemType } from "$appTypes";
+
+  import { onMount } from "svelte";
+
   import { enhance } from "$app/forms";
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
+  import ReadingListItem from "./ReadingListItem.svelte";
 
-  export let books: BookListItemType[];
+  export let readingActivities: ReadingListItemType[];
 
   const sentences = [
     "Add a book, mate!",
@@ -38,11 +34,11 @@
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
   <h2 class="flex items-end text-2xl -mb-1">
-    Currently Reading ({books.length})
+    Currently Reading ({readingActivities.length})
   </h2>
 </div>
 
-{#if books.length < 1 && $page.data.session}
+{#if readingActivities.length < 1 && $page.data.session}
   <p class="text-center text-4xl rotate-90">:(</p>
   <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
     {randomSentence}
@@ -50,9 +46,9 @@
 {/if}
 
 <div class="dark:bg-slate-800 bg-white">
-  {#each books as book (book.id)}
+  {#each readingActivities as entry (entry.id)}
     <form
-      action={`book/${book.name}?/readNow`}
+      action={`book/${entry.book.name}?/readNow`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
@@ -65,9 +61,9 @@
         };
       }}
     >
-      <input type="hidden" name="id" value={book.id} />
+      <input type="hidden" name="id" value={entry.book.id} />
 
-      <BookListItem {book}>
+      <ReadingListItem {entry}>
         <button
           class="group p-2 !border-0 done-button"
           title="done reading"
@@ -81,7 +77,7 @@
             <IoMdDoneAll alt="check mark" />
           </span>
         </button>
-      </BookListItem>
+      </ReadingListItem>
     </form>
   {/each}
 </div>

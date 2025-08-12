@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
-  export type ItemDeleteEvent = { book: BookRating };
+  export type ItemDeleteEvent = { book: Book };
 </script>
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookListItemType, BookRating } from "$appTypes";
+  import type { BookRating, ReadingListItemType } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -14,7 +14,7 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
   import { MAX_RATING } from "../../constants";
   import Pages from "$lib/icons/pages.svelte";
-  import { Prisma } from "@prisma/client";
+  import { Prisma, type Book } from "@prisma/client";
   import { twMerge } from "tailwind-merge";
   import clsx from "clsx";
   import {
@@ -26,8 +26,10 @@
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
+  import ReadingList from "./ReadingList.svelte";
 
-  export let book: BookListItemType;
+  export let entry: ReadingListItemType;
+  $: book = entry.book;
 
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
@@ -36,7 +38,7 @@
   const dispatch = createEventDispatcher<{ delete: ItemDeleteEvent }>();
   // console.log(book);
 
-  const book_url = encodeURIComponent(book.name);
+  const book_url = encodeURIComponent(entry.book.name);
 
   const colors = [
     "bg-red-500",
@@ -104,11 +106,11 @@
     <div class="flex items-center col-span-full sm:col-span-5">
       <div class="flex flex-1">
         <p class="flex items-center gap-1">
-          {#if book.dateFinished}
-            {formatShort(book.dateFinished)}
+          {#if entry.dateFinished}
+            {formatShort(entry.dateFinished)}
             <span class="icon" title="date read"><EventDone /></span>
-          {:else if book.dateStarted}
-            {formatShort(book.dateStarted)}
+          {:else if entry.dateStarted}
+            {formatShort(entry.dateStarted)}
             <span class="icon" title="date started"><EventProgress /></span>
           {:else}
             <span class="flex-shrink leading-4">
@@ -121,9 +123,9 @@
         </p>
       </div>
 
-      {#if book.rating}
+      {#if entry.rating}
         <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
-          <p>{book.rating.stars} / {MAX_RATING}</p>
+          <p>{entry.rating.stars} / {MAX_RATING}</p>
           <span class="icon" aria-label="stars"><IoIosStar /></span>
         </div>
       {/if}

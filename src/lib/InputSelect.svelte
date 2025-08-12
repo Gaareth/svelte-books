@@ -1,13 +1,17 @@
 <script lang="ts">
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
+  import { twMerge } from "tailwind-merge";
+  import { string } from "zod/v4";
 
   export let value: unknown | null;
   export let name: string;
   export let displayName: string = name;
 
+  export let selectClassName: string = "";
+
   // export let type: string = "text"
-  export let error: string | undefined;
+  export let error: string | undefined = undefined;
 
   const clearSelection = () => {
     value = null;
@@ -26,7 +30,10 @@
       bind:value
       {name}
       id={name}
-      class="input w-full {error ? 'input-error' : ''}"
+      class={twMerge(
+        "input w-full {error ? 'input-error' : ''}",
+        selectClassName
+      )}
     >
       <slot />
     </select>

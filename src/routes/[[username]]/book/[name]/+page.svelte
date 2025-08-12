@@ -14,12 +14,7 @@
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type {
-    BookFull,
-    BookFullType,
-    BookListItemType,
-    BookRating,
-  } from "../../../../app";
+  import type { BookFull, BookFullType, BookRating } from "../../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
@@ -41,12 +36,16 @@
   import Calendar from "$lib/icons/Calender.svelte";
   import Language from "$lib/icons/Language.svelte";
   import Pill from "$lib/Pill.svelte";
+  import ReadingListItem from "$lib/BookList/ReadingListItem.svelte";
+  import ReviewListItem from "$lib/BookList/ReviewListItem.svelte";
+  import AddIcon from "$lib/icons/AddIcon.svelte";
+  import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
 
   export let data: PageData;
 
   // let book: BookAll;
   let book = data.book;
-  let books: BookListItemType[] = data.books;
+  let books = data.books;
 
   // let no_rating = !data.book?.rating;
   let no_rating = false;
@@ -54,9 +53,9 @@
   $: {
     book = data.book;
 
-    if (book.rating === null && edit) {
-      book.rating = { stars: 0, bookId: book.id, comment: "" };
-    }
+    // if (book.rating === null && edit) {
+    //   book.rating = { stars: 0, bookId: book.id, comment: "" };
+    // }
 
     if (book.bookSeries === null && edit) {
       book.bookSeries = { books: [], id: -1 }; // very bad :(
@@ -149,17 +148,7 @@
 
   //TODO: cleanup
 
-  let tensionGraph =
-    book.storyGraphs.length > 0
-      ? {
-          labels: JSON.parse(book.storyGraphs[0].labels),
-          details: JSON.parse(book.storyGraphs[0].details),
-          data: JSON.parse(book.storyGraphs[0].data),
-          title: book.storyGraphs[0].title,
-        }
-      : {
-          title: "tension", // the rest is default in the component
-        };
+  let showCreateReadingActivity = false;
 
   const authorError =
     form?.errors != null && "author" in form?.errors
@@ -175,13 +164,16 @@
     form?.errors != null && "wordsPerPage" in form?.errors
       ? form?.errors?.wordsPerPage?.[0]
       : undefined;
+
+  const imageClass =
+    "transition-all duration-300 relative bg-background-elevated text-transparent w-[133px] h-[199px] md:rounded-[8px] sm:w-[220px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded";
 </script>
 
 <svelte:head>
   <title>{book.name}</title>
 </svelte:head>
 
-<div class="absolute left-0 right-0 mt-5 max-w-6xl mx-auto z-0">
+<div class="lg:absolute lg:left-0 lg:right-0 lg:mt-5 lg:max-w-6xl mx-auto">
   <form
     action="?/save"
     method="POST"
@@ -244,87 +236,134 @@
         </div>
       </div> -->
     {/if}
-    <div class="grid grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
-      <div class="item-border-no-hover p-4">
-        <div>
-          {#if thumbnailUrl != null}
-            <!-- <Image src={thumbnailUrl} alt="thumbnail" /> -->
-            <Image
-              src={"https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-256w.webp"}
-              alt="thumbnail"
-              class="rounded-md"
-            />
-          {:else}
-            <Image
-              src={"/cover.png"}
-              alt="thumbnail"
-              class="rounded-md w-full h-full object-cover"
-            />
-          {/if}
+    <div
+      class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0"
+    >
+      <div class="lg:item-border-no-hover lg:p-4 relative">
+        <div class="flex justify-center">
+          <img
+            src="https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-128w.webp"
+            class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
+            alt="Flowers for Algernon"
+            width="246"
+            height="369"
+            fetchpriority="low"
+            loading="lazy"
+          />
+          <div class="dark:hidden h-[230px]" />
+
+          <img
+            src="https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-128w.webp"
+            class="hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
+            alt="Flowers for Algernon"
+            width="206"
+            height="369"
+            fetchpriority="low"
+            loading="lazy"
+          />
+
+          <div
+            class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
+          >
+            {#if thumbnailUrl != null}
+              <!-- <Image src={thumbnailUrl} alt="thumbnail" /> -->
+              <Image src={thumbnailUrl} alt="thumbnail" class={imageClass} />
+            {:else}
+              <Image
+                src={"https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-256w.webp"}
+                alt="thumbnail fallback"
+                class={imageClass}
+              />
+            {/if}
+          </div>
         </div>
 
-        <div class="mt-3 text-secondary flex flex-col">
-          <span class="text-base leading-tight"
-            >Publisher: {book.bookApiData?.publisher ?? "Unknown"}</span
-          >
-          <span class="text-base leading-tight"
-            >ISBN: {book.bookApiData?.isbn_13 ?? "Unknown"}</span
-          >
-          <span class="text-base leading-tight"
-            >Language: {book.bookApiData?.language ?? "Unknown"}</span
-          >
+        <div class="hidden mt-3 text-secondary lg:flex flex-col">
+          <span class="text-base leading-tight">
+            Publisher: {book.bookApiData?.publisher ?? "Unknown"}
+          </span>
+          <span class="text-base leading-tight">
+            ISBN: {book.bookApiData?.isbn_13 ?? "Unknown"}
+          </span>
+          <span class="text-base leading-tight">
+            Language: {book.bookApiData?.language ?? "Unknown"}
+          </span>
         </div>
       </div>
 
-      <div class="item-border-no-hover p-4 flex flex-col">
-        <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
-          {book.name}
-        </h1>
-        <span class="-mt-1 dark:text-slate-100 text-gray-500"
-          >{book.author}</span
-        >
-
-        <div class="mt-2 flex flex-wrap gap-4">
-          <span class="flex items-center gap-1">
-            {book.bookApiData?.pageCount}
-            <span class="w-5 block mt-0.5"><Pages /></span>
+      <div class="flex flex-col gap-5">
+        <div class="lg:item-border-no-hover p-1 lg:p-4 flex flex-col">
+          <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
+            {book.name}
+          </h1>
+          <span class="-mt-1 dark:text-slate-100 text-gray-500">
+            {book.author}
           </span>
 
-          <span class="text-base flex items-center mb-[0.075rem]">•</span>
-
-          <!-- <span class="flex items-center gap-1">
-            {book.bookApiData?.language}
-            <span class="w-5 block mt-0.5"><Language /></span>
-          </span>  -->
-
-          <!-- <span class="flex items-center gap-1">
-            Publisher:
-            {book.bookApiData?.publisher}
-          </span> -->
-
-          {#if book.wordsPerPage != null}
+          <div class="mt-2 flex flex-wrap gap-2 lg:gap-4">
             <span class="flex items-center gap-1">
-              {book.wordsPerPage}
-              <span class="w-5 block mt-0.5"><Words /></span>
+              {book.bookApiData?.pageCount}
+              <span class="w-5 block mt-0.5"><Pages /></span>
             </span>
-            <span class="text-base flex items-center mb-[0.075rem]">•</span>
-          {/if}
 
-          <span class="flex items-center gap-1">
-            {book.bookApiData?.publishedDate}
-            <span class="w-5 block"><Calendar /></span>
-          </span>
+            <span class="text-base flex items-center mb-[0.075rem]">•</span>
+
+            {#if book.wordsPerPage != null}
+              <span class="flex items-center gap-1">
+                {book.wordsPerPage}
+                <span class="w-5 block mt-0.5"><Words /></span>
+              </span>
+              <span class="text-base flex items-center mb-[0.075rem]">•</span>
+            {/if}
+
+            <span class="flex items-center gap-1">
+              {book.bookApiData?.publishedDate}
+              <span class="w-5 block"><Calendar /></span>
+            </span>
+          </div>
+
+          <div class="text-secondary flex flex-col lg:overflow-y-hidden">
+            <span class="text-base leading-snug">
+              Publisher: {book.bookApiData?.publisher ?? "Unknown"}
+            </span>
+            <span class="text-base leading-snug">
+              ISBN: {book.bookApiData?.isbn_13 ?? "Unknown"}
+            </span>
+            <span class="text-base leading-snug">
+              Language: {book.bookApiData?.language ?? "Unknown"}
+            </span>
+          </div>
+
+          <p class="mt-2 mb-2 text-secondary line-clamp-7">
+            <!-- {book.bookApiData?.description ?? "No description available."} -->
+          </p>
+
+          <div class="mt-2 flex flex-wrap gap-1">
+            {#each book.bookApiData?.categories ?? [] as category}
+              <Pill className="dark:bg-slate-600">
+                {category.name}
+              </Pill>
+            {/each}
+          </div>
         </div>
 
-        <p class="mt-2 mb-2 text-secondary line-clamp-7">
-          <!-- {book.bookApiData?.description ?? "No description available."} -->
-        </p>
-
-        <div class="mt-2 flex flex-wrap gap-1">
-          {#each book.bookApiData?.categories ?? [] as category}
-            <Pill className="dark:bg-slate-600">
-              {category.name}
-            </Pill>
+        <div class="">
+          <div class="flex mb-1 items-center">
+            <h2 class="text-2xl">Reading Activity</h2>
+            <button
+              type="button"
+              class="ml-auto btn-generic p-2"
+              on:click={() => (showCreateReadingActivity = true)}
+              title="Create reading activity"
+            >
+              <span class="block w-5">
+                <AddIcon />
+              </span>
+            </button>
+          </div>
+          <!-- <hr class="border-slate-600 mt-2" /> -->
+          {#each book.readingActivity as readingActivity}
+            <ReviewListItem entry={readingActivity} />
           {/each}
         </div>
       </div>
@@ -396,55 +435,6 @@
           />
           <InputText value={book.author} name="author" error={authorError} />
 
-          <InputAny name="dateStarted">
-            <div class="icon-wrapper" slot="label">
-              <span class="w-5 block" title="date started">
-                <EventProgress />
-              </span>
-              Date started:
-            </div>
-
-            <DateSelector
-              slot="input"
-              id="dateStarted"
-              name="dateStarted"
-              inputClassName="!w-full !input"
-              className="w-full"
-              datetime={book.dateStarted ?? DEFAULT_OPTIONAL_DATETIME}
-            />
-          </InputAny>
-
-          <InputAny name="dateFinished">
-            <div class="icon-wrapper" slot="label">
-              <span class="w-5 block" title="date read">
-                <EventDone />
-              </span>
-              Date read:
-            </div>
-
-            <DateSelector
-              id="dateFinished"
-              name="dateFinished"
-              inputClassName="!w-full !input"
-              className="w-full"
-              slot="input"
-              datetime={book.dateFinished ?? DEFAULT_OPTIONAL_DATETIME}
-            />
-          </InputAny>
-
-          <!-- <InputSelect
-            value={book.yearRead}
-            displayName="Read in (year)"
-            name={"year"}
-            error={(form?.errors?.year ?? [undefined])[0]}
-          >
-            {#each range(startDate, endDate) as year}
-              <option value={year}>
-                {year}
-              </option>
-            {/each}
-          </InputSelect> -->
-
           <InputSelect
             value={book.bookList?.name}
             displayName="List"
@@ -462,41 +452,6 @@
         <BookApiDataEdit data={book.bookApiData} />
 
         <div class="my-7">
-          {#if book.rating !== null}
-            <div class="flex gap-2 items-center mb-1">
-              <h2 class="text-xl">Rating</h2>
-              <div>
-                (<input
-                  class="max-w-[3.5rem] p-0 text-center"
-                  name="stars"
-                  type="number"
-                  step="0.5"
-                  bind:value={book.rating.stars}
-                  min="0"
-                  max={MAX_RATING}
-                />
-                / {MAX_RATING})
-              </div>
-            </div>
-            <Rating
-              bind:rating={book.rating.stars}
-              rating_max={MAX_RATING}
-              editable={true}
-            />
-
-            <section>
-              <h2 class="text-xl mt-5">Comment</h2>
-              <div class="w-full">
-                <textarea
-                  class="w-full input"
-                  name="comment"
-                  id="comment"
-                  bind:value={book.rating.comment}
-                  rows="10"
-                />
-              </div>
-            </section>
-          {/if}
           <section>
             <h2 class="text-xl mt-5">Series</h2>
             <span class="text-base text-slate-500"
@@ -547,39 +502,6 @@
             />
           </section>
 
-          <section class="mt-5">
-            <h2 class="text-xl mb-1">Story graphs</h2>
-            <div class="default-border p-2">
-              <LineChartDrawer
-                allowEdits={true}
-                bind:title={tensionGraph.title}
-                bind:labels={tensionGraph.labels}
-                bind:details={tensionGraph.details}
-                bind:data={tensionGraph.data}
-              />
-              <input
-                type="hidden"
-                name="graphs[title]"
-                value={tensionGraph.title}
-              />
-              <input
-                type="hidden"
-                name="graphs[labels]"
-                value={JSON.stringify(tensionGraph.labels)}
-              />
-              <input
-                type="hidden"
-                name="graphs[details]"
-                value={JSON.stringify(tensionGraph.details)}
-              />
-              <input
-                type="hidden"
-                name="graphs[data]"
-                value={JSON.stringify(tensionGraph.data)}
-              />
-            </div>
-          </section>
-
           <div class="min-[500px]:flex min-[500px]:justify-end">
             <button
               formaction="?/save"
@@ -595,10 +517,9 @@
   </form>
 </div>
 
-<BookDeletePopUp
-  deletionBook={book}
-  bind:openModal={open_delete}
-  on:success={() => goto("/")}
+<ReadingActivityForm
+  bind:showModal={showCreateReadingActivity}
+  bookId={book.id}
 />
 
 <style>

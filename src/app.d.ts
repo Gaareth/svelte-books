@@ -39,23 +39,43 @@ export type BookFullType = Prisma.BookGetPayload<{
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
+export type ReadingActivityWithDates = Prisma.ReadingActivityGetPayload<{
+  include: { dateFinished: true; dateStarted: true };
+}>;
+
 export type BookDate = Prisma.BookGetPayload<{
-  include: { dateStarted: true; dateFinished: true };
+  include: {
+    readingStatus: { include: { dateStarted: true; dateFinished: true } };
+  };
 }>;
 
 // export type BookFull = BookRating &
 //   Prisma.BookGetPayload<{ include: { bookApiData: true } }>;
 
-export type BookListItemType = Prisma.BookGetPayload<{
+export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
   include: {
-    dateStarted: true;
-    dateFinished: true;
     rating: true;
-    bookApiData: {
+    book: {
       include: {
-        categories: true;
+        bookApiData: {
+          include: {
+            categories: true;
+          };
+        };
       };
     };
+    dateStarted: true;
+    dateFinished: true;
+  };
+}>;
+
+export type ReviewListItemType = Prisma.ReadingActivityGetPayload<{
+  include: {
+    rating: true;
+    dateStarted: true;
+    dateFinished: true;
+    storyGraphs: true;
+    book: true;
   };
 }>;
 
@@ -126,4 +146,22 @@ export type queriedBookFull = {
 
 export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
 export type DEFAULT_LIST = (typeof DEFAULT_LISTS)[number];
+
+export const READING_STATUS = {
+  READING: "reading",
+  FINISHED: "finished",
+  DID_NOT_FINISH: "did not finish",
+  PAUSED: "paused",
+} as const;
+export type READING_STATUS =
+  (typeof READING_STATUS)[keyof typeof READING_STATUS];
+
+export const READING_STATUS_VALUES = Object.values(READING_STATUS) as Array<
+  (typeof READING_STATUS)[keyof typeof READING_STATUS]
+>;
+// Ensure READING_STATUS_VALUES is a tuple for Zod enum
+export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
+  string,
+  ...string[]
+];
 export {};

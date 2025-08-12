@@ -5,9 +5,12 @@
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
   import Dropdown from "$lib/Dropdown.svelte";
   import IconAccount from "$lib/icons/IconAccount.svelte";
+  import clsx from "clsx";
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
   export let data;
+
+  $: headerConfig = $page.data.headerConfig || {};
 </script>
 
 <svelte:head>
@@ -16,7 +19,10 @@
 
 <header
   aria-label="Site Header"
-  class="shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
+  class={clsx(
+    !headerConfig.transparent &&
+      "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
+  )}
 >
   <div class="mx-auto max-w-screen-xl p-4">
     <div
@@ -99,7 +105,7 @@
 <main class="pb-20 px-2 md:px-0">
   <Toaster />
 
-  <div class="container max-w-3xl mx-auto w-">
+  <div class="container max-w-3xl mx-auto">
     <slot />
   </div>
 </main>

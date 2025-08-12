@@ -36,7 +36,8 @@ model Account {
 
   books Book[]
 
-  bookList BookList[]
+  bookList        BookList[]
+  ReadingActivity ReadingActivity[]
 }
 
 // enum Visibility {
@@ -94,10 +95,10 @@ model OptionalDatetime {
   hour   Int?
   minute Int?
 
-  timezoneOffset Int? // timezone offset minutes
+  timezoneOffset Int? // timezone offset minutes 
 
-  booksStarted  Book[] @relation("dateStarted")
-  booksFinished Book[] @relation("dateFinished")
+  booksStarted  ReadingActivity[] @relation("dateStarted")
+  booksFinished ReadingActivity[] @relation("dateFinished")
 }
 
 model Graph {
@@ -108,8 +109,30 @@ model Graph {
   labels  String
   details String
 
+  readingActivity   ReadingActivity @relation(fields: [readingActivityId], references: [id], onDelete: Cascade)
+  readingActivityId Int
+}
+
+model ReadingActivity {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
   bookId String
   book   Book   @relation(fields: [bookId], references: [id])
+
+  dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
+  dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])
+  dateStartedId  Int?
+  dateFinishedId Int?
+
+  status String // reading, finished, did not finish, paused
+
+  storyGraphs Graph[]
+  rating      Rating?
 }
 
 model Book {
@@ -121,18 +144,12 @@ model Book {
   author     String
   coverImage String?
 
-  monthRead Int?
-  yearRead  Int?
-
-  dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
-  dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])
-  dateStartedId  Int?
-  dateFinishedId Int?
+  // monthRead Int?
+  // yearRead  Int?
 
   // bookListName String?
   bookListId Int?
   bookList   BookList? @relation(fields: [bookListId], references: [id])
-  rating     Rating?
 
   bookSeriesId Int?
   bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])
@@ -144,13 +161,18 @@ model Book {
 
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
+  // @@unique([name, author, accountId])
 
-  storyGraphs Graph[]
+  readingActivity ReadingActivity[]
+
+  location       String?
+  recommendation String?
 }
 
 model Rating {
-  stars   Float
-  bookId  String  @unique
-  comment String?
-  book    Book    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  ratingId          Int             @id @default(autoincrement())
+  stars             Float
+  comment           String?
+  readingActivity   ReadingActivity @relation(fields: [readingActivityId], references: [id], onDelete: Cascade)
+  readingActivityId Int             @unique
 }

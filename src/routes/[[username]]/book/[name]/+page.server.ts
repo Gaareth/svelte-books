@@ -1,3 +1,4 @@
+import { READING_STATUS } from "$appTypes";
 import {
   extractBookApiData,
   extractCategories,
@@ -23,20 +24,23 @@ export async function load(page: ServerLoadEvent) {
       accountId,
     },
     include: {
-      rating: true,
-      dateStarted: true,
-      dateFinished: true,
       bookList: true,
       bookSeries: {
         include: {
           books: {
             include: {
-              rating: true,
-              dateStarted: true,
-              dateFinished: true,
               bookApiData: {
                 include: {
                   categories: true,
+                },
+              },
+              readingActivity: {
+                include: {
+                  dateStarted: true,
+                  dateFinished: true,
+                  rating: true,
+                  storyGraphs: true,
+                  book: true,
                 },
               },
             },
@@ -48,7 +52,15 @@ export async function load(page: ServerLoadEvent) {
           categories: true,
         },
       },
-      storyGraphs: true,
+      readingActivity: {
+        include: {
+          dateStarted: true,
+          dateFinished: true,
+          rating: true,
+          storyGraphs: true,
+          book: true,
+        },
+      },
     },
   });
 
@@ -62,13 +74,16 @@ export async function load(page: ServerLoadEvent) {
     error(404, { message: "Not found" });
   }
 
-  const books = (await loadBooks({ accountId }, "Read")).books;
+  const books = await loadBooks({ accountId }, undefined);
 
   return {
     book,
     books,
     bookLists,
     edit,
+    headerConfig: {
+      transparent: true,
+    },
   };
 }
 
@@ -206,7 +221,7 @@ export const actions = {
     const accountId = await checkBookAuth(event.locals, event.params);
     const f = await event.request.formData();
     const readNowSchema = z.object({
-      id: z.string(),
+      readingActivityId: z.number(),
     });
     const result = readNowSchema.safeParse(Object.fromEntries(f));
     if (!result.success) {
@@ -217,10 +232,10 @@ export const actions = {
       });
     }
 
-    const { id } = result.data;
+    const { readingActivityId } = result.data;
     const now = new Date();
-    const book = await prisma.book.update({
-      where: { id },
+    await prisma.readingActivity.update({
+      where: { id: readingActivityId },
       data: {
         dateFinished: {
           create: {
@@ -229,22 +244,13 @@ export const actions = {
             year: now.getFullYear(),
             hour: now.getHours(),
             minute: now.getMinutes(),
-            // timezoneOffset: now.getTimezoneOffset(),
           },
         },
-
-        bookList: {
-          connect: {
-            name_accountId: {
-              name: "Read",
-              accountId,
-            },
-          },
-        },
+        status: READING_STATUS.FINISHED,
       },
     });
 
-    redirect(302, "/book/" + encodeURIComponent(book.name));
+    redirect(302, "/");
   },
 
   save: async (event: RequestEvent) => {
@@ -362,60 +368,65 @@ export const actions = {
         });
       }
 
-      // only delete if exist
-      if (dateFinished == null || dateStarted == null) {
-        const currentBook = await prisma.book.findUnique({ where: { id } });
-        console.log("cb", currentBook);
+      // // only delete if exist
+      // if (dateFinished == null || dateStarted == null) {
+      //   const currentBook = await prisma.book.findUnique({ where: { id } });
+      //   console.log("cb", currentBook);
 
-        if (currentBook?.dateStartedId != null && dateStarted == null) {
-          await prisma.book.update({
-            where: { id },
-            data: {
-              dateStarted: { delete: true },
-            },
-          });
-        }
+      //   if (currentBook?.dateStartedId != null && dateStarted == null) {
+      //     await prisma.book.update({
+      //       where: { id },
+      //       data: {
+      //         dateStarted: { delete: true },
+      //       },
+      //     });
+      //   }
 
-        if (currentBook?.dateFinishedId != null && dateFinished == null) {
-          await prisma.book.update({
-            where: { id },
-            data: {
-              dateFinished: { delete: true },
-            },
-          });
-        }
-      }
+      //   if (currentBook?.dateFinishedId != null && dateFinished == null) {
+      //     await prisma.book.update({
+      //       where: { id },
+      //       data: {
+      //         dateFinished: { delete: true },
+      //       },
+      //     });
+      //   }
+      // }
+
+      //  dateStarted: dateStarted
+      //     ? {
+      //       upsert: {
+      //         update: dateStarted,
+      //         create: dateStarted,
+      //       },
+      //     }
+      //     : undefined,
+      //   dateFinished: dateFinished
+      //     ? {
+      //       upsert: {
+      //         update: dateFinished,
+      //         create: dateFinished,
+      //       },
+      //     }
+      //     : undefined,
+      //   rating:
+      //     stars !== undefined
+      //       ? {
+      //         upsert: {
+      //           update: { stars: stars, comment },
+      //           create: { stars: stars, comment },
+      //         },
+      //       }
+      //       : undefined,
+      // storyGraphs: {
+      //     deleteMany: {}, // delete all
+      //   },
 
       const book = await prisma.book.update({
         where: { id },
         data: {
           name,
           author,
-          dateStarted: dateStarted
-            ? {
-                upsert: {
-                  update: dateStarted,
-                  create: dateStarted,
-                },
-              }
-            : undefined,
-          dateFinished: dateFinished
-            ? {
-                upsert: {
-                  update: dateFinished,
-                  create: dateFinished,
-                },
-              }
-            : undefined,
-          rating:
-            stars !== undefined
-              ? {
-                  upsert: {
-                    update: { stars: stars, comment },
-                    create: { stars: stars, comment },
-                  },
-                }
-              : undefined,
+
           bookList: {
             connect: {
               name_accountId: {
@@ -427,27 +438,23 @@ export const actions = {
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,
-          storyGraphs: {
-            deleteMany: {}, // delete all
-          },
         },
       });
 
       // todo: extend for multiple
-      if (graphs != null) {
-        const g = await prisma.graph.create({
-          data: {
-            data: JSON.stringify(graphs.data),
-            labels: JSON.stringify(graphs.labels),
-            details: JSON.stringify(graphs.details),
-            title: graphs.title,
-            bookId: book.id,
-          },
-        });
-        // console.log(graphs);
+      // if (graphs != null) {
+      //   const g = await prisma.graph.create({
+      //     data: {
+      //       data: JSON.stringify(graphs.data),
+      //       labels: JSON.stringify(graphs.labels),
+      //       details: JSON.stringify(graphs.details),
+      //       title: graphs.title,
+      //     },
+      //   });
+      //   // console.log(graphs);
 
-        // console.log("graph", g);
-      }
+      //   // console.log("graph", g);
+      // }
 
       console.log("nnew book:", book);
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import BookList from "$lib/BookList/BookList.svelte";
+  import BookList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import type { PageData } from "./$types";
 

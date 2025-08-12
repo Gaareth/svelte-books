@@ -10,30 +10,37 @@
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
   import { Prisma } from "@prisma/client";
-  type BookStatistics = Prisma.BookGetPayload<{
+  import { READING_STATUS } from "$appTypes";
+  type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {
-      bookList: true;
       dateStarted: true;
       dateFinished: true;
       rating: true;
-      bookApiData: {
+      book: {
         include: {
-          categories: true;
+          bookList: true;
+          bookApiData: {
+            include: {
+              categories: true;
+            };
+          };
         };
       };
     };
   }>;
-  export let books: BookStatistics[];
-  books = books.filter((b) => b.bookList?.name == "Read");
+  export let readingActivities: ActivityStatistics[];
+  readingActivities = readingActivities.filter(
+    (a) => a.status == READING_STATUS.FINISHED
+  );
 
   function calc_most_read_categories(
-    books: BookStatistics[]
+    entry: ActivityStatistics[]
   ): [string, number][] {
     const category_count_map = new Map<string, number>();
 
     // Count each category across all books
-    books.forEach((book: BookStatistics) => {
-      book.bookApiData?.categories.forEach(({ name: category_name }) => {
+    entry.forEach((entry: ActivityStatistics) => {
+      entry.book.bookApiData?.categories.forEach(({ name: category_name }) => {
         category_count_map.set(
           category_name,
           (category_count_map.get(category_name) || 0) + 1
@@ -48,81 +55,88 @@
   }
 
   const most_read_categories: [string, number][] =
-    calc_most_read_categories(books);
+    calc_most_read_categories(readingActivities);
 
   const AVERAGE_NUM_WORDS_PER_PAGE = 250;
   const AVERAGE_NUM_PAGES_PER_BOOK = 350;
 
-  const count_pages = (books: BookStatistics[]) =>
+  const count_pages = (entries: ActivityStatistics[]) =>
     sum(
-      books.map((b) => b.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK)
-    );
-
-  const count_words = (books: BookStatistics[]) =>
-    sum(
-      books.map(
-        (b) =>
-          (b.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK) *
-          (b.wordsPerPage ?? AVERAGE_NUM_WORDS_PER_PAGE)
+      entries.map(
+        (e) => e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK
       )
     );
 
-  let books_without_pagecount = books.filter(
-    (b) => b.bookApiData?.pageCount == null
-  );
-  let num_pages = count_pages(books);
-  let pagecount_accuracy = 1 - books_without_pagecount.length / books.length;
+  const count_words = (entries: ActivityStatistics[]) =>
+    sum(
+      entries.map(
+        (e) =>
+          (e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK) *
+          (e.book.wordsPerPage ?? AVERAGE_NUM_WORDS_PER_PAGE)
+      )
+    );
 
-  let books_without_words = books.filter(
-    (b) => b.bookApiData?.pageCount == null || b.wordsPerPage == null
+  let books_without_pagecount = readingActivities.filter(
+    (e) => e.book.bookApiData?.pageCount == null
   );
-  let num_words = count_words(books);
-  let wordcount_accuracy = 1 - books_without_words.length / books.length;
+
+  let num_pages = count_pages(readingActivities);
+  let pagecount_accuracy =
+    1 - books_without_pagecount.length / readingActivities.length;
+
+  let books_without_words = readingActivities.filter(
+    (e) => e.book.bookApiData?.pageCount == null || e.book.wordsPerPage == null
+  );
+  let num_words = count_words(readingActivities);
+  let wordcount_accuracy =
+    1 - books_without_words.length / readingActivities.length;
 
   let showModal = false;
   let booksMissingList = [];
 
   let now = new Date();
 
-  let books_read_per_month = (month: number): BookStatistics[] => {
+  let books_read_per_month = (month: number): ActivityStatistics[] => {
     month = month == 0 ? 12 : month;
-    return books.filter(
-      (b) =>
-        b.dateFinished?.year == now.getFullYear() &&
-        b.dateFinished.month !== null &&
-        b.dateFinished.month == month
+    return readingActivities.filter(
+      (e) =>
+        e.dateFinished?.year == now.getFullYear() &&
+        e.dateFinished.month !== null &&
+        e.dateFinished.month == month
     );
   };
 
-  let books_this_month: BookStatistics[] = books_read_per_month(
+  let books_this_month: ActivityStatistics[] = books_read_per_month(
     now.getMonth() + 1
   );
 
   let pages_this_month = count_pages(books_this_month);
   let words_this_month = count_words(books_this_month);
 
-  let books_last_month: BookStatistics[] = books_read_per_month(now.getMonth());
+  let books_last_month: ActivityStatistics[] = books_read_per_month(
+    now.getMonth()
+  );
   let pages_last_month = count_pages(books_last_month);
   let words_last_month = count_words(books_last_month);
 
-  let books_read_per_year = (year: number): BookStatistics[] => {
-    return books.filter((b) => b.dateFinished?.year == year);
+  let books_read_per_year = (year: number): ActivityStatistics[] => {
+    return readingActivities.filter((e) => e.dateFinished?.year == year);
   };
 
-  let books_this_year: BookStatistics[] = books_read_per_year(
+  let books_this_year: ActivityStatistics[] = books_read_per_year(
     now.getFullYear()
   );
   let pages_this_year = count_pages(books_this_year);
   let words_this_year = count_words(books_this_year);
 
-  let books_last_year: BookStatistics[] = books_read_per_year(
+  let books_last_year: ActivityStatistics[] = books_read_per_year(
     now.getFullYear() - 1
   );
   let pages_last_year = count_pages(books_last_year);
   let words_last_year = count_words(books_last_year);
 
-  let calc_most_read_authors = (books: BookStatistics[]) => {
-    let authors = books.map((b) => b.author);
+  let calc_most_read_authors = (entries: ActivityStatistics[]) => {
+    let authors = entries.map((e) => e.book.author);
     let author_occur: { [key: string]: number } = {};
     authors.forEach((a: string) =>
       author_occur[a] ? ++author_occur[a] : (author_occur[a] = 1)
@@ -133,7 +147,7 @@
     );
     return sortedArray;
   };
-  $: most_read_authors = calc_most_read_authors(books);
+  $: most_read_authors = calc_most_read_authors(readingActivities);
 
   let selected_option: "books" | "pages" | "words" = "books";
 
@@ -205,10 +219,10 @@
     </p>
   </div>
   <ul class="list-disc p-2 sm:w-[30rem]">
-    {#each selected_option == "pages" ? books_without_pagecount : books_without_words as book}
+    {#each selected_option == "pages" ? books_without_pagecount : books_without_words as entry}
       <li>
-        <a href="book/{book.name}?edit=true" class="hover:underline">
-          {book.name}
+        <a href="book/{entry.book.name}?edit=true" class="hover:underline">
+          {entry.book.name}
         </a>
       </li>
     {/each}
@@ -219,7 +233,7 @@
   {#if selected_option == "books"}
     <Stats
       name="total books read"
-      value={books.length}
+      value={readingActivities.length}
       class="!bg-transparent backdrop-blur"
     />
   {:else if selected_option == "pages"}
@@ -290,7 +304,7 @@
 </div>
 
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">
-  {#if books.length > 0}
+  {#if readingActivities.length > 0}
     <Stats
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
       class="!bg-transparent backdrop-blur"
@@ -308,7 +322,7 @@
       </div>
     </Stats>
   {/if}
-  {#if books.length > 0 && most_read_categories[0] !== undefined}
+  {#if readingActivities.length > 0 && most_read_categories[0] !== undefined}
     <Stats
       value={most_read_categories[0][0] +
         " (" +
