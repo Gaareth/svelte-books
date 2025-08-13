@@ -26,7 +26,6 @@ export async function POST(req: RequestEvent) {
   const accountId = await checkBookAuth(req.locals, req.params);
 
   const f = await req.request.formData();
-  console.log("Form data received:", f);
   const formData = Object.fromEntries(f);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -37,14 +36,9 @@ export async function POST(req: RequestEvent) {
   // @ts-ignore
   formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
-  // only add graphs if they are present
-  if (f.has("graphs")) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["graphs"] = parseFormObject(formData, "graphs");
-  }
-
-  console.log("to be checked formData: ", formData);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  formData["graphs"] = parseFormObject(formData, "graphs");
 
   const result = saveSchema.safeParse(formData);
   if (!result.success) {
@@ -88,8 +82,28 @@ export async function POST(req: RequestEvent) {
             : undefined,
       },
     });
+
     if (!readingActivity) {
       return json({ success: false });
+    }
+
+    // todo: extend for multiple
+    if (graphs != null) {
+      if (
+        Array.isArray(graphs.data) &&
+        graphs.data.some((value) => value != null)
+      ) {
+        // at least one value is present, so create the graph
+        await prisma.graph.create({
+          data: {
+            data: JSON.stringify(graphs.data),
+            labels: JSON.stringify(graphs.labels),
+            details: JSON.stringify(graphs.details),
+            title: graphs.title,
+            readingActivityId: readingActivity.id,
+          },
+        });
+      }
     }
 
     return json({ success: true });

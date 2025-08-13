@@ -36,11 +36,15 @@ export async function POST(req: RequestEvent) {
   formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
   // only add graphs if they are present
-  if (f.has("graphs")) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["graphs"] = parseFormObject(formData, "graphs");
-  }
+  // if (f.has("graphs")) {
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   formData["graphs"] = parseFormObject(formData, "graphs");
+  // }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  formData["graphs"] = parseFormObject(formData, "graphs");
 
   console.log("to be checked formData: ", formData);
 
@@ -95,6 +99,20 @@ export async function POST(req: RequestEvent) {
     });
     if (!readingActivity) {
       return json({ success: false });
+    }
+
+    // todo: extend for multiple
+
+    if (graphs != null) {
+      await prisma.graph.create({
+        data: {
+          data: JSON.stringify(graphs.data),
+          labels: JSON.stringify(graphs.labels),
+          details: JSON.stringify(graphs.details),
+          title: graphs.title,
+          readingActivityId: readingActivity.id,
+        },
+      });
     }
 
     return json({ success: true });

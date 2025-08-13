@@ -14,11 +14,36 @@
   import toast from "svelte-french-toast";
   import { MAX_RATING } from "../../constants";
   import { type ReviewListItemType } from "$appTypes";
+  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
+  import clsx from "clsx";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;
   export let entry: ReviewListItemType | undefined = undefined;
+
   let stars = entry?.rating?.stars;
+
+  let tensionGraph =
+    entry?.storyGraphs && entry?.storyGraphs?.length > 0
+      ? {
+          labels: JSON.parse(entry.storyGraphs[0].labels),
+          details: JSON.parse(entry.storyGraphs[0].details),
+          data: JSON.parse(entry.storyGraphs[0].data),
+          title: entry.storyGraphs[0].title,
+        }
+      : {
+          title: "tension", // the rest is default in the component
+        };
+
+  let error: { dateStarted: any } | undefined = undefined;
+
+  // Create separate copies to prevent DateSelector components from sharing the same object reference
+  $: dateStartedValue = entry?.dateStarted
+    ? { ...entry.dateStarted }
+    : { ...DEFAULT_OPTIONAL_DATETIME };
+  $: dateFinishedValue = entry?.dateFinished
+    ? { ...entry.dateFinished }
+    : { ...DEFAULT_OPTIONAL_DATETIME };
 </script>
 
 <Modal
@@ -53,13 +78,15 @@
         } else {
           //@ts-ignore
           console.log("error", result.error);
+          //@ts-ignore
+          error = result.error;
 
           toast.error(
             `Error ${entry == null ? "creating" : "updating"} reading activity`
           );
         }
 
-        invalidateAll();
+        await invalidateAll();
       };
     }}
   >
@@ -71,7 +98,7 @@
 
     <div class="mt-5 flex flex-col gap-4">
       <div>
-        <InputAny name="dateStarted">
+        <InputAny name="dateStarted" error={error?.dateStarted}>
           <div class="icon-wrapper" slot="label">
             <span class="w-5 block" title="date started">
               <EventProgress />
@@ -85,7 +112,7 @@
             name="dateStarted"
             inputClassName="!w-full !input dark:bg-slate-600"
             className="w-full"
-            datetime={entry?.dateStarted ?? DEFAULT_OPTIONAL_DATETIME}
+            datetime={dateStartedValue}
           />
         </InputAny>
       </div>
@@ -105,7 +132,7 @@
             inputClassName="!w-full !input dark:bg-slate-600"
             className="w-full"
             slot="input"
-            datetime={entry?.dateFinished ?? DEFAULT_OPTIONAL_DATETIME}
+            datetime={dateFinishedValue}
           />
         </InputAny>
       </div>
@@ -146,8 +173,13 @@
       </div>
 
       <section>
-        <h2 class="text-xl">Comment</h2>
-        <div class="w-full">
+        <details>
+          <summary
+            class={clsx(
+              "cursor-pointer text-xl",
+              !entry?.rating?.comment && "text-secondary"
+            )}>Comment</summary
+          >
           <textarea
             class="w-full input dark:bg-slate-600"
             name="comment"
@@ -155,7 +187,49 @@
             value={entry?.rating?.comment ?? ""}
             rows="5"
           />
-        </div>
+        </details>
+      </section>
+
+      <section>
+        <details>
+          <summary
+            class={clsx(
+              "cursor-pointer text-xl",
+              entry?.storyGraphs?.length == 0 && "text-secondary"
+            )}>Story graphs</summary
+          >
+          <div class="default-border p-2 dark:bg-slate-600">
+            <LineChartDrawer
+              allowEdits={true}
+              bgColorDark="#64748b"
+              inputClassName="dark:bg-slate-500 dark:border-slate-500"
+              bind:title={tensionGraph.title}
+              bind:labels={tensionGraph.labels}
+              bind:details={tensionGraph.details}
+              bind:data={tensionGraph.data}
+            />
+            <input
+              type="hidden"
+              name="graphs[title]"
+              value={tensionGraph.title}
+            />
+            <input
+              type="hidden"
+              name="graphs[labels]"
+              value={JSON.stringify(tensionGraph.labels)}
+            />
+            <input
+              type="hidden"
+              name="graphs[details]"
+              value={JSON.stringify(tensionGraph.details)}
+            />
+            <input
+              type="hidden"
+              name="graphs[data]"
+              value={JSON.stringify(tensionGraph.data)}
+            />
+          </div>
+        </details>
       </section>
     </div>
 

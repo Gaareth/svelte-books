@@ -21,9 +21,12 @@
   import Modal from "./Modal.svelte";
   import { clamp } from "./utils";
   import { onMount } from "svelte";
+  import clsx from "clsx";
+  import { twMerge } from "tailwind-merge";
 
   export let allowEdits = false;
   export let title: string;
+  export let inputClassName = "";
 
   let chart: any | null = null;
   let canvas: HTMLCanvasElement;
@@ -68,8 +71,9 @@
 
   $: fgColor = $theme == "dark" ? "white" : "dark";
 
+  export let bgColorDark = "#334155";
   $: grid = {
-    color: $theme == "dark" ? "#334155" : "#",
+    color: $theme == "dark" ? bgColorDark : "#",
   };
 
   // $: labelMaxWidth = chart.width / length;
@@ -123,17 +127,18 @@
   let selectedLabelIndex: number;
 
   const startDrawing = (event: any): void => {
+    if (!allowEdits) return;
     isDrawing = true;
     options.animation = false;
   };
 
   const draw = (e: any): void => {
-    if (!isDrawing) return;
+    if (!isDrawing || !allowEdits) return;
     drawPoints(e);
   };
 
   const drawPoints = (e: any) => {
-    if (chart == null) return;
+    if (chart == null || !allowEdits) return;
     //@ts-ignore
     const canvasPosition = getRelativePosition(e, chart);
     const xValue = chart.scales.x.getValueForPixel(canvasPosition.x);
@@ -150,13 +155,14 @@
   };
 
   const drawTouch = (event: TouchEvent | any): void => {
-    if (!isDrawing) return;
+    if (!isDrawing || !allowEdits) return;
     const touch = event.touches[0];
     drawPoints(touch);
     event.preventDefault(); // Prevent scrolling
   };
 
   const stopDrawing = (): void => {
+    if (!allowEdits) return;
     isDrawing = false;
     // options.animation = true;
   };
@@ -169,7 +175,11 @@
     <div class="flex flex-wrap gap-5">
       <label>
         Title
-        <input type="text" class="input w-auto" bind:value={title} />
+        <input
+          type="text"
+          class={twMerge("input w-auto", inputClassName)}
+          bind:value={title}
+        />
       </label>
 
       <label>
@@ -219,6 +229,8 @@
     on:touchend={stopDrawing}
     on:touchcancel={stopDrawing}
     on:click={(e) => {
+      if (!allowEdits) return;
+
       //@ts-ignore
       const el = getElementAtEvent(chart, e);
       if (el[0] == null) return;

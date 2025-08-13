@@ -59,7 +59,7 @@
   export let allow_deletion: boolean | undefined = true;
 
   const dispatch = createEventDispatcher<{ delete: ItemDeleteEvent }>();
-  // console.log(book);
+  console.log(entry.storyGraphs);
 
   let expanded = false;
   let editExpanded = false;
@@ -330,37 +330,43 @@
 
   <section class="mt-5">
     <h2 class="text-xl">Review</h2>
-    <p class="text-secondary">{entry.rating?.comment}</p>
+    <p class="text-secondary">{entry.rating?.comment ?? "No comment added"}</p>
   </section>
 
-  <section class="mt-5">
-    <h2 class="text-xl mb-1">Story graphs</h2>
-    <div class="default-border p-2">
-      <LineChartDrawer
-        allowEdits={true}
-        bind:title={tensionGraph.title}
-        bind:labels={tensionGraph.labels}
-        bind:details={tensionGraph.details}
-        bind:data={tensionGraph.data}
-      />
-      <input type="hidden" name="graphs[title]" value={tensionGraph.title} />
-      <input
-        type="hidden"
-        name="graphs[labels]"
-        value={JSON.stringify(tensionGraph.labels)}
-      />
-      <input
-        type="hidden"
-        name="graphs[details]"
-        value={JSON.stringify(tensionGraph.details)}
-      />
-      <input
-        type="hidden"
-        name="graphs[data]"
-        value={JSON.stringify(tensionGraph.data)}
-      />
-    </div>
-  </section>
+  {#if entry.storyGraphs.length > 0}
+    <section class="mt-5">
+      <h2 class="text-xl mb-1">Story graphs</h2>
+      <div class="default-border p-2">
+        <LineChartDrawer
+          allowEdits={false}
+          bind:title={tensionGraph.title}
+          bind:labels={tensionGraph.labels}
+          bind:details={tensionGraph.details}
+          bind:data={tensionGraph.data}
+        />
+        <input type="hidden" name="graphs[title]" value={tensionGraph.title} />
+        <input
+          type="hidden"
+          name="graphs[labels]"
+          value={JSON.stringify(tensionGraph.labels)}
+        />
+        <input
+          type="hidden"
+          name="graphs[details]"
+          value={JSON.stringify(tensionGraph.details)}
+        />
+        <input
+          type="hidden"
+          name="graphs[data]"
+          value={JSON.stringify(tensionGraph.data)}
+        />
+      </div>
+    </section>
+  {/if}
+
+  <p class="text-secondary mt-5 -mb-4 text-sm text-end">
+    Created at: {entry.createdAt.toLocaleString()}
+  </p>
 </Modal>
 
 <ReadingActivityForm bind:showModal={editExpanded} {entry} />
@@ -369,6 +375,7 @@
   deletionEntry={entry}
   bind:openModal={deleteExpanded}
   on:success={() => {
+    deleteExpanded = false;
     invalidateAll();
   }}
 />
