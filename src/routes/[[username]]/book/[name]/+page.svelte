@@ -322,7 +322,7 @@
             </span>
           </div>
 
-          <div class="text-secondary flex flex-col lg:overflow-y-hidden">
+          <div class="text-secondary flex flex-col lg:hidden">
             <span class="text-base leading-snug">
               Publisher: {book.bookApiData?.publisher ?? "Unknown"}
             </span>
