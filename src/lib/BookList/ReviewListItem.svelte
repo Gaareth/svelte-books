@@ -68,14 +68,23 @@
   const getColor = (statuss: string) => {
     const status = statuss as READING_STATUS;
 
-    if (status === "reading") {
-      return "bg-yellow-500";
-    } else if (status === "did not finish") {
-      return "bg-red-600";
-    } else if (status === "finished") {
-      return "bg-green-500";
-    } else if (status === "paused") {
-      return "bg-gray-500";
+    switch (status) {
+      case "reading":
+        return "bg-yellow-500";
+      case "did not finish":
+        return "bg-red-600";
+      case "finished":
+        return "bg-green-500";
+      case "paused":
+        return "bg-gray-500";
+      case "to read":
+        return "bg-blue-500";
+      default: {
+        // This will cause a compile-time error if a case is missing
+        // by ensuring 'never' type is handled
+        const exhaustiveCheck: never = status;
+        throw new Error(`Unhandled status: ${status}`);
+      }
     }
   };
 

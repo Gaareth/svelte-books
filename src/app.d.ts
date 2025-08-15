@@ -161,6 +161,7 @@ export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
 export type DEFAULT_LIST = (typeof DEFAULT_LISTS)[number];
 
 export const READING_STATUS = {
+  TO_READ: "to read",
   READING: "reading",
   FINISHED: "finished",
   DID_NOT_FINISH: "did not finish",
