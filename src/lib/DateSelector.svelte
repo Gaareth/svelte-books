@@ -74,6 +74,8 @@
 
 <script lang="ts">
   import { twMerge } from "tailwind-merge";
+  //@ts-ignore
+  import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
@@ -86,19 +88,23 @@
   export let className: string | undefined = undefined;
   export let inputClassName: string | undefined = undefined;
 
+  export let clearButton: boolean = false;
+
   export let datetime: OptionalDate;
+
+  const NULL_DATETIME = {
+    year: undefined,
+    month: null,
+    day: null,
+
+    hour: null,
+    minute: null,
+    timezoneOffset: null,
+  };
 
   $: {
     if (datetime == null) {
-      datetime = {
-        year: undefined,
-        month: null,
-        day: null,
-
-        hour: null,
-        minute: null,
-        timezoneOffset: null,
-      };
+      datetime = NULL_DATETIME;
     }
   }
 
@@ -235,6 +241,16 @@
 
   // Array of days (1 to 31)
   const days: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  function clearSelection(): any {
+    datetime = NULL_DATETIME;
+    showPopover = false;
+  }
+
+  $: hoverCss =
+    datetime != NULL_DATETIME
+      ? "group-hover:animate-drop-hover group-active:animate-drop-click"
+      : "text-neutral-500";
 </script>
 
 <Dropdown
@@ -243,14 +259,28 @@
   closeOnClick={false}
   bind:open={showPopover}
 >
-  <input
-    class={twMerge(inputClassName)}
-    value={dateString}
-    on:click={togglePopover}
-    slot="triggerWrapper"
-    {id}
-    readonly
-  />
+  <div slot="triggerWrapper" class="flex gap-2">
+    <input
+      class={twMerge(inputClassName)}
+      value={dateString}
+      on:click={togglePopover}
+      {id}
+      readonly
+    />
+    {#if clearButton}
+      <button
+        on:click={() => clearSelection()}
+        disabled={datetime == null}
+        type="button"
+        class="group flex"
+        title="Clear Input"
+      >
+        <span class={twMerge("inline-block w-5 group self-center", hoverCss)}>
+          <IoIosRemoveCircle />
+        </span>
+      </button>
+    {/if}
+  </div>
 
   <div
     class=" max-w-96 w-auto p-3 border rounded-md dark:border-slate-500 dark:bg-slate-700 flex flex-col bg-white"
@@ -291,14 +321,14 @@
         />
       </div>
 
-      <div class="flex gap-1">
+      <div class="grid grid-cols-2 gap-1">
         <!-- Month (Optional) -->
         <div>
           <label for="month">Month</label>
           <select
             id="month"
             bind:value={datetime.month}
-            class="btn-generic-color-2"
+            class="btn-generic-color-2 w-full"
             name={`${name}[month]`}
           >
             <option value={null}>Select Month</option>
@@ -314,7 +344,7 @@
           <select
             id="day"
             bind:value={datetime.day}
-            class="btn-generic-color-2"
+            class="btn-generic-color-2 w-full"
             name={`${name}[day]`}
           >
             <option value={null}>Select Day</option>

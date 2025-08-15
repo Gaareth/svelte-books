@@ -133,7 +133,7 @@
       </p>
 
       <div
-        title={`${formatShort(entry.dateStarted)}-${formatShort(
+        title={`${formatShort(entry.dateStarted)} to ${formatShort(
           entry.dateFinished
         )}`}
       >

@@ -17,7 +17,7 @@ type GetAccountParams = GetAccountById | GetAccountByUsername;
 
 export async function loadBooks(
   accountParams: GetAccountParams,
-  listName: string | undefined = "Read"
+  listName: string | undefined = undefined
 ) {
   const { accountId, accountUsername } = accountParams;
 
@@ -47,6 +47,7 @@ export async function loadBooks(
           dateFinished: true,
           rating: true,
           storyGraphs: true,
+          book: true,
         },
       },
     },

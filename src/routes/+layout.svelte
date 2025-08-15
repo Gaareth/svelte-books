@@ -6,6 +6,7 @@
   import Dropdown from "$lib/Dropdown.svelte";
   import IconAccount from "$lib/icons/IconAccount.svelte";
   import clsx from "clsx";
+  import { twMerge } from "tailwind-merge";
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
   export let data;
@@ -105,7 +106,9 @@
 <main class="pb-20 px-2 md:px-0">
   <Toaster />
 
-  <div class="container max-w-3xl mx-auto">
+  <div
+    class={twMerge("container max-w-3xl mx-auto", headerConfig.wrapperClass)}
+  >
     <slot />
   </div>
 </main>

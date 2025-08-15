@@ -35,7 +35,7 @@
           title: "tension", // the rest is default in the component
         };
 
-  let error: { dateStarted: any } | undefined = undefined;
+  let error: { dateStarted: any; status: any } | undefined = undefined;
 
   // Create separate copies to prevent DateSelector components from sharing the same object reference
   $: dateStartedValue = entry?.dateStarted
@@ -98,6 +98,23 @@
 
     <div class="mt-5 flex flex-col gap-4">
       <div>
+        <InputSelect
+          value={entry?.status}
+          displayName="Status"
+          name={"status"}
+          selectClassName="dark:bg-slate-600"
+          clearButton={false}
+          error={error?.status}
+        >
+          {#each READING_STATUS_VALUES as status}
+            <option value={status}>
+              {status}
+            </option>
+          {/each}
+        </InputSelect>
+      </div>
+
+      <div>
         <InputAny name="dateStarted" error={error?.dateStarted}>
           <div class="icon-wrapper" slot="label">
             <span class="w-5 block" title="date started">
@@ -113,6 +130,7 @@
             inputClassName="!w-full !input dark:bg-slate-600"
             className="w-full"
             datetime={dateStartedValue}
+            clearButton={true}
           />
         </InputAny>
       </div>
@@ -133,23 +151,9 @@
             className="w-full"
             slot="input"
             datetime={dateFinishedValue}
+            clearButton={true}
           />
         </InputAny>
-      </div>
-
-      <div>
-        <InputSelect
-          value={entry?.status}
-          displayName="Status"
-          name={"status"}
-          selectClassName="dark:bg-slate-600"
-        >
-          {#each READING_STATUS_VALUES as status}
-            <option value={status}>
-              {status}
-            </option>
-          {/each}
-        </InputSelect>
       </div>
 
       <div class="flex gap-2 items-center my-1">

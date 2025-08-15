@@ -58,6 +58,31 @@ export async function POST(req: RequestEvent) {
     result.data;
 
   try {
+    // only delete if exist
+    if (dateFinished == null || dateStarted == null) {
+      const currentEntry = await prisma.readingActivity.findUnique({
+        where: { id },
+      });
+
+      if (currentEntry?.dateStartedId != null && dateStarted == null) {
+        await prisma.readingActivity.update({
+          where: { id },
+          data: {
+            dateStarted: { delete: true },
+          },
+        });
+      }
+
+      if (currentEntry?.dateFinishedId != null && dateFinished == null) {
+        await prisma.readingActivity.update({
+          where: { id },
+          data: {
+            dateFinished: { delete: true },
+          },
+        });
+      }
+    }
+
     const readingActivity = await prisma.readingActivity.update({
       where: {
         id: id,

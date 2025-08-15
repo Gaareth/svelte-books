@@ -46,6 +46,7 @@
   // let book: BookAll;
   let book = data.book;
   let books = data.books;
+  // console.log("books", books);
 
   // let no_rating = !data.book?.rating;
   let no_rating = false;
@@ -173,7 +174,7 @@
   <title>{book.name}</title>
 </svelte:head>
 
-<div class="lg:absolute lg:left-0 lg:right-0 lg:mt-5 lg:max-w-6xl mx-auto">
+<div class="mt-5">
   <form
     action="?/save"
     method="POST"
@@ -190,52 +191,6 @@
       };
     }}
   >
-    {#if $page.data.session}
-      <!-- <div class="flex justify-center mb-2 sm:mb-0">
-        <input type="hidden" name="id" value={book.id} />
-
-        <div class="sm:flex sm:flex-col sm:gap-1">
-          <span
-            class="btn-group mb-2 dark:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
-          >
-            <button
-              class="btn-group-btn
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600"
-              type="button"
-              on:click={() => {
-                edit = !edit;
-
-                let query = new URLSearchParams(
-                  $page.url.searchParams.toString()
-                );
-
-                query.set("edit", edit.toString());
-
-                goto(`?${query.toString()}`);
-              }}
-            >
-              {edit ? "Cancel" : "Edit"}
-            </button>
-            {#if edit}
-              <button
-                class="btn-group-btn text-blue-700
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-blue-500"
-              >
-                Save
-              </button>
-            {/if}
-            <button
-              on:click={() => (open_delete = !open_delete)}
-              type="button"
-              class="text-red-700 btn-group-btn
-              dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-600 dark:text-red-500"
-            >
-              Delete
-            </button>
-          </span>
-        </div>
-      </div> -->
-    {/if}
     <div
       class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0"
     >
@@ -293,9 +248,58 @@
 
       <div class="flex flex-col gap-5">
         <div class="lg:item-border-no-hover p-1 lg:p-4 flex flex-col">
-          <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
-            {book.name}
-          </h1>
+          <div class="flex flex-col-reverse lg:flex-row">
+            <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
+              {book.name}
+            </h1>
+
+            {#if $page.data.session}
+              <div class="flex justify-center lg:ml-auto">
+                <input type="hidden" name="id" value={book.id} />
+
+                <div class="sm:flex sm:flex-col sm:gap-1">
+                  <span
+                    class="btn-group mb-2 dark:bg-slate-600 dark:border-slate-500"
+                  >
+                    <button
+                      class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500"
+                      type="button"
+                      on:click={() => {
+                        edit = !edit;
+
+                        let query = new URLSearchParams(
+                          $page.url.searchParams.toString()
+                        );
+
+                        query.set("edit", edit.toString());
+
+                        goto(`?${query.toString()}`);
+                      }}
+                    >
+                      {edit ? "Cancel" : "Edit"}
+                    </button>
+                    {#if edit}
+                      <button
+                        class="btn-group-btn text-blue-700
+              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-blue-500"
+                      >
+                        Save
+                      </button>
+                    {/if}
+                    <button
+                      on:click={() => (open_delete = !open_delete)}
+                      type="button"
+                      class="text-red-700 btn-group-btn
+              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-red-500"
+                    >
+                      Delete
+                    </button>
+                  </span>
+                </div>
+              </div>
+            {/if}
+          </div>
+
           <span class="-mt-1 dark:text-slate-100 text-gray-500">
             {book.author}
           </span>
@@ -371,70 +375,38 @@
 
     {#if !edit}
       <div>
-        <!-- <div class="attribute-stats">
-          <p>Author: {book.author}</p>
-          <p>
-            Started: {formatShort(book.dateStarted, true)}
-          </p>
-          <p>
-            Read: {formatShort(book.dateFinished, true)}
-          </p>
-          <p>
-            Added: {book.createdAt.toLocaleDateString()}
-            {book.createdAt.toLocaleTimeString()}
-          </p>
-        </div>
-
-        <BookApiData data={book.bookApiData} /> -->
-
-        <!-- <div class="my-7">
-          {#if book.rating && !no_rating}
-            <section class="flex gap-2 items-center">
-              <h2 class="text-xl">Rating</h2>
-              <p>({book.rating.stars}/{MAX_RATING})</p>
-            </section>
-            <Rating rating={book.rating.stars} rating_max={MAX_RATING} />
-
-            {#if book.rating.comment && book.rating.comment.length > 0}
-              <section class="py-2 my-2">
-                <h2 class="text-xl">Comment</h2>
-                <p>{book.rating.comment}</p>
-              </section>
-            {:else if $page.data.session}
-              <button class="mt-5" on:click={() => (edit = !edit)}
-                >Add a comment?</button
-              >
-            {/if}
-          {:else}
-            <h2>No rating...</h2>
-          {/if}
-
-          {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
-            <section>
-              <h2 class="text-xl mt-5">Series</h2>
-              <p class="text-slate-500 text-base">
-                following books are also in this series:
-              </p>
-              <div>
-                <BookListSimple books={book.bookSeries.books} />
-              </div>
-            </section>
-          {/if}
-        </div> -->
+        <!-- {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
+          <section>
+            <h2 class="text-xl mt-5">Series</h2>
+            <p class="text-slate-500 text-base">
+              following books are also in this series:
+            </p>
+            <div>
+              <BookListSimple books={book.bookSeries.books} />
+            </div>
+          </section>
+        {/if} -->
       </div>
     {:else}
+      <hr class="my-5" />
+
       <!-- Inputs -->
-      <div class="w-full">
+      <section class="w-full mt-0">
+        <!-- <h2 class="text-3xl">Edit</h2> -->
+
         <div class="grid grid-cols-1 sm:grid-cols-2 items-center sm:gap-3">
           <InputText
-            value={book.name}
+            bind:value={book.name}
             name="name"
             error={form?.errors && "name" in form.errors
               ? form.errors.name?.[0]
               : undefined}
           />
-          <InputText value={book.author} name="author" error={authorError} />
-
+          <InputText
+            bind:value={book.author}
+            name="author"
+            error={authorError}
+          />
           <InputSelect
             value={book.bookList?.name}
             displayName="List"
@@ -467,7 +439,7 @@
                 items={books.filter((b) => b.name != book.name)}
                 labelFunction={autoCompleteBookLabel}
                 bind:selectedItem={selectedSeriesBook}
-                class="input dark:bg-slate-600 dark:border-slate-500 w-full"
+                class="input dark:bg-slate-700 dark:border-none w-full"
               />
               <button
                 title="Add book"
@@ -512,7 +484,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </section>
     {/if}
   </form>
 </div>

@@ -6,9 +6,8 @@ import {
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import { z, ZodIssueCode } from "zod";
+import { z } from "zod";
 import { checkBookAuth } from "../../../../auth";
-import { optionalDatetimeSchema, parseFormObject } from "../../../../schemas";
 import { getBookApiData } from "../../../book/api/api.server";
 import type { Actions, RequestEvent } from "./$types";
 
@@ -83,39 +82,16 @@ export async function load(page: ServerLoadEvent) {
     edit,
     headerConfig: {
       transparent: true,
+      wrapperClass: "max-w-6xl",
     },
   };
 }
-
-const parseJsonPreprocessor = (value: any, ctx: z.RefinementCtx) => {
-  if (typeof value === "string") {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      ctx.addIssue({
-        code: ZodIssueCode.custom,
-        message: (e as Error).message,
-      });
-    }
-  }
-
-  return value;
-};
-
-const storyGraphSchema = z.object({
-  title: z.string(),
-  labels: z.preprocess(parseJsonPreprocessor, z.string().array()),
-  details: z.preprocess(parseJsonPreprocessor, z.string().array()),
-  data: z.preprocess(parseJsonPreprocessor, z.number().nullable().array()),
-});
 
 //TODO: reuse
 const saveSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
-  comment: z.string().trim().optional(),
-  stars: z.coerce.number().min(0).max(5).optional(),
   listName: z.string(),
   bookSeries: z.string().array(),
   bookSeriesId: z
@@ -123,9 +99,6 @@ const saveSchema = z.object({
     .optional(),
   apiVolumeId: z.string().optional(),
   wordsPerPage: z.coerce.number().nonnegative().optional(),
-  dateStarted: optionalDatetimeSchema.nullish(),
-  dateFinished: optionalDatetimeSchema.nullish(),
-  graphs: storyGraphSchema.nullish(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -262,30 +235,10 @@ export const actions = {
     const formData = Object.fromEntries(f);
     // console.log("1", formData);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["dateStarted"] = parseFormObject(formData, "dateStarted");
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["dateFinished"] = parseFormObject(formData, "dateFinished");
-
-    // only add graphs if they are present
-    if (f.has("graphs")) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      formData["graphs"] = parseFormObject(formData, "graphs");
-    }
-
-    if (formData.year == "") {
-      delete formData.year;
-    }
-
     const bookSeries = f.getAll("books[]");
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["bookSeries"] = bookSeries;
-    console.log("to be checked formData: ", formData);
 
     const result = saveSchema.safeParse(formData);
 
@@ -295,17 +248,12 @@ export const actions = {
         id,
         name,
         author,
-        comment,
-        stars,
 
         listName,
         bookSeries,
         bookSeriesId,
         apiVolumeId,
         wordsPerPage,
-        dateStarted,
-        dateFinished,
-        graphs,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -368,59 +316,6 @@ export const actions = {
         });
       }
 
-      // // only delete if exist
-      // if (dateFinished == null || dateStarted == null) {
-      //   const currentBook = await prisma.book.findUnique({ where: { id } });
-      //   console.log("cb", currentBook);
-
-      //   if (currentBook?.dateStartedId != null && dateStarted == null) {
-      //     await prisma.book.update({
-      //       where: { id },
-      //       data: {
-      //         dateStarted: { delete: true },
-      //       },
-      //     });
-      //   }
-
-      //   if (currentBook?.dateFinishedId != null && dateFinished == null) {
-      //     await prisma.book.update({
-      //       where: { id },
-      //       data: {
-      //         dateFinished: { delete: true },
-      //       },
-      //     });
-      //   }
-      // }
-
-      //  dateStarted: dateStarted
-      //     ? {
-      //       upsert: {
-      //         update: dateStarted,
-      //         create: dateStarted,
-      //       },
-      //     }
-      //     : undefined,
-      //   dateFinished: dateFinished
-      //     ? {
-      //       upsert: {
-      //         update: dateFinished,
-      //         create: dateFinished,
-      //       },
-      //     }
-      //     : undefined,
-      //   rating:
-      //     stars !== undefined
-      //       ? {
-      //         upsert: {
-      //           update: { stars: stars, comment },
-      //           create: { stars: stars, comment },
-      //         },
-      //       }
-      //       : undefined,
-      // storyGraphs: {
-      //     deleteMany: {}, // delete all
-      //   },
-
       const book = await prisma.book.update({
         where: { id },
         data: {
@@ -440,21 +335,6 @@ export const actions = {
           wordsPerPage,
         },
       });
-
-      // todo: extend for multiple
-      // if (graphs != null) {
-      //   const g = await prisma.graph.create({
-      //     data: {
-      //       data: JSON.stringify(graphs.data),
-      //       labels: JSON.stringify(graphs.labels),
-      //       details: JSON.stringify(graphs.details),
-      //       title: graphs.title,
-      //     },
-      //   });
-      //   // console.log(graphs);
-
-      //   // console.log("graph", g);
-      // }
 
       console.log("nnew book:", book);
 
