@@ -424,12 +424,12 @@
         <BookApiDataEdit data={book.bookApiData} />
 
         <div class="my-7">
-          <section>
+          <section class="mb-10">
             <h2 class="text-xl mt-5">Series</h2>
             <span class="text-base text-slate-500"
               >Don't forget to press the big blue save button</span
             >
-            <div class="mt-2 flex gap-2 w-full">
+            <div class="mt-2 flex gap-2 w-full items-center">
               <input
                 type="hidden"
                 name="bookSeriesId"
@@ -445,10 +445,11 @@
                 title="Add book"
                 aria-label="Add book to book series"
                 type="button"
-                class="btn-primary-black px-1 py-1"
+                class="btn-primary-black !px-1 !py-1"
                 on:click={addBookSeries}
+                disabled={!selectedSeriesBook}
               >
-                <span class="block w-[30px]">
+                <span class="block w-7">
                   <IoIosAdd />
                 </span>
               </button>
@@ -471,6 +472,7 @@
               name="wordsPerPage"
               displayName="Words per page estimate"
               error={wordsPerPageError}
+              clearButton={true}
             />
           </section>
 

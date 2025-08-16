@@ -81,6 +81,7 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import { dateToYYYY_MM_DD, isValidDate } from "./utils";
   import { onMount } from "svelte";
+  import ClearButton from "./ClearButton.svelte";
 
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;
@@ -241,16 +242,6 @@
 
   // Array of days (1 to 31)
   const days: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
-
-  function clearSelection(): any {
-    datetime = NULL_DATETIME;
-    showPopover = false;
-  }
-
-  $: hoverCss =
-    datetime != NULL_DATETIME
-      ? "group-hover:animate-drop-hover group-active:animate-drop-click"
-      : "text-neutral-500";
 </script>
 
 <Dropdown
@@ -268,17 +259,14 @@
       readonly
     />
     {#if clearButton}
-      <button
-        on:click={() => clearSelection()}
-        disabled={datetime == null}
-        type="button"
-        class="group flex"
-        title="Clear Input"
-      >
-        <span class={twMerge("inline-block w-5 group self-center", hoverCss)}>
-          <IoIosRemoveCircle />
-        </span>
-      </button>
+      <ClearButton
+        value={datetime}
+        clearSelection={() => {
+          datetime = NULL_DATETIME;
+          showPopover = false;
+        }}
+        isValueNull={() => datetime == null || datetime.year == undefined}
+      />
     {/if}
   </div>
 

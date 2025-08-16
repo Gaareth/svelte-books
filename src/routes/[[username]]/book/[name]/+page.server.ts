@@ -8,6 +8,7 @@ import { prisma } from "$lib/server/prisma";
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 import { checkBookAuth } from "../../../../auth";
+import { optionalNumericString } from "../../../../schemas";
 import { getBookApiData } from "../../../book/api/api.server";
 import type { Actions, RequestEvent } from "./$types";
 
@@ -92,13 +93,15 @@ const saveSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
-  listName: z.string(),
+  listName: z.string().optional(),
   bookSeries: z.string().array(),
   bookSeriesId: z
     .preprocess((s) => (s != "" ? Number(s) : undefined), z.number().optional())
     .optional(),
   apiVolumeId: z.string().optional(),
-  wordsPerPage: z.coerce.number().nonnegative().optional(),
+  wordsPerPage: optionalNumericString(
+    z.coerce.number().nonnegative()
+  ).optional(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -322,14 +325,6 @@ export const actions = {
           name,
           author,
 
-          bookList: {
-            connect: {
-              name_accountId: {
-                name: listName,
-                accountId,
-              },
-            },
-          },
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,

@@ -314,7 +314,7 @@
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">Reading Activity</p>
 
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-2">
       <p class="flex items-center gap-1">
         {#if entry.dateStarted}
           {formatShort(entry.dateStarted)}
