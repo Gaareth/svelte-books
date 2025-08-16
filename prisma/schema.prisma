@@ -167,6 +167,8 @@ model Book {
 
   location       String?
   recommendation String?
+
+  description String?
 }
 
 model Rating {

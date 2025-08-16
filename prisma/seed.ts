@@ -7,22 +7,89 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-const books: { name: string; author: string }[] = [
-  { name: "To Kill a Mockingbird", author: "Harper Lee" },
-  { name: "1984", author: "George Orwell" },
-  { name: "The Great Gatsby", author: "F. Scott Fitzgerald" },
-  { name: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling" },
-  { name: "The Lord of the Rings", author: "J.R.R. Tolkien" },
-  { name: "Pride and Prejudice", author: "Jane Austen" },
-  { name: "The Catcher in the Rye", author: "J.D. Salinger" },
-  { name: "Moby-Dick", author: "Herman Melville" },
-  { name: "War and Peace", author: "Leo Tolstoy" },
-  { name: "The Hobbit", author: "J.R.R. Tolkien" },
-  { name: "Crime and Punishment", author: "Fyodor Dostoevsky" },
-  { name: "Brave New World", author: "Aldous Huxley" },
-  { name: "The Adventures of Huckleberry Finn", author: "Mark Twain" },
-  { name: "Jane Eyre", author: "Charlotte Brontë" },
-  { name: "Wuthering Heights", author: "Emily Brontë" },
+const books: { name: string; author: string; description: string }[] = [
+  {
+    name: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    description: "A novel about racial injustice in the Deep South.",
+  },
+  {
+    name: "1984",
+    author: "George Orwell",
+    description: "A dystopian story of surveillance and totalitarianism.",
+  },
+  {
+    name: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    description: "A tale of wealth, love, and the American dream.",
+  },
+  {
+    name: "Harry Potter and the Sorcerer's Stone",
+    author: "J.K. Rowling",
+    description: "The first adventure of a young wizard at Hogwarts.",
+  },
+  {
+    name: "The Lord of the Rings",
+    author: "J.R.R. Tolkien",
+    description: "An epic fantasy quest to destroy the One Ring.",
+  },
+  {
+    name: "Pride and Prejudice",
+    author: "Jane Austen",
+    description: "A classic romance and social commentary.",
+  },
+  {
+    name: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    description: "A story of teenage angst and alienation.",
+  },
+  {
+    name: "Moby-Dick",
+    author: "Herman Melville",
+    description: "A whaling voyage and obsession with a white whale.",
+  },
+  {
+    name: "War and Peace",
+    author: "Leo Tolstoy",
+    description:
+      "A sweeping novel of Russian society during the Napoleonic era.",
+  },
+  {
+    name: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    description: "Bilbo Baggins embarks on a journey to reclaim treasure.",
+  },
+  {
+    name: "Crime and Punishment",
+    author: "Fyodor Dostoevsky",
+    description: "A psychological drama of guilt and redemption.",
+  },
+  {
+    name: "Brave New World",
+    author: "Aldous Huxley",
+    description: "A futuristic society shaped by technology and control.",
+  },
+  {
+    name: "The Adventures of Huckleberry Finn",
+    author: "Mark Twain",
+    description: "A boy's journey down the Mississippi River.",
+  },
+  {
+    name: "Jane Eyre",
+    author: "Charlotte Brontë",
+    description: "A young woman's struggle for independence and love.",
+  },
+  {
+    name: "Wuthering Heights",
+    author: "Emily Brontë",
+    description: "A dark tale of passion and revenge on the Yorkshire moors.",
+  },
+  {
+    name: "Flowers for Algernon",
+    author: "Daniel Keyes",
+    description:
+      "A moving story of a man whose intelligence is artificially increased, exploring themes of identity and humanity.",
+  },
 ];
 
 async function createSeries() {

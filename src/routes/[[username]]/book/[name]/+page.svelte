@@ -172,7 +172,7 @@
       : undefined;
 
   const imageClass =
-    "transition-all duration-300 relative bg-background-elevated text-transparent w-[133px] h-[199px] md:rounded-[8px] sm:w-[220px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded";
+    "hover:opacity-50 transition-all duration-300 relative bg-background-elevated text-transparent w-[133px] h-[199px] md:rounded-[8px] sm:w-[220px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded";
 </script>
 
 <svelte:head>
@@ -200,7 +200,7 @@
       class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0"
     >
       <div class="lg:item-border-no-hover lg:p-4 relative">
-        <div class="flex justify-center">
+        <div class="flex justify-center relative group">
           <img
             src="https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-128w.webp"
             class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
@@ -236,6 +236,16 @@
               />
             {/if}
           </div>
+
+          {#if $page.data.session && edit}
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:visible invisible"
+            >
+              <button type="button" class="btn-generic btn-generic-color-2"
+                >Upload Image</button
+              >
+            </div>
+          {/if}
         </div>
 
         <div class="hidden mt-3 text-secondary lg:flex flex-col">
@@ -309,27 +319,35 @@
             {book.author}
           </span>
 
-          <div class="mt-2 flex flex-wrap gap-2 lg:gap-4">
-            <span class="flex items-center gap-1">
-              {book.bookApiData?.pageCount}
-              <span class="w-5 block mt-0.5"><Pages /></span>
-            </span>
+          {#if book.wordsPerPage != null || book.bookApiData?.pageCount != null || book.bookApiData?.publishedDate != null}
+            <!-- content here -->
 
-            <span class="text-base flex items-center mb-[0.075rem]">•</span>
+            <div class="flex flex-wrap gap-2 lg:gap-4">
+              {#if book.bookApiData?.pageCount != null}
+                <span class="flex items-center gap-1">
+                  {book.bookApiData?.pageCount}
+                  <span class="w-5 block mt-0.5"><Pages /></span>
+                </span>
 
-            {#if book.wordsPerPage != null}
-              <span class="flex items-center gap-1">
-                {book.wordsPerPage}
-                <span class="w-5 block mt-0.5"><Words /></span>
-              </span>
-              <span class="text-base flex items-center mb-[0.075rem]">•</span>
-            {/if}
+                <span class="text-base flex items-center mb-[0.075rem]">•</span>
+              {/if}
 
-            <span class="flex items-center gap-1">
-              {book.bookApiData?.publishedDate}
-              <span class="w-5 block"><Calendar /></span>
-            </span>
-          </div>
+              {#if book.wordsPerPage != null}
+                <span class="flex items-center gap-1">
+                  {book.wordsPerPage}
+                  <span class="w-5 block mt-0.5"><Words /></span>
+                </span>
+                <span class="text-base flex items-center mb-[0.075rem]">•</span>
+              {/if}
+
+              {#if book.bookApiData?.publishedDate != null}
+                <span class="flex items-center gap-1">
+                  {book.bookApiData?.publishedDate}
+                  <span class="w-5 block"><Calendar /></span>
+                </span>
+              {/if}
+            </div>
+          {/if}
 
           <div class="text-secondary flex flex-col lg:hidden">
             <span class="text-base leading-snug">
@@ -343,17 +361,19 @@
             </span>
           </div>
 
-          <p class="mt-2 mb-2 text-secondary line-clamp-7">
-            <!-- {book.bookApiData?.description ?? "No description available."} -->
+          <p class="mt-2 text-secondary line-clamp-7">
+            {book.description ?? "No description available."}
           </p>
 
-          <div class="mt-2 flex flex-wrap gap-1">
-            {#each book.bookApiData?.categories ?? [] as category}
-              <Pill className="dark:bg-slate-600">
-                {category.name}
-              </Pill>
-            {/each}
-          </div>
+          {#if (book.bookApiData?.categories ?? []).length > 0}
+            <div class="flex flex-wrap gap-1">
+              {#each book.bookApiData?.categories ?? [] as category}
+                <Pill className="dark:bg-slate-600">
+                  {category.name}
+                </Pill>
+              {/each}
+            </div>
+          {/if}
         </div>
 
         <div class="">
@@ -382,17 +402,17 @@
 
     {#if !edit}
       <div>
-        <!-- {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
+        {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
           <section>
             <h2 class="text-xl mt-5">Series</h2>
             <p class="text-slate-500 text-base">
-              following books are also in this series:
+              the following books are also in this series:
             </p>
             <div>
-              <BookListSimple books={book.bookSeries.books} />
+              <BookListSeries books={book.bookSeries.books} />
             </div>
           </section>
-        {/if} -->
+        {/if}
       </div>
     {:else}
       <hr class="my-5" />
@@ -414,6 +434,13 @@
             name="author"
             error={authorError}
           />
+
+          <InputText
+            bind:value={book.description}
+            name="description"
+            error={authorError}
+          />
+
           <InputSelect
             value={book.bookList?.name}
             displayName="List"
