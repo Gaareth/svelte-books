@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  export let src: string | null;
+  export let src: string | null | undefined;
   export let alt: string;
 
   let loaded = false;

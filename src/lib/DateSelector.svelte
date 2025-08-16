@@ -262,10 +262,18 @@
       <ClearButton
         value={datetime}
         clearSelection={() => {
-          datetime = NULL_DATETIME;
+          datetime = {
+            year: undefined,
+            month: null,
+            day: null,
+
+            hour: null,
+            minute: null,
+            timezoneOffset: null,
+          };
           showPopover = false;
         }}
-        isValueNull={() => datetime == null || datetime.year == undefined}
+        isValueNull={datetime == null || datetime.year == undefined}
       />
     {/if}
   </div>

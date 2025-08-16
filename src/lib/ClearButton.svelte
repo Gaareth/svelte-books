@@ -4,11 +4,12 @@
   import { twMerge } from "tailwind-merge";
 
   export let value: any | null | undefined;
-  export let isValueNull: () => boolean = () => value == null;
+  export let isValueNull: boolean | undefined = undefined;
 
-  $: hoverCss = !isValueNull()
-    ? "group-hover:animate-drop-hover group-active:animate-drop-click"
-    : "text-neutral-500";
+  $: hoverCss =
+    !isValueNull && value != null
+      ? "group-hover:animate-drop-hover group-active:animate-drop-click"
+      : "text-neutral-500";
 
   export let clearSelection: (() => void) | undefined = undefined;
 </script>
@@ -21,7 +22,7 @@
       value = null;
     }
   }}
-  disabled={isValueNull()}
+  disabled={isValueNull}
   type="button"
   class="group flex"
   title="Clear Input"

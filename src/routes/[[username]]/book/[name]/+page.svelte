@@ -14,7 +14,12 @@
   import type { ActionData, PageData } from "./$types";
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import InputNumber from "$lib/InputNumber.svelte";
-  import type { BookFull, BookFullType, BookRating } from "../../../../app";
+  import type {
+    BookFull,
+    BookFullType,
+    BookListItemType,
+    BookRating,
+  } from "../../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
@@ -354,16 +359,18 @@
         <div class="">
           <div class="flex mb-1 items-center">
             <h2 class="text-2xl">Reading Activity</h2>
-            <button
-              type="button"
-              class="ml-auto btn-generic p-2"
-              on:click={() => (showCreateReadingActivity = true)}
-              title="Create reading activity"
-            >
-              <span class="block w-5">
-                <AddIcon />
-              </span>
-            </button>
+            {#if $page.data.session && edit}
+              <button
+                type="button"
+                class="ml-auto btn-generic p-2"
+                on:click={() => (showCreateReadingActivity = true)}
+                title="Create reading activity"
+              >
+                <span class="block w-5">
+                  <AddIcon />
+                </span>
+              </button>
+            {/if}
           </div>
           <!-- <hr class="border-slate-600 mt-2" /> -->
           {#each book.readingActivity as readingActivity}
