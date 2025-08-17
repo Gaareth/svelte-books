@@ -34,19 +34,17 @@
 </script>
 
 <div class="relative">
-  <label for="searchBooks" class="sr-only"> Search </label>
+  <label for="searchBooks" class="sr-only">Search</label>
   <input
     value={search_term}
     on:keyup={onKeyUp}
     id="searchBooks"
     type="search"
     class="input rounded-md pr-10 shadow-sm sm:text-sm w-full mt-0 dark:border-slate-600"
-    placeholder="Search for books.."
-  />
+    placeholder="Search for books.." />
   <span
     class="pointer-events-none absolute inset-y-0 right-0 grid w-7 mx-1 mt-1 place-content-center
-  text-svelte dark:text-svelte_dark"
-  >
+  text-svelte dark:text-svelte_dark">
     <IoIosSearch />
   </span>
 </div>

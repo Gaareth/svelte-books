@@ -23,7 +23,7 @@
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
-  import Image from "$lib/Image.svelte";
+  import Img from "@zerodevx/svelte-img";
 
   import { MAX_RATING } from "../../../../constants";
   import DateSelector, {
@@ -45,6 +45,8 @@
   import ReviewListItem from "$lib/BookList/ReviewListItem.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
+  import clsx from "clsx";
+  import BookImage from "$lib/Book/BookImage.svelte";
 
   export let data: PageData;
 
@@ -171,8 +173,8 @@
       ? form?.errors?.wordsPerPage?.[0]
       : undefined;
 
-  const imageClass =
-    "hover:opacity-50 transition-all duration-300 relative bg-background-elevated text-transparent w-[133px] h-[199px] md:rounded-[8px] sm:w-[220px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded";
+  const imageClass = `lg:group-hover:opacity-50 transition-all duration-300 relative bg-background-elevated text-transparent
+     w-[133px] h-[199px] sm:w-[320px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded`;
 </script>
 
 <svelte:head>
@@ -194,58 +196,68 @@
 
         await applyAction(result);
       };
-    }}
-  >
+    }}>
     <div
-      class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0"
-    >
-      <div class="lg:item-border-no-hover lg:p-4 relative">
-        <div class="flex justify-center relative group">
+      class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
+      <div
+        class={clsx(
+          "lg:item-border-no-hover lg:p-4 relative",
+          edit && "group"
+        )}>
+        <div class="flex justify-center relative">
           <img
-            src="https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-128w.webp"
+            src={thumbnailUrl}
             class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
             alt="Flowers for Algernon"
             width="246"
             height="369"
             fetchpriority="low"
-            loading="lazy"
-          />
+            loading="lazy" />
           <div class="dark:hidden h-[230px]" />
 
           <img
-            src="https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-128w.webp"
-            class="hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
+            src={thumbnailUrl}
+            class={clsx(
+              edit &&
+                "lg:group-hover:opacity-50 transition-opacity duration-300",
+              "hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
+            )}
             alt="Flowers for Algernon"
             width="206"
             height="369"
             fetchpriority="low"
-            loading="lazy"
-          />
+            loading="lazy" />
 
           <div
-            class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
-          >
+            class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0">
             {#if thumbnailUrl != null}
-              <!-- <Image src={thumbnailUrl} alt="thumbnail" /> -->
-              <Image src={thumbnailUrl} alt="thumbnail" class={imageClass} />
-            {:else}
-              <Image
-                src={"https://images.kaguya.io/books/0195f308-0951-7eb2-98a7-90cf71ea0cf8-256w.webp"}
+              <!-- <BookImage
+                bookId={book.bookApiData?.id}
+                alt="thumbnail"
+                sizes="(width <= 1024px) 800px, 128px"
+                class={imageClass} /> -->
+              <img
+                src={thumbnailUrl}
                 alt="thumbnail fallback"
-                class={imageClass}
-              />
+                class={imageClass} />
+            {:else}
+              <img
+                src={"/cover.png"}
+                alt="thumbnail fallback"
+                class={imageClass} />
             {/if}
           </div>
 
-          {#if $page.data.session && edit}
+          <!-- {#if edit}
             <div
-              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:visible invisible"
-            >
-              <button type="button" class="btn-generic btn-generic-color-2"
-                >Upload Image</button
-              >
+              class="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <button
+                type="button"
+                class="btn-generic btn-generic-color-2 group-hover:visible invisible">
+                Upload
+              </button>
             </div>
-          {/if}
+          {/if} -->
         </div>
 
         <div class="hidden mt-3 text-secondary lg:flex flex-col">
@@ -261,8 +273,8 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-5">
-        <div class="lg:item-border-no-hover p-1 lg:p-4 flex flex-col">
+      <div class={clsx("flex flex-col gap-5")}>
+        <div class={clsx("lg:item-border-no-hover p-1 lg:p-4 flex flex-col")}>
           <div class="flex flex-col-reverse lg:flex-row">
             <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
               {book.name}
@@ -274,8 +286,7 @@
 
                 <div class="sm:flex sm:flex-col sm:gap-1">
                   <span
-                    class="btn-group mb-2 dark:bg-slate-600 dark:border-slate-500"
-                  >
+                    class="btn-group mb-2 dark:bg-slate-600 dark:border-slate-500">
                     <button
                       class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500"
                       type="button"
@@ -289,15 +300,13 @@
                         query.set("edit", edit.toString());
 
                         goto(`?${query.toString()}`);
-                      }}
-                    >
+                      }}>
                       {edit ? "Cancel" : "Edit"}
                     </button>
                     {#if edit}
                       <button
                         class="btn-group-btn text-blue-700
-              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-blue-500"
-                      >
+              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-blue-500">
                         Save
                       </button>
                     {/if}
@@ -305,8 +314,7 @@
                       on:click={() => (open_delete = !open_delete)}
                       type="button"
                       class="text-red-700 btn-group-btn
-              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-red-500"
-                    >
+              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-red-500">
                       Delete
                     </button>
                   </span>
@@ -320,8 +328,6 @@
           </span>
 
           {#if book.wordsPerPage != null || book.bookApiData?.pageCount != null || book.bookApiData?.publishedDate != null}
-            <!-- content here -->
-
             <div class="flex flex-wrap gap-2 lg:gap-4">
               {#if book.bookApiData?.pageCount != null}
                 <span class="flex items-center gap-1">
@@ -361,7 +367,7 @@
             </span>
           </div>
 
-          <p class="mt-2 text-secondary line-clamp-7">
+          <p class="mt-2 mb-3 text-secondary line-clamp-7">
             {book.description ?? "No description available."}
           </p>
 
@@ -379,13 +385,12 @@
         <div class="">
           <div class="flex mb-1 items-center">
             <h2 class="text-2xl">Reading Activity</h2>
-            {#if $page.data.session && edit}
+            {#if $page.data.session}
               <button
                 type="button"
                 class="ml-auto btn-generic p-2"
                 on:click={() => (showCreateReadingActivity = true)}
-                title="Create reading activity"
-              >
+                title="Create reading activity">
                 <span class="block w-5">
                   <AddIcon />
                 </span>
@@ -415,7 +420,7 @@
         {/if}
       </div>
     {:else}
-      <hr class="my-5" />
+      <hr class="my-5 dark:border-slate-600" />
 
       <!-- Inputs -->
       <section class="w-full mt-0">
@@ -427,26 +432,22 @@
             name="name"
             error={form?.errors && "name" in form.errors
               ? form.errors.name?.[0]
-              : undefined}
-          />
+              : undefined} />
           <InputText
             bind:value={book.author}
             name="author"
-            error={authorError}
-          />
+            error={authorError} />
 
           <InputText
             bind:value={book.description}
             name="description"
-            error={authorError}
-          />
+            error={authorError} />
 
           <InputSelect
             value={book.bookList?.name}
             displayName="List"
             name={"listName"}
-            error={listNameError}
-          >
+            error={listNameError}>
             {#each bookLists as list}
               <option value={list.name}>
                 {list.name}
@@ -460,29 +461,26 @@
         <div class="my-7">
           <section class="mb-10">
             <h2 class="text-xl mt-5">Series</h2>
-            <span class="text-base text-slate-500"
-              >Don't forget to press the big blue save button</span
-            >
+            <span class="text-base text-slate-500">
+              Don't forget to press the big blue save button
+            </span>
             <div class="mt-2 flex gap-2 w-full items-center">
               <input
                 type="hidden"
                 name="bookSeriesId"
-                value={book.bookSeriesId}
-              />
+                value={book.bookSeriesId} />
               <AutoComplete
                 items={books.filter((b) => b.name != book.name)}
                 labelFunction={autoCompleteBookLabel}
                 bind:selectedItem={selectedSeriesBook}
-                class="input dark:bg-slate-700 dark:border-none w-full"
-              />
+                class="input dark:bg-slate-700 dark:border-none w-full" />
               <button
                 title="Add book"
                 aria-label="Add book to book series"
                 type="button"
                 class="btn-primary-black !px-1 !py-1"
                 on:click={addBookSeries}
-                disabled={!selectedSeriesBook}
-              >
+                disabled={!selectedSeriesBook}>
                 <span class="block w-7">
                   <IoIosAdd />
                 </span>
@@ -495,8 +493,7 @@
               <BookListSeries
                 books={book.bookSeries?.books ?? []}
                 {on_delete}
-                allow_deletion={true}
-              />
+                allow_deletion={true} />
             </div>
           </section>
 
@@ -506,16 +503,14 @@
               name="wordsPerPage"
               displayName="Words per page estimate"
               error={wordsPerPageError}
-              clearButton={true}
-            />
+              clearButton={true} />
           </section>
 
           <div class="min-[500px]:flex min-[500px]:justify-end">
             <button
               formaction="?/save"
               class="bg-blue-700 text-white py-3 px-4 my-4 rounded-md w-full
-            block sm:hidden min-[500px]:w-1/2"
-            >
+            block sm:hidden min-[500px]:w-1/2">
               Save
             </button>
           </div>
@@ -527,8 +522,7 @@
 
 <ReadingActivityForm
   bind:showModal={showCreateReadingActivity}
-  bookId={book.id}
-/>
+  bookId={book.id} />
 
 <style>
   :global(.autocomplete) {

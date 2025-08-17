@@ -108,8 +108,7 @@
 
       <span
         class="absolute bottom-0 flex overflow-hidden rounded-3xl transition-all duration-300"
-        style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}
-      >
+        style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}>
         <span class={twMerge("h-full w-full", sliderClass)} />
       </span>
     </div>

@@ -19,8 +19,7 @@
     {name}
     class={twMerge("input w-full", error ? "input-error" : "", inputClass)}
     {...$$restProps}
-    bind:value
-  />
+    bind:value />
 
   {#if error}
     <span class="label-text-alt text-error">{error}</span>

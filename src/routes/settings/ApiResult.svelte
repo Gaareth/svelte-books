@@ -21,9 +21,9 @@
       <p class="mb-2">Updated {formDiffs.booksUpdated} books</p>
       {#each formDiffs.diffs as diff}
         <div>
-          <a class="hover:underline" href="/book/{diff.bookName}"
-            >{diff.bookName}</a
-          >
+          <a class="hover:underline" href="/book/{diff.bookName}">
+            {diff.bookName}
+          </a>
           -
           {diff.propName}: {diff.oldValue} --> {diff.newValue}
         </div>
@@ -48,16 +48,16 @@
               <span class="w-[20px] inline-block text-red-500">
                 <ErrorIcon />
               </span>
-              <a class="hover:underline" href="/book/{errorBook.book.name}"
-                >{errorBook.book.name}</a
-              >
+              <a class="hover:underline" href="/book/{errorBook.book.name}">
+                {errorBook.book.name}
+              </a>
               -
               {#if errorBook.volumeId !== undefined}
                 <a
                   class="hover:underline"
-                  href="http://books.google.de/books?id={errorBook.volumeId}"
-                  >volumeId: {errorBook.volumeId}</a
-                >
+                  href="http://books.google.de/books?id={errorBook.volumeId}">
+                  volumeId: {errorBook.volumeId}
+                </a>
               {/if}
               -
               <span class="text-red-500 font-bold">
@@ -69,11 +69,11 @@
       {:else}
         <span class="inline-flex gap-1 flex-wrap">
           <span
-            class="text-green-500 dark:text-green-400 inline-flex items-center gap-1"
-          >
+            class="text-green-500 dark:text-green-400 inline-flex items-center gap-1">
             <span class="w-[22px] inline-block">
               <SuccessIcon />
-            </span>Successfully
+            </span>
+            Successfully
           </span>
           updated all {formErrors.updatedBookNames.length}
           entries
@@ -83,9 +83,9 @@
           <ul class="list-disc">
             {#each formErrors.updatedBookNames as name}
               <li class="ml-10">
-                <a class="hover:underline text-base" href="/book/{name}"
-                  >{name}</a
-                >
+                <a class="hover:underline text-base" href="/book/{name}">
+                  {name}
+                </a>
               </li>
             {/each}
           </ul>

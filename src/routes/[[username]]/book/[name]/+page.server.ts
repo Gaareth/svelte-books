@@ -83,7 +83,7 @@ export async function load(page: ServerLoadEvent) {
     edit,
     headerConfig: {
       transparent: true,
-      wrapperClass: "max-w-6xl",
+      wrapperClass: "lg:max-w-6xl",
     },
   };
 }
@@ -100,7 +100,7 @@ const saveSchema = z.object({
     .optional(),
   apiVolumeId: z.string().optional(),
   wordsPerPage: optionalNumericString(
-    z.coerce.number().nonnegative()
+    z.coerce.number().nonnegative().optional()
   ).optional(),
 });
 

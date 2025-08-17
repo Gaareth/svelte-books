@@ -25,8 +25,7 @@
   disabled={isValueNull}
   type="button"
   class="group flex"
-  title="Clear Input"
->
+  title="Clear Input">
   <span class={twMerge("inline-block w-5 group self-center", hoverCss)}>
     <IoIosRemoveCircle />
   </span>

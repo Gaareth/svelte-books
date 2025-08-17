@@ -13,8 +13,7 @@
     {name}
     type="text"
     class="input w-full {error ? 'input-error' : ''}"
-    bind:value
-  />
+    bind:value />
   <label for={name} class="label">
     {#if error}
       <span class="label-text-alt text-error">{error}</span>

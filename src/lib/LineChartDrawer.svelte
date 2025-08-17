@@ -178,8 +178,7 @@
         <input
           type="text"
           class={twMerge("input w-auto", inputClassName)}
-          bind:value={title}
-        />
+          bind:value={title} />
       </label>
 
       <label>
@@ -188,8 +187,7 @@
           type="range"
           class="input w-auto h-full"
           on:input={updateLength}
-          bind:value={length}
-        />
+          bind:value={length} />
       </label>
     </div>
   </div>
@@ -202,8 +200,7 @@
     on:touchstart|preventDefault={startDrawing}
     on:touchmove={drawTouch}
     on:touchend|preventDefault={stopDrawing}
-    on:touchcancel|preventDefault={stopDrawing}
-  />
+    on:touchcancel|preventDefault={stopDrawing} />
 
   <Chart
     bind:chart
@@ -238,8 +235,7 @@
 
       showModal = true;
     }}
-    {...$$restProps}
-  />
+    {...$$restProps} />
 </div>
 
 <Modal
@@ -247,8 +243,7 @@
   className="max-w-96"
   on:opened={() => {
     eventInputRef.focus();
-  }}
->
+  }}>
   <h1 slot="header" class="text-2xl">
     Additional information ({selectedLabelIndex})
   </h1>
@@ -260,16 +255,14 @@
         type="text"
         class="input btn-generic-color-2"
         bind:this={eventInputRef}
-        bind:value={labels[selectedLabelIndex]}
-      />
+        bind:value={labels[selectedLabelIndex]} />
     </label>
 
     <label class="text-secondary text-base">
       details (!):
       <textarea
         class="input btn-generic-color-2"
-        bind:value={details[selectedLabelIndex]}
-      />
+        bind:value={details[selectedLabelIndex]} />
     </label>
 
     <p class="text-base text-secondary mt-2">

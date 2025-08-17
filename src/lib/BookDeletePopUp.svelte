@@ -51,5 +51,4 @@
   btn1_msg={"Delete book"}
   btn2_msg={"cancel"}
   type={"Error"}
-  on:primary={deleteBook}
-/>
+  on:primary={deleteBook} />

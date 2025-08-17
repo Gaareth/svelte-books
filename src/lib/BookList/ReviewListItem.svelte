@@ -105,14 +105,12 @@
 
 <div
   class="item-border mb-3 p-2 items-center
-     w-full gap-2 flex"
->
+     w-full gap-2 flex">
   <div
     class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
       entry.status
     )} rounded-md"
-    style="height: 98%;"
-  />
+    style="height: 98%;" />
   <div class="w-full flex flex-wrap items-center col-span-full gap-1">
     <div class="flex flex-1"><p>{entry.status.toUpperCase()}</p></div>
 
@@ -122,7 +120,7 @@
           {formatShort(entry.dateStarted)}
           <span class="icon" title="date started"><EventProgress /></span>
         {:else}
-          <span class="flex-shrink leading-4"> ??? </span>
+          <span class="flex-shrink leading-4">???</span>
         {/if}
       </p>
 
@@ -133,7 +131,7 @@
           {formatShort(entry.dateFinished)}
           <span class="icon" title="date read"><EventDone /></span>
         {:else}
-          <span class="flex-shrink leading-4"> ? </span>
+          <span class="flex-shrink leading-4">?</span>
         {/if}
 
         {#if entry.dateFinished != null && entry.dateStarted != null}
@@ -144,8 +142,7 @@
       <div
         title={`${formatShort(entry.dateStarted)} to ${formatShort(
           entry.dateFinished
-        )}`}
-      >
+        )}`}>
         {#if entry.dateFinished != null && entry.dateStarted != null}
           <p class="flex items-center gap-1">
             {dateDiffFormatted(
@@ -171,8 +168,7 @@
     <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
       <span
         class="hidden lg:inline-flex flex-row divide-x overflow-hidden rounded-md border dark:border-none bg-white shadow-sm
-            dark:bg-slate-600 dark:border-slate-700"
-      >
+            dark:bg-slate-600 dark:border-slate-700">
         <button
           class="group inline-block p-2 hover:bg-gray-50 focus:relative
               dark:hover:bg-slate-500"
@@ -180,11 +176,9 @@
           type="button"
           on:click={() => {
             expanded = !expanded;
-          }}
-        >
+          }}>
           <span
-            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-          >
+            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
             <OpenNew />
           </span>
         </button>
@@ -197,11 +191,9 @@
             type="button"
             on:click={() => {
               editExpanded = true;
-            }}
-          >
+            }}>
             <span
-              class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-            >
+              class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
               <IoMdSettings />
             </span>
           </button>
@@ -215,11 +207,9 @@
                 on:click={() => {
                   // dispatch("delete", { book });
                   deleteExpanded = true;
-                }}
-              >
+                }}>
                 <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-                >
+                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                   <IoMdTrash alt="red trash can" />
                 </span>
               </button>
@@ -232,31 +222,26 @@
         className="lg:!hidden !flex items-center"
         contentClass="!py-0"
         closeOnClick={true}
-        buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1"
-      >
+        buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1">
         <span
           slot="triggerContent"
           aria-label="open dropdown"
-          class="block w-5"
-        >
+          class="block w-5">
           <DropdownIcon />
         </span>
 
         <ul
           slot="dropdown"
-          class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200"
-        >
+          class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
           <li>
             <button
               on:click={() => {
                 expanded = !expanded;
               }}
               class="dropdown-item-button"
-              type="button"
-            >
+              type="button">
               <span
-                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-              >
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                 <OpenNew />
               </span>
               Open
@@ -270,11 +255,9 @@
                   editExpanded = !editExpanded;
                 }}
                 class="dropdown-item-button"
-                type="button"
-              >
+                type="button">
                 <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-                >
+                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                   <IoMdSettings />
                 </span>
                 Settings
@@ -289,11 +272,9 @@
                   deleteExpanded = !deleteExpanded;
                 }}
                 class="dropdown-item-button text-error"
-                type="button"
-              >
+                type="button">
                 <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-                >
+                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                   <IoMdTrash alt="red trash can" />
                 </span>
                 Delete
@@ -309,8 +290,7 @@
 <Modal
   bind:showModal={expanded}
   divClassName="w-full"
-  className="w-[95%] lg:w-2/5"
->
+  className="w-[95%] lg:w-2/5">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">Reading Activity</p>
 
@@ -320,7 +300,7 @@
           {formatShort(entry.dateStarted)}
           <span class="icon" title="date started"><EventProgress /></span>
         {:else}
-          <span class="flex-shrink leading-4"> ??? </span>
+          <span class="flex-shrink leading-4">???</span>
         {/if}
       </p>
 
@@ -331,7 +311,7 @@
           {formatShort(entry.dateFinished)}
           <span class="icon" title="date read"><EventDone /></span>
         {:else}
-          <span class="flex-shrink leading-4"> ? </span>
+          <span class="flex-shrink leading-4">?</span>
         {/if}
       </p>
     </div>
@@ -351,24 +331,20 @@
           bind:title={tensionGraph.title}
           bind:labels={tensionGraph.labels}
           bind:details={tensionGraph.details}
-          bind:data={tensionGraph.data}
-        />
+          bind:data={tensionGraph.data} />
         <input type="hidden" name="graphs[title]" value={tensionGraph.title} />
         <input
           type="hidden"
           name="graphs[labels]"
-          value={JSON.stringify(tensionGraph.labels)}
-        />
+          value={JSON.stringify(tensionGraph.labels)} />
         <input
           type="hidden"
           name="graphs[details]"
-          value={JSON.stringify(tensionGraph.details)}
-        />
+          value={JSON.stringify(tensionGraph.details)} />
         <input
           type="hidden"
           name="graphs[data]"
-          value={JSON.stringify(tensionGraph.data)}
-        />
+          value={JSON.stringify(tensionGraph.data)} />
       </div>
     </section>
   {/if}
@@ -386,8 +362,7 @@
   on:success={() => {
     deleteExpanded = false;
     invalidateAll();
-  }}
-/>
+  }} />
 
 <style lang="postcss">
   .icon {

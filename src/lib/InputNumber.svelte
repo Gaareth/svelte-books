@@ -21,8 +21,7 @@
       pattern="[0-9]*"
       inputmode="numeric"
       class={twMerge("input w-full", 'error ? "input-error" : ""}', inputClass)}
-      bind:value
-    />
+      bind:value />
     {#if clearButton}
       <ClearButton bind:value />
     {/if}

@@ -26,8 +26,7 @@
   class={clsx(
     "text-center text-5xl my-4 mb-6 mt-8 header-gradient",
     random != 0 ? "header-elnath" : "header-cloister"
-  )}
->
+  )}>
   {#if $page.data.session?.user?.name == data.username || data.username == null}
     my
   {:else}
@@ -46,8 +45,7 @@
   <BookListReading
     readingActivities={data.readingActivity.filter(
       (e) => e.status === "reading"
-    )}
-  />
+    )} />
 </div>
 
 <BookNew listName={"Read"} readingActivities={data.readingActivity ?? []} />

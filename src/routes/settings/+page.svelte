@@ -56,16 +56,15 @@
 
   <form method="POST" action="?/editVisibility" use:enhance>
     <div
-      class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center"
-    >
+      class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center">
       <div>
         <p>Global visibilty</p>
         <p class="text-secondary text-base">
           Applies to all lists as a fallback value.
           {#if !allAsGlobal}
-            <span class="text-warning text-base hidden sm:inline"
-              >Warning: Atleast one list is different.</span
-            >
+            <span class="text-warning text-base hidden sm:inline">
+              Warning: Atleast one list is different.
+            </span>
           {/if}
         </p>
       </div>
@@ -82,21 +81,19 @@
             data.lists[i].visibility = option;
           }
         }}
-        defaultOption={data.globalVisibility == "private" ? 0 : 1}
-      />
+        defaultOption={data.globalVisibility == "private" ? 0 : 1} />
       <input
         type="hidden"
         name="isPublic"
-        value={data.globalVisibility == "public"}
-      />
+        value={data.globalVisibility == "public"} />
     </div>
 
     <div class="flex items-center justify-between mt-4 mb-2">
       <h3 class="text-2xl font-medium">Lists</h3>
       {#if !allAsGlobal}
-        <span class="text-warning text-base inline sm:hidden"
-          >Warning: Atleast one list is different.</span
-        >
+        <span class="text-warning text-base inline sm:hidden">
+          Warning: Atleast one list is different.
+        </span>
       {/if}
     </div>
     <div class="flex flex-col gap-2">
@@ -107,8 +104,7 @@
             data.lists[i].visibility != data.globalVisibility &&
               data.lists[i].visibility &&
               "border-warning"
-          )}
-        >
+          )}>
           <p>{list.name}</p>
 
           <ToggleGroup
@@ -117,13 +113,11 @@
             btnClass="px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
             unToggleable={true}
-            bind:selectedOption={data.lists[i].visibility}
-          />
+            bind:selectedOption={data.lists[i].visibility} />
           <input
             type="hidden"
             name={`listNameVisibility[${list.name}]`}
-            value={data.lists[i].visibility}
-          />
+            value={data.lists[i].visibility} />
         </div>
       {/each}
     </div>
@@ -133,8 +127,7 @@
         class="btn-generic"
         on:click={async () => {
           await invalidateAll();
-        }}
-      >
+        }}>
         Cancel
       </button>
       <button type="submit" class="btn-primary-black w-36 flex justify-center">

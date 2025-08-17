@@ -23,8 +23,9 @@
       {#if $page.status == 404}
         Can't find this resource :(. For all books look <a
           href="/"
-          class="underline text-[#F2440D]">here</a
-        >
+          class="underline text-[#F2440D]">
+          here
+        </a>
       {:else if $page.status in errorMsgs}
         {errorMsg}
         Please go back

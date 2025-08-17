@@ -59,8 +59,7 @@
             toast.error("Failed updating book :(");
           }
         };
-      }}
-    >
+      }}>
       <input type="hidden" name="id" value={entry.book.id} />
 
       <ReadingListItem {entry}>
@@ -69,11 +68,9 @@
           title="done reading"
           type="submit"
           slot="delete"
-          on:click={() => {}}
-        >
+          on:click={() => {}}>
           <span
-            class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
-          >
+            class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
             <IoMdDoneAll alt="check mark" />
           </span>
         </button>

@@ -85,21 +85,20 @@
 <div
   class="item-border mb-3 p-2 items-center
      w-full grid gap-2"
-  style="grid-template-columns: 4px 1fr;"
->
+  style="grid-template-columns: 4px 1fr;">
   <div
     class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
       book.name,
       book.author
     )} rounded-md"
-    style="height: 98%;"
-  />
+    style="height: 98%;" />
   <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
     <div class="col-span-full sm:col-span-3">
       <a
         href="book/{book_url}"
-        class="text-md text-ellipsis overflow-hidden leading-3">{book.name}</a
-      >
+        class="text-md text-ellipsis overflow-hidden leading-3">
+        {book.name}
+      </a>
       <p class="text-gray-600 dark:text-slate-300 -mt-1">{book.author}</p>
     </div>
 
@@ -141,17 +140,14 @@
         <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
           <span
             class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
-            dark:bg-slate-600 dark:border-slate-700"
-          >
+            dark:bg-slate-600 dark:border-slate-700">
             <a
               class="group inline-block p-2 hover:bg-gray-50 focus:relative
               dark:hover:bg-slate-500"
               title="Edit book"
-              href="/book/{book_url}/?edit=true"
-            >
+              href="/book/{book_url}/?edit=true">
               <span
-                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-              >
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                 <IoMdSettings />
               </span>
             </a>
@@ -164,11 +160,9 @@
                   type="button"
                   on:click={() => {
                     dispatch("delete", { book });
-                  }}
-                >
+                  }}>
                   <span
-                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click"
-                  >
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                     <IoMdTrash alt="red trash can" />
                   </span>
                 </button>

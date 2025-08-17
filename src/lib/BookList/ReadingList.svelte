@@ -90,8 +90,7 @@
       <BookSearch bind:search_term={$searchStore.search} />
       <button
         class="btn-generic-icon ml-auto"
-        on:click={() => (showOptions = !showOptions)}
-      >
+        on:click={() => (showOptions = !showOptions)}>
         <span class="w-5 block">
           <MoreIcon />
         </span>
@@ -143,5 +142,4 @@
   on:success={() => {
     openModal = false;
     invalidateAll();
-  }}
-/>
+  }} />

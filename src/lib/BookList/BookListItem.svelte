@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { BookListItemType } from "$appTypes";
-  import Image from "$lib/Image.svelte";
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
@@ -12,22 +11,19 @@
 
 <div class="flex flex-col items-center lg:items-start group">
   <div class="relative">
-    <Image
+    <img
       src={book.bookApiData?.thumbnailUrl}
       alt={book.name}
-      class="rounded w-32 h-40 object-cover group-hover:opacity-50"
-    />
+      class="rounded w-32 h-40 object-cover group-hover:opacity-50" />
 
     <div
-      class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-    >
+      class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
       <button
         class="group p-2 btn-delete focus:relative !border-0 group-hover:visible invisible"
         title="Remove from series"
         type="button"
         hidden={!allow_deletion || !on_delete}
-        on:click={() => on_delete?.(book)}
-      >
+        on:click={() => on_delete?.(book)}>
         <span class="block w-[20px] group-active:animate-drop-click">
           <IoIosRemoveCircle />
         </span>

@@ -38,7 +38,6 @@
   class={twMerge(btnClass, $selectedTab === thisTab && btnSelectedClass)}
   on:click={select}
   type="button"
-  bind:clientWidth
->
+  bind:clientWidth>
   <slot />
 </button>

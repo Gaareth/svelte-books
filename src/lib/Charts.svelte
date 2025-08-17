@@ -55,5 +55,4 @@
     displayData = tupleToDataset(data.slice(0, 10), "# books read");
     displayData.datasets[0].backgroundColor = defaultBgColor;
   }}
-  {...$$restProps}
-/>
+  {...$$restProps} />

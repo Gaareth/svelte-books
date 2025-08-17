@@ -9,8 +9,7 @@
 
 <div
   style={animate ? `transform: translateX(-${100 * $currentTabIdx}%)` : ""}
-  class={twMerge("panels-wrapper", className)}
->
+  class={twMerge("panels-wrapper", className)}>
   <slot />
 </div>
 

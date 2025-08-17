@@ -60,8 +60,7 @@
         "border inline-block w-full rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto"
       )}
       type="button"
-      on:click={() => dispatch("primary")}
-    >
+      on:click={() => dispatch("primary")}>
       {btn1_msg}
     </button>
 
@@ -71,8 +70,7 @@
       on:click={() => {
         showModal = false;
       }}
-      type="button"
-    >
+      type="button">
       {btn2_msg}
     </button>
   </div>

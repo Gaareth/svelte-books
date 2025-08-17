@@ -248,16 +248,14 @@
   {className}
   contentClass="!border-0 !p-0 !bg-transparent"
   closeOnClick={false}
-  bind:open={showPopover}
->
+  bind:open={showPopover}>
   <div slot="triggerWrapper" class="flex gap-2">
     <input
       class={twMerge(inputClassName)}
       value={dateString}
       on:click={togglePopover}
       {id}
-      readonly
-    />
+      readonly />
     {#if clearButton}
       <ClearButton
         value={datetime}
@@ -273,15 +271,13 @@
           };
           showPopover = false;
         }}
-        isValueNull={datetime == null || datetime.year == undefined}
-      />
+        isValueNull={datetime == null || datetime.year == undefined} />
     {/if}
   </div>
 
   <div
     class=" max-w-96 w-auto p-3 border rounded-md dark:border-slate-500 dark:bg-slate-700 flex flex-col bg-white"
-    slot="dropdown"
-  >
+    slot="dropdown">
     <p class="text-xl mb-2 sm:text-lg sm:top-0 sm:absolute">Select Datetime</p>
     <div class="flex justify-center sm:mt-5">
       <ToggleGroup
@@ -295,8 +291,7 @@
         on:select={(ev) => {
           console.log(ev.detail);
           onQuickselect(ev.detail);
-        }}
-      />
+        }} />
     </div>
 
     <!-- <div class="border w-96 h-20"></div> -->
@@ -305,16 +300,15 @@
       <div class="col-span-2">
         <label for="year">
           Year
-          <span class="text-red-400" title="required">*</span></label
-        >
+          <span class="text-red-400" title="required">*</span>
+        </label>
         <input
           type="number"
           id="year"
           bind:value={datetime.year}
           placeholder="YYYY"
           class="w-full btn-generic-color-2"
-          name={`${name}[year]`}
-        />
+          name={`${name}[year]`} />
       </div>
 
       <div class="grid grid-cols-2 gap-1">
@@ -325,8 +319,7 @@
             id="month"
             bind:value={datetime.month}
             class="btn-generic-color-2 w-full"
-            name={`${name}[month]`}
-          >
+            name={`${name}[month]`}>
             <option value={null}>Select Month</option>
             {#each months as { value, label }}
               <option {value}>{label}</option>
@@ -341,8 +334,7 @@
             id="day"
             bind:value={datetime.day}
             class="btn-generic-color-2 w-full"
-            name={`${name}[day]`}
-          >
+            name={`${name}[day]`}>
             <option value={null}>Select Day</option>
             {#each days as dayNumber}
               <option value={dayNumber}>{dayNumber}</option>
@@ -365,8 +357,7 @@
                 timeString = undefined;
                 datetime.hour = null;
                 datetime.minute = null;
-              }}
-            >
+              }}>
               clear
             </button>
             <button
@@ -378,8 +369,7 @@
                   now.getHours().toString().padStart(2, "0") +
                   ":" +
                   now.getMinutes().toString().padStart(2, "0");
-              }}
-            >
+              }}>
               now
             </button>
           </div>
@@ -392,8 +382,7 @@
           type="time"
           id="minute"
           class="w-full btn-generic-color-2"
-          bind:value={timeString}
-        />
+          bind:value={timeString} />
       </div>
       <!-- 
   <label class="mt-5">

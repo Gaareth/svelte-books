@@ -37,8 +37,7 @@
           selectedOption = option;
           dispatch("select", option);
         }
-      }}
-    >
+      }}>
       {option}
     </button>
   {/each}

@@ -80,15 +80,13 @@
   class={twMerge("dropdown", className)}
   use:clickOutside
   on:click_outside={click_outside}
-  bind:this={dropdownWrapper}
->
+  bind:this={dropdownWrapper}>
   <slot name="triggerWrapper">
     <button
       class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
       on:click={toggleOpen}
       bind:this={trigger_ref}
-      type="button"
-    >
+      type="button">
       <slot name="triggerContent" />
     </button>
   </slot>
@@ -117,8 +115,7 @@
     on:keydown
     role="button"
     tabindex="0"
-    bind:this={dropdownContentWrapper}
-  >
+    bind:this={dropdownContentWrapper}>
     <slot name="dropdown" />
   </div>
 </div>
@@ -127,8 +124,7 @@
   bind:showModal
   showDividers={false}
   divClassName="!p-0"
-  on:closed={() => (open = false)}
->
+  on:closed={() => (open = false)}>
   <div
     on:keydown
     role="button"
@@ -138,8 +134,7 @@
       if (closeOnClick) {
         open = false;
       }
-    }}
-  >
+    }}>
     <slot name="dropdown" />
   </div>
 </Modal>

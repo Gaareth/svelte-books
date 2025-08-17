@@ -38,8 +38,7 @@
       class={twMerge(
         "input w-full {error ? 'input-error' : ''}",
         selectClassName
-      )}
-    >
+      )}>
       <slot />
     </select>
     {#if clearButton}
@@ -48,8 +47,7 @@
         disabled={value == null}
         type="button"
         class="group flex"
-        title="Clear Input"
-      >
+        title="Clear Input">
         <span class={twMerge("inline-block icon group self-center", hoverCss)}>
           <IoIosRemoveCircle />
         </span>

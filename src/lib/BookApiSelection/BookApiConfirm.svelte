@@ -1,6 +1,5 @@
 <script lang="ts">
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
-  import Image from "$lib/Image.svelte";
 
   import { delay } from "$lib/utils";
   //@ts-ignore
@@ -43,8 +42,7 @@
       dispatch && dispatch("back");
     }}
     class="mt-5 flex flex-row items-center gap-1"
-    type="button"
-  >
+    type="button">
     <span class="block w-6">
       <IoIosArrowBack />
     </span>
@@ -64,16 +62,14 @@
       : "uncategorized"}
     <div
       class="item-border p-2 my-2 flex flex-wrap items-center gap-4 relative"
-      bind:this={item_ref}
-    >
+      bind:this={item_ref}>
       <div class="flex items-center gap-4">
         <div>
           {#if info.imageLinks?.smallThumbnail}
-            <Image
+            <img
               src={info.imageLinks.smallThumbnail}
               alt="book cover"
-              class="w-10 max-w-[2.5rem]"
-            />
+              class="w-10 max-w-[2.5rem]" />
           {:else}
             <img src="/cover.png" alt="placeholder book cover" class="w-10" />
           {/if}
@@ -89,8 +85,7 @@
               class="pl-1"
               target="_blank"
               href="http://books.google.de/books?id={volumeId}"
-              title="Open on books.google.de"
-            >
+              title="Open on books.google.de">
               <span class="w-4 h-4 block">
                 <IoMdOpen />
               </span>
@@ -110,8 +105,7 @@
         class={clsx(
           "api-stats flex gap-2 items-center flex-grow justify-between",
           !flexWrapHappened ? "md:justify-end" : ""
-        )}
-      >
+        )}>
         <div class="api-stats-cols">
           <span class="self-auto md:self-end">{info.pageCount} pages</span>
           <span>{categories}</span>
@@ -125,13 +119,11 @@
         <img
           class="w-5 absolute top-5 right-0 min-[500px]:static"
           src={`/language-icons/icons/${info.language}.svg`}
-          alt={`${info.language} language icon`}
-        />
+          alt={`${info.language} language icon`} />
         <span
           class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
           hidden={isbn_13 === undefined}
-          title="ISBN 13"
-        >
+          title="ISBN 13">
           {isbn_13}
         </span>
       </div>

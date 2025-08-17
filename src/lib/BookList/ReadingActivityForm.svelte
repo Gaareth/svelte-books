@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { READING_STATUS_VALUES } from "$appTypes";
+  import { READING_STATUS, READING_STATUS_VALUES } from "$appTypes";
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
   } from "$lib/DateSelector.svelte";
@@ -16,12 +16,14 @@
   import { type ReviewListItemType } from "$appTypes";
   import LineChartDrawer from "$lib/LineChartDrawer.svelte";
   import clsx from "clsx";
+  import ToggleGroup from "$lib/ToggleGroup.svelte";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;
   export let entry: ReviewListItemType | undefined = undefined;
 
   let stars = entry?.rating?.stars;
+  let readingStatus = entry?.status;
 
   let tensionGraph =
     entry?.storyGraphs && entry?.storyGraphs?.length > 0
@@ -49,8 +51,7 @@
 <Modal
   bind:showModal
   divClassName="w-full h-full flex flex-col"
-  className="w-[95%] lg:w-2/5 h-4/5 lg:h-4/6"
->
+  className="w-full lg:w-2/5 h-4/5 lg:h-4/6">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">
       {entry != null ? "Edit" : "Create"} Reading Activity
@@ -88,8 +89,7 @@
 
         await invalidateAll();
       };
-    }}
-  >
+    }}>
     {#if entry !== undefined}
       <input type="hidden" name="id" value={entry.id} />
     {:else}
@@ -99,13 +99,12 @@
     <div class="mt-5 flex flex-col gap-4">
       <div>
         <InputSelect
-          value={entry?.status}
+          bind:value={readingStatus}
           displayName="Status"
           name={"status"}
           selectClassName="dark:bg-slate-600"
           clearButton={false}
-          error={error?.status}
-        >
+          error={error?.status}>
           {#each READING_STATUS_VALUES as status}
             <option value={status}>
               {status}
@@ -114,60 +113,73 @@
         </InputSelect>
       </div>
 
-      <div>
-        <InputAny name="dateStarted" error={error?.dateStarted}>
-          <div class="icon-wrapper" slot="label">
-            <span class="w-5 block" title="date started">
-              <EventProgress />
-            </span>
-            Date started:
-          </div>
+      <!-- <div class="flex justify-center sm:mt-5">
+        <ToggleGroup
+          options={READING_STATUS_VALUES}
+          groupClass="mb-2 inline-flex"
+          btnClass="px-2 py-2 sm:py-0 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
+          btnSelectedClass="dark:bg-slate-500 bg-gray-100"
+          startClass="border-s rounded-s-md"
+          endClass="rounded-e-md"
+        />
+      </div> -->
 
-          <DateSelector
-            slot="input"
-            id="dateStarted"
-            name="dateStarted"
-            inputClassName="!w-full !input dark:bg-slate-600"
-            className="w-full"
-            datetime={dateStartedValue}
-            clearButton={true}
-          />
-        </InputAny>
-      </div>
+      {#if readingStatus && readingStatus !== READING_STATUS.TO_READ}
+        <div>
+          <InputAny name="dateStarted" error={error?.dateStarted}>
+            <div class="icon-wrapper" slot="label">
+              <span class="w-5 block" title="date started">
+                <EventProgress />
+              </span>
+              Date started:
+            </div>
 
-      <div>
-        <InputAny name="dateFinished">
-          <div class="icon-wrapper" slot="label">
-            <span class="w-5 block" title="date read">
-              <EventDone />
-            </span>
-            Date read:
-          </div>
+            <DateSelector
+              slot="input"
+              id="dateStarted"
+              name="dateStarted"
+              inputClassName="!w-full !input dark:bg-slate-600"
+              className="w-full"
+              datetime={dateStartedValue}
+              clearButton={true} />
+          </InputAny>
+        </div>
+      {/if}
 
-          <DateSelector
-            id="dateFinished"
-            name="dateFinished"
-            inputClassName="!w-full !input dark:bg-slate-600"
-            className="w-full"
-            slot="input"
-            datetime={dateFinishedValue}
-            clearButton={true}
-          />
-        </InputAny>
-      </div>
+      {#if readingStatus && readingStatus !== READING_STATUS.TO_READ && readingStatus !== READING_STATUS.READING}
+        <div>
+          <InputAny name="dateFinished">
+            <div class="icon-wrapper" slot="label">
+              <span class="w-5 block" title="date read">
+                <EventDone />
+              </span>
+              Date read:
+            </div>
+
+            <DateSelector
+              id="dateFinished"
+              name="dateFinished"
+              inputClassName="!w-full !input dark:bg-slate-600"
+              className="w-full"
+              slot="input"
+              datetime={dateFinishedValue}
+              clearButton={true} />
+          </InputAny>
+        </div>
+      {/if}
 
       <div class="flex gap-2 items-center my-1">
         <h2 class="text-xl">Rating</h2>
         <div>
-          (<input
+          (
+          <input
             class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
             name="stars"
             type="number"
             step="0.5"
             bind:value={stars}
             min="0"
-            max={MAX_RATING}
-          />
+            max={MAX_RATING} />
           / {MAX_RATING})
         </div>
 
@@ -182,15 +194,15 @@
             class={clsx(
               "cursor-pointer text-xl",
               !entry?.rating?.comment && "text-secondary"
-            )}>Comment</summary
-          >
+            )}>
+            Comment
+          </summary>
           <textarea
             class="w-full input dark:bg-slate-600"
             name="comment"
             id="comment"
             value={entry?.rating?.comment ?? ""}
-            rows="5"
-          />
+            rows="5" />
         </details>
       </section>
 
@@ -200,8 +212,9 @@
             class={clsx(
               "cursor-pointer text-xl",
               entry?.storyGraphs?.length == 0 && "text-secondary"
-            )}>Story graphs</summary
-          >
+            )}>
+            Story graphs
+          </summary>
           <div class="default-border p-2 dark:bg-slate-600">
             <LineChartDrawer
               allowEdits={true}
@@ -210,47 +223,39 @@
               bind:title={tensionGraph.title}
               bind:labels={tensionGraph.labels}
               bind:details={tensionGraph.details}
-              bind:data={tensionGraph.data}
-            />
+              bind:data={tensionGraph.data} />
             <input
               type="hidden"
               name="graphs[title]"
-              value={tensionGraph.title}
-            />
+              value={tensionGraph.title} />
             <input
               type="hidden"
               name="graphs[labels]"
-              value={JSON.stringify(tensionGraph.labels)}
-            />
+              value={JSON.stringify(tensionGraph.labels)} />
             <input
               type="hidden"
               name="graphs[details]"
-              value={JSON.stringify(tensionGraph.details)}
-            />
+              value={JSON.stringify(tensionGraph.details)} />
             <input
               type="hidden"
               name="graphs[data]"
-              value={JSON.stringify(tensionGraph.data)}
-            />
+              value={JSON.stringify(tensionGraph.data)} />
           </div>
         </details>
       </section>
     </div>
 
     <div
-      class="min-[500px]:flex min-[500px]:justify-end grid grid-cols-2 gap-2 mt-auto"
-    >
+      class="min-[500px]:flex min-[500px]:justify-end grid grid-cols-2 gap-2 mt-auto">
       <button
         class="dark:text-white py-3 px-4 my-4 rounded-md w-full dark:bg-slate-600 dark:hover:bg-gray-500 btn-generic dark:border-none"
         type="button"
-        on:click={() => (showModal = false)}
-      >
+        on:click={() => (showModal = false)}>
         Cancel
       </button>
       <button
         class="bg-blue-700 text-white py-3 px-4 my-4 rounded-md w-full dark:hover:bg-blue-600 hover:bg-blue-800"
-        type="submit"
-      >
+        type="submit">
         {entry != null ? "Update" : "Create"}
       </button>
     </div>

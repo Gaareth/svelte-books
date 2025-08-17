@@ -35,8 +35,7 @@
         class="icon"
         disabled={!editable}
         on:click={() => decreaseRating(i + 1)}
-        type="button"
-      >
+        type="button">
         <IoIosStar />
       </button>
     {:else}
@@ -44,8 +43,7 @@
         class="icon"
         disabled={!editable}
         on:click={() => increaseRating(i + 1)}
-        type="button"
-      >
+        type="button">
         <IoIosStarOutline />
       </button>
     {/if}

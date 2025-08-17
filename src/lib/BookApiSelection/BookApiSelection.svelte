@@ -42,11 +42,10 @@
     <input
       class="input dark:bg-slate-600 dark:border-slate-500"
       type="text"
-      bind:value={query}
-    />
-    <button type="button" class="btn-primary-black" on:click={handleClick}
-      >Search</button
-    >
+      bind:value={query} />
+    <button type="button" class="btn-primary-black" on:click={handleClick}>
+      Search
+    </button>
   </div>
   <div>
     {#if queriedBooksPromise !== undefined}
@@ -61,15 +60,13 @@
                   <img
                     src={book.volumeInfo.imageLinks.smallThumbnail}
                     alt="book cover"
-                    class="w-10"
-                  />
+                    class="w-10" />
                 {:else}
                   <!-- ??TODO: placeholder -->
                   <img
                     src="/cover.png"
                     alt="placeholder book cover"
-                    class="w-10"
-                  />
+                    class="w-10" />
                 {/if}
               </div>
               <div class="flex flex-col">
@@ -91,8 +88,7 @@
                 id={`bookId-${book.id}`}
                 value={book.id}
                 on:click={() => (selectedBookId = book.id)}
-                class="mr-2 peer checked:hidden md:checked:block"
-              />
+                class="mr-2 peer checked:hidden md:checked:block" />
               <button
                 class="hidden peer-checked:flex px-3 py-1
                 border rounded-md dark:border-slate-500 dark:bg-slate-600
@@ -105,8 +101,7 @@
                   dispatch("select");
                 }}
                 title="Select book"
-                type="button"
-              >
+                type="button">
                 <span class="hidden md:inline">Select</span>
                 <span class="w-6 block">
                   <IoIosArrowForward />

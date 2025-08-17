@@ -144,16 +144,14 @@
 
 {#if $page.data.session}
   <div
-    class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white"
-  >
+    class="border rounded-md p-3 my-2 dark:bg-slate-700 dark:border-slate-600 bg-white">
     <div class="flex justify-between">
       <h2
         class={twMerge(
           "text-2xl flex items-center justify-center ease-in-out duration-500",
           new_book_open && "-translate-y-[32px] text-xl"
         )}
-        style="transition-property: transform, font-size;"
-      >
+        style="transition-property: transform, font-size;">
         Add new book
       </h2>
       <div>
@@ -161,8 +159,7 @@
           type="button"
           on:click={toggleContent}
           class="ml-auto rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
-      dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500 min-w-24"
-        >
+      dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500 min-w-24">
           {new_book_open ? "Cancel" : "Open"}
         </button>
       </div>
@@ -177,16 +174,14 @@
             groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
             btnClass="px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
-            bind:selectedOption={listName}
-          />
+            bind:selectedOption={listName} />
 
           <TabGroup
             btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
             btnSelectedClass="dark:text-slate-100 text-slate-900"
             sliderClass="border-b-2 dark:border-slate-500 border-slate-400"
             tabNames={["search", "manually"]}
-            animate={false}
-          >
+            animate={false}>
             <!-- TODO: tabtrigger info if there is a book selected -->
             <TabPanels className="">
               <TabPanel className="px-0.5">
@@ -197,8 +192,7 @@
                   bind:query={api_query}
                   on:select={() => {
                     showMore = true;
-                  }}
-                />
+                  }} />
               </TabPanel>
               <TabPanel className="px-0.5">
                 <p>Enter info manually</p>
@@ -209,8 +203,7 @@
                     name="name"
                     type="text"
                     class="rounded-md dark:bg-slate-600 dark:border-slate-500"
-                    bind:value={name}
-                  />
+                    bind:value={name} />
                   <label for="author">Author:</label>
                   <!-- <input
                     id="author"
@@ -225,8 +218,7 @@
                     create={true}
                     id="author"
                     name="author"
-                    class="input border-gray-500 dark:bg-slate-600 dark:border-slate-500"
-                  />
+                    class="input border-gray-500 dark:bg-slate-600 dark:border-slate-500" />
                 </div>
               </TabPanel>
             </TabPanels>
@@ -243,8 +235,7 @@
               {#if listName == "Reading" || listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
-                  for="dateStarted"
-                >
+                  for="dateStarted">
                   <div class="icon-wrapper">
                     <span class="w-5 block" title="date read">
                       <EventProgress />
@@ -256,16 +247,14 @@
                     id="dateStarted"
                     className="w-full sm:w-auto"
                     inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
-                    bind:datetime={dateStarted}
-                  />
+                    bind:datetime={dateStarted} />
                 </label>
               {/if}
 
               {#if listName == "Read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
-                  for="dateEnd"
-                >
+                  for="dateEnd">
                   <div class="icon-wrapper">
                     <span class="w-5 block" title="date read">
                       <EventDone />
@@ -277,8 +266,7 @@
                     id="dateEnd"
                     className="w-full sm:w-auto"
                     inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
-                    bind:datetime={dateFinished}
-                  />
+                    bind:datetime={dateFinished} />
                 </label>
               {/if}
 
@@ -299,8 +287,7 @@
                   name="words-per-page"
                   type="number"
                   class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full"
-                  bind:value={wordsPerPage}
-                />
+                  bind:value={wordsPerPage} />
               </div>
             </div>
           {/if}
@@ -311,8 +298,7 @@
               class="btn-primary-black mt-5 mb-1 transition-all"
               title="Add new book"
               disabled={!has_content}
-              type="button"
-            >
+              type="button">
               {#if loading}
                 <div>
                   <Moon size="20" color="white" duration="1s" />

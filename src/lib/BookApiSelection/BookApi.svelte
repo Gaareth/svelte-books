@@ -36,6 +36,5 @@
     bind:selectedBookId={volumeId}
     bind:apiBookSelected
     bind:query
-    {dispatch}
-  />
+    {dispatch} />
 </div>

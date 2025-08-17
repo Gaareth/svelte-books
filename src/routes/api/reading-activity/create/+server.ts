@@ -1,4 +1,4 @@
-import { READING_STATUS_VALUES_TUPLE } from "$appTypes";
+import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 import { json } from "@sveltejs/kit";
 import z from "zod";
@@ -7,20 +7,31 @@ import {
   optionalDatetimeSchema,
   optionalNumericString,
   parseFormObject,
-  requiredDatetimeSchema,
   storyGraphSchema,
 } from "../../../../schemas";
 import type { RequestEvent } from "./$types";
 
-const saveSchema = z.object({
-  stars: optionalNumericString(z.number().min(0).max(5).optional()).optional(),
-  comment: z.string().optional(),
-  dateStarted: requiredDatetimeSchema,
-  dateFinished: optionalDatetimeSchema.nullish(),
-  graphs: storyGraphSchema.nullish(),
-  status: z.enum(READING_STATUS_VALUES_TUPLE),
-  bookId: z.string(),
-});
+const saveSchema = z
+  .object({
+    stars: optionalNumericString(
+      z.number().min(0).max(5).optional()
+    ).optional(),
+    comment: z.string().optional(),
+    dateStarted: optionalDatetimeSchema.nullish(),
+    dateFinished: optionalDatetimeSchema.nullish(),
+    graphs: storyGraphSchema.nullish(),
+    status: z.enum(READING_STATUS_VALUES_TUPLE),
+    bookId: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "dateStarted is required unless status is 'to read'",
+        path: ["dateStarted"],
+      });
+    }
+  });
 
 export async function POST(req: RequestEvent) {
   const accountId = await checkBookAuth(req.locals, req.params);
@@ -53,9 +64,12 @@ export async function POST(req: RequestEvent) {
     result.data;
 
   try {
-    const createdDateStarted = await prisma.optionalDatetime.create({
-      data: dateStarted,
-    });
+    let createdDateStarted;
+    if (dateStarted) {
+      createdDateStarted = await prisma.optionalDatetime.create({
+        data: dateStarted,
+      });
+    }
 
     let createdDateFinished;
     if (dateFinished) {
@@ -69,7 +83,7 @@ export async function POST(req: RequestEvent) {
         accountId,
         bookId,
         status,
-        dateStartedId: createdDateStarted.id,
+        dateStartedId: createdDateStarted?.id,
         dateFinishedId: createdDateFinished?.id,
         rating:
           stars !== undefined

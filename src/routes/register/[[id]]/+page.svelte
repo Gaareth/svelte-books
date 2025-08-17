@@ -38,17 +38,18 @@
         }
 
         // don't add reset: false, as this (form clearing) is the only indicator the new code is still wrong
-      }}
-    >
-      <label class="flex flex-col mt-1" for="code"> Registration code </label>
+      }}>
+      <label class="flex flex-col mt-1" for="code">Registration code</label>
       <div class="flex gap-1">
         <input
           type="text"
           name="code"
           id="code"
           required
-          class={twMerge("input", form?.success === false ? "input-error" : "")}
-        />
+          class={twMerge(
+            "input",
+            form?.success === false ? "input-error" : ""
+          )} />
         <button class="btn-submit border-0">Enter</button>
       </div>
       {#if form?.success === false}
@@ -82,13 +83,11 @@
               update({ reset: false });
             };
           }}
-          class="w-full max-w-sm"
-        >
+          class="w-full max-w-sm">
           <div>
             <InputText
               name="username"
-              error={(form?.errors?.username ?? [undefined])[0]}
-            />
+              error={(form?.errors?.username ?? [undefined])[0]} />
           </div>
 
           <div class="mt-4">
@@ -96,20 +95,17 @@
               name="password"
               autocomplete="new-password"
               type="password"
-              error={(form?.errors?.password ?? [undefined])[0]}
-            />
+              error={(form?.errors?.password ?? [undefined])[0]} />
           </div>
 
-          <button class="btn-submit w-full mt-8" type="submit">
-            register
-          </button>
+          <button class="btn-submit w-full mt-8" type="submit">register</button>
           <input type="hidden" name="code" value={data.validCode} />
           <p class="text-lg text-secondary mt-4">
             Already have an account? <a
               href="/login/"
-              class="dark:text-blue-400 text-blue-500 underline text-lg"
-              >Login here</a
-            >
+              class="dark:text-blue-400 text-blue-500 underline text-lg">
+              Login here
+            </a>
           </p>
         </form>
       </div>

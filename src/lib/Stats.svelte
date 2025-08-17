@@ -17,8 +17,7 @@
   class={twMerge(
     "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
     $$restProps.class
-  )}
->
+  )}>
   <slot name="name">
     <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
   </slot>
@@ -29,8 +28,7 @@
         class={clsx(
           "font-bold self-center",
           typeof value === "number" ? "text-5xl" : "text-4xl"
-        )}
-      >
+        )}>
         {(value ?? NaN).toLocaleString("en-US")}
       </p>
     </slot>
@@ -40,8 +38,7 @@
           class={clsx(
             "w-10 h-10 self-center",
             value > last_value ? "text-green-500" : "text-red-500"
-          )}
-        >
+          )}>
           {#if value > last_value}
             <IoIosArrowUp />
           {:else if value < last_value}

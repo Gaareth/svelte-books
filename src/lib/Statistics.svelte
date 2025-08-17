@@ -156,35 +156,34 @@
 </script>
 
 <div
-  class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden"
->
+  class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden">
   <div class="btn-group dark:border-slate-700">
     <button
       class={twMerge(
         "btn-group-btn flex items-center gap-1",
         selected_option == "books" && "btn-group-selected"
       )}
-      on:click={() => (selected_option = "books")}
-    >
-      <span class="w-5"><Book /></span>books
+      on:click={() => (selected_option = "books")}>
+      <span class="w-5"><Book /></span>
+      books
     </button>
     <button
       class={twMerge(
         "btn-group-btn flex items-center gap-1",
         selected_option == "pages" && "btn-group-selected"
       )}
-      on:click={() => (selected_option = "pages")}
-    >
-      <span class="w-5"><Pages /></span>pages
+      on:click={() => (selected_option = "pages")}>
+      <span class="w-5"><Pages /></span>
+      pages
     </button>
     <button
       class={twMerge(
         "btn-group-btn flex items-center gap-1",
         selected_option == "words" && "btn-group-selected"
       )}
-      on:click={() => (selected_option = "words")}
-    >
-      <span class="w-5"><Words /></span>words
+      on:click={() => (selected_option = "words")}>
+      <span class="w-5"><Words /></span>
+      words
     </button>
   </div>
   <div class="text-secondary text-base">
@@ -234,8 +233,7 @@
     <Stats
       name="total books read"
       value={readingActivities.length}
-      class="!bg-transparent backdrop-blur"
-    />
+      class="!bg-transparent backdrop-blur" />
   {:else if selected_option == "pages"}
     <Stats name="total pages read" class="!bg-transparent backdrop-blur">
       <div slot="value" class="flex gap-1 items-center">
@@ -259,22 +257,19 @@
       name="books read this month"
       value={books_this_month.length}
       last_value={books_last_month.length}
-      class="!bg-transparent backdrop-blur"
-    />
+      class="!bg-transparent backdrop-blur" />
   {:else if selected_option == "pages"}
     <Stats
       name="pages read this month"
       value={pages_this_month}
       last_value={pages_last_month}
-      class="!bg-transparent backdrop-blur"
-    />
+      class="!bg-transparent backdrop-blur" />
   {:else}
     <Stats
       name="words read this month"
       value={words_this_month}
       last_value={words_last_month}
-      class="!bg-transparent backdrop-blur"
-    />
+      class="!bg-transparent backdrop-blur" />
   {/if}
 
   {#if books_last_year.length > 0}
@@ -283,22 +278,19 @@
         name="books read this year"
         value={books_this_year.length}
         last_value={books_last_year.length}
-        class="!bg-transparent backdrop-blur"
-      />
+        class="!bg-transparent backdrop-blur" />
     {:else if selected_option == "pages"}
       <Stats
         name="pages read this year"
         value={pages_this_year}
         last_value={pages_last_year}
-        class="!bg-transparent backdrop-blur"
-      />
+        class="!bg-transparent backdrop-blur" />
     {:else}
       <Stats
         name="words read this year"
         value={words_this_year}
         last_value={words_last_year}
-        class="!bg-transparent backdrop-blur"
-      />
+        class="!bg-transparent backdrop-blur" />
     {/if}
   {/if}
 </div>
@@ -307,16 +299,14 @@
   {#if readingActivities.length > 0}
     <Stats
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
-      class="!bg-transparent backdrop-blur"
-    >
+      class="!bg-transparent backdrop-blur">
       <div class="flex justify-between" slot="name">
         <p class="text-gray-500 dark:text-gray-400 text-base">
           most read author
         </p>
         <button
           class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-          on:click={() => (showModalAuthors = true)}
-        >
+          on:click={() => (showModalAuthors = true)}>
           <span class="w-5 block"><IoIosStats /></span>
         </button>
       </div>
@@ -328,16 +318,14 @@
         " (" +
         most_read_categories[0][1] +
         ")"}
-      class="!bg-transparent backdrop-blur"
-    >
+      class="!bg-transparent backdrop-blur">
       <div class="flex justify-between" slot="name">
         <p class="text-gray-500 dark:text-gray-400 text-base">
           most read genre/category
         </p>
         <button
           class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-          on:click={() => (showModalCats = true)}
-        >
+          on:click={() => (showModalCats = true)}>
           <span class="w-5 block"><IoIosStats /></span>
         </button>
       </div>

@@ -15,8 +15,7 @@
   <BookListItem
     {book}
     on:delete={on_delete}
-    allow_deletion={allow_deletion && !!on_delete}
-  />
+    allow_deletion={allow_deletion && !!on_delete} />
   <!-- <BookListItem {book} bind:deletionBook bind:openModal/> -->
 {/each}
 

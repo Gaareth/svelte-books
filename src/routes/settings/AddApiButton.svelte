@@ -80,8 +80,7 @@
       // `result` is an `ActionResult` object
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
     };
-  }}
->
+  }}>
   <div>
     <label class="flex items-center gap-2">
       Connect all:
@@ -92,8 +91,7 @@
   <button
     type="submit"
     class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit"
-    disabled={loading}
-  >
+    disabled={loading}>
     {#if loading}
       <LoadingSpinner />
       loading..

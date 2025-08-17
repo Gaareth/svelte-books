@@ -23,23 +23,19 @@
   class={clsx(
     !headerConfig.transparent &&
       "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
-  )}
->
+  )}>
   <div class="mx-auto max-w-screen-xl p-4">
     <div
-      class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col"
-    >
+      class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col">
       <div class="flex lg:w-0 lg:flex-1" />
 
       <nav
         aria-label="Site Nav"
-        class="gap-8 text-md font-medium flex flex-wrap"
-      >
+        class="gap-8 text-md font-medium flex flex-wrap">
         <a
           class="text-gray-500 dark:text-gray-400
         hover:text-[#F2440D] dark:hover:text-[#f67c56]"
-          href="/"
-        >
+          href="/">
           Home
         </a>
         {#if $page.data.session}
@@ -60,8 +56,7 @@
                   slot="triggerContent"
                   aria-label="open account dropdown"
                   title="Account"
-                  class="block w-8 text-secondary hover:text-secondary-hover"
-                >
+                  class="block w-8 text-secondary hover:text-secondary-hover">
                   <IconAccount />
                 </span>
 
@@ -74,7 +69,7 @@
                     </div>
                     <hr />
                     <div class="py-2 flex flex-col gap-1 text-secondary-2">
-                      <a href="/settings"> Settings </a>
+                      <a href="/settings">Settings</a>
                       <a href="/users">all users</a>
                     </div>
                     <hr />
@@ -82,15 +77,16 @@
                       <a
                         href="/auth/signout"
                         class="whitespace-nowrap"
-                        data-sveltekit-preload-data="off">Sign out</a
-                      >
+                        data-sveltekit-preload-data="off">
+                        Sign out
+                      </a>
                     </div>
                   </div>
                 </div>
               </Dropdown>
             {:else}
               <div>
-                <a class="auth-button" href="/auth/signin"> Log in </a>
+                <a class="auth-button" href="/auth/signin">Log in</a>
               </div>
             {/if}
           </div>
@@ -103,12 +99,11 @@
   </div>
 </header>
 
-<main class="pb-20 px-2 md:px-0">
+<main class="pb-20 px-2">
   <Toaster />
 
   <div
-    class={twMerge("container max-w-3xl mx-auto", headerConfig.wrapperClass)}
-  >
+    class={twMerge("container max-w-3xl mx-auto", headerConfig.wrapperClass)}>
     <slot />
   </div>
 </main>
@@ -120,8 +115,9 @@
     </p>
     <p>
       Made using
-      <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a> /
-      - Kit and <a href="/tech-stack">more</a>
+      <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a>
+      / - Kit and
+      <a href="/tech-stack">more</a>
     </p>
     <p>
       by <a href="https://github.com/Gaareth" class="underline">Gareth</a>

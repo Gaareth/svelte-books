@@ -83,8 +83,7 @@
     title="Change theme"
     aria-label="open theme changer dropdown"
     class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block
-    hover:scale-[1.15] transition-transform ease-out"
-  >
+    hover:scale-[1.15] transition-transform ease-out">
     {#if $theme == "dark"}
       <IoIosMoon />
     {:else if $theme == "light"}
@@ -95,13 +94,11 @@
   </span>
   <ul
     slot="dropdown"
-    class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200"
-  >
+    class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
     <li>
       <button
         on:click={applyDarkMode}
-        class="theme-dropdown-button hover:!text-purple-400 dark:!text-purple-400"
-      >
+        class="theme-dropdown-button hover:!text-purple-400 dark:!text-purple-400">
         <span>
           <IoIosMoon />
         </span>
@@ -111,8 +108,7 @@
     <li>
       <button
         on:click={applyLightMode}
-        class="theme-dropdown-button text-yellow-500 dark:text-inherit hover:!text-yellow-500 dark:hover:!text-yellow-200"
-      >
+        class="theme-dropdown-button text-yellow-500 dark:text-inherit hover:!text-yellow-500 dark:hover:!text-yellow-200">
         <span>
           <IoIosSunny />
         </span>
@@ -127,8 +123,7 @@
           prefersDark
             ? "hover:!text-purple-400"
             : "hover:!text-yellow-500 dark:hover:!text-yellow-200"
-        )}
-      >
+        )}>
         <span>
           <IoIosDesktop />
         </span>

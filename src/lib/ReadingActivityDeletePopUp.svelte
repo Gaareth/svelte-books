@@ -61,8 +61,7 @@
   btn1_msg={"Delete entry"}
   btn2_msg={"cancel"}
   type={"Error"}
-  on:primary={deleteEntry}
->
+  on:primary={deleteEntry}>
   <div slot="content">
     You won't be able to restore this entry, unless you create a new one.
     <div>

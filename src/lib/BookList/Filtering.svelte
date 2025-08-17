@@ -279,8 +279,7 @@
   <div class="grid grid-cols-1 gap-6">
     <details
       class="flex flex-col"
-      open={!!params.get("order") || !!params.get("sort")}
-    >
+      open={!!params.get("order") || !!params.get("sort")}>
       <summary class="text-2xl">
         <div class="inline-flex items-center gap-2">
           Sorting
@@ -298,8 +297,7 @@
           class="default-border border-red-600 border"
           bind:value={selectedSort}
           on:change={sortBooks}
-          aria-label="Sort by"
-        >
+          aria-label="Sort by">
           <option value="date_read">Sort by date</option>
           <option value="date_created">Sort by date created</option>
           <option value="title">Sort by title</option>
@@ -325,8 +323,9 @@
             Rating ({rating_filter} / {MAX_RATING})
             <button
               class="btn-generic px-2 py-0"
-              on:click={() => (rating_filter = undefined)}>clear</button
-            >
+              on:click={() => (rating_filter = undefined)}>
+              clear
+            </button>
           </div>
           <div class="my-2" hidden={true}>
             <!-- TODO -->
@@ -337,8 +336,7 @@
             min="0"
             max={MAX_RATING}
             bind:value={rating_filter}
-            aria-labelledby="rating-label"
-          />
+            aria-labelledby="rating-label" />
         </label>
 
         <label class="flex flex-col">
@@ -363,8 +361,7 @@
             id="categories"
             name="categories"
             class="input dark:bg-slate-600 dark:border-slate-500 my-2"
-            className="!h-full"
-          />
+            className="!h-full" />
         </label>
 
         <label class="flex flex-col">
@@ -373,8 +370,7 @@
             type="date"
             class="default-border"
             value={start_filter && dateToYYYY_MM_DD(start_filter)}
-            on:change={(e) => (start_filter = parseDateInput(e))}
-          />
+            on:change={(e) => (start_filter = parseDateInput(e))} />
         </label>
 
         <label class="flex flex-col">
@@ -383,8 +379,7 @@
             type="date"
             class="default-border"
             value={end_filter && dateToYYYY_MM_DD(end_filter)}
-            on:change={(e) => (end_filter = parseDateInput(e))}
-          />
+            on:change={(e) => (end_filter = parseDateInput(e))} />
         </label>
 
         <div class="flex justify-center gap-2">
@@ -405,14 +400,12 @@
       <div class="w-full md:w-fit flex gap-2 self-end mt-2">
         <button
           class="btn-secondary-black block my-3 px-8 text-center w-full md:w-fit"
-          on:click={resetFilter}
-        >
+          on:click={resetFilter}>
           Reset
         </button>
         <button
           class="btn-primary-black block my-3 px-8 text-center w-full md:w-fit"
-          on:click={filter}
-        >
+          on:click={filter}>
           Filter
         </button>
       </div>
