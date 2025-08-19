@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  export type ItemDeleteEvent = { book: Book };
+  export type ItemDeleteEvent = { entry: ReadingListItemType };
 </script>
 
 <script lang="ts">
@@ -176,7 +176,7 @@
                   title="Delete book"
                   type="button"
                   on:click={() => {
-                    dispatch("delete", { book });
+                    dispatch("delete", { entry });
                   }}>
                   <span
                     class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">

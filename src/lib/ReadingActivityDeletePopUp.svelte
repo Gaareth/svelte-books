@@ -9,6 +9,7 @@
   export let deletionEntry: Prisma.ReadingActivityGetPayload<{
     include: { book: true; dateFinished: true; dateStarted: true };
   }>;
+
   const dispatch = createEventDispatcher();
 
   const deleteEntry = (event: any) => {

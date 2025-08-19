@@ -122,7 +122,7 @@ model ReadingActivity {
   accountId String
 
   bookId String
-  book   Book   @relation(fields: [bookId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   dateStarted    OptionalDatetime? @relation("dateStarted", fields: [dateStartedId], references: [id])
   dateFinished   OptionalDatetime? @relation("dateFinished", fields: [dateFinishedId], references: [id])

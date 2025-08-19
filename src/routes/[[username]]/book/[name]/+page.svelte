@@ -401,6 +401,10 @@
           {#each book.readingActivity as readingActivity}
             <ReviewListItem entry={readingActivity} />
           {/each}
+
+          {#if book.readingActivity.length <= 0}
+            <p class="text-secondary text-center">No reading activity found.</p>
+          {/if}
         </div>
       </div>
     </div>
@@ -527,6 +531,13 @@
 <ReadingActivityForm
   bind:showModal={showCreateReadingActivity}
   bookId={book.id} />
+
+<BookDeletePopUp
+  bind:openModal={open_delete}
+  deletionBook={book}
+  on:success={() => {
+    goto("/");
+  }} />
 
 <style>
   :global(.autocomplete) {

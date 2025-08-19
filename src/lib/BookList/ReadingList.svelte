@@ -18,6 +18,7 @@
   import Filtering from "./Filtering.svelte";
   import { page } from "$app/stores";
   import ReadingListItem from "./ReadingListItem.svelte";
+  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
 
   export let entries: ReadingListItemType[];
   export let showSearch = true;
@@ -54,7 +55,7 @@
     unsubscribe();
   });
 
-  let deletionBook: Book;
+  let deletionEntry: ReadingListItemType;
   let openModal = false;
 
   let showOptions = false;
@@ -77,7 +78,7 @@
 
   const openPopup = (event: CustomEvent<ItemDeleteEvent>) => {
     openModal = true;
-    deletionBook = event.detail.book;
+    deletionEntry = event.detail.entry;
   };
 </script>
 
@@ -136,10 +137,12 @@
   {/each}
 </div>
 
-<BookDeletePopUp
-  {deletionBook}
-  bind:openModal
-  on:success={() => {
-    openModal = false;
-    invalidateAll();
-  }} />
+{#if deletionEntry}
+  <ReadingActivityDeletePopUp
+    {deletionEntry}
+    bind:openModal
+    on:success={() => {
+      openModal = false;
+      invalidateAll();
+    }} />
+{/if}

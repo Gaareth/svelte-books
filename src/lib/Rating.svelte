@@ -4,7 +4,7 @@
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
 
-  export let rating: number | undefined;
+  export let rating: number | undefined | null;
   export let rating_max: number;
   export let editable = false;
 
