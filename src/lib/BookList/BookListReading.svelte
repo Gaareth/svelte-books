@@ -3,7 +3,7 @@
 
   //@ts-ignore
   import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-  import type { ReadingListItemType } from "$appTypes";
+  import { READING_STATUS, type ReadingListItemType } from "$appTypes";
 
   import { onMount } from "svelte";
 
@@ -48,11 +48,14 @@
 <div class="dark:bg-slate-800 bg-white">
   {#each readingActivities as entry (entry.id)}
     <form
-      action={`book/${entry.book.name}?/readNow`}
+      action={`api/reading-activity/readNow`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
-          if (result.type === "redirect") {
+          console.log("result", result);
+
+          //@ts-ignore
+          if (result.success === true) {
             invalidateAll();
             toast.success(`Successfully added book to read`);
           } else {
@@ -60,7 +63,7 @@
           }
         };
       }}>
-      <input type="hidden" name="id" value={entry.book.id} />
+      <input type="hidden" name="readingActivityId" value={entry.id} />
 
       <ReadingListItem {entry}>
         <button

@@ -56,8 +56,8 @@
         <IoMdClose />
       </span>
     </button>
-    <hr class="dark:border-slate-600" hidden={!showDividers} />
 
+    <hr class="dark:border-slate-600" hidden={!showDividers} />
     <slot />
     <hr class="mt-4 dark:border-slate-600" hidden={!showDividers} />
   </div>

@@ -1,30 +1,42 @@
-import { READING_STATUS_VALUES_TUPLE } from "$appTypes";
+import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 import { json } from "@sveltejs/kit";
 import z from "zod";
 import { checkBookAuth } from "../../../../auth";
 import {
+  numericString,
   optionalDatetimeSchema,
   parseFormObject,
   storyGraphSchema,
 } from "../../../../schemas";
 import type { RequestEvent } from "./$types";
 
-const saveSchema = z.object({
-  id: z.coerce.number(),
-  stars: z.coerce.number().min(0).max(5).optional(),
-  comment: z.string().optional(),
-  dateStarted: optionalDatetimeSchema.nullish(),
-  dateFinished: optionalDatetimeSchema.nullish(),
-  graphs: storyGraphSchema.nullish(),
-  status: z.enum(READING_STATUS_VALUES_TUPLE).optional(),
-});
+const saveSchema = z
+  .object({
+    id: z.coerce.number(),
+    stars: numericString(z.number().min(0).max(5).nullish()),
+    comment: z.string().optional(),
+    dateStarted: optionalDatetimeSchema.nullish(),
+    dateFinished: optionalDatetimeSchema.nullish(),
+    graphs: storyGraphSchema.nullish(),
+    status: z.enum(READING_STATUS_VALUES_TUPLE).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A start date is required unless status is 'to read'",
+        path: ["dateStarted"],
+      });
+    }
+  });
 
 export async function POST(req: RequestEvent) {
   await checkBookAuth(req.locals, req.params);
 
   const f = await req.request.formData();
   const formData = Object.fromEntries(f);
+  console.log("Form data received:", formData);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -57,6 +69,15 @@ export async function POST(req: RequestEvent) {
   const { id, stars, status, dateStarted, dateFinished, graphs, comment } =
     result.data;
 
+  console.log("Parsed data:", {
+    id,
+    stars,
+    status,
+    dateStarted,
+    dateFinished,
+    graphs,
+    comment,
+  });
   try {
     // only delete if exist
     if (dateFinished == null || dateStarted == null) {

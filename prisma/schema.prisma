@@ -173,7 +173,7 @@ model Book {
 
 model Rating {
   ratingId          Int             @id @default(autoincrement())
-  stars             Float
+  stars             Float?
   comment           String?
   readingActivity   ReadingActivity @relation(fields: [readingActivityId], references: [id], onDelete: Cascade)
   readingActivityId Int             @unique

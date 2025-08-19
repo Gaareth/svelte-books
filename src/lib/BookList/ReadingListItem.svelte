@@ -4,7 +4,11 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import type { BookRating, ReadingListItemType } from "$appTypes";
+  import {
+    READING_STATUS,
+    type BookRating,
+    type ReadingListItemType,
+  } from "$appTypes";
   import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -83,8 +87,12 @@
 </script>
 
 <div
-  class="item-border mb-3 p-2 items-center
-     w-full grid gap-2"
+  class={clsx(
+    "item-border mb-3 p-2 items-center w-full grid gap-2",
+    (entry.status === READING_STATUS.PAUSED ||
+      entry.status === READING_STATUS.DID_NOT_FINISH) &&
+      "opacity-75"
+  )}
   style="grid-template-columns: 4px 1fr;">
   <div
     class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
@@ -122,7 +130,16 @@
         </p>
       </div>
 
-      {#if entry.rating}
+      {#if entry.status === READING_STATUS.PAUSED}
+        <p class="text-secondary">Paused</p>
+      {:else if entry.status === READING_STATUS.DID_NOT_FINISH}
+        <p
+          class="text-red-600 dark:text-red-500 flex justify-end flex-1 uppercase">
+          Dropped
+        </p>
+      {/if}
+
+      {#if entry.rating?.stars}
         <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
           <p>{entry.rating.stars} / {MAX_RATING}</p>
           <span class="icon" aria-label="stars"><IoIosStar /></span>

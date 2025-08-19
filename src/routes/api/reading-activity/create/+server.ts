@@ -1,5 +1,4 @@
-import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
+import { READING_STATUS } from "$appTypes";
 import { json } from "@sveltejs/kit";
 import z from "zod";
 import { checkBookAuth } from "../../../../auth";
@@ -9,6 +8,7 @@ import {
   parseFormObject,
   storyGraphSchema,
 } from "../../../../schemas";
+import { createReadingActivity } from "../api.server";
 import type { RequestEvent } from "./$types";
 
 const saveSchema = z
@@ -20,14 +20,14 @@ const saveSchema = z
     dateStarted: optionalDatetimeSchema.nullish(),
     dateFinished: optionalDatetimeSchema.nullish(),
     graphs: storyGraphSchema.nullish(),
-    status: z.enum(READING_STATUS_VALUES_TUPLE),
+    status: z.nativeEnum(READING_STATUS),
     bookId: z.string(),
   })
   .superRefine((data, ctx) => {
     if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "dateStarted is required unless status is 'to read'",
+        message: "A start date is required unless status is 'to read'",
         path: ["dateStarted"],
       });
     }
@@ -64,63 +64,18 @@ export async function POST(req: RequestEvent) {
     result.data;
 
   try {
-    let createdDateStarted;
-    if (dateStarted) {
-      createdDateStarted = await prisma.optionalDatetime.create({
-        data: dateStarted,
-      });
-    }
+    const readingActivity = await createReadingActivity(
+      accountId,
+      bookId,
+      stars,
+      status,
+      dateStarted,
+      dateFinished,
+      graphs,
+      comment
+    );
 
-    let createdDateFinished;
-    if (dateFinished) {
-      createdDateFinished = await prisma.optionalDatetime.create({
-        data: dateFinished,
-      });
-    }
-
-    const readingActivity = await prisma.readingActivity.create({
-      data: {
-        accountId,
-        bookId,
-        status,
-        dateStartedId: createdDateStarted?.id,
-        dateFinishedId: createdDateFinished?.id,
-        rating:
-          stars !== undefined
-            ? {
-                create: {
-                  stars: stars,
-                  comment: comment,
-                },
-              }
-            : undefined,
-      },
-    });
-
-    if (!readingActivity) {
-      return json({ success: false });
-    }
-
-    // todo: extend for multiple
-    if (graphs != null) {
-      if (
-        Array.isArray(graphs.data) &&
-        graphs.data.some((value) => value != null)
-      ) {
-        // at least one value is present, so create the graph
-        await prisma.graph.create({
-          data: {
-            data: JSON.stringify(graphs.data),
-            labels: JSON.stringify(graphs.labels),
-            details: JSON.stringify(graphs.details),
-            title: graphs.title,
-            readingActivityId: readingActivity.id,
-          },
-        });
-      }
-    }
-
-    return json({ success: true });
+    return json({ success: readingActivity != null });
   } catch (error) {
     console.error("Error updating reading activity:", error);
     return json({ success: false });

@@ -1,4 +1,3 @@
-import { READING_STATUS } from "$appTypes";
 import {
   extractBookApiData,
   extractCategories,
@@ -102,6 +101,8 @@ const saveSchema = z.object({
   wordsPerPage: optionalNumericString(
     z.coerce.number().nonnegative().optional()
   ).optional(),
+
+  description: z.string().trim().optional(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -193,42 +194,6 @@ async function updateBookSeries(
 }
 
 export const actions = {
-  readNow: async (event: RequestEvent) => {
-    const accountId = await checkBookAuth(event.locals, event.params);
-    const f = await event.request.formData();
-    const readNowSchema = z.object({
-      readingActivityId: z.number(),
-    });
-    const result = readNowSchema.safeParse(Object.fromEntries(f));
-    if (!result.success) {
-      console.error("Validation failed:", result.error);
-      return fail(400, {
-        data: Object.fromEntries(f),
-        errors: result.error.flatten().fieldErrors,
-      });
-    }
-
-    const { readingActivityId } = result.data;
-    const now = new Date();
-    await prisma.readingActivity.update({
-      where: { id: readingActivityId },
-      data: {
-        dateFinished: {
-          create: {
-            day: now.getDate(),
-            month: now.getMonth() + 1,
-            year: now.getFullYear(),
-            hour: now.getHours(),
-            minute: now.getMinutes(),
-          },
-        },
-        status: READING_STATUS.FINISHED,
-      },
-    });
-
-    redirect(302, "/");
-  },
-
   save: async (event: RequestEvent) => {
     const accountId = await checkBookAuth(event.locals, event.params);
 
@@ -251,7 +216,7 @@ export const actions = {
         id,
         name,
         author,
-
+        description,
         listName,
         bookSeries,
         bookSeriesId,
@@ -324,7 +289,7 @@ export const actions = {
         data: {
           name,
           author,
-
+          description,
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,

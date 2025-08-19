@@ -8,6 +8,7 @@
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
   import type { PageData } from "./$types";
+  import { READING_STATUS } from "$appTypes";
 
   export let data: PageData;
 
@@ -44,12 +45,21 @@
 <div class="mb-10">
   <BookListReading
     readingActivities={data.readingActivity.filter(
-      (e) => e.status === "reading"
+      (e) =>
+        e.status === READING_STATUS.READING ||
+        e.status === READING_STATUS.PAUSED
     )} />
 </div>
 
-<BookNew listName={"Read"} readingActivities={data.readingActivity ?? []} />
-<ReadingList entries={data.readingActivity} />
+<BookNew
+  readingStatus={"read"}
+  readingActivities={data.readingActivity ?? []} />
+<ReadingList
+  entries={data.readingActivity.filter(
+    (e) =>
+      e.status === READING_STATUS.FINISHED ||
+      e.status === READING_STATUS.DID_NOT_FINISH
+  )} />
 
 <style>
   @keyframes pan {

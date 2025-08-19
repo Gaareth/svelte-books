@@ -120,7 +120,7 @@
           {formatShort(entry.dateStarted)}
           <span class="icon" title="date started"><EventProgress /></span>
         {:else}
-          <span class="flex-shrink leading-4">???</span>
+          <span class="flex-shrink leading-4">?</span>
         {/if}
       </p>
 
@@ -158,7 +158,7 @@
       </div>
     </div>
 
-    {#if entry.rating}
+    {#if entry.rating?.stars}
       <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
         <p>{entry.rating.stars} / {MAX_RATING}</p>
         <span class="icon" aria-label="stars"><IoIosStar /></span>
@@ -300,7 +300,7 @@
           {formatShort(entry.dateStarted)}
           <span class="icon" title="date started"><EventProgress /></span>
         {:else}
-          <span class="flex-shrink leading-4">???</span>
+          <span class="flex-shrink leading-4">?</span>
         {/if}
       </p>
 
@@ -318,7 +318,17 @@
   </div>
 
   <section class="mt-5">
-    <h2 class="text-xl">Review</h2>
+    <div class="flex items-center gap-3">
+      <h2 class="text-xl">Review</h2>
+
+      {#if entry.rating?.stars}
+        <div class="flex gap-1 items-center">
+          <p>{entry.rating.stars} / {MAX_RATING}</p>
+          <span class="icon" aria-label="stars"><IoIosStar /></span>
+        </div>
+      {/if}
+    </div>
+
     <p class="text-secondary">{entry.rating?.comment ?? "No comment added"}</p>
   </section>
 

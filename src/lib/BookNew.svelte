@@ -19,6 +19,7 @@
   import BookApi from "./BookApiSelection/BookApi.svelte";
   import {
     DEFAULT_LISTS,
+    READING_STATUS,
     type DEFAULT_LIST,
     type queriedBookFull,
   } from "$appTypes";
@@ -40,7 +41,11 @@
   import { slideHeight } from "./utils";
 
   export let endpoint = "/book/create";
-  export let listName: DEFAULT_LIST | string = "Read";
+
+  const CREATABLE_READING_STATUS = ["read", "reading", "to read"] as const;
+  type CreatableReadingStatus = (typeof CREATABLE_READING_STATUS)[number];
+
+  export let readingStatus: CreatableReadingStatus = "read";
 
   export let readingActivities: Prisma.ReadingActivityGetPayload<{
     include: { book: { include: { bookList: true } } };
@@ -54,7 +59,7 @@
   let name = "";
   let author = "";
   let read_now = false;
-  let rating: number;
+  let stars: number;
   let wordsPerPage: number;
   let dateStarted: OptionalDate;
   let dateFinished: OptionalDate;
@@ -76,13 +81,14 @@
       body: JSON.stringify({
         name,
         author,
-        listName,
         volumeId,
         read_now,
-        rating,
+        stars,
         wordsPerPage,
         dateStarted,
         dateFinished,
+        readingStatus:
+          readingStatus == "read" ? READING_STATUS.FINISHED : readingStatus,
       }),
       headers: {
         "content-type": "application/json",
@@ -94,7 +100,9 @@
 
     if (success) {
       invalidateAll();
-      toast.success("Successfully added book");
+      toast.success(
+        "Successfully added book" + (message ? ": " + message : "")
+      );
     } else {
       if (message) {
         toast.error(message);
@@ -170,11 +178,11 @@
         <form>
           <p>Have you already read the book?</p>
           <ToggleGroup
-            options={[...DEFAULT_LISTS]}
+            options={[...CREATABLE_READING_STATUS]}
             groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
             btnClass="px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
-            bind:selectedOption={listName} />
+            bind:selectedOption={readingStatus} />
 
           <TabGroup
             btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
@@ -226,13 +234,13 @@
 
           {#if showMore || (name.length > 0 && author.length > 0)}
             <div class="grid grid-cols-2 gap-2">
-              {#if readingActivities.some((e) => e.book.name === name && e.book.author === author && e.book.bookList?.name == listName)}
+              {#if readingActivities.some((e) => e.book.name === name && e.book.author === author)}
                 <p class="text-warning text-base col-span-2">
                   Info: A book with this name (and author) is already in this
                   list.
                 </p>
               {/if}
-              {#if listName == "Reading" || listName == "Read"}
+              {#if readingStatus == "reading" || readingStatus == "read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateStarted">
@@ -251,7 +259,7 @@
                 </label>
               {/if}
 
-              {#if listName == "Read"}
+              {#if readingStatus == "read"}
                 <label
                   class="col-span-2 flex flex-wrap items-center justify-between"
                   for="dateEnd">
@@ -270,25 +278,30 @@
                 </label>
               {/if}
 
-              <div class="mt-1">
-                <label for="rating">Rating:</label>
-                <Rating rating_max={MAX_RATING} editable={true} bind:rating />
-              </div>
+              {#if readingStatus != "to read"}
+                <div class="mt-1">
+                  <label for="rating">Rating:</label>
+                  <Rating
+                    rating_max={MAX_RATING}
+                    editable={true}
+                    bind:rating={stars} />
+                </div>
 
-              <div class="mt-1">
-                <label for="words-per-page" class="icon-wrapper">
-                  <span class="w-5 block" title="date read">
-                    <Words />
-                  </span>
-                  Words per page:
-                </label>
-                <input
-                  id="words-per-page"
-                  name="words-per-page"
-                  type="number"
-                  class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full"
-                  bind:value={wordsPerPage} />
-              </div>
+                <div class="mt-1">
+                  <label for="words-per-page" class="icon-wrapper">
+                    <span class="w-5 block" title="date read">
+                      <Words />
+                    </span>
+                    Words per page:
+                  </label>
+                  <input
+                    id="words-per-page"
+                    name="words-per-page"
+                    type="number"
+                    class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full"
+                    bind:value={wordsPerPage} />
+                </div>
+              {/if}
             </div>
           {/if}
 

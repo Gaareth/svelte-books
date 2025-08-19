@@ -5,23 +5,7 @@ import { checkBookAuth } from "../../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const username = params.username;
-  const listName = params.listName;
-  const accountId = await checkBookAuth(locals, params, listName);
-
-  const bookList = await prisma.bookList.findFirst({
-    where: {
-      name: listName,
-      accountId,
-    },
-  });
-
-  if (bookList == null) {
-    return {
-      exists: false,
-      listName,
-      username,
-    };
-  }
+  const accountId = await checkBookAuth(locals, params);
 
   const data = {
     books: (await loadBooks({ accountId }, listName)).books,

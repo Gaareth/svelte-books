@@ -17,6 +17,7 @@
   import LineChartDrawer from "$lib/LineChartDrawer.svelte";
   import clsx from "clsx";
   import ToggleGroup from "$lib/ToggleGroup.svelte";
+  import ClearButton from "$lib/ClearButton.svelte";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;
@@ -51,7 +52,7 @@
 <Modal
   bind:showModal
   divClassName="w-full h-full flex flex-col"
-  className="w-full lg:w-2/5 h-4/5 lg:h-4/6">
+  className="w-full lg:w-2/5 ">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">
       {entry != null ? "Edit" : "Create"} Reading Activity
@@ -146,7 +147,7 @@
         </div>
       {/if}
 
-      {#if readingStatus && readingStatus !== READING_STATUS.TO_READ && readingStatus !== READING_STATUS.READING}
+      {#if readingStatus && (readingStatus == READING_STATUS.FINISHED || readingStatus == READING_STATUS.DID_NOT_FINISH)}
         <div>
           <InputAny name="dateFinished">
             <div class="icon-wrapper" slot="label">
@@ -170,7 +171,7 @@
 
       <div class="flex gap-2 items-center my-1">
         <h2 class="text-xl">Rating</h2>
-        <div>
+        <div class="flex items-center gap-1">
           (
           <input
             class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
@@ -181,6 +182,8 @@
             min="0"
             max={MAX_RATING} />
           / {MAX_RATING})
+
+          <ClearButton bind:value={stars} />
         </div>
 
         <div class="flex-1 flex justify-center">

@@ -438,10 +438,14 @@
             name="author"
             error={authorError} />
 
-          <InputText
-            bind:value={book.description}
-            name="description"
-            error={authorError} />
+          <InputAny name="description" displayName="Description">
+            <textarea
+              slot="input"
+              class="w-full input dark:bg-slate-700 text-lg"
+              name="description"
+              id="description"
+              bind:value={book.description} />
+          </InputAny>
 
           <InputSelect
             value={book.bookList?.name}
