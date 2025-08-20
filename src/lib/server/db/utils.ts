@@ -1,6 +1,7 @@
 import type { queriedBookFull, READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils";
+import type { Prisma } from "@prisma/client";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
@@ -111,7 +112,9 @@ export function extractCategories(apiData: queriedBookFull): string[] {
   return categories;
 }
 
-export function extractBookApiData(apiData: queriedBookFull) {
+export function extractBookApiData(
+  apiData: queriedBookFull
+): Prisma.BookApiDataCreateInput {
   const info = apiData.volumeInfo;
   const { title, subtitle, publishedDate, publisher, pageCount, language } =
     info;
@@ -126,11 +129,13 @@ export function extractBookApiData(apiData: queriedBookFull) {
     title,
     subtitle,
     authors,
+    description: info.description,
     publishedDate,
     publisher,
     pageCount,
     language,
     thumbnailUrl,
     isbn_13,
+    imageLinksJSON: JSON.stringify(info.imageLinks),
   };
 }

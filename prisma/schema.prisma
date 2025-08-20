@@ -66,17 +66,19 @@ model BookSeries {
 }
 
 model BookApiData {
-  id            String         @id
-  title         String
-  authors       String //TODO: author relation?
-  subtitle      String?
-  thumbnailUrl  String?
-  isbn_13       String?
-  pageCount     Int?
-  categories    BookCategory[]
-  publishedDate String? //YYYY-MM-DD
-  publisher     String?
-  language      String
+  id             String         @id
+  title          String
+  authors        String //TODO: author relation?
+  subtitle       String?
+  description    String?
+  thumbnailUrl   String?
+  imageLinksJSON String? // JSON string of image links
+  isbn_13        String?
+  pageCount      Int?
+  categories     BookCategory[]
+  publishedDate  String? //YYYY-MM-DD
+  publisher      String?
+  language       String
 
   book Book[]
 }

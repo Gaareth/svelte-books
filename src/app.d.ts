@@ -135,12 +135,40 @@ export type queriedBook = {
   };
 };
 
+export const QUERIED_BOOK_FULL_FIELDS = `
+  id,
+  volumeInfo(
+    title,
+    subtitle,
+    authors,
+    description,
+    publishedDate,
+    publisher,
+    industryIdentifiers,
+    imageLinks,
+    pageCount,
+    printedPageCount,
+    categories,
+    language
+  )
+`;
+
+export type ImageLinksType = {
+  smallThumbnail: string;
+  thumbnail: string;
+  small?: string;
+  medium?: string;
+  large?: string;
+  extraLarge?: string;
+};
+
 export type queriedBookFull = {
   id: string;
   volumeInfo: {
     title: string;
     subtitle: string | undefined;
     authors: string[];
+    description: string | undefined;
     publishedDate: string | undefined;
     publisher: string | undefined;
     industryIdentifiers:
@@ -149,7 +177,7 @@ export type queriedBookFull = {
           identifier: string | undefined;
         }[]
       | undefined;
-    imageLinks: { smallThumbnail: string; thumbnail: string } | undefined;
+    imageLinks: ImageLinksType | undefined;
     pageCount: number | undefined;
     printedPageCount: number | undefined;
     categories: string[] | undefined;
