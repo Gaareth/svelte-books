@@ -95,6 +95,7 @@ export async function POST(req: RequestEvent) {
   }
   error(400);
 }
+
 async function addApiData(volumeId: string | undefined, bookId: string) {
   if (volumeId !== undefined) {
     const apiData = await getBookApiData(volumeId);

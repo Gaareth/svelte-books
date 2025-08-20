@@ -5,8 +5,13 @@
     BookApiDataCategories,
     BookFullType,
     BookIncludeCategory,
+    ReadingListItemType,
   } from "$appTypes";
-  import { dateToYYYY_MM_DD, optionalToDate } from "$lib/utils";
+  import {
+    dateToYYYY_MM_DD,
+    optionalToDate,
+    sortReadingActivity,
+  } from "$lib/utils";
   import { onMount } from "svelte";
   import { MAX_RATING } from "../../constants";
   import SortOrder from "./SortOrder.svelte";
@@ -22,10 +27,13 @@
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
   import EqRelation from "./EqRelation.svelte";
 
+  import { createSearchStore } from "$lib/stores/search";
+
   let books_displayed: BookFullType[];
   export let languages_used: string[];
   export let category_names: string[]; // not reactive
-  export let searchStore;
+
+  export let searchStore: ReturnType<typeof createSearchStore<any>>;
 
   let allowed_categories_filter: string[] | undefined;
   let rating_filter: number | undefined;
@@ -103,27 +111,27 @@
     //   (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
     // );
 
-    $searchStore!.sort = (a: BookFullType, b: BookFullType) =>
+    $searchStore!.sort = (a: ReadingListItemType, b: ReadingListItemType) =>
       cmpBooks(a, b) * (sortingReversed ? -1 : 1);
   };
 
-  const cmpBooks = (b1: BookFullType, b2: BookFullType) => {
+  const cmpBooks = (b1: ReadingListItemType, b2: ReadingListItemType) => {
     switch (selectedSort) {
       case "date_created":
         return b1.createdAt.getTime() - b2.createdAt.getTime();
 
       case "author":
-        return b1.author.localeCompare(b2.author);
+        return b1.book.author.localeCompare(b2.book.author);
 
       case "title":
-        return b1.name.localeCompare(b2.name);
+        return b1.book.name.localeCompare(b2.book.name);
 
       case "rating":
         return (b1.rating?.stars ?? 0) - (b2.rating?.stars ?? 0);
 
       case "date_read":
       default:
-        return sortBooksDefault(b1, b2) * -1;
+        return sortReadingActivity(b1, b2) * -1;
     }
   };
 
@@ -131,11 +139,11 @@
   const filter = () => {
     // filter functions
 
-    let f_rating = (b: BookFullType) =>
+    let f_rating = (b: ReadingListItemType) =>
       rating_filter === undefined ||
       Math.floor(b.rating?.stars ?? 0) == rating_filter;
 
-    let f_start = (b: BookFullType) => {
+    let f_start = (b: ReadingListItemType) => {
       const startDate =
         optionalToDate(b.dateStarted ?? b.dateFinished) ?? b.createdAt;
 
@@ -145,7 +153,7 @@
       );
     };
 
-    let f_end = (b: BookFullType) => {
+    let f_end = (b: ReadingListItemType) => {
       const endDate =
         optionalToDate(b.dateFinished ?? b.dateStarted) ?? b.createdAt;
       return (
@@ -153,17 +161,17 @@
       );
     };
 
-    let f_category = (b: BookFullType) =>
+    let f_category = (b: ReadingListItemType) =>
       allowed_categories_filter === undefined ||
       allowed_categories_filter.length == 0 ||
-      b.bookApiData?.categories.find(({ name: c }) =>
+      !!b.book.bookApiData?.categories.find(({ name: c }) =>
         allowed_categories_filter!.includes(c)
       );
 
-    let f_lang = (b: BookFullType) =>
+    let f_lang = (b: ReadingListItemType) =>
       lang_filter === undefined ||
       lang_filter == "all" ||
-      b.bookApiData?.language == lang_filter;
+      b.book.bookApiData?.language == lang_filter;
 
     let params = $page.url.searchParams;
     if (lang_filter !== undefined) {
@@ -195,7 +203,7 @@
       noScroll: true,
     });
 
-    $searchStore!.filter = (b: BookFullType) =>
+    $searchStore!.filter = (b: ReadingListItemType) =>
       f_rating(b) && f_lang(b) && f_category(b) && f_start(b) && f_end(b);
   };
 

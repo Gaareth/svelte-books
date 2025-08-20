@@ -83,8 +83,11 @@
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
-  <h2 class="flex items-end text-2xl -mb-1 {showOptions ? 'invisible' : ''}">
+  <h2 class="flex items-end text-2xl -mb-1">
     Books
+    {#if !showOptions}
+      ({entries.length})
+    {/if}
   </h2>
   <div class="flex gap-1 sm:gap-2">
     {#if entries.length > 0 && showSearch}
@@ -115,12 +118,15 @@
   </div>
 </div>
 
-<!-- <div hidden={!showOptions}>
+<div hidden={!showOptions}>
   <Filtering {searchStore} {languages_used} {category_names} />
-</div> -->
+</div>
 
-<h2 class="flex items-end text-2xl -mb-1 {!showOptions ? 'hidden' : ''}">
-  Books ({books_displayed.length})
+<h2
+  class="flex items-end text-xl -mb-1 {!showOptions
+    ? 'hidden'
+    : ''} text-secondary">
+  {books_displayed.length} results
 </h2>
 
 {#if entries.length <= 0}
