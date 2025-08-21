@@ -103,6 +103,7 @@ const saveSchema = z.object({
   ).optional(),
 
   description: z.string().trim().optional(),
+  coverImage: z.string().trim().nullish(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -222,6 +223,7 @@ export const actions = {
         bookSeriesId,
         apiVolumeId,
         wordsPerPage,
+        coverImage,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -293,6 +295,7 @@ export const actions = {
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,
+          coverImage: coverImage,
         },
       });
 

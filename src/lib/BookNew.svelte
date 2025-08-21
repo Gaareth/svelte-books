@@ -179,9 +179,11 @@
           <p>Have you already read the book?</p>
           <ToggleGroup
             options={[...CREATABLE_READING_STATUS]}
-            groupClass="mb-5 mt-1 inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-            btnClass="px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
+            groupClass="mb-5 mt-1 inline-flex"
+            btnClass="px-4 py-1 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
+            startClass="border-s rounded-s-md"
+            endClass="rounded-e-md"
             bind:selectedOption={readingStatus} />
 
           <TabGroup

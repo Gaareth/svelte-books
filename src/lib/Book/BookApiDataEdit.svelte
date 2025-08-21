@@ -2,11 +2,13 @@
   import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
   import BookApiDetails from "$lib/BookApiSelection/BookApiDetails.svelte";
-  import BookApi from "./../BookApiSelection/BookApi.svelte";
+  import { createEventDispatcher } from "svelte";
+
   export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;
   let bookSelected: boolean;
   // let fetch_data = data;
+  const dispatch = createEventDispatcher();
 
   let queriedBook: queriedBookFull;
   if (data !== null) {
@@ -14,6 +16,7 @@
       id: data.id,
       volumeInfo: {
         ...data,
+        description: data.description || undefined,
         subtitle: data.subtitle || undefined,
         authors: data.authors.split("|"),
         publishedDate: data.publishedDate || undefined,
@@ -49,6 +52,13 @@
     bookSelected = true;
     newVolumeId = data?.id;
   };
+
+  const takeOver = () => {
+    dispatch("takeOver", {
+      volumeId: newVolumeId,
+      queriedBook: queriedBook,
+    });
+  };
 </script>
 
 <section class="my-10">
@@ -58,12 +68,17 @@
       (Google Books)
     </a>
     {#if data !== null}
-      <button type="button" class="btn-generic ml-auto" on:click={reloadData}>
-        <span class="w-4 h-4">
-          <!-- <IoIosRefresh /> -->
-        </span>
-        reload
-      </button>
+      <div class="ml-auto">
+        <button type="button" class="btn-generic" on:click={reloadData}>
+          <span class="w-4 h-4">
+            <!-- <IoIosRefresh /> -->
+          </span>
+          reload
+        </button>
+        <button type="button" class="btn-generic" on:click={takeOver}>
+          Take over
+        </button>
+      </div>
     {/if}
   </h2>
   {#if data !== null}

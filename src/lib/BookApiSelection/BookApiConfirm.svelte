@@ -96,6 +96,11 @@
           </p>
         </div>
       </div>
+      <p
+        class="text-sm text-secondary line-clamp-2 hover:line-clamp-none -mt-2 -mb-1">
+        {info.description}
+      </p>
+
       <!-- <p>{categories?.length}</p> -->
       <!-- <p>{flexWrapHappened}</p>
       {#if item_ref}

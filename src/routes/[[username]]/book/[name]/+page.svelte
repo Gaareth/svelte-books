@@ -19,6 +19,7 @@
     BookFullType,
     BookListItemType,
     BookRating,
+    queriedBookFull,
   } from "../../../../app";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import BookListSimple from "$lib/BookList/BookListSimple.svelte";
@@ -79,8 +80,6 @@
   $: bookLists = data.bookLists;
 
   let selectedSeriesBook: BookRating;
-
-  let thumbnailUrl = book.bookApiData?.thumbnailUrl;
 
   // $: rating = book?.rating ?? { stars: 0, comment: "" };
   // $: rating_stars = rating.stars;
@@ -173,8 +172,27 @@
       ? form?.errors?.wordsPerPage?.[0]
       : undefined;
 
-  const imageClass = `lg:group-hover:opacity-50 transition-all duration-300 relative bg-background-elevated text-transparent
+  //lg:group-hover:opacity-50
+  const imageClass = ` transition-all duration-300 relative bg-background-elevated text-transparent
      w-[133px] h-[199px] sm:w-[320px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded`;
+
+  function handleTakeOver(
+    e: CustomEvent<{
+      volumeId: string | undefined;
+      queriedBook: queriedBookFull;
+    }>
+  ): void {
+    book.description = e.detail.queriedBook.volumeInfo.description ?? null;
+    book.name = e.detail.queriedBook.volumeInfo.title;
+    book.author = e.detail.queriedBook.volumeInfo.authors[0];
+    book.coverImage =
+      e.detail.queriedBook.volumeInfo.imageLinks?.extraLarge ||
+      e.detail.queriedBook.volumeInfo.imageLinks?.large ||
+      e.detail.queriedBook.volumeInfo.imageLinks?.medium ||
+      e.detail.queriedBook.volumeInfo.imageLinks?.thumbnail ||
+      e.detail.queriedBook.volumeInfo.imageLinks?.smallThumbnail ||
+      null;
+  }
 </script>
 
 <svelte:head>
@@ -205,41 +223,47 @@
           edit && "group"
         )}>
         <div class="flex justify-center relative">
-          <img
-            src={thumbnailUrl}
-            class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
-            alt="Flowers for Algernon"
-            width="246"
-            height="369"
-            fetchpriority="low"
-            loading="lazy" />
-          <div class="dark:hidden h-[230px]" />
+          {#if book.coverImage != null}
+            <img
+              src={book.coverImage}
+              class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
+              alt="Flowers for Algernon"
+              width="246"
+              height="369"
+              fetchpriority="low"
+              loading="lazy" />
+            <div class="dark:hidden h-[230px]" />
 
-          <img
-            src={thumbnailUrl}
-            class={clsx(
-              edit &&
-                "lg:group-hover:opacity-50 transition-opacity duration-300",
-              "hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
-            )}
-            alt="Flowers for Algernon"
-            width="206"
-            height="369"
-            fetchpriority="low"
-            loading="lazy" />
+            <img
+              src={book.coverImage}
+              class={clsx(
+                "hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
+              )}
+              alt="Flowers for Algernon"
+              width="206"
+              height="369"
+              fetchpriority="low"
+              loading="lazy" />
+          {/if}
 
           <div
             class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0">
-            {#if thumbnailUrl != null}
+            {#if book.coverImage != null}
               <!-- <BookImage
                 bookId={book.bookApiData?.id}
                 alt="thumbnail"
                 sizes="(width <= 1024px) 800px, 128px"
                 class={imageClass} /> -->
               <img
-                src={thumbnailUrl}
+                src={book.coverImage}
                 alt="thumbnail fallback"
                 class={imageClass} />
+              {#if edit}
+                <input
+                  type="hidden"
+                  name="coverImage"
+                  value={book.coverImage} />
+              {/if}
             {:else}
               <img
                 src={"/cover.png"}
@@ -367,7 +391,7 @@
             </span>
           </div>
 
-          <p class="mt-2 mb-3 text-secondary line-clamp-7">
+          <p class="mt-2 mb-3 text-secondary line-clamp-5">
             {book.description ?? "No description available."}
           </p>
 
@@ -464,7 +488,7 @@
           </InputSelect>
         </div>
 
-        <BookApiDataEdit data={book.bookApiData} />
+        <BookApiDataEdit data={book.bookApiData} on:takeOver={handleTakeOver} />
 
         <div class="my-7">
           <section class="mb-10">
