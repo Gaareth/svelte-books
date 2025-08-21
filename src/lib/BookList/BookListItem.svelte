@@ -12,7 +12,7 @@
 <div class="flex flex-col items-center lg:items-start group">
   <div class="relative">
     <img
-      src={book.bookApiData?.thumbnailUrl}
+      src={book.coverImage ?? "/cover.png"}
       alt={book.name}
       class="rounded w-32 h-40 object-cover group-hover:opacity-50" />
 

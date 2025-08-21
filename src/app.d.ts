@@ -54,9 +54,6 @@ export type BookDate = Prisma.BookGetPayload<{
 
 export type BookListItemType = Prisma.BookGetPayload<{
   include: {
-    dateStarted: true;
-    dateFinished: true;
-    rating: true;
     bookApiData: {
       include: {
         categories: true;

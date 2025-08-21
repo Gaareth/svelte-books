@@ -122,7 +122,7 @@
 
   let series_error: string | undefined = undefined;
   const on_delete = (b: BookListItemType) => {
-    const index = book.bookSeries?.books.indexOf(b);
+    const index = book.bookSeries?.books.map((b) => b.id).indexOf(b.id);
 
     if (index === undefined) {
       series_error = "The book is not part of a book series";

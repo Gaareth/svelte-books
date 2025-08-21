@@ -11,7 +11,7 @@
   export let allow_deletion = false;
 </script>
 
-<div class="grid grid-cols-2 lg:grid-cols-6 gap-2 mb-5 mt-1">
+<div class="grid grid-cols-2 lg:grid-cols-7 gap-2 mb-5 mt-3">
   {#each books as book, i (book.id)}
     <input type="hidden" name={`books[]`} value={book.id} />
 
