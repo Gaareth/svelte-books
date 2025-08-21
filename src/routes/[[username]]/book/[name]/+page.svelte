@@ -1,53 +1,38 @@
 <script lang="ts">
-  import BookApiData from "./../../../../lib/Book/BookApiData.svelte";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import AutoComplete from "simple-svelte-autocomplete";
-  import Rating from "./../../../../lib/Rating.svelte";
-  import type { Book, BookList, Prisma } from "@prisma/client";
-  import { page } from "$app/stores";
-  import { goto, invalidateAll } from "$app/navigation";
-  import InputText from "$lib/InputText.svelte";
-  import InputSelect from "$lib/InputSelect.svelte";
+  import clsx from "clsx";
   //@ts-ignore
+  import AutoComplete from "simple-svelte-autocomplete";
+  import toast from "svelte-french-toast";
+  // @ts-ignore
   import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
+
   import type { ActionData, PageData } from "./$types";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import InputNumber from "$lib/InputNumber.svelte";
   import type {
-    BookFull,
     BookFullType,
     BookListItemType,
     BookRating,
     queriedBookFull,
   } from "../../../../app";
-  import BookListSeries from "$lib/BookList/BookListSeries.svelte";
-  import BookListSimple from "$lib/BookList/BookListSimple.svelte";
-  import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
-  import Img from "@zerodevx/svelte-img";
+  import type { BookList } from "@prisma/client";
 
-  import { MAX_RATING } from "../../../../constants";
-  import DateSelector, {
-    DEFAULT_OPTIONAL_DATETIME,
-    formatShort,
-  } from "$lib/DateSelector.svelte";
-  import EventProgress from "$lib/icons/EventProgress.svelte";
-  import EventDone from "$lib/icons/EventDone.svelte";
-  import InputAny from "$lib/InputAny.svelte";
   import { applyAction, enhance } from "$app/forms";
-  import toast from "svelte-french-toast";
-  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
-  import Pages from "$lib/icons/pages.svelte";
-  import Words from "$lib/icons/words.svelte";
-  import Calendar from "$lib/icons/Calender.svelte";
-  import Language from "$lib/icons/Language.svelte";
-  import Pill from "$lib/Pill.svelte";
-  import ReadingListItem from "$lib/BookList/ReadingListItem.svelte";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
+  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
+  import BookListSeries from "$lib/BookList/BookListSeries.svelte";
+  import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
   import ReviewListItem from "$lib/BookList/ReviewListItem.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
-  import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
-  import clsx from "clsx";
-  import BookImage from "$lib/Book/BookImage.svelte";
+  import Calendar from "$lib/icons/Calender.svelte";
+  import Pages from "$lib/icons/pages.svelte";
+  import Words from "$lib/icons/words.svelte";
+  import InputAny from "$lib/InputAny.svelte";
+  import InputNumber from "$lib/InputNumber.svelte";
+  import InputSelect from "$lib/InputSelect.svelte";
+  import InputText from "$lib/InputText.svelte";
+  //@ts-ignore
+  import Pill from "$lib/Pill.svelte";
 
   export let data: PageData;
 
@@ -57,7 +42,6 @@
   // console.log("books", books);
 
   // let no_rating = !data.book?.rating;
-  let no_rating = false;
 
   $: {
     book = data.book;
