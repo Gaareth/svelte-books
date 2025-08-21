@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { page } from "$app/stores";
   import BookList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
@@ -26,4 +26,4 @@
   <BookList books={data.books ?? []} />
 {:else}
   <h1 class="text-center text-5xl my-4 mb-6">This list does not exist</h1>
-{/if}
+{/if} -->
