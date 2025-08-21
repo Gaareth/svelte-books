@@ -2,7 +2,6 @@
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
   import { twMerge } from "tailwind-merge";
-  import { string } from "zod/v4";
 
   export let value: unknown | null;
   $: {
@@ -11,9 +10,9 @@
 
   export let name: string;
   export let displayName: string = name;
-  export let clearButton: boolean = true;
+  export let clearButton = true;
 
-  export let selectClassName: string = "";
+  export let selectClassName = "";
 
   // export let type: string = "text"
   export let error: string | undefined = undefined;

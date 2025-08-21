@@ -1,9 +1,11 @@
-import { prisma } from "$lib/server/prisma";
-import type { Session } from "@auth/sveltekit";
-import type { Account } from "@prisma/client";
 import { error, redirect } from "@sveltejs/kit";
 import * as argon2 from "argon2";
 import { StatusCodes } from "http-status-codes";
+
+import type { Session } from "@auth/sveltekit";
+import type { Account } from "@prisma/client";
+
+import { prisma } from "$lib/server/prisma";
 const { randomBytes } = await import("node:crypto");
 
 export async function getAccountIdfromSession(session: Session | null) {

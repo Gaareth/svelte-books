@@ -1,9 +1,12 @@
 <script lang="ts">
+  import type { EventDispatcher } from "svelte";
+
   //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
+
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
+
   import type { queriedBook } from "$appTypes";
-  import type { EventDispatcher } from "svelte";
 
   // const queryBooksDebug = async () => {
   //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();

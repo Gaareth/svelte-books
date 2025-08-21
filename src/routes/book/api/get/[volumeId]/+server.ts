@@ -1,4 +1,5 @@
 import { type RequestHandler, error, json } from "@sveltejs/kit";
+
 import { getBookApiData } from "../../api.server";
 
 export const GET: RequestHandler = async ({ params, locals }) => {

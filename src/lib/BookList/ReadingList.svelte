@@ -1,24 +1,22 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import { fade, scale } from "svelte/transition";
-  import BookSearch from "../BookSearch.svelte";
-
-  import type { BookFullType, ReadingListItemType } from "$appTypes";
-  import { createSearchStore, searchHandler } from "$lib/stores/search";
-  import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
-  import { flip } from "svelte/animate";
-  import type { ItemDeleteEvent } from "./ReadingListItem.svelte";
-  import BookListItem from "./ReadingListItem.svelte";
+
+  import { fade, scale } from "svelte/transition";
 
   //@ts-ignore
   import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
 
+  import BookSearch from "../BookSearch.svelte";
   import Filtering from "./Filtering.svelte";
-  import { page } from "$app/stores";
   import ReadingListItem from "./ReadingListItem.svelte";
+
+  import type { ReadingListItemType } from "$appTypes";
+  import type { ItemDeleteEvent } from "./ReadingListItem.svelte";
+
+  import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
   import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
+  import { createSearchStore, searchHandler } from "$lib/stores/search";
 
   export let entries: ReadingListItemType[];
   export let showSearch = true;

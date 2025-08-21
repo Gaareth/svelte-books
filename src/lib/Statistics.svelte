@@ -1,15 +1,19 @@
 <script lang="ts">
-  import Modal from "./Modal.svelte";
+  import { Prisma } from "@prisma/client";
+  //@ts-ignore
+  import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
   import { twMerge } from "tailwind-merge";
-  import Stats from "./Stats.svelte";
-  import { sum } from "./utils";
+
+  import Charts from "./Charts.svelte";
   import Book from "./icons/book.svelte";
   import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
-  import Charts from "./Charts.svelte";
+  import Modal from "./Modal.svelte";
+  import Stats from "./Stats.svelte";
+  import { sum } from "./utils";
+
   //@ts-ignore
-  import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
-  import { Prisma } from "@prisma/client";
+
   import { READING_STATUS } from "$appTypes";
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {

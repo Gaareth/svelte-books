@@ -1,9 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+
   import toast from "svelte-french-toast";
-  import Popup from "./Popup.svelte";
-  import type { Prisma } from "@prisma/client";
+
   import { formatShort } from "./DateSelector.svelte";
+  import Popup from "./Popup.svelte";
+
+  import type { Prisma } from "@prisma/client";
 
   export let openModal: boolean;
   export let deletionEntry: Prisma.ReadingActivityGetPayload<{

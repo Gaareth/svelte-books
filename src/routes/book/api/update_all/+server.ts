@@ -1,8 +1,9 @@
-import { delay } from "$lib/utils.js";
-
 import { event } from "sveltekit-sse";
+
 import { getAccountIdfromSession } from "../../../../auth";
 import { SSE_DATA } from "./sse";
+
+import { delay } from "$lib/utils.js";
 
 export async function GET({ request, locals }) {
   const session = await locals.auth();

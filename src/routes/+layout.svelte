@@ -1,12 +1,14 @@
 <script lang="ts">
   import "../app.css";
-  import { page } from "$app/stores";
+  import clsx from "clsx";
   import { Toaster } from "svelte-french-toast";
-  import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  import { twMerge } from "tailwind-merge";
+
+  import { page } from "$app/stores";
   import Dropdown from "$lib/Dropdown.svelte";
   import IconAccount from "$lib/icons/IconAccount.svelte";
-  import clsx from "clsx";
-  import { twMerge } from "tailwind-merge";
+  import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
   export let data;

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-
   import clsx from "clsx";
 
+  import type { PageData } from "./$types";
+
+  import { page } from "$app/stores";
+  import { READING_STATUS } from "$appTypes";
   import BookListReading from "$lib/BookList/BookListReading.svelte";
   import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
-  import type { PageData } from "./$types";
-  import { READING_STATUS } from "$appTypes";
 
   export let data: PageData;
 

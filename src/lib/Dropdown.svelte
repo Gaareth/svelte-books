@@ -1,17 +1,20 @@
 <script lang="ts">
-  import clsx from "clsx";
-  import { clickOutside } from "./clickOutside";
-  import { twMerge } from "tailwind-merge";
-  import Modal from "./Modal.svelte";
-  import { browser } from "$app/environment";
   import { onMount, onDestroy } from "svelte";
+
+  import clsx from "clsx";
+  import { twMerge } from "tailwind-merge";
+
+  import { clickOutside } from "./clickOutside";
+  import Modal from "./Modal.svelte";
+
+  import { browser } from "$app/environment";
 
   export let className: string | undefined = undefined;
   export let buttonClass: string | undefined = undefined;
   export let contentClass: string | undefined = undefined;
-  export let closeOnClick: boolean = true;
+  export let closeOnClick = true;
 
-  export let open: boolean = false;
+  export let open = false;
   let trigger_ref: HTMLElement;
 
   let showModal = false;

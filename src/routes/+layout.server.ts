@@ -1,4 +1,5 @@
 import { getAccountByUsername } from "../auth";
+
 import type { LayoutServerLoad } from "./$types";
 
 export const trailingSlash = "always";

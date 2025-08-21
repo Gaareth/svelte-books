@@ -1,20 +1,6 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
-  import type {
-    BookApiDataCategories,
-    BookFullType,
-    BookIncludeCategory,
-    ReadingListItemType,
-  } from "$appTypes";
-  import {
-    dateToYYYY_MM_DD,
-    optionalToDate,
-    sortReadingActivity,
-  } from "$lib/utils";
   import { onMount } from "svelte";
-  import { MAX_RATING } from "../../constants";
-  import SortOrder from "./SortOrder.svelte";
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
@@ -25,9 +11,21 @@
   import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
   //@ts-ignore
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
-  import EqRelation from "./EqRelation.svelte";
 
+  import EqRelation from "./EqRelation.svelte";
+  import SortOrder from "./SortOrder.svelte";
+  import { MAX_RATING } from "../../constants";
+
+  import type { BookFullType, ReadingListItemType } from "$appTypes";
+
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import { createSearchStore } from "$lib/stores/search";
+  import {
+    dateToYYYY_MM_DD,
+    optionalToDate,
+    sortReadingActivity,
+  } from "$lib/utils";
 
   let books_displayed: BookFullType[];
   export let languages_used: string[];

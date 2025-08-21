@@ -1,5 +1,6 @@
 import { BookSeries, PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
+
 import { createLists, seedInitial } from "./seed-initial";
 
 // Load environment variables

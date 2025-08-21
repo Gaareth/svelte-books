@@ -1,7 +1,6 @@
-import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
 import { json } from "@sveltejs/kit";
 import z from "zod";
+
 import { checkBookAuth } from "../../../../auth";
 import {
   numericString,
@@ -9,7 +8,11 @@ import {
   parseFormObject,
   storyGraphSchema,
 } from "../../../../schemas";
+
 import type { RequestEvent } from "./$types";
+
+import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
+import { prisma } from "$lib/server/prisma";
 
 const saveSchema = z
   .object({

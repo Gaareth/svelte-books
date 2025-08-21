@@ -1,7 +1,9 @@
 <script lang="ts">
-  import type { BookListItemType } from "$appTypes";
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
+
+  import type { BookListItemType } from "$appTypes";
+  //@ts-ignore
 
   export let book: BookListItemType;
   export let allow_deletion = false;

@@ -1,7 +1,6 @@
-import { prisma } from "$lib/server/prisma";
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
-
 import { StatusCodes } from "http-status-codes";
+
 import { getAccountByUsername, getAccountIdfromSession } from "../../auth";
 import { parseFormArray } from "../../schemas";
 import { SSE_DATA } from "../book/api/update_all/sse";
@@ -11,6 +10,8 @@ import {
   type settingsApiCreateResult,
   type settingsApiReloadResult,
 } from "./apidata";
+
+import { prisma } from "$lib/server/prisma";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 

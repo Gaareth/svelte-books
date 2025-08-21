@@ -1,28 +1,19 @@
 <script lang="ts">
-  import {
-    Chart,
-    getDatasetAtEvent,
-    getElementAtEvent,
-    getElementsAtEvent,
-  } from "svelte-chartjs";
+  import { Chart, getElementAtEvent } from "svelte-chartjs";
   import "chart.js/auto";
   import {
-    Chart as ChartJS,
     Scale,
     type ChartOptions,
     type CoreScaleOptions,
     type Tick,
   } from "chart.js/auto";
-
   import { getRelativePosition } from "chart.js/helpers";
+  import { twMerge } from "tailwind-merge";
 
-  import { theme } from "./stores/stores";
   import { defaultBgColor } from "../chartUtils";
   import Modal from "./Modal.svelte";
+  import { theme } from "./stores/stores";
   import { clamp } from "./utils";
-  import { onMount } from "svelte";
-  import clsx from "clsx";
-  import { twMerge } from "tailwind-merge";
 
   export let allowEdits = false;
   export let title: string;

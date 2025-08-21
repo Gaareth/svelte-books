@@ -1,7 +1,8 @@
 import type { queriedBookFull, READING_STATUS } from "$appTypes";
+import type { Prisma } from "@prisma/client";
+
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils";
-import type { Prisma } from "@prisma/client";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {

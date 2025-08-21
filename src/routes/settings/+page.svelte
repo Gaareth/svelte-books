@@ -1,19 +1,14 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
-
-  import ReloadButton from "./ReloadButton.svelte";
-
-  import AddApiButton from "./AddApiButton.svelte";
-  import ApiResult from "./ApiResult.svelte";
-  import type { SSE_EVENT } from "../book/api/update_all/sse";
-  import ToggleGroup from "$lib/ToggleGroup.svelte";
-  import { listenArrayEvents } from "chart.js/helpers";
-  import type { PageData } from "./$types.js";
-  import { twMerge } from "tailwind-merge";
-  import { invalidateAll } from "$app/navigation";
   import toast from "svelte-french-toast";
+  import { twMerge } from "tailwind-merge";
+
+  import type { PageData } from "./$types.js";
   import type { Visibility } from "../../prismaTypes";
+  import type { SSE_EVENT } from "../book/api/update_all/sse";
+
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+  import ToggleGroup from "$lib/ToggleGroup.svelte";
 
   export let form;
   export let data: PageData;

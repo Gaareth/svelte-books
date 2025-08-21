@@ -1,8 +1,8 @@
 <script lang="ts">
   //@ts-ignore
-  import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
-  //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
+  //@ts-ignore
+  import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
 
   export let rating: number | undefined | null;
   export let rating_max: number;

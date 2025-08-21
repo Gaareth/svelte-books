@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import type { PageData } from "./$types";
-  import InputText from "$lib/InputText.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputAll from "$lib/InputAll.svelte";
-  import { onMount } from "svelte";
   //@ts-ignore
-  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+  import toast from "svelte-french-toast";
   //@ts-ignore
   import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
-  import toast from "svelte-french-toast";
+  //@ts-ignore
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+
+  import type { PageData } from "./$types";
+
+  import { enhance } from "$app/forms";
   import EyePlus from "$lib/icons/eye-plus.svelte";
   export let data: PageData;
 

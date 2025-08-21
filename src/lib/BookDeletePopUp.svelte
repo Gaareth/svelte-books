@@ -1,8 +1,11 @@
 <script lang="ts">
-  import type { Book } from "@prisma/client";
   import { createEventDispatcher } from "svelte";
+
   import toast from "svelte-french-toast";
+
   import Popup from "./Popup.svelte";
+
+  import type { Book } from "@prisma/client";
 
   export let openModal: boolean;
   export let deletionBook: Book;

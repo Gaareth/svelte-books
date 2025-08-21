@@ -3,6 +3,7 @@
   import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
   // @ts-ignore
   import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
+
   import type {
     settingsApiReloadResult,
     settingsApiCreateResult,

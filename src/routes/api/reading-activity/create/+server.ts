@@ -1,6 +1,6 @@
-import { READING_STATUS } from "$appTypes";
 import { json } from "@sveltejs/kit";
 import z from "zod";
+
 import { checkBookAuth } from "../../../../auth";
 import {
   optionalDatetimeSchema,
@@ -9,7 +9,10 @@ import {
   storyGraphSchema,
 } from "../../../../schemas";
 import { createReadingActivity } from "../api.server";
+
 import type { RequestEvent } from "./$types";
+
+import { READING_STATUS } from "$appTypes";
 
 const saveSchema = z
   .object({

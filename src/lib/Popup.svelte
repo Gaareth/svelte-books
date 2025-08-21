@@ -1,8 +1,9 @@
 <script lang="ts">
-  import clsx from "clsx";
-  import Modal from "./Modal.svelte";
-
   import { createEventDispatcher } from "svelte";
+
+  import clsx from "clsx";
+
+  import Modal from "./Modal.svelte";
 
   const dispatch = createEventDispatcher();
 

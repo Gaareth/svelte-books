@@ -3,54 +3,33 @@
 </script>
 
 <script lang="ts">
-  import { page } from "$app/stores";
-  import {
-    READING_STATUS,
-    READING_STATUS_VALUES,
-    type BookRating,
-    type ReadingListItemType,
-    type ReviewListItemType,
-  } from "$appTypes";
   import { createEventDispatcher } from "svelte";
+
+  import { type Book } from "@prisma/client";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   //@ts-ignore
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
-  import { MAX_RATING } from "../../constants";
-  import Pages from "$lib/icons/pages.svelte";
-  import { Prisma, type Book } from "@prisma/client";
 
-  import clsx from "clsx";
-  import DateSelector, {
-    DEFAULT_OPTIONAL_DATETIME,
-    formatOptionalDate,
-    formatShort,
-    type OptionalDate,
-  } from "$lib/DateSelector.svelte";
-  import { date } from "zod";
-  import EventDone from "$lib/icons/EventDone.svelte";
-  import EventProgress from "$lib/icons/EventProgress.svelte";
-  import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
-  import ReadingList from "./ReadingList.svelte";
-  import { dateDiffFormatted, optionalToDate, slideHeight } from "$lib/utils";
-  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
-  import Modal from "$lib/Modal.svelte";
-  import OpenNew from "$lib/icons/OpenNew.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputSelect from "$lib/InputSelect.svelte";
-  import { en } from "zod/v4/locales";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
-  import { invalidate, invalidateAll } from "$app/navigation";
-  import Rating from "$lib/Rating.svelte";
-  import InfoIcon from "$lib/icons/InfoIcon.svelte";
+  import ReadingActivityForm from "./ReadingActivityForm.svelte";
+  import { MAX_RATING } from "../../constants";
+
+  import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { READING_STATUS, type ReviewListItemType } from "$appTypes";
+  import { formatShort } from "$lib/DateSelector.svelte";
   import Dropdown from "$lib/Dropdown.svelte";
   import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
-  import { applyAction, enhance } from "$app/forms";
-  import toast from "svelte-french-toast";
-  import ReadingActivityForm from "./ReadingActivityForm.svelte";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
+  import InfoIcon from "$lib/icons/InfoIcon.svelte";
+  import OpenNew from "$lib/icons/OpenNew.svelte";
+  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
+  import Modal from "$lib/Modal.svelte";
+  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
+  import { dateDiffFormatted, optionalToDate } from "$lib/utils";
 
   export let entry: ReviewListItemType;
 

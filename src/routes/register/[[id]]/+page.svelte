@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { ActionData, PageData } from "./$types";
-  import InputText from "$lib/InputText.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputAll from "$lib/InputAll.svelte";
-  import { enhance } from "$app/forms";
   import { twMerge } from "tailwind-merge";
+
+  import type { ActionData, PageData } from "./$types";
+
+  import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import InputAll from "$lib/InputAll.svelte";
+  import InputText from "$lib/InputText.svelte";
 
   export let data: PageData;
   export let form: ActionData;

@@ -1,15 +1,18 @@
+import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
+import { z } from "zod";
+
+import { checkBookAuth } from "../../../../auth";
+import { optionalNumericString } from "../../../../schemas";
+import { getBookApiData } from "../../../book/api/api.server";
+
+import type { Actions, RequestEvent } from "./$types";
+
 import {
   extractBookApiData,
   extractCategories,
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import { z } from "zod";
-import { checkBookAuth } from "../../../../auth";
-import { optionalNumericString } from "../../../../schemas";
-import { getBookApiData } from "../../../book/api/api.server";
-import type { Actions, RequestEvent } from "./$types";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;

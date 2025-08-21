@@ -1,44 +1,29 @@
 <script lang="ts">
-  import TabPanels from "./Tab/TabPanels.svelte";
-  import TabPanel from "./Tab/TabPanel.svelte";
-  import Rating from "./Rating.svelte";
-  import BookApiDetails from "./BookApiSelection/BookApiDetails.svelte";
-  import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+  //@ts-ignore
+  import AutoComplete from "simple-svelte-autocomplete";
   import { toast } from "svelte-french-toast";
   import { Moon } from "svelte-loading-spinners";
-
-  //@ts-ignore
-  import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
-  //@ts-ignore
-  import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import AutoComplete from "simple-svelte-autocomplete";
-  import BookApi from "./BookApiSelection/BookApi.svelte";
-  import {
-    DEFAULT_LISTS,
-    READING_STATUS,
-    type DEFAULT_LIST,
-    type queriedBookFull,
-  } from "$appTypes";
-  import InputNumber from "./InputNumber.svelte";
-  import { unknown } from "zod";
-  import { MAX_RATING } from "../constants";
-  import { onMount, type EventDispatcher } from "svelte";
   import { twMerge } from "tailwind-merge";
-  import ToggleGroup from "./ToggleGroup.svelte";
-  import TabGroup from "./Tab/TabGroup.svelte";
-  import Tab from "./Tab/Tab.svelte";
 
+  import { MAX_RATING } from "../constants";
+  import BookApi from "./BookApiSelection/BookApi.svelte";
   import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
   import EventDone from "./icons/EventDone.svelte";
   import EventProgress from "./icons/EventProgress.svelte";
-  import Pages from "./icons/pages.svelte";
   import Words from "./icons/words.svelte";
-  import type { Book, Prisma } from "@prisma/client";
+  import Rating from "./Rating.svelte";
+  import TabGroup from "./Tab/TabGroup.svelte";
+  import TabPanel from "./Tab/TabPanel.svelte";
+  import TabPanels from "./Tab/TabPanels.svelte";
+  import ToggleGroup from "./ToggleGroup.svelte";
   import { slideHeight } from "./utils";
+
+  import type { Prisma } from "@prisma/client";
+
+  import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { READING_STATUS, type queriedBookFull } from "$appTypes";
 
   export let endpoint = "/book/create";
 

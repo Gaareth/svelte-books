@@ -1,20 +1,21 @@
 <script lang="ts">
-  import BookApiSkeleton from "./BookApiSkeleton.svelte";
+  import type { EventDispatcher } from "svelte";
 
-  import { delay } from "$lib/utils";
+  import clsx from "clsx";
   //@ts-ignore
   import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
   //@ts-ignore
   import IoMdOpen from "svelte-icons/io/IoMdOpen.svelte";
-  import clsx from "clsx";
-  import { browser } from "$app/environment";
+
+  import BookApiSkeleton from "./BookApiSkeleton.svelte";
+
   import type { queriedBookFull } from "$appTypes";
-  import { boolean } from "zod";
-  import type { EventDispatcher } from "svelte";
+
+  import { browser } from "$app/environment";
 
   export let volumeId: string | undefined;
-  export let apiBookSelected: boolean = true;
-  export let back_button: boolean = true;
+  export let apiBookSelected = true;
+  export let back_button = true;
   export let dispatch: EventDispatcher<any> | undefined = undefined;
 
   export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;

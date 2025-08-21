@@ -1,15 +1,11 @@
 <script lang="ts">
-  import { scale } from "svelte/transition";
-  import {
-    Chart,
-    getDatasetAtEvent,
-    getElementAtEvent,
-    getElementsAtEvent,
-  } from "svelte-chartjs";
+  import { Chart, getElementAtEvent } from "svelte-chartjs";
+
   import "chart.js/auto";
-  import { theme } from "./stores/stores";
-  import { scales, type ChartTypeRegistry } from "chart.js/auto";
   import { defaultBgColor, tupleToDataset } from "../chartUtils";
+  import { theme } from "./stores/stores";
+
+  import { type ChartTypeRegistry } from "chart.js/auto";
 
   let chart: any;
   export let data: [any, number][];

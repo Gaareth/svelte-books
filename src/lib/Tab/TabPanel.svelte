@@ -1,7 +1,9 @@
 <script lang="ts">
   import { getContext, onMount } from "svelte";
-  import { TABS, type TabsContext } from "./TabGroup.svelte";
+
   import { twMerge } from "tailwind-merge";
+
+  import { TABS, type TabsContext } from "./TabGroup.svelte";
 
   let panel = {};
   let thisPanel: HTMLDivElement;

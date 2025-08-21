@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
-
-  //@ts-ignore
-  import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-  import { READING_STATUS, type ReadingListItemType } from "$appTypes";
-
   import { onMount } from "svelte";
 
-  import { enhance } from "$app/forms";
-  import { page } from "$app/stores";
   import toast from "svelte-french-toast";
+  //@ts-ignore
+  import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
+
   import ReadingListItem from "./ReadingListItem.svelte";
+
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { type ReadingListItemType } from "$appTypes";
 
   export let readingActivities: ReadingListItemType[];
 

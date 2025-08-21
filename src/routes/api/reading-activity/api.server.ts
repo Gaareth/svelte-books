@@ -1,10 +1,11 @@
 import type { READING_STATUS } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
 import type z from "zod";
 import type {
   optionalDatetimeSchema,
   storyGraphSchema,
 } from "../../../schemas";
+
+import { prisma } from "$lib/server/prisma";
 
 export async function createReadingActivity(
   accountId: string,

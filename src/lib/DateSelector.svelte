@@ -19,10 +19,7 @@
     timezoneOffset: null,
   };
 
-  export const formatOptionalDate = (
-    d: OptionalDate,
-    includeTime: boolean = true
-  ) => {
+  export const formatOptionalDate = (d: OptionalDate, includeTime = true) => {
     if (d == null || d.year == null) return "?";
 
     const placeholder = "??";
@@ -46,10 +43,7 @@
     return `${hour}:${minute}`;
   };
 
-  export const formatShort = (
-    d: OptionalDate | null,
-    includeTime: boolean = false
-  ) => {
+  export const formatShort = (d: OptionalDate | null, includeTime = false) => {
     if (d == null || d.year == null) return "?";
 
     const mo = d.month?.toString().padStart(2, "0");
@@ -75,13 +69,11 @@
 <script lang="ts">
   import { twMerge } from "tailwind-merge";
   //@ts-ignore
-  import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
+  import ClearButton from "./ClearButton.svelte";
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
-  import { dateToYYYY_MM_DD, isValidDate } from "./utils";
-  import { onMount } from "svelte";
-  import ClearButton from "./ClearButton.svelte";
+  import { isValidDate } from "./utils";
 
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;
@@ -89,7 +81,7 @@
   export let className: string | undefined = undefined;
   export let inputClassName: string | undefined = undefined;
 
-  export let clearButton: boolean = false;
+  export let clearButton = false;
 
   export let datetime: OptionalDate;
 

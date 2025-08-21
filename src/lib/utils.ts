@@ -1,5 +1,6 @@
-import type { ReadingActivityWithDates } from "$appTypes";
 import { sineInOut } from "svelte/easing";
+
+import type { ReadingActivityWithDates } from "$appTypes";
 import type { OptionalDate } from "./DateSelector.svelte";
 import type { THEME } from "./stores/stores";
 
@@ -187,7 +188,7 @@ export function dateDiffFormatted(
   const d1 = new Date(date1);
   const d2 = new Date(date2);
 
-  let diffMs = Math.abs(d1.getTime() - d2.getTime());
+  const diffMs = Math.abs(d1.getTime() - d2.getTime());
   const seconds = Math.floor(diffMs / 1000);
 
   if (seconds < 60) {

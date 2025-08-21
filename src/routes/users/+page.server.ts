@@ -1,6 +1,8 @@
-import { prisma } from "$lib/server/prisma";
-import type { ServerLoadEvent } from "@sveltejs/kit";
 import { getAccountByUsername } from "../../auth";
+
+import type { ServerLoadEvent } from "@sveltejs/kit";
+
+import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.auth();

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+
   import { twMerge } from "tailwind-merge";
 
   export let groupClass: string | undefined = undefined;
@@ -10,7 +11,7 @@
 
   export let options: string[];
   export let defaultOption: number | undefined = undefined;
-  export let unToggleable: boolean = false;
+  export let unToggleable = false;
 
   export let selectedOption: Option | undefined | null =
     defaultOption != null ? options[defaultOption] : undefined;

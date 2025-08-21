@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
   import { onMount } from "svelte";
 
   //@ts-ignore
   import IoIosSearch from "svelte-icons/io/IoIosSearch.svelte";
-  import { replaceStateWithQuery } from "./utils";
+
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   export let search_term = "";
 
   onMount(() => {

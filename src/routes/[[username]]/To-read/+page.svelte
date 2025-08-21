@@ -1,9 +1,9 @@
 <script lang="ts">
+  import type { PageData } from "./$types";
+
   import { READING_STATUS } from "$appTypes";
   import ReadingList from "$lib/BookList/ReadingList.svelte";
-  import BookList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
-  import type { PageData } from "./$types";
 
   export let data: PageData;
 </script>

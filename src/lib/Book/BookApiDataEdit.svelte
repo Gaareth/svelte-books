@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
+
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
   import BookApiDetails from "$lib/BookApiSelection/BookApiDetails.svelte";
-  import { createEventDispatcher } from "svelte";
 
   export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;

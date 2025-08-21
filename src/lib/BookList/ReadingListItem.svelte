@@ -3,34 +3,25 @@
 </script>
 
 <script lang="ts">
-  import { page } from "$app/stores";
-  import {
-    READING_STATUS,
-    type BookRating,
-    type ReadingListItemType,
-  } from "$appTypes";
   import { createEventDispatcher } from "svelte";
+
+  import clsx from "clsx";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   //@ts-ignore
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+
   import { MAX_RATING } from "../../constants";
-  import Pages from "$lib/icons/pages.svelte";
-  import { Prisma, type Book } from "@prisma/client";
-  import { twMerge } from "tailwind-merge";
-  import clsx from "clsx";
-  import {
-    formatOptionalDate,
-    formatShort,
-    type OptionalDate,
-  } from "$lib/DateSelector.svelte";
-  import { date } from "zod";
+
+  import { page } from "$app/stores";
+  import { READING_STATUS, type ReadingListItemType } from "$appTypes";
+  import { formatShort } from "$lib/DateSelector.svelte";
+  import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
-  import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
-  import ReadingList from "./ReadingList.svelte";
+  import Pages from "$lib/icons/pages.svelte";
 
   export let entry: ReadingListItemType;
   $: book = entry.book;

@@ -2,7 +2,7 @@
   import clsx from "clsx";
   import { twMerge } from "tailwind-merge";
 
-  export let className: string = "";
+  export let className = "";
 </script>
 
 <div

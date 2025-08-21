@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import { onMount } from "svelte";
+
   import toast from "svelte-french-toast";
 
   // @ts-ignore
-  import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
   // @ts-ignore
-  import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
   // @ts-ignore
   import RefreshIcon from "svelte-icons/io/IoMdRefresh.svelte";
+
   import type { SSE_EVENT } from "../book/api/update_all/sse";
+
+  import { enhance } from "$app/forms";
+  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
 
   let loading = false;
   let evtSource: EventSource;

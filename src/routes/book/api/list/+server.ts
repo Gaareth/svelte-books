@@ -1,4 +1,5 @@
 import { error, json, type RequestHandler } from "@sveltejs/kit";
+
 import { queryBooks } from "../api.server";
 
 export const GET: RequestHandler = async ({ url, locals }) => {

@@ -1,8 +1,10 @@
-import { READING_STATUS } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
 import { error, json, type RequestEvent } from "@sveltejs/kit";
 import z from "zod";
+
 import { checkBookAuth } from "../../../../auth";
+
+import { READING_STATUS } from "$appTypes";
+import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
   await checkBookAuth(req.locals, req.params);
