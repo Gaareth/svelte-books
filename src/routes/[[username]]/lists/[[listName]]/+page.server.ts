@@ -1,36 +1,36 @@
-import { loadBooks } from "$lib/server/db/utils";
-import { prisma } from "$lib/server/prisma";
-import { type ServerLoadEvent } from "@sveltejs/kit";
-import { checkBookAuth } from "../../../../auth";
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
+
+import { READING_STATUS, READING_STATUS_VALUES } from "$appTypes";
+import { getReadingActivity } from "$lib/server/db/utils";
+import { StatusCodes } from "http-status-codes";
+import { authorize, isReadingActivityPublic } from "../../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
-  const username = params.username;
-  const listName = params.listName;
-  const accountId = await checkBookAuth(locals, params, listName);
+  console.log("Loading reading activity for list:", params.listName);
 
-  const bookList = await prisma.bookList.findFirst({
-    where: {
-      name: listName,
-      accountId,
-    },
-  });
-
-  if (bookList == null) {
-    return {
-      exists: false,
-      listName,
-      username,
-    };
+  if (!READING_STATUS_VALUES.includes(params.listName as READING_STATUS)) {
+    return error(StatusCodes.NOT_FOUND);
   }
 
-  const data = {
-    books: (await loadBooks({ accountId }, listName)).books,
-    category_names: await prisma.bookCategory.findMany({
-      select: {
-        name: true,
-      },
-    }),
-  };
+  const readingActivityStatus = params.listName as READING_STATUS;
 
-  return { ...data, username, listName, exists: true };
+  const { sessionAccount, requestedAccount } = await authorize(
+    await locals.auth(),
+    params.username,
+    async (requestedAccount) =>
+      await isReadingActivityPublic(requestedAccount.id, readingActivityStatus)
+  );
+
+  const username = params.username;
+  const readingActivity = await getReadingActivity(
+    { accountId: requestedAccount.id },
+    readingActivityStatus
+  );
+
+  return {
+    readingActivity,
+    username,
+    listName: params.listName,
+    exists: true,
+  };
 }

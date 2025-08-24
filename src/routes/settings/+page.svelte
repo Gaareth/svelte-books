@@ -1,19 +1,17 @@
 <script lang="ts">
+  import toast from "svelte-french-toast";
+  import { twMerge } from "tailwind-merge";
+
+  import type { PageData } from "./$types.js";
+  import type { Visibility } from "../../prismaTypes";
+  import type { SSE_EVENT } from "../book/api/update_all/sse";
+
   import { enhance } from "$app/forms";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
-
-  import ReloadButton from "./ReloadButton.svelte";
-
+  import { invalidateAll } from "$app/navigation";
+  import ToggleGroup from "$lib/ToggleGroup.svelte";
   import AddApiButton from "./AddApiButton.svelte";
   import ApiResult from "./ApiResult.svelte";
-  import type { SSE_EVENT } from "../book/api/update_all/sse";
-  import ToggleGroup from "$lib/ToggleGroup.svelte";
-  import { listenArrayEvents } from "chart.js/helpers";
-  import type { PageData } from "./$types.js";
-  import { twMerge } from "tailwind-merge";
-  import { invalidateAll } from "$app/navigation";
-  import toast from "svelte-french-toast";
-  import type { Visibility } from "../../prismaTypes";
+  import ReloadButton from "./ReloadButton.svelte";
 
   export let form;
   export let data: PageData;
@@ -32,17 +30,11 @@
   // let globalVisibility = "private";
 
   let allAsGlobal;
-  $: allAsGlobal = data.lists
+  $: allAsGlobal = data.readingActivityLists
     .filter((v) => v.visibility != null)
     .every((v) => (v.visibility as Visibility) == data.globalVisibility);
-  $: {
-    console.log(data.lists);
-    console.log(data.globalVisibility);
-  }
 
   $: {
-    console.log(form);
-
     if (form?.success) {
       toast.success("Successfully applied changes");
     }
@@ -56,16 +48,15 @@
 
   <form method="POST" action="?/editVisibility" use:enhance>
     <div
-      class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center"
-    >
+      class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center">
       <div>
         <p>Global visibilty</p>
         <p class="text-secondary text-base">
           Applies to all lists as a fallback value.
           {#if !allAsGlobal}
-            <span class="text-warning text-base hidden sm:inline"
-              >Warning: Atleast one list is different.</span
-            >
+            <span class="text-warning text-base hidden sm:inline">
+              Warning: Atleast one list is different.
+            </span>
           {/if}
         </p>
       </div>
@@ -78,38 +69,35 @@
           const option = ev.detail;
           data.globalVisibility = option;
           // data.lists = Array(data.lists.length).fill(option);
-          for (let i = 0; i < data.lists.length; i++) {
-            data.lists[i].visibility = option;
+          for (let i = 0; i < data.readingActivityLists.length; i++) {
+            data.readingActivityLists[i].visibility = option;
           }
         }}
-        defaultOption={data.globalVisibility == "private" ? 0 : 1}
-      />
+        defaultOption={data.globalVisibility == "private" ? 0 : 1} />
       <input
         type="hidden"
         name="isPublic"
-        value={data.globalVisibility == "public"}
-      />
+        value={data.globalVisibility == "public"} />
     </div>
 
     <div class="flex items-center justify-between mt-4 mb-2">
-      <h3 class="text-2xl font-medium">Lists</h3>
+      <h3 class="text-2xl font-medium">Reading Activity Lists</h3>
       {#if !allAsGlobal}
-        <span class="text-warning text-base inline sm:hidden"
-          >Warning: Atleast one list is different.</span
-        >
+        <span class="text-warning text-base inline sm:hidden">
+          Warning: Atleast one list is different.
+        </span>
       {/if}
     </div>
     <div class="flex flex-col gap-2">
-      {#each data.lists as list, i}
+      {#each data.readingActivityLists as list, i}
         <div
           class={twMerge(
             "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",
-            data.lists[i].visibility != data.globalVisibility &&
-              data.lists[i].visibility &&
+            data.readingActivityLists[i].visibility != data.globalVisibility &&
+              data.readingActivityLists[i].visibility &&
               "border-warning"
-          )}
-        >
-          <p>{list.name}</p>
+          )}>
+          <p>{list.status}</p>
 
           <ToggleGroup
             options={["private", "public"]}
@@ -117,13 +105,11 @@
             btnClass="px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
             unToggleable={true}
-            bind:selectedOption={data.lists[i].visibility}
-          />
+            bind:selectedOption={data.readingActivityLists[i].visibility} />
           <input
             type="hidden"
-            name={`listNameVisibility[${list.name}]`}
-            value={data.lists[i].visibility}
-          />
+            name={`readingActivityVisibility[${list.status}]`}
+            value={data.readingActivityLists[i].visibility} />
         </div>
       {/each}
     </div>
@@ -133,8 +119,7 @@
         class="btn-generic"
         on:click={async () => {
           await invalidateAll();
-        }}
-      >
+        }}>
         Cancel
       </button>
       <button type="submit" class="btn-primary-black w-36 flex justify-center">
@@ -146,13 +131,13 @@
 
 <section>
   <h2>Datasource</h2>
-  <!-- <div class="flex flex-col gap-6 sm:gap-8">
+  <div class="flex flex-col gap-6 sm:gap-8">
     <ReloadButton bind:currentStatus />
     <AddApiButton bind:currentStatus />
 
     <ApiResult {form} {currentStatus} />
-  </div> -->
-  SOON
+  </div>
+  <!-- SOON -->
 </section>
 
 <style>

@@ -1,9 +1,12 @@
-import type { queriedBookFull } from "$appTypes";
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import { arrMax, getErrorMessage, zip } from "$lib/utils";
-import type { Book, BookApiData } from "@prisma/client";
 import { getBookApiData, queryBooksFull } from "../book/api/api.server";
 import { SSE_DATA } from "../book/api/update_all/sse";
+
+import type { queriedBookFull } from "$appTypes";
+import { prisma } from "$lib/server/prisma";
+import type { Book, BookApiData } from "@prisma/client";
+
+import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
+import { arrMax, getErrorMessage, zip } from "$lib/utils";
 
 type bookDiff = {
   bookName: string;
@@ -30,8 +33,6 @@ export async function updateData(accountId: string) {
       },
     },
   });
-
-  console.log("bookdatalist", bookDataList.length);
 
   SSE_DATA[accountId].max = bookDataList.length;
 
@@ -76,7 +77,7 @@ export async function updateData(accountId: string) {
     // TOOD: zipMap?
     zip(Object.keys(extractedData).sort(), Object.keys(book).sort()).forEach(
       (props) => {
-        console.log(props);
+        // console.log(props);
 
         const entries = [
           //TODO: give hints
@@ -131,9 +132,6 @@ export async function createConnections(
   const unconnectedBooks = await prisma.book.findMany({
     where: {
       bookApiDataId: connect_all ? undefined : null, // for whatever reason, undefined applies to all entries (kinda make sense lol)
-      bookList: {
-        name: "Read",
-      },
       accountId,
     },
   });
@@ -167,6 +165,7 @@ export async function createConnections(
       const apiData = await getBookApiData(volumeId); //TODO
       const extractedData = extractBookApiData(apiData);
       const categories = extractCategories(apiData);
+
       return prisma.bookApiData.create({
         data: {
           ...extractedData,
@@ -191,8 +190,8 @@ export async function createConnections(
   ): Promise<{ volumeId: string; score: number } | undefined> => {
     return queryBooksFull(`${book.name}+inauthor:${book.author}`)
       .then((books: queriedBookFull[]) => {
-        console.log(books);
-        console.log(books.length);
+        // console.log(books);
+        // console.log(books.length);
 
         if (books.length == 0 || books === undefined) {
           return undefined;

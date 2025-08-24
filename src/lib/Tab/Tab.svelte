@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
-  import { TABS, type TabsContext } from "./TabGroup.svelte";
+  import { getContext } from "svelte";
+
   import { twMerge } from "tailwind-merge";
+
+  import { TABS, type TabsContext } from "./TabGroup.svelte";
 
   const thisTab = {};
   const {
@@ -38,7 +40,6 @@
   class={twMerge(btnClass, $selectedTab === thisTab && btnSelectedClass)}
   on:click={select}
   type="button"
-  bind:clientWidth
->
+  bind:clientWidth>
   <slot />
 </button>

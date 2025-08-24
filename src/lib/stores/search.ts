@@ -34,7 +34,7 @@ export const createSearchStore = <T extends Record<PropertyKey, any>>(
 export const searchHandler = <T extends Record<PropertyKey, any>>(
   store: SearchStoreModel<T>
 ) => {
-  const searcher = new FuzzySearch(store.data, ["name", "author"], {
+  const searcher = new FuzzySearch(store.data, ["book.name", "book.author"], {
     caseSensitive: false,
   });
 

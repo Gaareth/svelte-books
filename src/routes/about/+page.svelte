@@ -8,8 +8,8 @@
       have read, (and potentially also the books I want to read). Why not use
       some of those popular apps? Idk, but this also gave me a reason too look
       into
-      <a href="https://svelte.dev/" class="underline">Svelte</a>, and built a
-      simple app with it. And.. there we go :)
+      <a href="https://svelte.dev/" class="underline">Svelte</a>
+      , and built a simple app with it. And.. there we go :)
     </p>
   </div>
 </div>

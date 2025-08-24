@@ -1,112 +1,111 @@
-import { DEFAULT_LISTS } from "$appTypes";
+import { error, json } from "@sveltejs/kit";
+import { z } from "zod";
+
+import { optionalDatetimeSchema } from "../../../../schemas";
+import { createReadingActivity } from "../../../api/reading-activity/api.server";
+import { getBookApiData } from "../../../book/api/api.server";
+
+import type { RequestEvent } from "./$types";
+
+import { READING_STATUS } from "$appTypes";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
-import { error, json } from "@sveltejs/kit";
-import { z } from "zod";
-import { checkBookAuth } from "../../../../auth";
-import { optionalDatetimeSchema } from "../../../../schemas";
-import { getBookApiData } from "../../../book/api/api.server";
-import type { RequestEvent } from "./$types";
+import { authorize } from "../../../../auth";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
-  rating: z.number().optional(),
+  stars: z.coerce.number().optional(),
   wordsPerPage: z.number().optional(),
-  listName: z.enum(DEFAULT_LISTS),
+  readingStatus: z.nativeEnum(READING_STATUS),
   volumeId: z.string().trim().optional(),
   dateStarted: optionalDatetimeSchema.optional(),
   dateFinished: optionalDatetimeSchema.optional(),
 });
 
 export async function POST(req: RequestEvent) {
-  const accountId = await checkBookAuth(req.locals, req.params);
+  const accountId = (
+    await authorize(await req.locals.auth(), req.params.username)
+  ).requestedAccount.id;
 
   const json_data = await req.request.json();
 
   const result = createSchema.safeParse(json_data);
-  console.log(result);
-  console.log(result.error);
+  // console.log(result);
+  // console.log(result.error);
   // TODO: return schema parsing errors
 
   if (result.success) {
-    const { name, author, rating, wordsPerPage, listName, volumeId } =
+    const { name, author, stars, wordsPerPage, readingStatus, volumeId } =
       result.data;
 
     // null can be seen as delete, while undefined as ignore. I dont want to delete while creating
     const dateStarted = nullToUndefined(result.data.dateStarted);
     const dateFinished = nullToUndefined(result.data.dateFinished);
 
-    /* const book_exist = await prisma.book.findFirst({ where: { name } });
-    // todo: only show warning with are you sure or something.
-    if (book_exist) {
+    let book = await prisma.book.findFirst({ where: { name } });
+    const book_exist = book != null;
+    // if (book_exist) {
+    //   return json({
+    //     success: false,
+    //     message: "Books titles have to be unique.\nPlease use another title",
+    //   });
+    // }
+
+    if (book == null) {
+      // const bookList = await prisma.bookList.upsert({
+      //   where: { name_accountId: { accountId, name: listName } },
+      //   update: {}, // No update needed if it exists
+      //   create: {
+      //     name: listName,
+      //     accountId,
+      //   },
+      // });
+
+      book = await prisma.book.create({
+        data: {
+          accountId,
+          name,
+          author,
+          wordsPerPage,
+          // bookListId: bookList.id,
+        },
+      });
+      await addApiData(volumeId, book.id);
+    }
+
+    const rA = await createReadingActivity(
+      accountId,
+      book.id,
+      stars,
+      readingStatus,
+      dateStarted,
+      dateFinished,
+      null,
+      null
+    );
+
+    if (!rA) {
       return json({
         success: false,
-        message: "Books titles have to be unique.\nPlease use another title",
+        message: "Failed to create reading activity",
       });
-    } */
-
-    const bookList = await prisma.bookList.upsert({
-      where: { name_accountId: { accountId, name: listName } },
-      update: {}, // No update needed if it exists
-      create: {
-        name: listName,
-        accountId,
-      },
-    });
-
-    let dateStartedId;
-    if (dateStarted) {
-      dateStartedId = (
-        await prisma.optionalDatetime.create({
-          data: dateStarted,
-        })
-      ).id;
     }
 
-    let dateFinishedId;
-    if (dateFinished) {
-      dateFinishedId = (
-        await prisma.optionalDatetime.create({
-          data: dateFinished,
-        })
-      ).id;
-    }
-
-    const optionalRating =
-      rating != null
-        ? {
-            create: {
-              stars: rating,
-              comment: undefined,
-            },
-          }
-        : undefined;
-
-    const book = await prisma.book.create({
-      data: {
-        accountId,
-        name,
-        author,
-        wordsPerPage,
-        bookListId: bookList.id,
-        rating: optionalRating,
-        dateStartedId: dateStartedId,
-        dateFinishedId: dateFinishedId,
-      },
+    return json({
+      success: true,
+      message: book_exist ? "Added reading activity" : "Created book",
     });
-
-    await addApiData(volumeId, book.id);
-
-    return json({ success: true });
   }
   error(400);
 }
+
+/// Adds API data to the book if volumeId is provided
 async function addApiData(volumeId: string | undefined, bookId: string) {
   if (volumeId !== undefined) {
     const apiData = await getBookApiData(volumeId);
-    console.log(apiData);
+    // console.log(apiData);
 
     const extractedData = extractBookApiData(apiData);
 
@@ -136,7 +135,7 @@ async function addApiData(volumeId: string | undefined, bookId: string) {
 
     const categories = extractCategories(apiData);
 
-    console.log(categories);
+    // console.log(categories);
 
     for (const category_str of categories) {
       const category = await prisma.bookCategory.upsert({
@@ -151,7 +150,7 @@ async function addApiData(volumeId: string | undefined, bookId: string) {
         },
       });
 
-      console.log(category);
+      // console.log(category);
     }
   }
 }

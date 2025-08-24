@@ -1,12 +1,14 @@
 <script lang="ts">
+  import clsx from "clsx";
+
+  import type { PageData } from "./$types";
+
   import { page } from "$app/stores";
-  import BookList from "$lib/BookList/BookList.svelte";
+  import { READING_STATUS } from "$appTypes";
+  import BookListReading from "$lib/BookList/BookListReading.svelte";
+  import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
-  import clsx from "clsx";
-  import type { BookFullType } from "../../app";
-  import BookListReading from "$lib/BookList/BookListReading.svelte";
-  import type { PageData } from "./$types";
 
   export let data: PageData;
 
@@ -25,8 +27,7 @@
   class={clsx(
     "text-center text-5xl my-4 mb-6 mt-8 header-gradient",
     random != 0 ? "header-elnath" : "header-cloister"
-  )}
->
+  )}>
   {#if $page.data.session?.user?.name == data.username || data.username == null}
     my
   {:else}
@@ -35,18 +36,35 @@
   Book List
 </h1>
 
-{#if $page.data.session}
-  <Statistics books={data.books} />
-{/if}
+<Statistics readingActivities={data.readingActivity} />
 
 <div class="my-5" />
 
-<div class="mb-10">
-  <BookListReading books={data.currentlyReading} />
-</div>
+{#if data.isCurrentlyReadingPublic}
+  <div class="mb-10">
+    <BookListReading
+      isAuthorizedToModify={data.isAuthorizedToModify}
+      readingActivities={data.readingActivity.filter(
+        (e) =>
+          e.status.status === READING_STATUS.READING ||
+          e.status.status === READING_STATUS.PAUSED
+      )} />
+  </div>
+{/if}
 
-<BookNew listName={"Read"} books={data.books ?? []} />
-<BookList books={data.books} />
+{#if data.isAuthorizedToModify}
+  <BookNew
+    readingStatus={"read"}
+    readingActivities={data.readingActivity ?? []} />
+{/if}
+
+<ReadingList
+  isAuthorizedToModify={data.isAuthorizedToModify}
+  entries={data.readingActivity.filter(
+    (e) =>
+      e.status.status === READING_STATUS.FINISHED ||
+      e.status.status === READING_STATUS.DID_NOT_FINISH
+  )} />
 
 <style>
   @keyframes pan {

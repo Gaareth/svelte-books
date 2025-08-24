@@ -22,3 +22,4 @@ db-backups/
 .vscode/
 
 #seed.js
+gitleaks-report.json

@@ -1,0 +1,221 @@
+<script context="module" lang="ts">
+  export type ItemDeleteEvent = { entry: ReadingListItemType };
+</script>
+
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
+  import clsx from "clsx";
+  //@ts-ignore
+  import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
+  //@ts-ignore
+  import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
+  //@ts-ignore
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+
+  import { MAX_RATING } from "../../constants";
+
+  import { READING_STATUS, type ReadingListItemType } from "$appTypes";
+  import { formatShort } from "$lib/DateSelector.svelte";
+  import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
+  import Pages from "$lib/icons/pages.svelte";
+
+  export let entry: ReadingListItemType;
+  export let isAuthorizedToModify = false;
+  $: book = entry.book;
+
+  // export let deletionBook: Book | undefined = undefined;
+  // export let openModal: boolean = false;
+  export let allow_deletion: boolean | undefined = true;
+
+  const dispatch = createEventDispatcher<{ delete: ItemDeleteEvent }>();
+  // console.log(book);
+
+  const book_url = encodeURIComponent(entry.book.name);
+
+  const colors = [
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-lime-500",
+    "bg-green-600",
+    "bg-emerald-500",
+    "bg-teal-600",
+    "bg-cyan-400",
+    "bg-blue-600",
+    "bg-indigo-500",
+    "bg-violet-600",
+    "bg-fuchsia-600",
+    "bg-rose-600",
+  ];
+
+  const getColor = (name: string, author: string) => {
+    const hash = hashCode(name + author);
+    let index = hash % colors.length;
+    if (index < 0) {
+      index += colors.length;
+    }
+    return colors[index];
+  };
+
+  /**
+   * Returns a hash code from a string
+   * @param  {String} str The string to hash.
+   * @return {Number}    A 32bit integer
+   * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+   * @credit https://stackoverflow.com/a/8831937
+   */
+  function hashCode(str: string) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+      let chr = str.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
+</script>
+
+<div
+  class={clsx(
+    "item-border mb-3 p-2 items-center w-full grid gap-2",
+    (entry.status.status === READING_STATUS.PAUSED ||
+      entry.status.status === READING_STATUS.DID_NOT_FINISH) &&
+      "opacity-75"
+  )}
+  style="grid-template-columns: 4px 1fr;">
+  <div
+    class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
+      book.name,
+      book.author
+    )} rounded-md"
+    style="height: 98%;" />
+  <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
+    <div class="col-span-full sm:col-span-3">
+      <a
+        href="/{entry.account.username}/book/{book_url}"
+        class="text-md text-ellipsis overflow-hidden leading-3">
+        {book.name}
+      </a>
+      <p class="text-gray-600 dark:text-slate-300 -mt-1">{book.author}</p>
+    </div>
+
+    <div class="flex items-center col-span-full sm:col-span-5">
+      <div class="flex flex-1">
+        <p class="flex items-center gap-1">
+          {#if entry.dateFinished}
+            {formatShort(entry.dateFinished)}
+            <span class="icon" title="date read"><EventDone /></span>
+          {:else if entry.dateStarted}
+            {formatShort(entry.dateStarted)}
+            <span class="icon" title="date started"><EventProgress /></span>
+          {:else}
+            <span class="flex-shrink leading-4">
+              {book.createdAt.toLocaleString()}
+            </span>
+            <span class="icon flex-shrink-0" title="date added">
+              <CalenderAdd />
+            </span>
+          {/if}
+        </p>
+      </div>
+
+      {#if entry.status.status === READING_STATUS.PAUSED}
+        <p class="text-secondary">Paused</p>
+      {:else if entry.status.status === READING_STATUS.DID_NOT_FINISH}
+        <p
+          class="text-red-600 dark:text-red-500 flex justify-end flex-1 uppercase">
+          Dropped
+        </p>
+      {/if}
+
+      {#if entry.rating?.stars}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
+          <p>{entry.rating.stars} / {MAX_RATING}</p>
+          <span class="icon" aria-label="stars"><IoIosStar /></span>
+        </div>
+      {/if}
+
+      {#if book.bookApiData?.pageCount}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
+          <p>{book.bookApiData.pageCount}</p>
+          <span aria-label="number of pages" class="icon"><Pages /></span>
+        </div>
+      {/if}
+
+      {#if isAuthorizedToModify}
+        <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
+          <span
+            class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
+            dark:bg-slate-600 dark:border-slate-700">
+            <a
+              class="group inline-block p-2 hover:bg-gray-50 focus:relative
+              dark:hover:bg-slate-500"
+              title="Edit book"
+              href="/book/{book_url}/?edit=true">
+              <span
+                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                <IoMdSettings />
+              </span>
+            </a>
+
+            <slot name="delete">
+              {#if allow_deletion}
+                <button
+                  class="group p-2 btn-delete hidden sm:inline-block !border-0"
+                  title="Delete book"
+                  type="button"
+                  on:click={() => {
+                    dispatch("delete", { entry });
+                  }}>
+                  <span
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                    <IoMdTrash alt="red trash can" />
+                  </span>
+                </button>
+              {/if}
+            </slot>
+          </span>
+        </div>
+      {:else}
+        <div class="hidden sm:flex justify-end ms-2">
+          <a
+            class="underline-hover"
+            href="/{entry.account.username}/book/{book_url}">
+            View
+          </a>
+        </div>
+      {/if}
+    </div>
+  </div>
+</div>
+
+<style lang="postcss">
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .icon-edit {
+    width: 20px;
+    height: 20px;
+  }
+
+  .book-item-grid {
+    display: grid;
+    flex-grow: 1;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    row-gap: 0;
+    align-items: center;
+    height: 100%;
+    /* grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); */
+    grid-template-rows: auto;
+  }
+
+  @media (min-width: 640px) {
+    .book-item-grid {
+      grid-template-rows: repeat(1, minmax(0, 1fr));
+    }
+  }
+</style>

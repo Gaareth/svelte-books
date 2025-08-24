@@ -17,13 +17,11 @@
       <form
         method="post"
         action="/auth/callback/credentials"
-        class="w-full max-w-sm"
-      >
+        class="w-full max-w-sm">
         <p
           class="{error
             ? 'block'
-            : 'hidden'} text-error text-center font-bold text-xl my-4"
-        >
+            : 'hidden'} text-error text-center font-bold text-xl my-4">
           Username or password are not correct
         </p>
         <input name="csrfToken" type="hidden" value={csrfToken} />
@@ -34,8 +32,7 @@
             name="username"
             id="username"
             class="input w-full {error ? 'input-error' : ''}"
-            autocomplete="username"
-          />
+            autocomplete="username" />
         </div>
         <div class="mt-4">
           <label for="password">Password</label>
@@ -44,8 +41,7 @@
             type="password"
             name="password"
             id="password"
-            class="input w-full {!error || 'input-error'}"
-          />
+            class="input w-full {!error || 'input-error'}" />
         </div>
 
         <button
@@ -54,16 +50,15 @@
       hover:bg-transparent hover:text-black
       dark:hover:bg-blue-600 dark:hover:text-white
       transition-colors"
-          type="submit"
-        >
+          type="submit">
           login
         </button>
         <p class="text-lg text-secondary mt-4">
           Don't have an account yet? <a
             href="/register/"
-            class="dark:text-blue-400 text-blue-500 underline text-lg"
-            >Sign up here</a
-          >
+            class="dark:text-blue-400 text-blue-500 underline text-lg">
+            Sign up here
+          </a>
         </p>
       </form>
     </div>

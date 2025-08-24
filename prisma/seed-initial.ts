@@ -1,6 +1,11 @@
-import { PrismaClient, type BookList } from "@prisma/client";
+import {
+  PrismaClient,
+  type BookList,
+  type ReadingActivityStatus,
+} from "@prisma/client";
 import dotenv from "dotenv";
-import { DEFAULT_LISTS } from "../src/app.d";
+
+import { DEFAULT_LISTS, READING_STATUS_VALUES, VISIBILITY } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 
 // Load environment variables
@@ -57,11 +62,30 @@ export async function createLists(accountId: string) {
   return lists;
 }
 
+export async function createReadingActivityStatus(accountId: string) {
+  const lists: ReadingActivityStatus[] = [];
+
+  for (const status of READING_STATUS_VALUES) {
+    lists.push(
+      await prisma.readingActivityStatus.create({
+        data: {
+          status,
+          accountId,
+          visibility: VISIBILITY.PRIVATE,
+        },
+      })
+    );
+  }
+
+  return lists;
+}
+
 export async function seedInitial() {
   const account = await createAccount(true);
   return {
     account,
     serverSettings: await createServerSettings(),
     lists: await createLists(account.id),
+    readingActivityStatus: await createReadingActivityStatus(account.id),
   };
 }

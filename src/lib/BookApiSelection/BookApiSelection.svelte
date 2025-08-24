@@ -1,14 +1,18 @@
 <script lang="ts">
+  import type { EventDispatcher } from "svelte";
+
   //@ts-ignore
   import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
+
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
+
   import type { queriedBook } from "$appTypes";
-  import type { EventDispatcher } from "svelte";
 
   // const queryBooksDebug = async () => {
   //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();
   // };
 
+  export let label: string;
   export let query: string | undefined = undefined;
   let queriedBooksPromise: Promise<queriedBook[]>;
 
@@ -38,15 +42,23 @@
 </script>
 
 <div {...$$restProps}>
+  <label for="bookApiQuery" class="w-full text-lg">
+    {label}
+  </label>
   <div class="flex gap-2">
     <input
       class="input dark:bg-slate-600 dark:border-slate-500"
       type="text"
-      bind:value={query}
-    />
-    <button type="button" class="btn-primary-black" on:click={handleClick}
-      >Search</button
-    >
+      id="bookApiQuery"
+      bind:value={query} />
+
+    <button
+      type="button"
+      class="btn-primary-black"
+      on:click={handleClick}
+      disabled={!query || query?.length === 0}>
+      Search
+    </button>
   </div>
   <div>
     {#if queriedBooksPromise !== undefined}
@@ -61,15 +73,13 @@
                   <img
                     src={book.volumeInfo.imageLinks.smallThumbnail}
                     alt="book cover"
-                    class="w-10"
-                  />
+                    class="w-10" />
                 {:else}
                   <!-- ??TODO: placeholder -->
                   <img
                     src="/cover.png"
                     alt="placeholder book cover"
-                    class="w-10"
-                  />
+                    class="w-10" />
                 {/if}
               </div>
               <div class="flex flex-col">
@@ -91,8 +101,7 @@
                 id={`bookId-${book.id}`}
                 value={book.id}
                 on:click={() => (selectedBookId = book.id)}
-                class="mr-2 peer checked:hidden md:checked:block"
-              />
+                class="mr-2 peer checked:hidden md:checked:block" />
               <button
                 class="hidden peer-checked:flex px-3 py-1
                 border rounded-md dark:border-slate-500 dark:bg-slate-600
@@ -105,8 +114,7 @@
                   dispatch("select");
                 }}
                 title="Select book"
-                type="button"
-              >
+                type="button">
                 <span class="hidden md:inline">Select</span>
                 <span class="w-6 block">
                   <IoIosArrowForward />

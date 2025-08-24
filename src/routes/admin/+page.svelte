@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import type { PageData } from "./$types";
-  import InputText from "$lib/InputText.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputAll from "$lib/InputAll.svelte";
-  import { onMount } from "svelte";
   //@ts-ignore
-  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+  import toast from "svelte-french-toast";
   //@ts-ignore
   import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
-  import toast from "svelte-french-toast";
+  //@ts-ignore
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+
+  import type { PageData } from "./$types";
+
+  import { enhance } from "$app/forms";
   import EyePlus from "$lib/icons/eye-plus.svelte";
   export let data: PageData;
 
@@ -45,19 +44,17 @@
     return async ({ update, result }) => {
       // @ts-ignore
       if (result.data.success) {
-        toast.success("Successfully update data");
+        toast.success("Successfully updated data");
       }
 
       update({ reset: false });
     };
   }}
-  action="?/save"
->
+  action="?/save">
   <div class="flex flex-col gap-6">
     <h1 class="text-3xl">Registration</h1>
     <div
-      class="gap-2 flex justify-between border generic-border p-4 items-center"
-    >
+      class="gap-2 flex justify-between border generic-border p-4 items-center">
       <div>
         <label for="registrationOpen">Registration open</label>
         <p class="text-secondary text-base">
@@ -73,8 +70,7 @@
         on:change={() => {
           registrationPossible = !registrationPossible;
         }}
-        class="rounded"
-      />
+        class="rounded" />
     </div>
 
     <div>
@@ -85,8 +81,7 @@
         <button
           class="btn-generic px-5 sm:px-2 text-base"
           formaction="?/addRegistrationCode"
-          type="submit"
-        >
+          type="submit">
           Add
         </button>
       </div>
@@ -100,15 +95,13 @@
                 <a
                   href={`/register/${code.code}`}
                   class="underline-hover"
-                  target="_blank"
-                >
+                  target="_blank">
                   {code.code}
                 </a>
 
                 <p
                   class="ml-5 text-secondary text-base flex items-center gap-1"
-                  title="times used"
-                >
+                  title="times used">
                   {code.timesUsed}
                   <span class="block w-4"><EyePlus /></span>
                 </p>
@@ -116,18 +109,15 @@
                 <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
                   <span
                     class="inline-flex flex-row divide-x overflow-hidden rounded-md bg-white
-                    dark:bg-slate-700"
-                  >
+                    dark:bg-slate-700">
                     <button
                       class="group inline-block p-2 hover:bg-gray-50 focus:relative
                       dark:hover:bg-slate-500"
                       title="copy"
                       type="button"
-                      on:click={async () => await copyToClipboard(code.code)}
-                    >
+                      on:click={async () => await copyToClipboard(code.code)}>
                       <span
-                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
-                      >
+                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
                         <IoMdCopy alt="copy icon" />
                       </span>
                     </button>
@@ -135,11 +125,9 @@
                     <button
                       class="group p-2 btn-delete !border-0"
                       title="Delete code"
-                      type="submit"
-                    >
+                      type="submit">
                       <span
-                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
-                      >
+                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
                         <IoMdTrash alt="red trash can" />
                       </span>
                     </button>
@@ -160,14 +148,12 @@
         class="btn-generic flex-1 sm:flex-initial"
         on:click={async () => {
           formValues = deepClone(initialValues);
-        }}
-      >
+        }}>
         Cancel
       </button>
       <button
         type="submit"
-        class="btn-primary-black w-36 flex justify-center flex-1 sm:flex-initial"
-      >
+        class="btn-primary-black w-36 flex justify-center flex-1 sm:flex-initial">
         Save
       </button>
     </div>
@@ -185,8 +171,9 @@
               {#each user.lists as list}
                 <a
                   href="/{user.username}/lists/{list?.name}"
-                  class="hover:underline">{list?.name}</a
-                >
+                  class="hover:underline">
+                  {list?.name}
+                </a>
                 |
               {/each}
             </div>

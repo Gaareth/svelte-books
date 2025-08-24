@@ -1,13 +1,21 @@
 <script lang="ts">
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
+  import { twMerge } from "tailwind-merge";
 
   export let value: unknown | null;
+  $: {
+    value = value === undefined ? null : value;
+  }
+
   export let name: string;
   export let displayName: string = name;
+  export let clearButton = true;
+
+  export let selectClassName = "";
 
   // export let type: string = "text"
-  export let error: string | undefined;
+  export let error: string | undefined = undefined;
 
   const clearSelection = () => {
     value = null;
@@ -26,21 +34,24 @@
       bind:value
       {name}
       id={name}
-      class="input w-full {error ? 'input-error' : ''}"
-    >
+      class={twMerge(
+        "input w-full {error ? 'input-error' : ''}",
+        selectClassName
+      )}>
       <slot />
     </select>
-    <button
-      on:click={() => clearSelection()}
-      disabled={value === null}
-      type="button"
-      class="group flex"
-      title="Clear Input"
-    >
-      <span class="inline-block icon group {hoverCss} self-center">
-        <IoIosRemoveCircle />
-      </span>
-    </button>
+    {#if clearButton}
+      <button
+        on:click={() => clearSelection()}
+        disabled={value == null}
+        type="button"
+        class="group flex"
+        title="Clear Input">
+        <span class={twMerge("inline-block icon group self-center", hoverCss)}>
+          <IoIosRemoveCircle />
+        </span>
+      </button>
+    {/if}
   </div>
   <label for={name} class="label">
     {#if error}

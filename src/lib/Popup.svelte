@@ -1,7 +1,9 @@
 <script lang="ts">
-  import Modal from "./Modal.svelte";
-
   import { createEventDispatcher } from "svelte";
+
+  import clsx from "clsx";
+
+  import Modal from "./Modal.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +16,7 @@
 
   export let type: MsgType;
   export let message: string;
-  export let content: string;
+  export let content: string | undefined = undefined;
   export let btn1_msg: string;
   export let btn2_msg: string;
 
@@ -30,13 +32,13 @@
     }
   }
 
-  function getColorVar() {
+  function getBorderColor() {
     if (type == "Info") {
-      return "blue";
+      return "border-blue-400 hover:border-blue-500 hover:dark:border-blue-300";
     } else if (type == "Warning") {
-      return "yellow";
+      return "border-yellow-400 hover:border-yellow-500 hover:dark:border-yellow-300";
     } else {
-      return "red";
+      return "border-red-400 hover:border-red-500 hover:dark:border-red-300";
     }
   }
 </script>
@@ -48,16 +50,18 @@
   </div>
 
   <p class="mt-4 text-gray-500 dark:text-white">
-    {content}
+    <slot name="content">{content}</slot>
   </p>
 
   <div class="mt-6 sm:flex sm:gap-4">
     <button
-      class="inline-block w-full {getColor()} rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto
-      border
-      border-slate-400 hover:border-slate-500"
-      on:click={() => dispatch("primary")}
-    >
+      class={clsx(
+        getColor(),
+        getBorderColor(),
+        "border inline-block w-full rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto"
+      )}
+      type="button"
+      on:click={() => dispatch("primary")}>
       {btn1_msg}
     </button>
 
@@ -67,7 +71,7 @@
       on:click={() => {
         showModal = false;
       }}
-    >
+      type="button">
       {btn2_msg}
     </button>
   </div>

@@ -1,8 +1,5 @@
 <script lang="ts">
   import { Moon } from "svelte-loading-spinners";
-  import { theme } from "./stores/stores";
-  import { isDarkModeEnabled } from "./utils";
-  import { onMount } from "svelte";
 
   export let color: string | undefined = undefined;
   // $: themedColor = window !== undefined && isDarkModeEnabled($theme, window) ? "white" : "black";

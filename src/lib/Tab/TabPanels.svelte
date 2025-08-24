@@ -1,7 +1,9 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { TABS, type TabsContext } from "./TabGroup.svelte";
+
   import { twMerge } from "tailwind-merge";
+
+  import { TABS, type TabsContext } from "./TabGroup.svelte";
   export let className: string | undefined = undefined;
 
   const { currentTabIdx, animate } = getContext<TabsContext>(TABS);
@@ -9,8 +11,7 @@
 
 <div
   style={animate ? `transform: translateX(-${100 * $currentTabIdx}%)` : ""}
-  class={twMerge("panels-wrapper", className)}
->
+  class={twMerge("panels-wrapper", className)}>
   <slot />
 </div>
 

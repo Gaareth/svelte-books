@@ -1,12 +1,18 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
+
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
   import BookApiDetails from "$lib/BookApiSelection/BookApiDetails.svelte";
-  import BookApi from "./../BookApiSelection/BookApi.svelte";
+  import BookApi from "$lib/BookApiSelection/BookApi.svelte";
+
+  export let query: string | undefined = undefined;
   export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;
   let bookSelected: boolean;
   // let fetch_data = data;
+  const dispatch = createEventDispatcher();
 
   let queriedBook: queriedBookFull;
   if (data !== null) {
@@ -14,6 +20,7 @@
       id: data.id,
       volumeInfo: {
         ...data,
+        description: data.description || undefined,
         subtitle: data.subtitle || undefined,
         authors: data.authors.split("|"),
         publishedDate: data.publishedDate || undefined,
@@ -49,21 +56,33 @@
     bookSelected = true;
     newVolumeId = data?.id;
   };
+
+  const takeOver = () => {
+    dispatch("takeOver", {
+      volumeId: newVolumeId,
+      queriedBook: queriedBook,
+    });
+  };
 </script>
 
 <section class="my-10">
   <h2 class="text-xl flex items-center gap-1">
     API Data
-    <a href="https://books.google.com/books" class="text-sm underline"
-      >(Google Books)</a
-    >
+    <a href="https://books.google.com/books" class="text-sm underline">
+      (Google Books)
+    </a>
     {#if data !== null}
-      <button type="button" class="btn-generic ml-auto" on:click={reloadData}>
-        <span class="w-4 h-4">
-          <!-- <IoIosRefresh /> -->
-        </span>
-        reload
-      </button>
+      <div class="ml-auto">
+        <button type="button" class="btn-generic" on:click={reloadData}>
+          <span class="w-4 h-4">
+            <!-- <IoIosRefresh /> -->
+          </span>
+          reload
+        </button>
+        <button type="button" class="btn-generic" on:click={takeOver}>
+          Take over
+        </button>
+      </div>
     {/if}
   </h2>
   {#if data !== null}
@@ -71,24 +90,25 @@
     <BookApiConfirm
       volumeId={data.id}
       getBookPromise={currentBookData}
-      back_button={false}
-    />
+      back_button={false} />
   {/if}
   {#if bookSelected}
     <input type="hidden" name="apiVolumeId" value={newVolumeId} />
     <p class="text-base text-slate-500 text-center mt-3">
-      <span class="text-base text-stone-950 dark:text-gray-200"
-        >Unsaved changes!
-      </span>Don't forget to press the big
-      <span class="text-blue-700 text-base">blue</span> save button
+      <span class="text-base text-stone-950 dark:text-gray-200">
+        Unsaved changes!
+      </span>
+      Don't forget to press the big
+      <span class="text-blue-700 text-base">blue</span>
+      save button
     </p>
   {/if}
 
-  <BookApiDetails
-    open={false}
+  <BookApi
+    {query}
+    label={data !== null ? "Update Book API" : "Add Book API"}
     bind:volumeId={newVolumeId}
-    summary_text={data !== null ? "Update API connection" : undefined}
     on:select={() => (bookSelected = true)}
-    on:back={() => (bookSelected = false)}
-  />
+    on:back={() => (bookSelected = false)} />
 </section>
+<!-- summary_text={data !== null ? "Update API connection" : undefined} -->

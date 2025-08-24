@@ -1,8 +1,6 @@
-import { prisma } from "$lib/server/prisma";
-import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { type ServerLoadEvent } from "@sveltejs/kit";
 
-import { StatusCodes } from "http-status-codes";
-import { getAccountByUsername, getAccountIdfromSession } from "../../auth";
+import { getAccountIdfromSession, userAuth } from "../../auth";
 import { parseFormArray } from "../../schemas";
 import { SSE_DATA } from "../book/api/update_all/sse";
 import {
@@ -11,6 +9,8 @@ import {
   type settingsApiCreateResult,
   type settingsApiReloadResult,
 } from "./apidata";
+
+import { prisma } from "$lib/server/prisma";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 
@@ -60,11 +60,16 @@ export const actions = {
     const formData = await request.formData();
 
     const formDataObject = Object.fromEntries(formData);
-    console.log(formDataObject);
+    // console.log(formDataObject);
 
-    const listNameVisibility = parseFormArray(
+    // const listNameVisibility = parseFormArray(
+    //   formDataObject,
+    //   "listNameVisibility"
+    // );
+
+    const readingActivityVisibility = parseFormArray(
       formDataObject,
-      "listNameVisibility"
+      "readingActivityVisibility"
     );
 
     const isPublic = formData.get("isPublic");
@@ -81,18 +86,18 @@ export const actions = {
       });
     }
 
-    for (const list of listNameVisibility) {
+    for (const list of readingActivityVisibility) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      const name = list[0];
+      const status = list[0];
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const visibility = list[1];
 
-      await prisma.bookList.update({
+      await prisma.readingActivityStatus.update({
         where: {
-          name_accountId: {
-            name,
+          status_accountId: {
+            status,
             accountId,
           },
         },
@@ -124,45 +129,27 @@ export const actions = {
 // }
 
 export async function load({ locals }: ServerLoadEvent) {
-  const session = await locals.auth();
-  if (session?.user?.name == null) {
-    error(401);
-  }
-  const account = await getAccountByUsername(session.user.name);
-  if (account == null) {
-    error(StatusCodes.UNAUTHORIZED);
-  }
+  const account = await userAuth(await locals.auth());
+  // const lists = await prisma.bookList.findMany({
+  //   where: { accountId: account.id },
+  //   include: {
+  //     _count: {
+  //       select: {
+  //         books: true,
+  //       },
+  //     },
+  //   },
+  // });
 
-  const lists = await prisma.bookList.findMany({
+  const readingActivityLists = await prisma.readingActivityStatus.findMany({
     where: { accountId: account.id },
-    include: {
-      _count: {
-        select: {
-          books: true,
-        },
-      },
-    },
   });
+  // console.log("Reading Activity Lists:", readingActivityLists);
 
-  const isPublic = (
-    await prisma.account.findUnique({
-      where: {
-        username: session.user?.name,
-      },
-      select: {
-        isPublic: true,
-      },
-    })
-  )?.isPublic;
-
-  if (isPublic == null) {
-    console.warn("isPublic is null but account exists??");
-
-    error(StatusCodes.INTERNAL_SERVER_ERROR);
-  }
+  const isPublic = account.isPublic;
 
   return {
     globalVisibility: isPublic ? "public" : "private",
-    lists,
+    readingActivityLists,
   };
 }

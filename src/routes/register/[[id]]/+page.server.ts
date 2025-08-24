@@ -1,14 +1,21 @@
-import { prisma } from "$lib/server/prisma";
 import {
   redirect,
   type RequestEvent,
   type ServerLoadEvent,
 } from "@sveltejs/kit";
 import { z } from "zod";
+
 import { createLists } from "../../../../prisma/seed-initial";
 import { hashPassword } from "../../../auth";
 
+import { prisma } from "$lib/server/prisma";
+import { StatusCodes } from "http-status-codes";
+
 export async function load({ locals, params }: ServerLoadEvent) {
+  if (await locals.auth()) {
+    return redirect(StatusCodes.SEE_OTHER, "/");
+  }
+
   const id = params.id;
   const serverSettings = await prisma.serverSettings.findFirst({
     include: {
@@ -28,6 +35,9 @@ export async function load({ locals, params }: ServerLoadEvent) {
 
 export const actions = {
   redirectRegistration: async (event: RequestEvent) => {
+    if (await event.locals.auth()) {
+      return redirect(StatusCodes.SEE_OTHER, "/");
+    }
     const formData = Object.fromEntries(await event.request.formData());
     const schema = z.object({
       code: z.string(),
@@ -58,6 +68,10 @@ export const actions = {
     }
   },
   register: async (event: RequestEvent) => {
+    if (await event.locals.auth()) {
+      return redirect(StatusCodes.SEE_OTHER, "/");
+    }
+
     const formData = Object.fromEntries(await event.request.formData());
 
     const schema = z.object({

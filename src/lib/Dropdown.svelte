@@ -1,17 +1,20 @@
 <script lang="ts">
-  import clsx from "clsx";
-  import { clickOutside } from "./clickOutside";
-  import { twMerge } from "tailwind-merge";
-  import Modal from "./Modal.svelte";
-  import { browser } from "$app/environment";
   import { onMount, onDestroy } from "svelte";
+
+  import clsx from "clsx";
+  import { twMerge } from "tailwind-merge";
+
+  import { clickOutside } from "./clickOutside";
+  import Modal from "./Modal.svelte";
+
+  import { browser } from "$app/environment";
 
   export let className: string | undefined = undefined;
   export let buttonClass: string | undefined = undefined;
   export let contentClass: string | undefined = undefined;
-  export let closeOnClick: boolean = true;
+  export let closeOnClick = true;
 
-  export let open: boolean = false;
+  export let open = false;
   let trigger_ref: HTMLElement;
 
   let showModal = false;
@@ -58,7 +61,7 @@
 
   const toggleOpen = () => {
     // trigger_ref.focus();
-    console.log("open");
+    // console.log("open");
 
     open = !open;
     if (open) {
@@ -67,7 +70,7 @@
   };
 
   const click_outside = () => {
-    console.log("clicked outside");
+    // console.log("clicked outside");
     // open = false;
 
     if (!showModal) {
@@ -80,15 +83,13 @@
   class={twMerge("dropdown", className)}
   use:clickOutside
   on:click_outside={click_outside}
-  bind:this={dropdownWrapper}
->
+  bind:this={dropdownWrapper}>
   <slot name="triggerWrapper">
     <button
       class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
       on:click={toggleOpen}
       bind:this={trigger_ref}
-      type="button"
-    >
+      type="button">
       <slot name="triggerContent" />
     </button>
   </slot>
@@ -117,8 +118,7 @@
     on:keydown
     role="button"
     tabindex="0"
-    bind:this={dropdownContentWrapper}
-  >
+    bind:this={dropdownContentWrapper}>
     <slot name="dropdown" />
   </div>
 </div>
@@ -127,8 +127,7 @@
   bind:showModal
   showDividers={false}
   divClassName="!p-0"
-  on:closed={() => (open = false)}
->
+  on:closed={() => (open = false)}>
   <div
     on:keydown
     role="button"
@@ -138,8 +137,7 @@
       if (closeOnClick) {
         open = false;
       }
-    }}
-  >
+    }}>
     <slot name="dropdown" />
   </div>
 </Modal>

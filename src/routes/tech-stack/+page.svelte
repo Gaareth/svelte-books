@@ -5,8 +5,7 @@
 <div>
   <h1
     class="font-extrabold text-5xl my-4 text-transparent bg-clip-text bg-gradient-to-b
-  from-svelte via-purple-500 to-pink-500"
-  >
+  from-svelte via-purple-500 to-pink-500">
     Tech-Stack
   </h1>
   <p class="my-2">What I have used for this project:</p>

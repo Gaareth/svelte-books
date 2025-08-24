@@ -36,11 +36,10 @@
   }}
   on:click|self={() => dialog.close()}
   class={twMerge(
-    "rounded-md border border-blue-100 bg-white dark:bg-slate-700 dark:text-white p-4 shadow-lg sm:p-6 lg:p-8",
+    "rounded-md border border-blue-100 bg-white dark:border-slate-700 dark:bg-slate-700 dark:text-white shadow-lg p-2 lg:p-4",
     className
   )}
-  role="alertdialog"
->
+  role="alertdialog">
   <div on:click|stopPropagation class={divClassName}>
     <div class="flex justify-between item-center gap-3">
       <slot name="header" />
@@ -52,32 +51,23 @@
         dialog.close();
       }}
       title="Close modal"
-      class="!flex items-center absolute top-1 right-1"
-    >
-      <span class="w-[24px] h-[24px] inline-block">
+      class="!flex items-center absolute top-2 right-2">
+      <span class="w-[24px] h-[24px] inline-block hover:text-error">
         <IoMdClose />
       </span>
     </button>
-    <hr class="dark:border-slate-600" hidden={!showDividers} />
 
+    <hr class="dark:border-slate-600" hidden={!showDividers} />
     <slot />
     <hr class="mt-4 dark:border-slate-600" hidden={!showDividers} />
   </div>
 </dialog>
 
 <style>
-  dialog {
-    /* max-width: 62em; */
-    border-radius: 0.2em;
-    border: none;
-    padding: 0;
-  }
   dialog::backdrop {
     background: rgba(0, 0, 0, 0.3);
   }
-  dialog > div {
-    padding: 1em;
-  }
+
   dialog[open] {
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }

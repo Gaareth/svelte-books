@@ -3,6 +3,7 @@
   import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
   // @ts-ignore
   import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
+
   import type {
     settingsApiReloadResult,
     settingsApiCreateResult,
@@ -21,9 +22,9 @@
       <p class="mb-2">Updated {formDiffs.booksUpdated} books</p>
       {#each formDiffs.diffs as diff}
         <div>
-          <a class="hover:underline" href="/book/{diff.bookName}"
-            >{diff.bookName}</a
-          >
+          <a class="hover:underline" href="/book/{diff.bookName}">
+            {diff.bookName}
+          </a>
           -
           {diff.propName}: {diff.oldValue} --> {diff.newValue}
         </div>
@@ -48,16 +49,16 @@
               <span class="w-[20px] inline-block text-red-500">
                 <ErrorIcon />
               </span>
-              <a class="hover:underline" href="/book/{errorBook.book.name}"
-                >{errorBook.book.name}</a
-              >
+              <a class="hover:underline" href="/book/{errorBook.book.name}">
+                {errorBook.book.name}
+              </a>
               -
               {#if errorBook.volumeId !== undefined}
                 <a
                   class="hover:underline"
-                  href="http://books.google.de/books?id={errorBook.volumeId}"
-                  >volumeId: {errorBook.volumeId}</a
-                >
+                  href="http://books.google.de/books?id={errorBook.volumeId}">
+                  volumeId: {errorBook.volumeId}
+                </a>
               {/if}
               -
               <span class="text-red-500 font-bold">
@@ -69,11 +70,11 @@
       {:else}
         <span class="inline-flex gap-1 flex-wrap">
           <span
-            class="text-green-500 dark:text-green-400 inline-flex items-center gap-1"
-          >
+            class="text-green-500 dark:text-green-400 inline-flex items-center gap-1">
             <span class="w-[22px] inline-block">
               <SuccessIcon />
-            </span>Successfully
+            </span>
+            Successfully
           </span>
           updated all {formErrors.updatedBookNames.length}
           entries
@@ -83,9 +84,9 @@
           <ul class="list-disc">
             {#each formErrors.updatedBookNames as name}
               <li class="ml-10">
-                <a class="hover:underline text-base" href="/book/{name}"
-                  >{name}</a
-                >
+                <a class="hover:underline text-base" href="/book/{name}">
+                  {name}
+                </a>
               </li>
             {/each}
           </ul>
@@ -97,9 +98,9 @@
 
 {#if currentStatus !== undefined && currentStatus.msg != "done"}
   <div class="flex flex-col">
-    <div>
+    <div class="flex gap-1">
       <span>{currentStatus.msg}</span>
-      <span>{currentStatus.items}/{currentStatus.max}</span>
+      <span class="ml-auto">{currentStatus.items}/{currentStatus.max}</span>
     </div>
     <progress max={currentStatus.max} value={currentStatus.items} />
   </div>

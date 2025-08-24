@@ -1,22 +1,19 @@
 <script lang="ts">
-  import { goto, invalidateAll } from "$app/navigation";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import { fade, scale } from "svelte/transition";
-  import BookSearch from "../BookSearch.svelte";
+  import { onMount } from "svelte";
+
+  import toast from "svelte-french-toast";
   //@ts-ignore
   import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-  import type { BookFullType, BookListItemType } from "$appTypes";
-  import { createSearchStore, searchHandler } from "$lib/stores/search";
-  import type { Book } from "@prisma/client";
-  import { onDestroy, onMount } from "svelte";
-  import { flip } from "svelte/animate";
-  import type { ItemDeleteEvent } from "./BookListItem.svelte";
-  import BookListItem from "./BookListItem.svelte";
-  import { enhance } from "$app/forms";
-  import { page } from "$app/stores";
-  import toast from "svelte-french-toast";
 
-  export let books: BookListItemType[];
+  import ReadingListItem from "./ReadingListItem.svelte";
+
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { type ReadingListItemType } from "$appTypes";
+
+  export let readingActivities: ReadingListItemType[];
+  export let isAuthorizedToModify = false;
 
   const sentences = [
     "Add a book, mate!",
@@ -38,11 +35,11 @@
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
   <h2 class="flex items-end text-2xl -mb-1">
-    Currently Reading ({books.length})
+    Currently Reading ({readingActivities.length})
   </h2>
 </div>
 
-{#if books.length < 1 && $page.data.session}
+{#if readingActivities.length < 1 && isAuthorizedToModify}
   <p class="text-center text-4xl rotate-90">:(</p>
   <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
     {randomSentence}
@@ -50,38 +47,38 @@
 {/if}
 
 <div class="dark:bg-slate-800 bg-white">
-  {#each books as book (book.id)}
+  {#each readingActivities as entry (entry.id)}
     <form
-      action={`book/${book.name}?/readNow`}
+      action={`api/reading-activity/readNow`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
-          if (result.type === "redirect") {
+          // console.log("result", result);
+
+          //@ts-ignore
+          if (result.success === true) {
             invalidateAll();
             toast.success(`Successfully added book to read`);
           } else {
             toast.error("Failed updating book :(");
           }
         };
-      }}
-    >
-      <input type="hidden" name="id" value={book.id} />
+      }}>
+      <input type="hidden" name="readingActivityId" value={entry.id} />
 
-      <BookListItem {book}>
+      <ReadingListItem {entry} {isAuthorizedToModify}>
         <button
           class="group p-2 !border-0 done-button"
           title="done reading"
           type="submit"
           slot="delete"
-          on:click={() => {}}
-        >
+          on:click={() => {}}>
           <span
-            class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click"
-          >
+            class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
             <IoMdDoneAll alt="check mark" />
           </span>
         </button>
-      </BookListItem>
+      </ReadingListItem>
     </form>
   {/each}
 </div>

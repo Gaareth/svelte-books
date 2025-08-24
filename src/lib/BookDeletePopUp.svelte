@@ -1,8 +1,11 @@
 <script lang="ts">
-  import type { Book } from "@prisma/client";
   import { createEventDispatcher } from "svelte";
+
   import toast from "svelte-french-toast";
+
   import Popup from "./Popup.svelte";
+
+  import type { Book } from "@prisma/client";
 
   export let openModal: boolean;
   export let deletionBook: Book;
@@ -10,7 +13,7 @@
 
   const deleteBook = (event: any) => {
     let res = new Promise((resolve, reject) => {
-      fetch("book/" + encodeURIComponent(deletionBook.name) + "/delete", {
+      fetch("delete", {
         method: "POST",
         body: JSON.stringify({ id: deletionBook.id }),
       }).then((response) => {
@@ -51,5 +54,4 @@
   btn1_msg={"Delete book"}
   btn2_msg={"cancel"}
   type={"Error"}
-  on:primary={deleteBook}
-/>
+  on:primary={deleteBook} />

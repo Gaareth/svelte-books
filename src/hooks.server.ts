@@ -1,12 +1,11 @@
-import { prisma } from "$lib/server/prisma";
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { SvelteKitAuth } from "@auth/sveltekit";
 
+import * as seed from "../prisma/seed-initial";
 import { verifyPassword } from "./auth";
 
 import { building } from "$app/environment";
-
-import * as seed from "../prisma/seed-initial";
+import { prisma } from "$lib/server/prisma";
 
 if (!building) {
   /*  try {
@@ -41,9 +40,13 @@ export const handle = SvelteKitAuth({
       async authorize(credentials, req) {
         if (!credentials.username || !credentials.password) {
           if (import.meta.env.DEV) {
-            let account = await prisma.account.findFirst({
+            const account = await prisma.account.findFirst({
               where: {
-                isAdmin: true,
+                isAdmin:
+                  !credentials.username && !credentials.password
+                    ? true
+                    : undefined,
+                username: credentials.username ?? undefined,
               },
             });
             return {
@@ -65,13 +68,10 @@ export const handle = SvelteKitAuth({
           return null;
         }
 
-        console.log(credentials.password);
-
         const matching = await verifyPassword(
           account,
           credentials.password.toString()
         );
-        console.log(matching);
 
         if (matching) {
           return {

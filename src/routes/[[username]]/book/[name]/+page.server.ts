@@ -1,42 +1,66 @@
+import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
+import { z } from "zod";
+
+import { authorize } from "../../../../auth";
+import { optionalNumericString } from "../../../../schemas";
+import { getBookApiData } from "../../../book/api/api.server";
+
+import type { Actions, RequestEvent } from "./$types";
+
+import { VISIBILITY } from "$appTypes";
 import {
   extractBookApiData,
   extractCategories,
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
-import { z, ZodIssueCode } from "zod";
-import { checkBookAuth } from "../../../../auth";
-import { optionalDatetimeSchema, parseFormObject } from "../../../../schemas";
-import { getBookApiData } from "../../../book/api/api.server";
-import type { Actions, RequestEvent } from "./$types";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
-  const accountId = await checkBookAuth(page.locals, params);
+  const session = await page.locals.auth();
+  // console.log("Session:", session);
+  const { sessionAccount, requestedAccount } = await authorize(
+    session,
+    params.username,
+    (requestedAccount) => requestedAccount?.isPublic
+  );
+
+  const isAuthorizedToModify =
+    (sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin) ??
+    false;
 
   const edit = page.url.searchParams.get("edit");
 
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
-      accountId,
+      accountId: requestedAccount?.id,
     },
     include: {
-      rating: true,
-      dateStarted: true,
-      dateFinished: true,
       bookList: true,
       bookSeries: {
         include: {
           books: {
             include: {
-              rating: true,
-              dateStarted: true,
-              dateFinished: true,
               bookApiData: {
                 include: {
                   categories: true,
+                },
+              },
+              readingActivity: {
+                where: {
+                  status: {
+                    visibility: isAuthorizedToModify
+                      ? undefined
+                      : VISIBILITY.PUBLIC,
+                  },
+                },
+                include: {
+                  dateStarted: true,
+                  dateFinished: true,
+                  rating: true,
+                  storyGraphs: true,
+                  book: true,
                 },
               },
             },
@@ -48,13 +72,27 @@ export async function load(page: ServerLoadEvent) {
           categories: true,
         },
       },
-      storyGraphs: true,
+      readingActivity: {
+        where: {
+          status: {
+            visibility: isAuthorizedToModify ? undefined : VISIBILITY.PUBLIC,
+          },
+        },
+        include: {
+          dateStarted: true,
+          dateFinished: true,
+          rating: true,
+          storyGraphs: true,
+          book: true,
+          status: true,
+        },
+      },
     },
   });
 
   const bookLists = await prisma.bookList.findMany({
     where: {
-      accountId,
+      accountId: requestedAccount.id,
     },
   });
 
@@ -62,55 +100,38 @@ export async function load(page: ServerLoadEvent) {
     error(404, { message: "Not found" });
   }
 
-  const books = (await loadBooks({ accountId }, "Read")).books;
+  const books = await loadBooks({ accountId: requestedAccount.id }, undefined);
 
   return {
     book,
     books,
     bookLists,
     edit,
+    headerConfig: {
+      transparent: true,
+      wrapperClass: "lg:max-w-6xl",
+    },
+    isAuthorizedToModify,
   };
 }
-
-const parseJsonPreprocessor = (value: any, ctx: z.RefinementCtx) => {
-  if (typeof value === "string") {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      ctx.addIssue({
-        code: ZodIssueCode.custom,
-        message: (e as Error).message,
-      });
-    }
-  }
-
-  return value;
-};
-
-const storyGraphSchema = z.object({
-  title: z.string(),
-  labels: z.preprocess(parseJsonPreprocessor, z.string().array()),
-  details: z.preprocess(parseJsonPreprocessor, z.string().array()),
-  data: z.preprocess(parseJsonPreprocessor, z.number().nullable().array()),
-});
 
 //TODO: reuse
 const saveSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
-  comment: z.string().trim().optional(),
-  stars: z.coerce.number().min(0).max(5).optional(),
-  listName: z.string(),
+  listName: z.string().optional(),
   bookSeries: z.string().array(),
   bookSeriesId: z
     .preprocess((s) => (s != "" ? Number(s) : undefined), z.number().optional())
     .optional(),
   apiVolumeId: z.string().optional(),
-  wordsPerPage: z.coerce.number().nonnegative().optional(),
-  dateStarted: optionalDatetimeSchema.nullish(),
-  dateFinished: optionalDatetimeSchema.nullish(),
-  graphs: storyGraphSchema.nullish(),
+  wordsPerPage: optionalNumericString(
+    z.coerce.number().nonnegative().optional()
+  ).optional(),
+
+  description: z.string().trim().optional(),
+  coverImage: z.string().trim().nullish(),
 });
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
@@ -202,84 +223,22 @@ async function updateBookSeries(
 }
 
 export const actions = {
-  readNow: async (event: RequestEvent) => {
-    const accountId = await checkBookAuth(event.locals, event.params);
-    const f = await event.request.formData();
-    const readNowSchema = z.object({
-      id: z.string(),
-    });
-    const result = readNowSchema.safeParse(Object.fromEntries(f));
-    if (!result.success) {
-      console.error("Validation failed:", result.error);
-      return fail(400, {
-        data: Object.fromEntries(f),
-        errors: result.error.flatten().fieldErrors,
-      });
-    }
-
-    const { id } = result.data;
-    const now = new Date();
-    const book = await prisma.book.update({
-      where: { id },
-      data: {
-        dateFinished: {
-          create: {
-            day: now.getDate(),
-            month: now.getMonth() + 1,
-            year: now.getFullYear(),
-            hour: now.getHours(),
-            minute: now.getMinutes(),
-            // timezoneOffset: now.getTimezoneOffset(),
-          },
-        },
-
-        bookList: {
-          connect: {
-            name_accountId: {
-              name: "Read",
-              accountId,
-            },
-          },
-        },
-      },
-    });
-
-    redirect(302, "/book/" + encodeURIComponent(book.name));
-  },
-
   save: async (event: RequestEvent) => {
-    const accountId = await checkBookAuth(event.locals, event.params);
+    const account = (
+      await authorize(await event.locals.auth(), event.params.username)
+    ).requestedAccount;
+    const accountId = account.id;
 
     const f = await event.request.formData();
-    console.log(f);
+    // console.log(f);
 
     const formData = Object.fromEntries(f);
     // console.log("1", formData);
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["dateStarted"] = parseFormObject(formData, "dateStarted");
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    formData["dateFinished"] = parseFormObject(formData, "dateFinished");
-
-    // only add graphs if they are present
-    if (f.has("graphs")) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      formData["graphs"] = parseFormObject(formData, "graphs");
-    }
-
-    if (formData.year == "") {
-      delete formData.year;
-    }
 
     const bookSeries = f.getAll("books[]");
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["bookSeries"] = bookSeries;
-    console.log("to be checked formData: ", formData);
 
     const result = saveSchema.safeParse(formData);
 
@@ -289,17 +248,13 @@ export const actions = {
         id,
         name,
         author,
-        comment,
-        stars,
-
+        description,
         listName,
         bookSeries,
         bookSeriesId,
         apiVolumeId,
         wordsPerPage,
-        dateStarted,
-        dateFinished,
-        graphs,
+        coverImage,
       } = result.data;
 
       // don't update if only the book itself is in the series
@@ -323,11 +278,11 @@ export const actions = {
       if (apiVolumeId !== undefined) {
         apiData = await getBookApiData(apiVolumeId);
         const extractedData = extractBookApiData(apiData);
-        console.log(extractedData);
+        // console.log(extractedData);
 
         const categories = extractCategories(apiData);
 
-        console.log(categories);
+        // console.log(categories);
 
         for (const category_str of categories) {
           try {
@@ -336,7 +291,7 @@ export const actions = {
                 name: category_str,
               },
             });
-            console.log(category);
+            // console.log(category);
           } catch (e) {
             // ignore
           }
@@ -362,101 +317,30 @@ export const actions = {
         });
       }
 
-      // only delete if exist
-      if (dateFinished == null || dateStarted == null) {
-        const currentBook = await prisma.book.findUnique({ where: { id } });
-        console.log("cb", currentBook);
-
-        if (currentBook?.dateStartedId != null && dateStarted == null) {
-          await prisma.book.update({
-            where: { id },
-            data: {
-              dateStarted: { delete: true },
-            },
-          });
-        }
-
-        if (currentBook?.dateFinishedId != null && dateFinished == null) {
-          await prisma.book.update({
-            where: { id },
-            data: {
-              dateFinished: { delete: true },
-            },
-          });
-        }
-      }
-
       const book = await prisma.book.update({
-        where: { id },
+        where: { id, accountId },
         data: {
           name,
           author,
-          dateStarted: dateStarted
-            ? {
-                upsert: {
-                  update: dateStarted,
-                  create: dateStarted,
-                },
-              }
-            : undefined,
-          dateFinished: dateFinished
-            ? {
-                upsert: {
-                  update: dateFinished,
-                  create: dateFinished,
-                },
-              }
-            : undefined,
-          rating:
-            stars !== undefined
-              ? {
-                  upsert: {
-                    update: { stars: stars, comment },
-                    create: { stars: stars, comment },
-                  },
-                }
-              : undefined,
-          bookList: {
-            connect: {
-              name_accountId: {
-                name: listName,
-                accountId,
-              },
-            },
-          },
+          description,
           bookApiData:
             apiData?.id !== undefined ? { connect: { id: apiData.id } } : {},
           wordsPerPage,
-          storyGraphs: {
-            deleteMany: {}, // delete all
-          },
+          coverImage: coverImage,
         },
       });
 
-      // todo: extend for multiple
-      if (graphs != null) {
-        const g = await prisma.graph.create({
-          data: {
-            data: JSON.stringify(graphs.data),
-            labels: JSON.stringify(graphs.labels),
-            details: JSON.stringify(graphs.details),
-            title: graphs.title,
-            bookId: book.id,
-          },
-        });
-        // console.log(graphs);
+      // console.log("nnew book:", book);
 
-        // console.log("graph", g);
-      }
-
-      console.log("nnew book:", book);
-
-      redirect(302, "/book/" + encodeURIComponent(book.name));
+      redirect(
+        302,
+        "/" + account.username + "/book/" + encodeURIComponent(book.name)
+      );
     }
 
     const { fieldErrors: errors } = result.error.flatten();
-    console.log("Errors:", errors);
-    console.log("Issues:", result.error.issues);
+    // console.log("Errors:", errors);
+    // console.log("Issues:", result.error.issues);
 
     return fail(400, {
       data: formData,

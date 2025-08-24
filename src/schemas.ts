@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, ZodIssueCode } from "zod";
 
 export const numericString = (schema: z.ZodTypeAny) =>
   z.preprocess((a) => {
@@ -15,18 +15,66 @@ export const numericString = (schema: z.ZodTypeAny) =>
     }
   }, schema) as z.ZodEffects<z.ZodTypeAny, number, number>;
 
-export const optionalDatetimeSchema = z
-  .object({
-    day: numericString(z.number().int().min(0).max(31).nullish()),
-    month: numericString(z.number().int().min(0).max(12).nullish()),
-    year: numericString(z.number().int().min(0).nullish()),
+export const optionalNumericString = (schema: z.ZodTypeAny) =>
+  z.preprocess((a) => {
+    if (typeof a === "string") {
+      if (a === "") return undefined;
+      const n = parseInt(a, 10);
+      if (isNaN(n)) {
+        return undefined;
+      }
+      return n;
+    } else if (typeof a === "number") {
+      return a;
+    } else {
+      return undefined;
+    }
+  }, schema) as z.ZodEffects<z.ZodTypeAny, number, number>;
 
-    hour: numericString(z.number().int().min(0).max(23).nullish()),
-    minute: numericString(z.number().int().min(0).max(59).nullish()),
+export const parseJsonPreprocessor = (value: any, ctx: z.RefinementCtx) => {
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: (e as Error).message,
+      });
+    }
+  }
 
-    timezone: z.coerce.number().min(0).nullish(), // Optional timezoneoffset in minutes
-  })
-  .transform((data) => (data.year === null ? null : data));
+  return value;
+};
+
+export const storyGraphSchema = z.object({
+  title: z.string(),
+  labels: z.preprocess(parseJsonPreprocessor, z.string().array()),
+  details: z.preprocess(parseJsonPreprocessor, z.string().array()),
+  data: z.preprocess(parseJsonPreprocessor, z.number().nullable().array()),
+});
+
+export const DatetimeSchema = z.object({
+  day: numericString(z.number().int().min(0).max(31).nullish()),
+  month: numericString(z.number().int().min(0).max(12).nullish()),
+  year: numericString(z.number().int().min(0).nullish()),
+
+  hour: numericString(z.number().int().min(0).max(23).nullish()),
+  minute: numericString(z.number().int().min(0).max(59).nullish()),
+
+  timezone: z.coerce.number().min(0).nullish(), // Optional timezoneoffset in minutes
+});
+
+export const requiredDatetimeSchema = DatetimeSchema.refine(
+  (data) => data.year !== null,
+  {
+    message: "Year is required",
+    path: ["year"],
+  }
+);
+
+export const optionalDatetimeSchema = DatetimeSchema.transform((data) =>
+  data.year === null ? null : data
+);
 
 type NestedObject = { [key: string]: any };
 // date[time][hour] => {date: {time: {hour: value}}}
@@ -95,7 +143,7 @@ export function parseFormObject(
     const match = key.match(regexObject);
 
     if (match && attribute == match[1]) {
-      console.log(key, value);
+      // console.log(key, value);
 
       const matches = [...key.matchAll(regexKeys)].map((m) => m[1]);
 
@@ -125,7 +173,7 @@ export function parseFormArray(
     const match = key.match(regexObject);
 
     if (match && attribute == match[1]) {
-      console.log(match);
+      // console.log(match);
 
       if (match[2].length == 0) {
         values.push(value);

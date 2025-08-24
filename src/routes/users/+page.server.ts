@@ -1,6 +1,9 @@
-import { prisma } from "$lib/server/prisma";
-import type { ServerLoadEvent } from "@sveltejs/kit";
 import { getAccountByUsername } from "../../auth";
+
+import type { ServerLoadEvent } from "@sveltejs/kit";
+
+import { VISIBILITY } from "$appTypes";
+import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.auth();
@@ -13,7 +16,7 @@ export async function load({ locals }: ServerLoadEvent) {
 
   const accounts = await prisma.account.findMany({
     where: {
-      isPublic: true,
+      isPublic: account?.isAdmin ? undefined : true,
     },
     include: {
       books: {
@@ -21,7 +24,7 @@ export async function load({ locals }: ServerLoadEvent) {
           bookList: true,
         },
       },
-      bookList: true,
+      readingActivityStatus: true,
     },
   });
 
@@ -29,8 +32,8 @@ export async function load({ locals }: ServerLoadEvent) {
     return {
       username: a.username,
       numBooks: a.books.length,
-      lists: a.bookList.filter(
-        (b) => b.visibility == "public" || account?.isAdmin
+      readingActivityLists: a.readingActivityStatus.filter(
+        (r) => r.visibility == VISIBILITY.PUBLIC || account?.isAdmin
       ),
     };
   });

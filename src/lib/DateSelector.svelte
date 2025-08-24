@@ -19,10 +19,7 @@
     timezoneOffset: null,
   };
 
-  export const formatOptionalDate = (
-    d: OptionalDate,
-    includeTime: boolean = true
-  ) => {
+  export const formatOptionalDate = (d: OptionalDate, includeTime = true) => {
     if (d == null || d.year == null) return "?";
 
     const placeholder = "??";
@@ -46,10 +43,7 @@
     return `${hour}:${minute}`;
   };
 
-  export const formatShort = (
-    d: OptionalDate | null,
-    includeTime: boolean = false
-  ) => {
+  export const formatShort = (d: OptionalDate | null, includeTime = false) => {
     if (d == null || d.year == null) return "?";
 
     const mo = d.month?.toString().padStart(2, "0");
@@ -74,11 +68,12 @@
 
 <script lang="ts">
   import { twMerge } from "tailwind-merge";
+  //@ts-ignore
 
+  import ClearButton from "./ClearButton.svelte";
   import Dropdown from "./Dropdown.svelte";
   import ToggleGroup from "./ToggleGroup.svelte";
-  import { dateToYYYY_MM_DD, isValidDate } from "./utils";
-  import { onMount } from "svelte";
+  import { isValidDate } from "./utils";
 
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;
@@ -86,19 +81,23 @@
   export let className: string | undefined = undefined;
   export let inputClassName: string | undefined = undefined;
 
+  export let clearButton = false;
+
   export let datetime: OptionalDate;
+
+  const NULL_DATETIME = {
+    year: undefined,
+    month: null,
+    day: null,
+
+    hour: null,
+    minute: null,
+    timezoneOffset: null,
+  };
 
   $: {
     if (datetime == null) {
-      datetime = {
-        year: undefined,
-        month: null,
-        day: null,
-
-        hour: null,
-        minute: null,
-        timezoneOffset: null,
-      };
+      datetime = NULL_DATETIME;
     }
   }
 
@@ -241,21 +240,36 @@
   {className}
   contentClass="!border-0 !p-0 !bg-transparent"
   closeOnClick={false}
-  bind:open={showPopover}
->
-  <input
-    class={twMerge(inputClassName)}
-    value={dateString}
-    on:click={togglePopover}
-    slot="triggerWrapper"
-    {id}
-    readonly
-  />
+  bind:open={showPopover}>
+  <div slot="triggerWrapper" class="flex gap-2">
+    <input
+      class={twMerge(inputClassName)}
+      value={dateString}
+      on:click={togglePopover}
+      {id}
+      readonly />
+    {#if clearButton}
+      <ClearButton
+        value={datetime}
+        clearSelection={() => {
+          datetime = {
+            year: undefined,
+            month: null,
+            day: null,
+
+            hour: null,
+            minute: null,
+            timezoneOffset: null,
+          };
+          showPopover = false;
+        }}
+        isValueNull={datetime == null || datetime.year == undefined} />
+    {/if}
+  </div>
 
   <div
     class=" max-w-96 w-auto p-3 border rounded-md dark:border-slate-500 dark:bg-slate-700 flex flex-col bg-white"
-    slot="dropdown"
-  >
+    slot="dropdown">
     <p class="text-xl mb-2 sm:text-lg sm:top-0 sm:absolute">Select Datetime</p>
     <div class="flex justify-center sm:mt-5">
       <ToggleGroup
@@ -267,10 +281,9 @@
         endClass="rounded-e-md"
         bind:selectedOption
         on:select={(ev) => {
-          console.log(ev.detail);
+          // console.log(ev.detail);
           onQuickselect(ev.detail);
-        }}
-      />
+        }} />
     </div>
 
     <!-- <div class="border w-96 h-20"></div> -->
@@ -279,28 +292,26 @@
       <div class="col-span-2">
         <label for="year">
           Year
-          <span class="text-red-400" title="required">*</span></label
-        >
+          <span class="text-red-400" title="required">*</span>
+        </label>
         <input
           type="number"
           id="year"
           bind:value={datetime.year}
           placeholder="YYYY"
           class="w-full btn-generic-color-2"
-          name={`${name}[year]`}
-        />
+          name={`${name}[year]`} />
       </div>
 
-      <div class="flex gap-1">
+      <div class="grid grid-cols-2 gap-1">
         <!-- Month (Optional) -->
         <div>
           <label for="month">Month</label>
           <select
             id="month"
             bind:value={datetime.month}
-            class="btn-generic-color-2"
-            name={`${name}[month]`}
-          >
+            class="btn-generic-color-2 w-full"
+            name={`${name}[month]`}>
             <option value={null}>Select Month</option>
             {#each months as { value, label }}
               <option {value}>{label}</option>
@@ -314,9 +325,8 @@
           <select
             id="day"
             bind:value={datetime.day}
-            class="btn-generic-color-2"
-            name={`${name}[day]`}
-          >
+            class="btn-generic-color-2 w-full"
+            name={`${name}[day]`}>
             <option value={null}>Select Day</option>
             {#each days as dayNumber}
               <option value={dayNumber}>{dayNumber}</option>
@@ -339,8 +349,7 @@
                 timeString = undefined;
                 datetime.hour = null;
                 datetime.minute = null;
-              }}
-            >
+              }}>
               clear
             </button>
             <button
@@ -352,8 +361,7 @@
                   now.getHours().toString().padStart(2, "0") +
                   ":" +
                   now.getMinutes().toString().padStart(2, "0");
-              }}
-            >
+              }}>
               now
             </button>
           </div>
@@ -366,8 +374,7 @@
           type="time"
           id="minute"
           class="w-full btn-generic-color-2"
-          bind:value={timeString}
-        />
+          bind:value={timeString} />
       </div>
       <!-- 
   <label class="mt-5">

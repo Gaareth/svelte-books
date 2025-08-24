@@ -1,35 +1,35 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
-  import { fade, scale } from "svelte/transition";
-  import BookSearch from "../BookSearch.svelte";
-
-  import type { BookFullType, BookListItemType } from "$appTypes";
-  import { createSearchStore, searchHandler } from "$lib/stores/search";
-  import type { Book } from "@prisma/client";
   import { onDestroy } from "svelte";
-  import { flip } from "svelte/animate";
-  import type { ItemDeleteEvent } from "./BookListItem.svelte";
-  import BookListItem from "./BookListItem.svelte";
+
+  import { fade, scale } from "svelte/transition";
 
   //@ts-ignore
   import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
 
+  import BookSearch from "../BookSearch.svelte";
   import Filtering from "./Filtering.svelte";
+  import ReadingListItem from "./ReadingListItem.svelte";
+
+  import type { ReadingListItemType } from "$appTypes";
+  import type { ItemDeleteEvent } from "./ReadingListItem.svelte";
+
+  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
-  import Dropdown from "$lib/Dropdown.svelte";
+  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
+  import { createSearchStore, searchHandler } from "$lib/stores/search";
 
-  export let books: BookListItemType[];
+  export let entries: ReadingListItemType[];
   export let showSearch = true;
+  export let isAuthorizedToModify = false;
 
-  const searchStore = createSearchStore(books);
+  const searchStore = createSearchStore(entries);
   let added_book = false;
 
   let languages_used: string[];
   let category_names: string[] = [
     ...new Set(
-      books
-        .map((b) => b.bookApiData?.categories.map((c) => c.name))
+      entries
+        .map((b) => b.book.bookApiData?.categories.map((c) => c.name))
         .flat()
         .filter((n) => n != null)
     ),
@@ -37,9 +37,9 @@
 
   $: {
     added_book = true;
-    $searchStore.data = books;
-    languages_used = books.reduce((result, b) => {
-      let lang = b.bookApiData?.language;
+    $searchStore.data = entries;
+    languages_used = entries.reduce((result, b) => {
+      let lang = b.book.bookApiData?.language;
       if (lang !== undefined && !result.includes(lang)) {
         return result.concat(lang);
       }
@@ -54,7 +54,7 @@
     unsubscribe();
   });
 
-  let deletionBook: Book;
+  let deletionEntry: ReadingListItemType;
   let openModal = false;
 
   let showOptions = false;
@@ -77,21 +77,23 @@
 
   const openPopup = (event: CustomEvent<ItemDeleteEvent>) => {
     openModal = true;
-    deletionBook = event.detail.book;
+    deletionEntry = event.detail.entry;
   };
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
-  <h2 class="flex items-end text-2xl -mb-1 {showOptions ? 'invisible' : ''}">
+  <h2 class="flex items-end text-2xl -mb-1">
     Books
+    {#if !showOptions}
+      ({entries.length})
+    {/if}
   </h2>
   <div class="flex gap-1 sm:gap-2">
-    {#if books.length > 0 && showSearch}
+    {#if entries.length > 0 && showSearch}
       <BookSearch bind:search_term={$searchStore.search} />
       <button
         class="btn-generic-icon ml-auto"
-        on:click={() => (showOptions = !showOptions)}
-      >
+        on:click={() => (showOptions = !showOptions)}>
         <span class="w-5 block">
           <MoreIcon />
         </span>
@@ -119,29 +121,33 @@
   <Filtering {searchStore} {languages_used} {category_names} />
 </div>
 
-<h2 class="flex items-end text-2xl -mb-1 {!showOptions ? 'hidden' : ''}">
-  Books ({books_displayed.length})
+<h2
+  class="flex items-end text-xl -mb-1 {!showOptions
+    ? 'hidden'
+    : ''} text-secondary">
+  {books_displayed.length} results
 </h2>
 
-{#if books.length <= 0}
+{#if entries.length <= 0}
   <p>No books added at the moment :(</p>
 {:else if $searchStore.filtered.length <= 0}
   <p>No books found matching your search :(</p>
 {/if}
 
 <div class="dark:bg-slate-800 bg-white">
-  {#each books_displayed as book (book.id)}
+  {#each books_displayed as entry (entry.id)}
     <div>
-      <BookListItem {book} on:delete={openPopup} />
+      <ReadingListItem {entry} on:delete={openPopup} {isAuthorizedToModify} />
     </div>
   {/each}
 </div>
 
-<BookDeletePopUp
-  {deletionBook}
-  bind:openModal
-  on:success={() => {
-    openModal = false;
-    invalidateAll();
-  }}
-/>
+{#if deletionEntry}
+  <ReadingActivityDeletePopUp
+    {deletionEntry}
+    bind:openModal
+    on:success={() => {
+      openModal = false;
+      invalidateAll();
+    }} />
+{/if}

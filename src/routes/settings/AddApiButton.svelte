@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import { onMount } from "svelte";
+
   import toast from "svelte-french-toast";
 
   // @ts-ignore
   import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
+
   import type { SSE_EVENT } from "../book/api/update_all/sse";
+
+  import { enhance } from "$app/forms";
+  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
 
   let loading = false;
   let evtSource: EventSource;
@@ -80,8 +83,7 @@
       // `result` is an `ActionResult` object
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
     };
-  }}
->
+  }}>
   <div>
     <label class="flex items-center gap-2">
       Connect all:
@@ -92,8 +94,7 @@
   <button
     type="submit"
     class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit"
-    disabled={loading}
-  >
+    disabled={loading}>
     {#if loading}
       <LoadingSpinner />
       loading..

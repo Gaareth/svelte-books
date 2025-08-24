@@ -7,7 +7,7 @@
   export let displayName: string | undefined = name;
   // export let type: string = "text"
   export let error: string | undefined = undefined;
-  export let inputClass: string = "";
+  export let inputClass = "";
 </script>
 
 <label for={name} class="capitalize">
@@ -19,8 +19,7 @@
     {name}
     class={twMerge("input w-full", error ? "input-error" : "", inputClass)}
     {...$$restProps}
-    bind:value
-  />
+    bind:value />
 
   {#if error}
     <span class="label-text-alt text-error">{error}</span>

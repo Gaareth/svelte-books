@@ -1,20 +1,6 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
-  import type {
-    BookApiDataCategories,
-    BookFullType,
-    BookIncludeCategory,
-  } from "$appTypes";
-  import {
-    dateToYYYY_MM_DD,
-    getBookReadDate,
-    optionalToDate,
-    sortBooksDefault,
-  } from "$lib/utils";
   import { onMount } from "svelte";
-  import { MAX_RATING } from "../../constants";
-  import SortOrder from "./SortOrder.svelte";
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
@@ -25,12 +11,27 @@
   import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
   //@ts-ignore
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
+
   import EqRelation from "./EqRelation.svelte";
+  import SortOrder from "./SortOrder.svelte";
+  import { MAX_RATING } from "../../constants";
+
+  import type { BookFullType, ReadingListItemType } from "$appTypes";
+
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { createSearchStore } from "$lib/stores/search";
+  import {
+    dateToYYYY_MM_DD,
+    optionalToDate,
+    sortReadingActivity,
+  } from "$lib/utils";
 
   let books_displayed: BookFullType[];
   export let languages_used: string[];
   export let category_names: string[]; // not reactive
-  export let searchStore;
+
+  export let searchStore: ReturnType<typeof createSearchStore<any>>;
 
   let allowed_categories_filter: string[] | undefined;
   let rating_filter: number | undefined;
@@ -108,27 +109,27 @@
     //   (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
     // );
 
-    $searchStore!.sort = (a: BookFullType, b: BookFullType) =>
+    $searchStore!.sort = (a: ReadingListItemType, b: ReadingListItemType) =>
       cmpBooks(a, b) * (sortingReversed ? -1 : 1);
   };
 
-  const cmpBooks = (b1: BookFullType, b2: BookFullType) => {
+  const cmpBooks = (b1: ReadingListItemType, b2: ReadingListItemType) => {
     switch (selectedSort) {
       case "date_created":
         return b1.createdAt.getTime() - b2.createdAt.getTime();
 
       case "author":
-        return b1.author.localeCompare(b2.author);
+        return b1.book.author.localeCompare(b2.book.author);
 
       case "title":
-        return b1.name.localeCompare(b2.name);
+        return b1.book.name.localeCompare(b2.book.name);
 
       case "rating":
         return (b1.rating?.stars ?? 0) - (b2.rating?.stars ?? 0);
 
       case "date_read":
       default:
-        return sortBooksDefault(b1, b2) * -1;
+        return sortReadingActivity(b1, b2) * -1;
     }
   };
 
@@ -136,11 +137,11 @@
   const filter = () => {
     // filter functions
 
-    let f_rating = (b: BookFullType) =>
+    let f_rating = (b: ReadingListItemType) =>
       rating_filter === undefined ||
       Math.floor(b.rating?.stars ?? 0) == rating_filter;
 
-    let f_start = (b: BookFullType) => {
+    let f_start = (b: ReadingListItemType) => {
       const startDate =
         optionalToDate(b.dateStarted ?? b.dateFinished) ?? b.createdAt;
 
@@ -150,7 +151,7 @@
       );
     };
 
-    let f_end = (b: BookFullType) => {
+    let f_end = (b: ReadingListItemType) => {
       const endDate =
         optionalToDate(b.dateFinished ?? b.dateStarted) ?? b.createdAt;
       return (
@@ -158,17 +159,17 @@
       );
     };
 
-    let f_category = (b: BookFullType) =>
+    let f_category = (b: ReadingListItemType) =>
       allowed_categories_filter === undefined ||
       allowed_categories_filter.length == 0 ||
-      b.bookApiData?.categories.find(({ name: c }) =>
+      !!b.book.bookApiData?.categories.find(({ name: c }) =>
         allowed_categories_filter!.includes(c)
       );
 
-    let f_lang = (b: BookFullType) =>
+    let f_lang = (b: ReadingListItemType) =>
       lang_filter === undefined ||
       lang_filter == "all" ||
-      b.bookApiData?.language == lang_filter;
+      b.book.bookApiData?.language == lang_filter;
 
     let params = $page.url.searchParams;
     if (lang_filter !== undefined) {
@@ -200,7 +201,7 @@
       noScroll: true,
     });
 
-    $searchStore!.filter = (b: BookFullType) =>
+    $searchStore!.filter = (b: ReadingListItemType) =>
       f_rating(b) && f_lang(b) && f_category(b) && f_start(b) && f_end(b);
   };
 
@@ -222,7 +223,7 @@
     if (params.get("order")) {
       new_params.set("order", params.get("order")!);
     }
-    console.log(new_params);
+    // console.log(new_params);
 
     goto("?" + new_params.toString(), {
       noScroll: true,
@@ -284,8 +285,7 @@
   <div class="grid grid-cols-1 gap-6">
     <details
       class="flex flex-col"
-      open={!!params.get("order") || !!params.get("sort")}
-    >
+      open={!!params.get("order") || !!params.get("sort")}>
       <summary class="text-2xl">
         <div class="inline-flex items-center gap-2">
           Sorting
@@ -303,8 +303,7 @@
           class="default-border border-red-600 border"
           bind:value={selectedSort}
           on:change={sortBooks}
-          aria-label="Sort by"
-        >
+          aria-label="Sort by">
           <option value="date_read">Sort by date</option>
           <option value="date_created">Sort by date created</option>
           <option value="title">Sort by title</option>
@@ -330,8 +329,9 @@
             Rating ({rating_filter} / {MAX_RATING})
             <button
               class="btn-generic px-2 py-0"
-              on:click={() => (rating_filter = undefined)}>clear</button
-            >
+              on:click={() => (rating_filter = undefined)}>
+              clear
+            </button>
           </div>
           <div class="my-2" hidden={true}>
             <!-- TODO -->
@@ -342,8 +342,7 @@
             min="0"
             max={MAX_RATING}
             bind:value={rating_filter}
-            aria-labelledby="rating-label"
-          />
+            aria-labelledby="rating-label" />
         </label>
 
         <label class="flex flex-col">
@@ -368,8 +367,7 @@
             id="categories"
             name="categories"
             class="input dark:bg-slate-600 dark:border-slate-500 my-2"
-            className="!h-full"
-          />
+            className="!h-full" />
         </label>
 
         <label class="flex flex-col">
@@ -378,8 +376,7 @@
             type="date"
             class="default-border"
             value={start_filter && dateToYYYY_MM_DD(start_filter)}
-            on:change={(e) => (start_filter = parseDateInput(e))}
-          />
+            on:change={(e) => (start_filter = parseDateInput(e))} />
         </label>
 
         <label class="flex flex-col">
@@ -388,8 +385,7 @@
             type="date"
             class="default-border"
             value={end_filter && dateToYYYY_MM_DD(end_filter)}
-            on:change={(e) => (end_filter = parseDateInput(e))}
-          />
+            on:change={(e) => (end_filter = parseDateInput(e))} />
         </label>
 
         <div class="flex justify-center gap-2">
@@ -410,14 +406,12 @@
       <div class="w-full md:w-fit flex gap-2 self-end mt-2">
         <button
           class="btn-secondary-black block my-3 px-8 text-center w-full md:w-fit"
-          on:click={resetFilter}
-        >
+          on:click={resetFilter}>
           Reset
         </button>
         <button
           class="btn-primary-black block my-3 px-8 text-center w-full md:w-fit"
-          on:click={filter}
-        >
+          on:click={filter}>
           Filter
         </button>
       </div>

@@ -39,8 +39,14 @@ export type BookFullType = Prisma.BookGetPayload<{
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
+export type ReadingActivityWithDates = Prisma.ReadingActivityGetPayload<{
+  include: { dateFinished: true; dateStarted: true };
+}>;
+
 export type BookDate = Prisma.BookGetPayload<{
-  include: { dateStarted: true; dateFinished: true };
+  include: {
+    readingStatus: { include: { dateStarted: true; dateFinished: true } };
+  };
 }>;
 
 // export type BookFull = BookRating &
@@ -48,14 +54,41 @@ export type BookDate = Prisma.BookGetPayload<{
 
 export type BookListItemType = Prisma.BookGetPayload<{
   include: {
-    dateStarted: true;
-    dateFinished: true;
-    rating: true;
     bookApiData: {
       include: {
         categories: true;
       };
     };
+  };
+}>;
+
+export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
+  include: {
+    rating: true;
+    status: true;
+    book: {
+      include: {
+        bookApiData: {
+          include: {
+            categories: true;
+          };
+        };
+      };
+    };
+    dateStarted: true;
+    dateFinished: true;
+    account: true;
+  };
+}>;
+
+export type ReviewListItemType = Prisma.ReadingActivityGetPayload<{
+  include: {
+    rating: true;
+    dateStarted: true;
+    dateFinished: true;
+    storyGraphs: true;
+    book: true;
+    status: true;
   };
 }>;
 
@@ -102,12 +135,25 @@ export type queriedBook = {
   };
 };
 
+export const QUERIED_BOOK_FULL_FIELDS =
+  "id,volumeInfo(title,subtitle,authors,description,publishedDate,publisher,industryIdentifiers,imageLinks,pageCount,printedPageCount,categories,language)";
+
+export type ImageLinksType = {
+  smallThumbnail: string;
+  thumbnail: string;
+  small?: string;
+  medium?: string;
+  large?: string;
+  extraLarge?: string;
+};
+
 export type queriedBookFull = {
   id: string;
   volumeInfo: {
     title: string;
     subtitle: string | undefined;
     authors: string[];
+    description: string | undefined;
     publishedDate: string | undefined;
     publisher: string | undefined;
     industryIdentifiers:
@@ -116,7 +162,7 @@ export type queriedBookFull = {
           identifier: string | undefined;
         }[]
       | undefined;
-    imageLinks: { smallThumbnail: string; thumbnail: string } | undefined;
+    imageLinks: ImageLinksType | undefined;
     pageCount: number | undefined;
     printedPageCount: number | undefined;
     categories: string[] | undefined;
@@ -126,4 +172,30 @@ export type queriedBookFull = {
 
 export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
 export type DEFAULT_LIST = (typeof DEFAULT_LISTS)[number];
+
+export const READING_STATUS = {
+  TO_READ: "to read",
+  READING: "reading",
+  FINISHED: "finished",
+  DID_NOT_FINISH: "did not finish",
+  PAUSED: "paused",
+} as const;
+export type READING_STATUS =
+  (typeof READING_STATUS)[keyof typeof READING_STATUS];
+
+export const READING_STATUS_VALUES = Object.values(READING_STATUS) as Array<
+  (typeof READING_STATUS)[keyof typeof READING_STATUS]
+>;
+// Ensure READING_STATUS_VALUES is a tuple for Zod enum
+export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
+  string,
+  ...string[]
+];
+
+export const VISIBILITY = {
+  PRIVATE: "private",
+  PUBLIC: "public",
+  UNLISTED: "unlisted",
+} as const;
+
 export {};

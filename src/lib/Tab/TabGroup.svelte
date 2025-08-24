@@ -19,8 +19,10 @@
 <script lang="ts">
   // https://svelte.dev/playground/8e68120858e5322272dc9136c4bb79cc
   import { setContext, onDestroy } from "svelte";
+
   import { writable } from "svelte/store";
   import { twMerge } from "tailwind-merge";
+
   import Tab from "./Tab.svelte";
 
   const tabs: any[] = [];
@@ -35,7 +37,7 @@
   export let btnClass: string | undefined = undefined;
   export let btnSelectedClass: string | undefined = undefined;
   export let sliderClass: string | undefined = undefined;
-  export let animate: boolean = true;
+  export let animate = true;
 
   let offsetLeft = writable(0);
   let tabWidth = writable(0);
@@ -108,8 +110,7 @@
 
       <span
         class="absolute bottom-0 flex overflow-hidden rounded-3xl transition-all duration-300"
-        style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}
-      >
+        style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}>
         <span class={twMerge("h-full w-full", sliderClass)} />
       </span>
     </div>

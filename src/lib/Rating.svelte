@@ -1,10 +1,10 @@
 <script lang="ts">
   //@ts-ignore
-  import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
-  //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
+  //@ts-ignore
+  import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
 
-  export let rating: number;
+  export let rating: number | undefined | null;
   export let rating_max: number;
   export let editable = false;
 
@@ -30,13 +30,12 @@
 
 <div class="flex flex-row flex-wrap">
   {#each Array(rating_max) as _, i}
-    {#if i + 1 <= rating}
+    {#if i + 1 <= (rating ?? 0)}
       <button
         class="icon"
         disabled={!editable}
         on:click={() => decreaseRating(i + 1)}
-        type="button"
-      >
+        type="button">
         <IoIosStar />
       </button>
     {:else}
@@ -44,8 +43,7 @@
         class="icon"
         disabled={!editable}
         on:click={() => increaseRating(i + 1)}
-        type="button"
-      >
+        type="button">
         <IoIosStarOutline />
       </button>
     {/if}

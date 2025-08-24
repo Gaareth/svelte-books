@@ -1,29 +1,23 @@
 <script lang="ts">
-  import {
-    Chart,
-    getDatasetAtEvent,
-    getElementAtEvent,
-    getElementsAtEvent,
-  } from "svelte-chartjs";
+  import { Chart, getElementAtEvent } from "svelte-chartjs";
   import "chart.js/auto";
   import {
-    Chart as ChartJS,
     Scale,
     type ChartOptions,
     type CoreScaleOptions,
     type Tick,
   } from "chart.js/auto";
-
   import { getRelativePosition } from "chart.js/helpers";
+  import { twMerge } from "tailwind-merge";
 
-  import { theme } from "./stores/stores";
   import { defaultBgColor } from "../chartUtils";
   import Modal from "./Modal.svelte";
+  import { theme } from "./stores/stores";
   import { clamp } from "./utils";
-  import { onMount } from "svelte";
 
   export let allowEdits = false;
   export let title: string;
+  export let inputClassName = "";
 
   let chart: any | null = null;
   let canvas: HTMLCanvasElement;
@@ -68,8 +62,9 @@
 
   $: fgColor = $theme == "dark" ? "white" : "dark";
 
+  export let bgColorDark = "#334155";
   $: grid = {
-    color: $theme == "dark" ? "#334155" : "#",
+    color: $theme == "dark" ? bgColorDark : "#",
   };
 
   // $: labelMaxWidth = chart.width / length;
@@ -123,17 +118,18 @@
   let selectedLabelIndex: number;
 
   const startDrawing = (event: any): void => {
+    if (!allowEdits) return;
     isDrawing = true;
     options.animation = false;
   };
 
   const draw = (e: any): void => {
-    if (!isDrawing) return;
+    if (!isDrawing || !allowEdits) return;
     drawPoints(e);
   };
 
   const drawPoints = (e: any) => {
-    if (chart == null) return;
+    if (chart == null || !allowEdits) return;
     //@ts-ignore
     const canvasPosition = getRelativePosition(e, chart);
     const xValue = chart.scales.x.getValueForPixel(canvasPosition.x);
@@ -150,13 +146,14 @@
   };
 
   const drawTouch = (event: TouchEvent | any): void => {
-    if (!isDrawing) return;
+    if (!isDrawing || !allowEdits) return;
     const touch = event.touches[0];
     drawPoints(touch);
     event.preventDefault(); // Prevent scrolling
   };
 
   const stopDrawing = (): void => {
+    if (!allowEdits) return;
     isDrawing = false;
     // options.animation = true;
   };
@@ -169,7 +166,10 @@
     <div class="flex flex-wrap gap-5">
       <label>
         Title
-        <input type="text" class="input w-auto" bind:value={title} />
+        <input
+          type="text"
+          class={twMerge("input w-auto", inputClassName)}
+          bind:value={title} />
       </label>
 
       <label>
@@ -178,8 +178,7 @@
           type="range"
           class="input w-auto h-full"
           on:input={updateLength}
-          bind:value={length}
-        />
+          bind:value={length} />
       </label>
     </div>
   </div>
@@ -192,8 +191,7 @@
     on:touchstart|preventDefault={startDrawing}
     on:touchmove={drawTouch}
     on:touchend|preventDefault={stopDrawing}
-    on:touchcancel|preventDefault={stopDrawing}
-  />
+    on:touchcancel|preventDefault={stopDrawing} />
 
   <Chart
     bind:chart
@@ -219,6 +217,8 @@
     on:touchend={stopDrawing}
     on:touchcancel={stopDrawing}
     on:click={(e) => {
+      if (!allowEdits) return;
+
       //@ts-ignore
       const el = getElementAtEvent(chart, e);
       if (el[0] == null) return;
@@ -226,8 +226,7 @@
 
       showModal = true;
     }}
-    {...$$restProps}
-  />
+    {...$$restProps} />
 </div>
 
 <Modal
@@ -235,8 +234,7 @@
   className="max-w-96"
   on:opened={() => {
     eventInputRef.focus();
-  }}
->
+  }}>
   <h1 slot="header" class="text-2xl">
     Additional information ({selectedLabelIndex})
   </h1>
@@ -248,16 +246,14 @@
         type="text"
         class="input btn-generic-color-2"
         bind:this={eventInputRef}
-        bind:value={labels[selectedLabelIndex]}
-      />
+        bind:value={labels[selectedLabelIndex]} />
     </label>
 
     <label class="text-secondary text-base">
       details (!):
       <textarea
         class="input btn-generic-color-2"
-        bind:value={details[selectedLabelIndex]}
-      />
+        bind:value={details[selectedLabelIndex]} />
     </label>
 
     <p class="text-base text-secondary mt-2">
