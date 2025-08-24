@@ -77,6 +77,7 @@ export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
     };
     dateStarted: true;
     dateFinished: true;
+    account: true;
   };
 }>;
 

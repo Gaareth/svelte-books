@@ -66,11 +66,11 @@ export async function loadBooks(
 export async function getReadingActivity(
   sessionAccountParams: GetAccountParams,
   status: READING_STATUS | undefined = undefined,
-  requestedAccountUsernname?: string
+  requestedAccountUsername?: string
 ) {
   const { accountId, accountUsername } = sessionAccountParams;
-  const requestedAccountId = requestedAccountUsernname
-    ? await getAccountByUsername(requestedAccountUsernname)
+  const requestedAccountId = requestedAccountUsername
+    ? await getAccountByUsername(requestedAccountUsername)
     : accountId;
 
   const whereClause = {
@@ -94,6 +94,7 @@ export async function getReadingActivity(
       dateStarted: true,
       dateFinished: true,
       rating: true,
+      account: true,
       book: {
         include: {
           bookList: true,

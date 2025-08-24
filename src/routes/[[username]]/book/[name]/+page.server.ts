@@ -224,9 +224,10 @@ async function updateBookSeries(
 
 export const actions = {
   save: async (event: RequestEvent) => {
-    const accountId = (
+    const account = (
       await authorize(await event.locals.auth(), event.params.username)
-    ).requestedAccount.id;
+    ).requestedAccount;
+    const accountId = account.id;
 
     const f = await event.request.formData();
     // console.log(f);
@@ -331,7 +332,10 @@ export const actions = {
 
       // console.log("nnew book:", book);
 
-      redirect(302, "/book/" + encodeURIComponent(book.name));
+      redirect(
+        302,
+        "/" + account.username + "/book/" + encodeURIComponent(book.name)
+      );
     }
 
     const { fieldErrors: errors } = result.error.flatten();

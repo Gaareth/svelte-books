@@ -62,7 +62,7 @@
       ? info.categories?.join(" | ")
       : "uncategorized"}
     <div
-      class="item-border p-2 my-2 flex flex-wrap items-center gap-4 relative"
+      class="item-border p-2 my-2 flex flex-wrap flex-col gap-2 relative"
       bind:this={item_ref}>
       <div class="flex items-center gap-4">
         <div>
@@ -97,9 +97,10 @@
           </p>
         </div>
       </div>
+
       <p
-        class="text-sm text-secondary line-clamp-2 hover:line-clamp-none -mt-2 -mb-1">
-        {info.description}
+        class="text-sm text-secondary line-clamp-2 hover:line-clamp-none -mt-1 -mb-1">
+        {info.description ?? "No description available"}
       </p>
 
       <!-- <p>{categories?.length}</p> -->
@@ -126,12 +127,13 @@
           class="w-5 absolute top-5 right-0 min-[500px]:static"
           src={`/language-icons/icons/${info.language}.svg`}
           alt={`${info.language} language icon`} />
-        <span
-          class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
-          hidden={isbn_13 === undefined}
-          title="ISBN 13">
-          {isbn_13}
-        </span>
+        {#if isbn_13}
+          <span
+            class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
+            title="ISBN 13">
+            {isbn_13}
+          </span>
+        {/if}
       </div>
     </div>
   {:catch error}

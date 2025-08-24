@@ -18,6 +18,11 @@
 <details {open}>
   <summary class="text-lg">{summary_text}</summary>
   <div>
-    <BookApi bind:getBookPromise bind:volumeId bind:query {dispatch} />
+    <BookApi
+      bind:getBookPromise
+      bind:volumeId
+      bind:query
+      {dispatch}
+      label="Add API data" />
   </div>
 </details>

@@ -11,7 +11,7 @@
   export let data: PageData;
   export let form: ActionData;
 
-  console.log(form);
+  // console.log(form);
 </script>
 
 {#if !data.showForm}

@@ -37,8 +37,8 @@ model Account {
   books Book[]
 
   bookList              BookList[]
-  ReadingActivity       ReadingActivity[]
-  ReadingActivityStatus ReadingActivityStatus[]
+  readingActivity       ReadingActivity[]
+  readingActivityStatus ReadingActivityStatus[]
 }
 
 // enum Visibility {
