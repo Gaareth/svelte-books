@@ -34,8 +34,11 @@ export async function POST(req: RequestEvent) {
         },
       },
       status: {
-        update: {
-          status: READING_STATUS.FINISHED,
+        connect: {
+          status_accountId: {
+            status: READING_STATUS.FINISHED,
+            accountId,
+          },
         },
       },
     },

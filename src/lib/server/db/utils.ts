@@ -1,4 +1,8 @@
-import type { queriedBookFull, READING_STATUS } from "$appTypes";
+import {
+  VISIBILITY,
+  type queriedBookFull,
+  type READING_STATUS,
+} from "$appTypes";
 import type { Prisma } from "@prisma/client";
 
 import { prisma } from "$lib/server/prisma";
@@ -81,7 +85,8 @@ export async function getReadingActivity(
       status: {
         status: status,
         accountId: accountId,
-        visibility: requestedAccountId === accountId ? undefined : "PUBLIC",
+        visibility:
+          requestedAccountId === accountId ? undefined : VISIBILITY.PUBLIC,
       },
     },
     include: {

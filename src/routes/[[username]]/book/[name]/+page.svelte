@@ -55,7 +55,7 @@
       book.bookSeries = { books: [], id: -1 }; // very bad :(
     }
 
-    console.log("book changed");
+    // console.log("book changed");
   }
 
   // console.log(data.book.bookSeries?.books);

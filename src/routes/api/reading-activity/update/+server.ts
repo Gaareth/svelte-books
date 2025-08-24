@@ -11,7 +11,7 @@ import {
 
 import type { RequestEvent } from "./$types";
 
-import { READING_STATUS, READING_STATUS_VALUES_TUPLE } from "$appTypes";
+import { READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 
 const saveSchema = z
@@ -22,7 +22,7 @@ const saveSchema = z
     dateStarted: optionalDatetimeSchema.nullish(),
     dateFinished: optionalDatetimeSchema.nullish(),
     graphs: storyGraphSchema.nullish(),
-    status: z.enum(READING_STATUS_VALUES_TUPLE).optional(),
+    status: z.nativeEnum(READING_STATUS).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
@@ -105,11 +105,22 @@ export async function POST(req: RequestEvent) {
         accountId,
       },
       data: {
-        status: {
-          update: {
-            status,
-          },
-        },
+        status: status
+          ? {
+              connectOrCreate: {
+                where: {
+                  status_accountId: {
+                    status,
+                    accountId,
+                  },
+                },
+                create: {
+                  status,
+                  accountId,
+                },
+              },
+            }
+          : undefined,
         dateStarted: dateStarted
           ? {
               upsert: {
