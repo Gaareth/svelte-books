@@ -9,6 +9,9 @@
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import ToggleGroup from "$lib/ToggleGroup.svelte";
+  import AddApiButton from "./AddApiButton.svelte";
+  import ApiResult from "./ApiResult.svelte";
+  import ReloadButton from "./ReloadButton.svelte";
 
   export let form;
   export let data: PageData;
@@ -30,14 +33,8 @@
   $: allAsGlobal = data.readingActivityLists
     .filter((v) => v.visibility != null)
     .every((v) => (v.visibility as Visibility) == data.globalVisibility);
-  $: {
-    console.log(data.readingActivityLists);
-    console.log(data.globalVisibility);
-  }
 
   $: {
-    console.log(form);
-
     if (form?.success) {
       toast.success("Successfully applied changes");
     }
@@ -134,13 +131,13 @@
 
 <section>
   <h2>Datasource</h2>
-  <!-- <div class="flex flex-col gap-6 sm:gap-8">
+  <div class="flex flex-col gap-6 sm:gap-8">
     <ReloadButton bind:currentStatus />
     <AddApiButton bind:currentStatus />
 
     <ApiResult {form} {currentStatus} />
-  </div> -->
-  SOON
+  </div>
+  <!-- SOON -->
 </section>
 
 <style>

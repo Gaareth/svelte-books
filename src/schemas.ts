@@ -143,7 +143,7 @@ export function parseFormObject(
     const match = key.match(regexObject);
 
     if (match && attribute == match[1]) {
-      console.log(key, value);
+      // console.log(key, value);
 
       const matches = [...key.matchAll(regexKeys)].map((m) => m[1]);
 
@@ -173,7 +173,7 @@ export function parseFormArray(
     const match = key.match(regexObject);
 
     if (match && attribute == match[1]) {
-      console.log(match);
+      // console.log(match);
 
       if (match[2].length == 0) {
         values.push(value);

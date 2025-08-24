@@ -281,7 +281,7 @@
         endClass="rounded-e-md"
         bind:selectedOption
         on:select={(ev) => {
-          console.log(ev.detail);
+          // console.log(ev.detail);
           onQuickselect(ev.detail);
         }} />
     </div>

@@ -61,7 +61,7 @@
 
   const toggleOpen = () => {
     // trigger_ref.focus();
-    console.log("open");
+    // console.log("open");
 
     open = !open;
     if (open) {
@@ -70,7 +70,7 @@
   };
 
   const click_outside = () => {
-    console.log("clicked outside");
+    // console.log("clicked outside");
     // open = false;
 
     if (!showModal) {

@@ -98,9 +98,9 @@
 
 {#if currentStatus !== undefined && currentStatus.msg != "done"}
   <div class="flex flex-col">
-    <div>
+    <div class="flex gap-1">
       <span>{currentStatus.msg}</span>
-      <span>{currentStatus.items}/{currentStatus.max}</span>
+      <span class="ml-auto">{currentStatus.items}/{currentStatus.max}</span>
     </div>
     <progress max={currentStatus.max} value={currentStatus.items} />
   </div>

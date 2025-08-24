@@ -60,7 +60,7 @@ export const actions = {
     const formData = await request.formData();
 
     const formDataObject = Object.fromEntries(formData);
-    console.log(formDataObject);
+    // console.log(formDataObject);
 
     // const listNameVisibility = parseFormArray(
     //   formDataObject,

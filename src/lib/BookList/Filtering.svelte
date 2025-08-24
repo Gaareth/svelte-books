@@ -223,7 +223,7 @@
     if (params.get("order")) {
       new_params.set("order", params.get("order")!);
     }
-    console.log(new_params);
+    // console.log(new_params);
 
     goto("?" + new_params.toString(), {
       noScroll: true,

@@ -134,23 +134,8 @@ export type queriedBook = {
   };
 };
 
-export const QUERIED_BOOK_FULL_FIELDS = `
-  id,
-  volumeInfo(
-    title,
-    subtitle,
-    authors,
-    description,
-    publishedDate,
-    publisher,
-    industryIdentifiers,
-    imageLinks,
-    pageCount,
-    printedPageCount,
-    categories,
-    language
-  )
-`;
+export const QUERIED_BOOK_FULL_FIELDS =
+  "id,volumeInfo(title,subtitle,authors,description,publishedDate,publisher,industryIdentifiers,imageLinks,pageCount,printedPageCount,categories,language)";
 
 export type ImageLinksType = {
   smallThumbnail: string;

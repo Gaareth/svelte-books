@@ -18,7 +18,7 @@ import { prisma } from "$lib/server/prisma";
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
   const session = await page.locals.auth();
-  console.log("Session:", session);
+  // console.log("Session:", session);
   const { sessionAccount, requestedAccount } = await authorize(
     session,
     params.username,
@@ -229,7 +229,7 @@ export const actions = {
     ).requestedAccount.id;
 
     const f = await event.request.formData();
-    console.log(f);
+    // console.log(f);
 
     const formData = Object.fromEntries(f);
     // console.log("1", formData);
@@ -277,11 +277,11 @@ export const actions = {
       if (apiVolumeId !== undefined) {
         apiData = await getBookApiData(apiVolumeId);
         const extractedData = extractBookApiData(apiData);
-        console.log(extractedData);
+        // console.log(extractedData);
 
         const categories = extractCategories(apiData);
 
-        console.log(categories);
+        // console.log(categories);
 
         for (const category_str of categories) {
           try {
@@ -290,7 +290,7 @@ export const actions = {
                 name: category_str,
               },
             });
-            console.log(category);
+            // console.log(category);
           } catch (e) {
             // ignore
           }
@@ -329,14 +329,14 @@ export const actions = {
         },
       });
 
-      console.log("nnew book:", book);
+      // console.log("nnew book:", book);
 
       redirect(302, "/book/" + encodeURIComponent(book.name));
     }
 
     const { fieldErrors: errors } = result.error.flatten();
-    console.log("Errors:", errors);
-    console.log("Issues:", result.error.issues);
+    // console.log("Errors:", errors);
+    // console.log("Issues:", result.error.issues);
 
     return fail(400, {
       data: formData,

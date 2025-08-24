@@ -53,7 +53,7 @@
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
-          console.log("result", result);
+          // console.log("result", result);
 
           //@ts-ignore
           if (result.success === true) {

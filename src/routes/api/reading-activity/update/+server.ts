@@ -40,7 +40,7 @@ export async function POST(req: RequestEvent) {
 
   const f = await req.request.formData();
   const formData = Object.fromEntries(f);
-  console.log("Form data received:", formData);
+  // console.log("Form data received:", formData);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -73,15 +73,6 @@ export async function POST(req: RequestEvent) {
   const { id, stars, status, dateStarted, dateFinished, graphs, comment } =
     result.data;
 
-  console.log("Parsed data:", {
-    id,
-    stars,
-    status,
-    dateStarted,
-    dateFinished,
-    graphs,
-    comment,
-  });
   try {
     // only delete if exist
     if (dateFinished == null || dateStarted == null) {

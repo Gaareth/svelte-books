@@ -33,6 +33,7 @@
   import InputText from "$lib/InputText.svelte";
   //@ts-ignore
   import Pill from "$lib/Pill.svelte";
+  import { getMaxResolutionImage } from "$lib/utils";
 
   export let data: PageData;
 
@@ -160,6 +161,9 @@
   const imageClass = ` transition-all duration-300 relative bg-background-elevated text-transparent
      w-[133px] h-[199px] sm:w-[320px] sm:h-[330px] aspect-[1/1.5] object-cover object-center rounded`;
 
+  let bookImage: string | null;
+  $: bookImage = book.coverImage ?? getMaxResolutionImage(book.bookApiData);
+
   function handleTakeOver(
     e: CustomEvent<{
       volumeId: string | undefined;
@@ -207,9 +211,9 @@
           edit && "group"
         )}>
         <div class="flex justify-center relative">
-          {#if book.coverImage != null}
+          {#if bookImage != null}
             <img
-              src={book.coverImage}
+              src={bookImage}
               class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
               alt="Flowers for Algernon"
               width="246"
@@ -219,7 +223,7 @@
             <div class="dark:hidden h-[230px]" />
 
             <img
-              src={book.coverImage}
+              src={bookImage}
               class={clsx(
                 "hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute"
               )}
@@ -231,23 +235,26 @@
           {/if}
 
           <div
-            class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0">
-            {#if book.coverImage != null}
+            class={clsx(
+              bookImage &&
+                "absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
+            )}>
+            {#if bookImage}
               <!-- <BookImage
                 bookId={book.bookApiData?.id}
                 alt="thumbnail"
                 sizes="(width <= 1024px) 800px, 128px"
                 class={imageClass} /> -->
               <img
-                src={book.coverImage}
+                src={bookImage}
                 alt="thumbnail fallback"
                 class={imageClass} />
-              {#if edit}
+              <!-- {#if edit}
                 <input
                   type="hidden"
                   name="coverImage"
                   value={book.coverImage} />
-              {/if}
+              {/if} -->
             {:else}
               <img
                 src={"/cover.png"}

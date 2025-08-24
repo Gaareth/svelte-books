@@ -68,7 +68,7 @@
     class="flex flex-col h-full"
     use:enhance={() => {
       return async ({ update, result }) => {
-        console.log("result", result);
+        // console.log("result", result);
 
         //@ts-ignore
         if (result.success) {

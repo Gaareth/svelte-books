@@ -1,6 +1,7 @@
 import { sineInOut } from "svelte/easing";
 
-import type { ReadingActivityWithDates } from "$appTypes";
+import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
+import type { BookApiData } from "@prisma/client";
 import type { OptionalDate } from "./DateSelector.svelte";
 import type { THEME } from "./stores/stores";
 
@@ -217,4 +218,21 @@ export function dateDiffFormatted(
 
   const years = Math.floor(months / 12);
   return `${years} year${years !== 1 ? "s" : ""}`;
+}
+
+export function getMaxResolutionImage(apiData: BookApiData | null) {
+  if (!apiData) return null;
+
+  const imageLinks = JSON.parse(
+    apiData.imageLinksJSON || "{}"
+  ) as ImageLinksType;
+
+  return (
+    imageLinks?.extraLarge ||
+    imageLinks?.large ||
+    imageLinks?.medium ||
+    imageLinks?.thumbnail ||
+    imageLinks?.smallThumbnail ||
+    null
+  );
 }

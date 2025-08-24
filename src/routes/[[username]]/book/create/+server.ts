@@ -32,8 +32,8 @@ export async function POST(req: RequestEvent) {
   const json_data = await req.request.json();
 
   const result = createSchema.safeParse(json_data);
-  console.log(result);
-  console.log(result.error);
+  // console.log(result);
+  // console.log(result.error);
   // TODO: return schema parsing errors
 
   if (result.success) {
@@ -105,7 +105,7 @@ export async function POST(req: RequestEvent) {
 async function addApiData(volumeId: string | undefined, bookId: string) {
   if (volumeId !== undefined) {
     const apiData = await getBookApiData(volumeId);
-    console.log(apiData);
+    // console.log(apiData);
 
     const extractedData = extractBookApiData(apiData);
 
@@ -135,7 +135,7 @@ async function addApiData(volumeId: string | undefined, bookId: string) {
 
     const categories = extractCategories(apiData);
 
-    console.log(categories);
+    // console.log(categories);
 
     for (const category_str of categories) {
       const category = await prisma.bookCategory.upsert({
@@ -150,7 +150,7 @@ async function addApiData(volumeId: string | undefined, bookId: string) {
         },
       });
 
-      console.log(category);
+      // console.log(category);
     }
   }
 }

@@ -130,10 +130,26 @@ export function extractBookApiData(
   const { title, subtitle, publishedDate, publisher, pageCount, language } =
     info;
   const authors = info.authors.join("|"); //TODO: relation
-  const thumbnailUrl = info.imageLinks?.thumbnail;
+  const thumbnailUrl = info.imageLinks?.thumbnail.replace(
+    "http://",
+    "https://"
+  );
   const isbn_13 = info.industryIdentifiers?.find(
     (o) => o.type == "ISBN_13"
   )?.identifier;
+
+  const imageLinks = info.imageLinks
+    ? Object.fromEntries(
+        Object.entries(info.imageLinks).map(([key, value]) => [
+          key,
+          typeof value === "string"
+            ? value.replace("http://", "https://")
+            : value,
+        ])
+      )
+    : undefined;
+
+  console.log(imageLinks);
 
   return {
     id: apiData.id,
@@ -147,6 +163,6 @@ export function extractBookApiData(
     language,
     thumbnailUrl,
     isbn_13,
-    imageLinksJSON: JSON.stringify(info.imageLinks),
+    imageLinksJSON: JSON.stringify(imageLinks),
   };
 }

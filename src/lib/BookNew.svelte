@@ -111,7 +111,7 @@
   async function take_over() {
     if (getBookPromise !== undefined) {
       let data = await getBookPromise;
-      console.log(data);
+      // console.log(data);
       name = data?.volumeInfo.title || "";
 
       author = data?.volumeInfo.authors[0] || "";
@@ -127,7 +127,7 @@
   };
 
   onMount(() => {
-    console.log(localStorage.getItem("BookNewCollapseState"));
+    // console.log(localStorage.getItem("BookNewCollapseState"));
 
     new_book_open = localStorage.getItem("BookNewCollapseState") == "true";
   });
