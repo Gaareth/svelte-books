@@ -5,7 +5,9 @@
 
   import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
   import BookApiDetails from "$lib/BookApiSelection/BookApiDetails.svelte";
+  import BookApi from "$lib/BookApiSelection/BookApi.svelte";
 
+  export let query: string | undefined = undefined;
   export let data: BookApiDataCategories | null;
   let newVolumeId: string | undefined;
   let bookSelected: boolean;
@@ -102,10 +104,11 @@
     </p>
   {/if}
 
-  <BookApiDetails
-    open={false}
+  <BookApi
+    {query}
+    label={data !== null ? "Update Book API" : "Add Book API"}
     bind:volumeId={newVolumeId}
-    summary_text={data !== null ? "Update API connection" : undefined}
     on:select={() => (bookSelected = true)}
     on:back={() => (bookSelected = false)} />
 </section>
+<!-- summary_text={data !== null ? "Update API connection" : undefined} -->

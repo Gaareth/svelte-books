@@ -12,6 +12,7 @@
   //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();
   // };
 
+  export let label: string;
   export let query: string | undefined = undefined;
   let queriedBooksPromise: Promise<queriedBook[]>;
 
@@ -41,12 +42,21 @@
 </script>
 
 <div {...$$restProps}>
+  <label for="bookApiQuery" class="w-full text-lg">
+    {label}
+  </label>
   <div class="flex gap-2">
     <input
       class="input dark:bg-slate-600 dark:border-slate-500"
       type="text"
+      id="bookApiQuery"
       bind:value={query} />
-    <button type="button" class="btn-primary-black" on:click={handleClick}>
+
+    <button
+      type="button"
+      class="btn-primary-black"
+      on:click={handleClick}
+      disabled={!query || query?.length === 0}>
       Search
     </button>
   </div>

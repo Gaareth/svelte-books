@@ -179,8 +179,9 @@
           <!-- TODO: tabtrigger info if there is a book selected -->
           <TabPanels className="">
             <TabPanel className="px-0.5">
-              <p class="-mb-1">Search using google books</p>
+              <!-- <p class="-mb-1">Search using google books</p> -->
               <BookApi
+                label="Search using google books"
                 bind:volumeId
                 bind:getBookPromise
                 bind:query={api_query}

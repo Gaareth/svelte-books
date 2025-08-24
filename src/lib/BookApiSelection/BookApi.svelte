@@ -11,9 +11,10 @@
   export let dispatch: EventDispatcher<any> = createEventDispatcher();
   export let query: string | undefined = undefined;
 
-  let apiBookSelected = false;
+  export let apiBookSelected = false;
 
   export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+  export let label: string;
 
   $: {
     if (volumeId !== undefined && apiBookSelected) {
@@ -34,6 +35,7 @@
 
 <div hidden={apiBookSelected}>
   <BookApiSelection
+    {label}
     class="my-2"
     bind:selectedBookId={volumeId}
     bind:apiBookSelected

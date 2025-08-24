@@ -474,7 +474,10 @@
           </InputSelect>
         </div>
 
-        <BookApiDataEdit data={book.bookApiData} on:takeOver={handleTakeOver} />
+        <BookApiDataEdit
+          data={book.bookApiData}
+          on:takeOver={handleTakeOver}
+          query={`${book.name} ${book.author}`} />
 
         <div class="my-7">
           <section class="mb-10">

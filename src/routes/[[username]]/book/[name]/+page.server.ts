@@ -111,7 +111,7 @@ export async function load(page: ServerLoadEvent) {
       transparent: true,
       wrapperClass: "lg:max-w-6xl",
     },
-    isAuthorizedToModify: true,
+    isAuthorizedToModify,
   };
 }
 
