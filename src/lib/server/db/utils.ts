@@ -155,8 +155,6 @@ export function extractBookApiData(
       )
     : undefined;
 
-  console.log(imageLinks);
-
   return {
     id: apiData.id,
     title,

@@ -38,8 +38,6 @@ export const handle = SvelteKitAuth({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       async authorize(credentials, req) {
-        console.log("credentials", credentials);
-
         if (!credentials.username || !credentials.password) {
           if (import.meta.env.DEV) {
             const account = await prisma.account.findFirst({
@@ -70,13 +68,10 @@ export const handle = SvelteKitAuth({
           return null;
         }
 
-        console.log(credentials.password);
-
         const matching = await verifyPassword(
           account,
           credentials.password.toString()
         );
-        console.log(matching);
 
         if (matching) {
           return {
