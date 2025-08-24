@@ -13,6 +13,7 @@
   import { type ReadingListItemType } from "$appTypes";
 
   export let readingActivities: ReadingListItemType[];
+  export let isAuthorizedToModify = false;
 
   const sentences = [
     "Add a book, mate!",
@@ -38,7 +39,7 @@
   </h2>
 </div>
 
-{#if readingActivities.length < 1 && $page.data.session}
+{#if readingActivities.length < 1 && isAuthorizedToModify}
   <p class="text-center text-4xl rotate-90">:(</p>
   <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
     {randomSentence}
@@ -65,7 +66,7 @@
       }}>
       <input type="hidden" name="readingActivityId" value={entry.id} />
 
-      <ReadingListItem {entry}>
+      <ReadingListItem {entry} {isAuthorizedToModify}>
         <button
           class="group p-2 !border-0 done-button"
           title="done reading"

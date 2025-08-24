@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 import z from "zod";
 
-import { checkBookAuth } from "../../../../auth";
+import { authorize } from "../../../../auth";
 import {
   numericString,
   optionalDatetimeSchema,
@@ -35,7 +35,8 @@ const saveSchema = z
   });
 
 export async function POST(req: RequestEvent) {
-  await checkBookAuth(req.locals, req.params);
+  const { requestedAccount } = await authorize(await req.locals.auth());
+  const accountId = requestedAccount.id;
 
   const f = await req.request.formData();
   const formData = Object.fromEntries(f);
@@ -90,7 +91,7 @@ export async function POST(req: RequestEvent) {
 
       if (currentEntry?.dateStartedId != null && dateStarted == null) {
         await prisma.readingActivity.update({
-          where: { id },
+          where: { id, accountId },
           data: {
             dateStarted: { delete: true },
           },
@@ -99,7 +100,7 @@ export async function POST(req: RequestEvent) {
 
       if (currentEntry?.dateFinishedId != null && dateFinished == null) {
         await prisma.readingActivity.update({
-          where: { id },
+          where: { id, accountId },
           data: {
             dateFinished: { delete: true },
           },
@@ -110,9 +111,14 @@ export async function POST(req: RequestEvent) {
     const readingActivity = await prisma.readingActivity.update({
       where: {
         id: id,
+        accountId,
       },
       data: {
-        status,
+        status: {
+          update: {
+            status,
+          },
+        },
         dateStarted: dateStarted
           ? {
               upsert: {

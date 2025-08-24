@@ -76,7 +76,7 @@
 
   $: edit =
     ((data.edit !== "false" && data.edit !== null) || !!form?.errors) &&
-    !!$page.data.session;
+    data.isAuthorizedToModify;
 
   const addBookSeries = () => {
     if (!selectedSeriesBook) {
@@ -288,7 +288,7 @@
               {book.name}
             </h1>
 
-            {#if $page.data.session}
+            {#if data.isAuthorizedToModify}
               <div class="flex justify-center lg:ml-auto">
                 <input type="hidden" name="id" value={book.id} />
 
@@ -393,7 +393,7 @@
         <div class="">
           <div class="flex mb-1 items-center">
             <h2 class="text-2xl">Reading Activity</h2>
-            {#if $page.data.session}
+            {#if data.isAuthorizedToModify}
               <button
                 type="button"
                 class="ml-auto btn-generic p-2"
@@ -407,7 +407,9 @@
           </div>
           <!-- <hr class="border-slate-600 mt-2" /> -->
           {#each book.readingActivity as readingActivity}
-            <ReviewListItem entry={readingActivity} />
+            <ReviewListItem
+              entry={readingActivity}
+              isAuthorizedToModify={data.isAuthorizedToModify} />
           {/each}
 
           {#if book.readingActivity.length <= 0}

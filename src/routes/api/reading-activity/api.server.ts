@@ -31,11 +31,22 @@ export async function createReadingActivity(
     });
   }
 
+  let statusId = (
+    await prisma.readingActivityStatus.findUniqueOrThrow({
+      where: {
+        status_accountId: {
+          status,
+          accountId,
+        },
+      },
+    })
+  ).id;
+
   const readingActivity = await prisma.readingActivity.create({
     data: {
       accountId,
       bookId,
-      status,
+      readingActivityStatusId: statusId,
       dateStartedId: createdDateStarted?.id,
       dateFinishedId: createdDateFinished?.id,
       rating:

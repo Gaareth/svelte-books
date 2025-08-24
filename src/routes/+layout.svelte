@@ -26,6 +26,13 @@
     !headerConfig.transparent &&
       "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
   )}>
+  {#if import.meta.env.DEV}
+    <div
+      class="w-full bg-red-500 h-[30px] text-center text-xl flex items-center justify-center">
+      DEV MODE
+    </div>
+  {/if}
+
   <div class="mx-auto max-w-screen-xl p-4">
     <div
       class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col">
@@ -41,7 +48,7 @@
           Home
         </a>
         {#if $page.data.session}
-          <a class="nav-a" href="/To-read">To-Read</a>
+          <a class="nav-a" href="/lists/to read">To-Read</a>
           {#if data.isAdmin}
             <a class="nav-a" href="/admin">Admin</a>
           {/if}
@@ -64,6 +71,12 @@
 
                 <div slot="dropdown" class="w-56 sm:w-36" id="dropdown-account">
                   <div class="">
+                    {#if data.isAdmin}
+                      <div
+                        class="bg-red-500 w-full h-6 text-center text-sm rounded-t">
+                        ADMIN
+                      </div>
+                    {/if}
                     <div class="p-1">
                       <p class="text-center font-bold">
                         {$page.data.session.user?.name}

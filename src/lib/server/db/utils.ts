@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils";
+import { getAccountByUsername } from "../../../auth";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
@@ -59,10 +60,14 @@ export async function loadBooks(
 }
 
 export async function getReadingActivity(
-  accountParams: GetAccountParams,
-  status: READING_STATUS | undefined = undefined
+  sessionAccountParams: GetAccountParams,
+  status: READING_STATUS | undefined = undefined,
+  requestedAccountUsernname?: string
 ) {
-  const { accountId, accountUsername } = accountParams;
+  const { accountId, accountUsername } = sessionAccountParams;
+  const requestedAccountId = requestedAccountUsernname
+    ? await getAccountByUsername(requestedAccountUsernname)
+    : accountId;
 
   const whereClause = {
     ...(accountId
@@ -73,9 +78,14 @@ export async function getReadingActivity(
   const readingActivity = await prisma.readingActivity.findMany({
     where: {
       ...whereClause,
-      status: status,
+      status: {
+        status: status,
+        accountId: accountId,
+        visibility: requestedAccountId === accountId ? undefined : "PUBLIC",
+      },
     },
     include: {
+      status: true,
       dateStarted: true,
       dateFinished: true,
       rating: true,

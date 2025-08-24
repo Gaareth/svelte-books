@@ -20,6 +20,7 @@
 
   export let entries: ReadingListItemType[];
   export let showSearch = true;
+  export let isAuthorizedToModify = false;
 
   const searchStore = createSearchStore(entries);
   let added_book = false;
@@ -136,7 +137,7 @@
 <div class="dark:bg-slate-800 bg-white">
   {#each books_displayed as entry (entry.id)}
     <div>
-      <ReadingListItem {entry} on:delete={openPopup} />
+      <ReadingListItem {entry} on:delete={openPopup} {isAuthorizedToModify} />
     </div>
   {/each}
 </div>

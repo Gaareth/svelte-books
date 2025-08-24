@@ -10,7 +10,12 @@
 
   export let openModal: boolean;
   export let deletionEntry: Prisma.ReadingActivityGetPayload<{
-    include: { book: true; dateFinished: true; dateStarted: true };
+    include: {
+      book: true;
+      dateFinished: true;
+      dateStarted: true;
+      status: true;
+    };
   }>;
 
   const dispatch = createEventDispatcher();
@@ -73,7 +78,7 @@
       <br />
       ID: {deletionEntry.id}
       <br />
-      Status: {deletionEntry.status}
+      Status: {deletionEntry.status.status}
       <br />
       Date started: {formatShort(deletionEntry.dateStarted)}
       <br />

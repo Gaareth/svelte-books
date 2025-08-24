@@ -36,29 +36,34 @@
   Book List
 </h1>
 
-{#if $page.data.session}
-  <Statistics readingActivities={data.readingActivity} />
-{/if}
+<Statistics readingActivities={data.readingActivity} />
 
 <div class="my-5" />
 
-<div class="mb-10">
-  <BookListReading
-    readingActivities={data.readingActivity.filter(
-      (e) =>
-        e.status === READING_STATUS.READING ||
-        e.status === READING_STATUS.PAUSED
-    )} />
-</div>
+{#if data.isCurrentlyReadingPublic}
+  <div class="mb-10">
+    <BookListReading
+      isAuthorizedToModify={data.isAuthorizedToModify}
+      readingActivities={data.readingActivity.filter(
+        (e) =>
+          e.status.status === READING_STATUS.READING ||
+          e.status.status === READING_STATUS.PAUSED
+      )} />
+  </div>
+{/if}
 
-<BookNew
-  readingStatus={"read"}
-  readingActivities={data.readingActivity ?? []} />
+{#if data.isAuthorizedToModify}
+  <BookNew
+    readingStatus={"read"}
+    readingActivities={data.readingActivity ?? []} />
+{/if}
+
 <ReadingList
+  isAuthorizedToModify={data.isAuthorizedToModify}
   entries={data.readingActivity.filter(
     (e) =>
-      e.status === READING_STATUS.FINISHED ||
-      e.status === READING_STATUS.DID_NOT_FINISH
+      e.status.status === READING_STATUS.FINISHED ||
+      e.status.status === READING_STATUS.DID_NOT_FINISH
   )} />
 
 <style>

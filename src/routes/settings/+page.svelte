@@ -27,11 +27,11 @@
   // let globalVisibility = "private";
 
   let allAsGlobal;
-  $: allAsGlobal = data.lists
+  $: allAsGlobal = data.readingActivityLists
     .filter((v) => v.visibility != null)
     .every((v) => (v.visibility as Visibility) == data.globalVisibility);
   $: {
-    console.log(data.lists);
+    console.log(data.readingActivityLists);
     console.log(data.globalVisibility);
   }
 
@@ -72,8 +72,8 @@
           const option = ev.detail;
           data.globalVisibility = option;
           // data.lists = Array(data.lists.length).fill(option);
-          for (let i = 0; i < data.lists.length; i++) {
-            data.lists[i].visibility = option;
+          for (let i = 0; i < data.readingActivityLists.length; i++) {
+            data.readingActivityLists[i].visibility = option;
           }
         }}
         defaultOption={data.globalVisibility == "private" ? 0 : 1} />
@@ -84,7 +84,7 @@
     </div>
 
     <div class="flex items-center justify-between mt-4 mb-2">
-      <h3 class="text-2xl font-medium">Lists</h3>
+      <h3 class="text-2xl font-medium">Reading Activity Lists</h3>
       {#if !allAsGlobal}
         <span class="text-warning text-base inline sm:hidden">
           Warning: Atleast one list is different.
@@ -92,15 +92,15 @@
       {/if}
     </div>
     <div class="flex flex-col gap-2">
-      {#each data.lists as list, i}
+      {#each data.readingActivityLists as list, i}
         <div
           class={twMerge(
             "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",
-            data.lists[i].visibility != data.globalVisibility &&
-              data.lists[i].visibility &&
+            data.readingActivityLists[i].visibility != data.globalVisibility &&
+              data.readingActivityLists[i].visibility &&
               "border-warning"
           )}>
-          <p>{list.name}</p>
+          <p>{list.status}</p>
 
           <ToggleGroup
             options={["private", "public"]}
@@ -108,11 +108,11 @@
             btnClass="px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
             unToggleable={true}
-            bind:selectedOption={data.lists[i].visibility} />
+            bind:selectedOption={data.readingActivityLists[i].visibility} />
           <input
             type="hidden"
-            name={`listNameVisibility[${list.name}]`}
-            value={data.lists[i].visibility} />
+            name={`readingActivityVisibility[${list.status}]`}
+            value={data.readingActivityLists[i].visibility} />
         </div>
       {/each}
     </div>

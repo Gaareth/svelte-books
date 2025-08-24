@@ -1,7 +1,13 @@
 import { BookSeries, PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
-import { createLists, seedInitial } from "./seed-initial";
+import { READING_STATUS } from "../src/app.d";
+import { hashPassword } from "../src/auth";
+import {
+  createLists,
+  createReadingActivityStatus,
+  seedInitial,
+} from "./seed-initial";
 
 // Load environment variables
 dotenv.config();
@@ -106,16 +112,18 @@ async function createSeries() {
 
 async function createDummyAccounts() {
   const createDummyAccount = async (username: string) => {
+    const { hash, salt } = await hashPassword("test123");
     const acc = await prisma.account.create({
       data: {
         username: username,
-        password_hash: "hash",
-        password_salt: "salt",
+        password_hash: hash,
+        password_salt: salt,
         isAdmin: false,
       },
     });
 
     await createLists(acc.id);
+    await createReadingActivityStatus(acc.id);
   };
 
   await createDummyAccount("Carlos");
@@ -147,7 +155,24 @@ async function createBooks(account) {
             id: createdBook.id,
           },
         },
-        status: "finished",
+        status: {
+          connectOrCreate: {
+            where: {
+              status_accountId: {
+                status: READING_STATUS.FINISHED,
+                accountId: account.id,
+              },
+            },
+            create: {
+              status: READING_STATUS.FINISHED,
+              account: {
+                connect: {
+                  id: account.id,
+                },
+              },
+            },
+          },
+        },
         dateStarted: {
           create: {
             day: 1,

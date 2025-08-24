@@ -17,6 +17,7 @@
   import { READING_STATUS } from "$appTypes";
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {
+      status: true;
       dateStarted: true;
       dateFinished: true;
       rating: true;
@@ -34,7 +35,7 @@
   }>;
   export let readingActivities: ActivityStatistics[];
   readingActivities = readingActivities.filter(
-    (a) => a.status == READING_STATUS.FINISHED
+    (a) => a.status.status == READING_STATUS.FINISHED
   );
 
   function calc_most_read_categories(

@@ -36,8 +36,9 @@ model Account {
 
   books Book[]
 
-  bookList        BookList[]
-  ReadingActivity ReadingActivity[]
+  bookList              BookList[]
+  ReadingActivity       ReadingActivity[]
+  ReadingActivityStatus ReadingActivityStatus[]
 }
 
 // enum Visibility {
@@ -115,6 +116,19 @@ model Graph {
   readingActivityId Int
 }
 
+model ReadingActivityStatus {
+  id         Int    @id @default(autoincrement())
+  status     String // reading, finished, did not finish, paused
+  visibility String @default("private")
+
+  ReadingActivity ReadingActivity[]
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  @@unique([status, accountId])
+}
+
 model ReadingActivity {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -131,7 +145,8 @@ model ReadingActivity {
   dateStartedId  Int?
   dateFinishedId Int?
 
-  status String // reading, finished, did not finish, paused
+  status                  ReadingActivityStatus @relation(fields: [readingActivityStatusId], references: [id])
+  readingActivityStatusId Int
 
   storyGraphs Graph[]
   rating      Rating?

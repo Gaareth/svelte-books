@@ -15,7 +15,6 @@
 
   import { MAX_RATING } from "../../constants";
 
-  import { page } from "$app/stores";
   import { READING_STATUS, type ReadingListItemType } from "$appTypes";
   import { formatShort } from "$lib/DateSelector.svelte";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
@@ -24,6 +23,7 @@
   import Pages from "$lib/icons/pages.svelte";
 
   export let entry: ReadingListItemType;
+  export let isAuthorizedToModify = false;
   $: book = entry.book;
 
   // export let deletionBook: Book | undefined = undefined;
@@ -80,8 +80,8 @@
 <div
   class={clsx(
     "item-border mb-3 p-2 items-center w-full grid gap-2",
-    (entry.status === READING_STATUS.PAUSED ||
-      entry.status === READING_STATUS.DID_NOT_FINISH) &&
+    (entry.status.status === READING_STATUS.PAUSED ||
+      entry.status.status === READING_STATUS.DID_NOT_FINISH) &&
       "opacity-75"
   )}
   style="grid-template-columns: 4px 1fr;">
@@ -121,9 +121,9 @@
         </p>
       </div>
 
-      {#if entry.status === READING_STATUS.PAUSED}
+      {#if entry.status.status === READING_STATUS.PAUSED}
         <p class="text-secondary">Paused</p>
-      {:else if entry.status === READING_STATUS.DID_NOT_FINISH}
+      {:else if entry.status.status === READING_STATUS.DID_NOT_FINISH}
         <p
           class="text-red-600 dark:text-red-500 flex justify-end flex-1 uppercase">
           Dropped
@@ -144,7 +144,7 @@
         </div>
       {/if}
 
-      {#if $page.data.session}
+      {#if isAuthorizedToModify}
         <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
           <span
             class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm

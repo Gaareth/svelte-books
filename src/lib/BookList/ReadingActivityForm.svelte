@@ -25,7 +25,7 @@
   export let entry: ReviewListItemType | undefined = undefined;
 
   let stars = entry?.rating?.stars;
-  let readingStatus = entry?.status;
+  let readingStatus = entry?.status.status;
 
   let tensionGraph =
     entry?.storyGraphs && entry?.storyGraphs?.length > 0

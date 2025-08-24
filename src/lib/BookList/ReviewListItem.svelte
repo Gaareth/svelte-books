@@ -32,6 +32,7 @@
   import { dateDiffFormatted, optionalToDate } from "$lib/utils";
 
   export let entry: ReviewListItemType;
+  export let isAuthorizedToModify = false;
 
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
@@ -87,11 +88,11 @@
      w-full gap-2 flex">
   <div
     class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
-      entry.status
+      entry.status.status
     )} rounded-md"
     style="height: 98%;" />
   <div class="w-full flex flex-wrap items-center col-span-full gap-1">
-    <div class="flex flex-1"><p>{entry.status.toUpperCase()}</p></div>
+    <div class="flex flex-1"><p>{entry.status.status.toUpperCase()}</p></div>
 
     <div class="flex gap-4">
       <p class="hidden lg:flex items-center gap-1">
@@ -162,7 +163,7 @@
           </span>
         </button>
 
-        {#if $page.data.session}
+        {#if isAuthorizedToModify}
           <button
             class="group inline-block p-2 hover:bg-gray-50 focus:relative
               dark:hover:bg-slate-500 border-none"
@@ -227,7 +228,7 @@
             </button>
           </li>
 
-          {#if $page.data.session}
+          {#if isAuthorizedToModify}
             <li>
               <button
                 on:click={() => {

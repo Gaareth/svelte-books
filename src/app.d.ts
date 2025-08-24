@@ -65,6 +65,7 @@ export type BookListItemType = Prisma.BookGetPayload<{
 export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
   include: {
     rating: true;
+    status: true;
     book: {
       include: {
         bookApiData: {
@@ -86,6 +87,7 @@ export type ReviewListItemType = Prisma.ReadingActivityGetPayload<{
     dateFinished: true;
     storyGraphs: true;
     book: true;
+    status: true;
   };
 }>;
 
@@ -203,4 +205,11 @@ export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
   string,
   ...string[]
 ];
+
+export const VISIBILITY = {
+  PRIVATE: "private",
+  PUBLIC: "public",
+  UNLISTED: "unlisted",
+} as const;
+
 export {};

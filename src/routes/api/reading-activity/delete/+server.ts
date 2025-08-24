@@ -1,13 +1,13 @@
 import { json } from "@sveltejs/kit";
 
-import { checkBookAuth } from "../../../../auth";
-
 import type { RequestEvent } from "./$types";
 
 import { prisma } from "$lib/server/prisma";
+import { authorize } from "../../../../auth";
 
 export async function POST(req: RequestEvent) {
-  await checkBookAuth(req.locals, req.params);
+  const { requestedAccount } = await authorize(await req.locals.auth());
+  const accountId = requestedAccount.id;
 
   const { id } = await req.request.json();
   if (id === undefined) {
@@ -18,6 +18,7 @@ export async function POST(req: RequestEvent) {
     const readingActivity = await prisma.readingActivity.delete({
       where: {
         id: id,
+        accountId,
       },
     });
     if (!readingActivity) {

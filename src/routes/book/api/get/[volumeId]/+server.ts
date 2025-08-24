@@ -7,6 +7,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   if (!session) {
     error(401);
   }
+
   const volumeId = params.volumeId;
   if (volumeId === null || volumeId === undefined) {
     error(400);

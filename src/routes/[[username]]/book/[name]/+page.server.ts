@@ -1,12 +1,13 @@
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { checkBookAuth } from "../../../../auth";
+import { authorize } from "../../../../auth";
 import { optionalNumericString } from "../../../../schemas";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
+import { VISIBILITY } from "$appTypes";
 import {
   extractBookApiData,
   extractCategories,
@@ -16,14 +17,24 @@ import { prisma } from "$lib/server/prisma";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
-  const accountId = await checkBookAuth(page.locals, params);
+  const session = await page.locals.auth();
+  console.log("Session:", session);
+  const { sessionAccount, requestedAccount } = await authorize(
+    session,
+    params.username,
+    (requestedAccount) => requestedAccount?.isPublic
+  );
+
+  const isAuthorizedToModify =
+    (sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin) ??
+    false;
 
   const edit = page.url.searchParams.get("edit");
 
   const book = await prisma.book.findFirst({
     where: {
       name: params.name,
-      accountId,
+      accountId: requestedAccount?.id,
     },
     include: {
       bookList: true,
@@ -37,6 +48,13 @@ export async function load(page: ServerLoadEvent) {
                 },
               },
               readingActivity: {
+                where: {
+                  status: {
+                    visibility: isAuthorizedToModify
+                      ? undefined
+                      : VISIBILITY.PUBLIC,
+                  },
+                },
                 include: {
                   dateStarted: true,
                   dateFinished: true,
@@ -55,12 +73,18 @@ export async function load(page: ServerLoadEvent) {
         },
       },
       readingActivity: {
+        where: {
+          status: {
+            visibility: isAuthorizedToModify ? undefined : VISIBILITY.PUBLIC,
+          },
+        },
         include: {
           dateStarted: true,
           dateFinished: true,
           rating: true,
           storyGraphs: true,
           book: true,
+          status: true,
         },
       },
     },
@@ -68,7 +92,7 @@ export async function load(page: ServerLoadEvent) {
 
   const bookLists = await prisma.bookList.findMany({
     where: {
-      accountId,
+      accountId: requestedAccount.id,
     },
   });
 
@@ -76,7 +100,7 @@ export async function load(page: ServerLoadEvent) {
     error(404, { message: "Not found" });
   }
 
-  const books = await loadBooks({ accountId }, undefined);
+  const books = await loadBooks({ accountId: requestedAccount.id }, undefined);
 
   return {
     book,
@@ -87,6 +111,7 @@ export async function load(page: ServerLoadEvent) {
       transparent: true,
       wrapperClass: "lg:max-w-6xl",
     },
+    isAuthorizedToModify: true,
   };
 }
 
@@ -199,7 +224,9 @@ async function updateBookSeries(
 
 export const actions = {
   save: async (event: RequestEvent) => {
-    const accountId = await checkBookAuth(event.locals, event.params);
+    const accountId = (
+      await authorize(await event.locals.auth(), event.params.username)
+    ).requestedAccount.id;
 
     const f = await event.request.formData();
     console.log(f);
@@ -290,7 +317,7 @@ export const actions = {
       }
 
       const book = await prisma.book.update({
-        where: { id },
+        where: { id, accountId },
         data: {
           name,
           author,

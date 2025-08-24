@@ -1,7 +1,6 @@
 import { json } from "@sveltejs/kit";
 import z from "zod";
 
-import { checkBookAuth } from "../../../../auth";
 import {
   optionalDatetimeSchema,
   optionalNumericString,
@@ -13,6 +12,7 @@ import { createReadingActivity } from "../api.server";
 import type { RequestEvent } from "./$types";
 
 import { READING_STATUS } from "$appTypes";
+import { authorize } from "../../../../auth";
 
 const saveSchema = z
   .object({
@@ -37,7 +37,8 @@ const saveSchema = z
   });
 
 export async function POST(req: RequestEvent) {
-  const accountId = await checkBookAuth(req.locals, req.params);
+  const accountId = (await authorize(await req.locals.auth())).requestedAccount
+    .id;
 
   const f = await req.request.formData();
   const formData = Object.fromEntries(f);

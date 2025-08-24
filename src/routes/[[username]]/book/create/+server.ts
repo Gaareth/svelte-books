@@ -1,7 +1,6 @@
 import { error, json } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { checkBookAuth } from "../../../../auth";
 import { optionalDatetimeSchema } from "../../../../schemas";
 import { createReadingActivity } from "../../../api/reading-activity/api.server";
 import { getBookApiData } from "../../../book/api/api.server";
@@ -12,6 +11,7 @@ import { READING_STATUS } from "$appTypes";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
+import { authorize } from "../../../../auth";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
@@ -25,7 +25,9 @@ const createSchema = z.object({
 });
 
 export async function POST(req: RequestEvent) {
-  const accountId = await checkBookAuth(req.locals, req.params);
+  const accountId = (
+    await authorize(await req.locals.auth(), req.params.username)
+  ).requestedAccount.id;
 
   const json_data = await req.request.json();
 

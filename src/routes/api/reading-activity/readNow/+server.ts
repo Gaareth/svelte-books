@@ -1,13 +1,14 @@
 import { error, json, type RequestEvent } from "@sveltejs/kit";
 import z from "zod";
 
-import { checkBookAuth } from "../../../../auth";
+import { authorize } from "../../../../auth";
 
 import { READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
-  await checkBookAuth(req.locals, req.params);
+  const { requestedAccount } = await authorize(await req.locals.auth());
+  const accountId = requestedAccount.id;
 
   const f = await req.request.formData();
   const readNowSchema = z.object({
@@ -21,7 +22,7 @@ export async function POST(req: RequestEvent) {
   const { readingActivityId } = result.data;
   const now = new Date();
   await prisma.readingActivity.update({
-    where: { id: readingActivityId },
+    where: { id: readingActivityId, accountId },
     data: {
       dateFinished: {
         create: {
@@ -32,7 +33,11 @@ export async function POST(req: RequestEvent) {
           minute: now.getMinutes(),
         },
       },
-      status: READING_STATUS.FINISHED,
+      status: {
+        update: {
+          status: READING_STATUS.FINISHED,
+        },
+      },
     },
   });
 

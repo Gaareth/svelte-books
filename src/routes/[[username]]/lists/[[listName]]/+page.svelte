@@ -1,5 +1,7 @@
-<!-- <script lang="ts">
+<script lang="ts">
   import { page } from "$app/stores";
+  import { READING_STATUS } from "$appTypes";
+  import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import type { PageData } from "./$types";
@@ -22,8 +24,10 @@
     {data.listName} LIST
   </h1>
 
-  <BookNew {listName} books={data.books ?? []} />
-  <BookList books={data.books ?? []} />
+  <BookNew
+    readingStatus={"to read"}
+    readingActivities={data.readingActivity ?? []} />
+  <ReadingList entries={data.readingActivity} />
 {:else}
   <h1 class="text-center text-5xl my-4 mb-6">This list does not exist</h1>
-{/if} -->
+{/if}
