@@ -24,4 +24,33 @@ Dockerfile
 *.tar
 *.db
 *.db-journal
-# .env
+
+.env
+
+### .gitignore:
+
+.DS_Store
+node_modules
+/backups
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+*.db
+*.db-journal
+# .sql
+dev.db
+
+# prisma/migrations
+*.tar
+validation-tests/
+db-backups/
+*.xcf
+.vscode/
+
+#seed.js
+gitleaks-report.json
