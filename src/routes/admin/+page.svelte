@@ -10,6 +10,7 @@
 
   import { enhance } from "$app/forms";
   import EyePlus from "$lib/icons/eye-plus.svelte";
+  import UsersList from "$lib/UsersList.svelte";
   export let data: PageData;
 
   let formValues: PageData = deepClone(data);
@@ -161,24 +162,7 @@
     <section>
       <h2 class="text-3xl">Users</h2>
       <div class="flex flex-col gap-1">
-        {#each data.users as user}
-          <div class="default-border flex gap-1 items-center p-3">
-            <a class="text-lg hover:underline flex-1" href="/{user.username}">
-              {user.username}
-            </a>
-
-            <div class="flex gap-1 sm:gap-2 flex-1">
-              {#each user.lists as list}
-                <a
-                  href="/{user.username}/lists/{list?.name}"
-                  class="hover:underline">
-                  {list?.name}
-                </a>
-                |
-              {/each}
-            </div>
-          </div>
-        {/each}
+        <UsersList users={data.users} />
       </div>
     </section>
   </div>

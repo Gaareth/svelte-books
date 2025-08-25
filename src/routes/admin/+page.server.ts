@@ -22,13 +22,15 @@ export async function load({ locals }: ServerLoadEvent) {
         },
       },
       bookList: true,
+      readingActivityStatus: true,
     },
   });
 
   const users = accounts.map((a) => {
     return {
       username: a.username,
-      lists: a.bookList,
+      numBooks: a.books.length,
+      readingActivityLists: a.readingActivityStatus,
     };
   });
 
