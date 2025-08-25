@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import z from "zod";
 
+import { authorize } from "../../../../auth";
 import {
   optionalDatetimeSchema,
   optionalNumericString,
@@ -12,7 +13,6 @@ import { createReadingActivity } from "../api.server";
 import type { RequestEvent } from "./$types";
 
 import { READING_STATUS } from "$appTypes";
-import { authorize } from "../../../../auth";
 
 const saveSchema = z
   .object({

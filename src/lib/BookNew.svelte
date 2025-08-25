@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+
   //@ts-ignore
   import AutoComplete from "simple-svelte-autocomplete";
   import { toast } from "svelte-french-toast";
@@ -22,7 +23,6 @@
   import type { Prisma } from "@prisma/client";
 
   import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
   import { READING_STATUS, type queriedBookFull } from "$appTypes";
 
   export let endpoint = "/book/create";

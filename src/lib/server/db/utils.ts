@@ -1,13 +1,14 @@
+import { getAccountByUsername } from "../../../auth";
+
+import type { Prisma } from "@prisma/client";
+
 import {
   VISIBILITY,
   type queriedBookFull,
   type READING_STATUS,
 } from "$appTypes";
-import type { Prisma } from "@prisma/client";
-
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils";
-import { getAccountByUsername } from "../../../auth";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {

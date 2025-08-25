@@ -1,6 +1,7 @@
 import { error, json } from "@sveltejs/kit";
 import { z } from "zod";
 
+import { authorize } from "../../../../auth";
 import { optionalDatetimeSchema } from "../../../../schemas";
 import { createReadingActivity } from "../../../api/reading-activity/api.server";
 import { getBookApiData } from "../../../book/api/api.server";
@@ -11,7 +12,6 @@ import { READING_STATUS } from "$appTypes";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
-import { authorize } from "../../../../auth";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),

@@ -31,7 +31,7 @@ export async function createReadingActivity(
     });
   }
 
-  let statusId = (
+  const statusId = (
     await prisma.readingActivityStatus.findUniqueOrThrow({
       where: {
         status_accountId: {

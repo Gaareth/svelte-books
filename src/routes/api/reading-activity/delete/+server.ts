@@ -1,9 +1,10 @@
 import { json } from "@sveltejs/kit";
 
+import { authorize } from "../../../../auth";
+
 import type { RequestEvent } from "./$types";
 
 import { prisma } from "$lib/server/prisma";
-import { authorize } from "../../../../auth";
 
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());

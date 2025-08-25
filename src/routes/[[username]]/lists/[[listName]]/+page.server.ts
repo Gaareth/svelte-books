@@ -1,9 +1,10 @@
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { StatusCodes } from "http-status-codes";
+
+import { authorize, isReadingActivityPublic } from "../../../../auth";
 
 import { READING_STATUS, READING_STATUS_VALUES } from "$appTypes";
 import { getReadingActivity } from "$lib/server/db/utils";
-import { StatusCodes } from "http-status-codes";
-import { authorize, isReadingActivityPublic } from "../../../../auth";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   console.log("Loading reading activity for list:", params.listName);

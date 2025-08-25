@@ -9,7 +9,6 @@
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
   import { type ReadingListItemType } from "$appTypes";
 
   export let readingActivities: ReadingListItemType[];

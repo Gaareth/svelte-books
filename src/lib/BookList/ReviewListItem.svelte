@@ -17,7 +17,6 @@
   import { MAX_RATING } from "../../constants";
 
   import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
   import { READING_STATUS, type ReviewListItemType } from "$appTypes";
   import { formatShort } from "$lib/DateSelector.svelte";
   import Dropdown from "$lib/Dropdown.svelte";

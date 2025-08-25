@@ -3,13 +3,13 @@ import {
   type RequestEvent,
   type ServerLoadEvent,
 } from "@sveltejs/kit";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 import { createLists } from "../../../../prisma/seed-initial";
 import { hashPassword } from "../../../auth";
 
 import { prisma } from "$lib/server/prisma";
-import { StatusCodes } from "http-status-codes";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   if (await locals.auth()) {

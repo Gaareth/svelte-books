@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Prisma } from "@prisma/client";
   import Book from "./icons/book.svelte";
 
   export let users: {
