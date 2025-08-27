@@ -50,10 +50,7 @@
     : { ...DEFAULT_OPTIONAL_DATETIME };
 </script>
 
-<Modal
-  bind:showModal
-  divClassName="w-full h-full flex flex-col"
-  className="w-full lg:w-2/5 ">
+<Modal bind:showModal divClassName="w-full" className="w-full lg:w-2/5 ">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">
       {entry != null ? "Edit" : "Create"} Reading Activity
@@ -170,9 +167,9 @@
         </div>
       {/if}
 
-      <div class="flex gap-2 items-center my-1">
-        <h2 class="text-xl">Rating</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center my-2">
         <div class="flex items-center gap-1">
+          <h2 class="text-xl">Rating</h2>
           (
           <input
             class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
@@ -187,7 +184,7 @@
           <ClearButton bind:value={stars} />
         </div>
 
-        <div class="flex-1 flex justify-center">
+        <div class="flex sm:justify-center">
           <Rating bind:rating={stars} rating_max={MAX_RATING} editable={true} />
         </div>
       </div>

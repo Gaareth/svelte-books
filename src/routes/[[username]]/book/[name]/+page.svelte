@@ -403,7 +403,7 @@
             {#if data.isAuthorizedToModify}
               <button
                 type="button"
-                class="ml-auto btn-generic p-2"
+                class="ml-auto btn-generic p-2 w-16 sm:w-auto flex justify-center"
                 on:click={() => (showCreateReadingActivity = true)}
                 title="Create reading activity">
                 <span class="block w-5">

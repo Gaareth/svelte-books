@@ -38,6 +38,8 @@ export async function createAccount(admin = false) {
 
   await createLists(account.id);
   await createReadingActivityStatus(account.id);
+
+  return account;
 }
 
 export async function createServerSettings() {
@@ -91,15 +93,15 @@ export async function seedInitial() {
   };
 }
 
-// if (import.meta.url === `file://${process.argv[1]}`) {
-//   seedInitial()
-//     .then(() => {
-//       console.log("Seeding complete.");
-//       prisma.$disconnect();
-//     })
-//     .catch((err) => {
-//       console.error("Seeding failed:", err);
-//       prisma.$disconnect();
-//       process.exit(1);
-//     });
-// }
+if (import.meta.url === `file://${process.argv[1]}`) {
+  seedInitial()
+    .then(() => {
+      console.log("Seeding complete.");
+      prisma.$disconnect();
+    })
+    .catch((err) => {
+      console.error("Seeding failed:", err);
+      prisma.$disconnect();
+      process.exit(1);
+    });
+}

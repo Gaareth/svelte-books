@@ -80,11 +80,20 @@
         };
 
   let stars = entry.rating?.stars ?? 0;
+
+  let dropdownOpen = false;
 </script>
 
 <div
   class="item-border mb-3 p-2 items-center
-     w-full gap-2 flex">
+     w-full gap-2 flex"
+  role="button"
+  tabindex="0"
+  on:dblclick={() => {
+    if (window.innerWidth < 1024) {
+      dropdownOpen = true;
+    }
+  }}>
   <div
     class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
       entry.status.status
@@ -201,6 +210,7 @@
         className="lg:!hidden !flex items-center"
         contentClass="!py-0"
         closeOnClick={true}
+        bind:open={dropdownOpen}
         buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1">
         <span
           slot="triggerContent"
