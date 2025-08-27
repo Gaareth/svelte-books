@@ -13,13 +13,19 @@ cleanup() {
 # Build the Docker image
 docker build . -t book-store
 
+if [ $? -ne 0 ]; then
+    print_error "Docker build failed. Stopping script."
+    exit 1
+fi
+
+
 # Stop and remove any existing container named 'book-store'
 docker stop book-store 2>/dev/null || true
 docker rm book-store 2>/dev/null || true
 
 echo "> Starting container"
 # Run the Docker container in detached mode
-docker run --name book-store -p 3000:3000 -d book-store
+docker run --env-file .env.production -v book-store:/database --name book-store -p 3000:3000 -d book-store
 
 # Wait a moment for the server to start
 sleep 3

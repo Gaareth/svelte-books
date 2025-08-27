@@ -8,17 +8,14 @@ import { building } from "$app/environment";
 import { prisma } from "$lib/server/prisma";
 
 if (!building) {
-  /*  try {
-    await seed.createLists();
-    console.log("created lists tables");
-  } catch (error) {
-    // # ignore
-  } */
   try {
-    await seed.createServerSettings();
-    console.log("created server settings");
+    await seed.seedInitial();
+    console.log("[!] seeded initial data");
   } catch (e) {
     // ignore
+    console.error(e);
+
+    console.log("[!] failed to seed initial data");
   }
 }
 
@@ -39,23 +36,7 @@ export const handle = SvelteKitAuth({
       //@ts-ignore
       async authorize(credentials, req) {
         if (!credentials.username || !credentials.password) {
-          if (import.meta.env.DEV) {
-            const account = await prisma.account.findFirst({
-              where: {
-                isAdmin:
-                  !credentials.username && !credentials.password
-                    ? true
-                    : undefined,
-                username: credentials.username ?? undefined,
-              },
-            });
-            return {
-              id: account!.id,
-              name: account!.username,
-            };
-          } else {
-            return null;
-          }
+          return null;
         }
 
         const account = await prisma.account.findFirst({

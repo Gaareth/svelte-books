@@ -3,12 +3,12 @@ import {
   type queriedBook,
   type queriedBookFull,
 } from "$appTypes";
-import { BOOKS_API_KEY } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
 export async function queryBooksFull(
   query: string
 ): Promise<queriedBookFull[]> {
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=FULL&fields=items(${QUERIED_BOOK_FULL_FIELDS})&orderBy=relevance&key=${BOOKS_API_KEY}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=FULL&fields=items(${QUERIED_BOOK_FULL_FIELDS})&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
 
   const json = await (await fetch(url)).json();
   if (json.error !== undefined) {
@@ -20,7 +20,7 @@ export async function queryBooksFull(
 
 export async function queryBooks(query: string): Promise<queriedBook[]> {
   const fields = "items(id, volumeInfo(title, authors, subtitle, imageLinks))";
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=lite&fields=${fields}&orderBy=relevance&key=${BOOKS_API_KEY}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=lite&fields=${fields}&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
 
   // console.log(url);
 
@@ -35,7 +35,7 @@ export async function queryBooks(query: string): Promise<queriedBook[]> {
 export async function getBookApiData(
   volumeId: string
 ): Promise<queriedBookFull> {
-  const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}?fields=${QUERIED_BOOK_FULL_FIELDS}&key=${BOOKS_API_KEY}`;
+  const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}?fields=${QUERIED_BOOK_FULL_FIELDS}&key=${env.BOOKS_API_KEY}`;
 
   const response = await fetch(url);
   // if (!response.ok) {

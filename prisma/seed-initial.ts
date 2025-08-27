@@ -27,7 +27,7 @@ export async function createAccount(admin = false) {
 
   const { hash, salt } = await hashPassword(password);
 
-  return await prisma.account.create({
+  const account = await prisma.account.create({
     data: {
       username: username,
       password_hash: hash,
@@ -35,6 +35,9 @@ export async function createAccount(admin = false) {
       isAdmin: admin,
     },
   });
+
+  await createLists(account.id);
+  await createReadingActivityStatus(account.id);
 }
 
 export async function createServerSettings() {
@@ -85,7 +88,18 @@ export async function seedInitial() {
   return {
     account,
     serverSettings: await createServerSettings(),
-    lists: await createLists(account.id),
-    readingActivityStatus: await createReadingActivityStatus(account.id),
   };
 }
+
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   seedInitial()
+//     .then(() => {
+//       console.log("Seeding complete.");
+//       prisma.$disconnect();
+//     })
+//     .catch((err) => {
+//       console.error("Seeding failed:", err);
+//       prisma.$disconnect();
+//       process.exit(1);
+//     });
+// }

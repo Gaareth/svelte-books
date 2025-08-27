@@ -1,56 +1,33 @@
 
-# .dockerignore
-
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.gitattributes
+README.md
+.npmrc
+.prettierrc
+.eslintrc.cjs
+.graphqlrc
+.editorconfig
+.svelte-kit
+.vscode
+node_modules
+build
+package
+**/.env
+**/.env*
 .vscode
 
-node_modules
 
-.git
-
-.gitattributes
 
 .eslintignore
+.prettierignore
 
-.eslintrc.cjs
-
-.prettierrc
-
-.pretieriignore
-
-README.md
-
-Dockerfile
-
-*.tar
-*.db
+**/*.tar
+**/*.db
 *.db-journal
-
-.env
-
-### .gitignore:
-
-.DS_Store
-node_modules
 /backups
-/build
-/.svelte-kit
-/package
-.env
-.env.*
-!.env.example
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-*.db
-*.db-journal
-# .sql
-dev.db
-
-# prisma/migrations
-*.tar
-validation-tests/
-db-backups/
-*.xcf
-.vscode/
-
-#seed.js
 gitleaks-report.json
+*.sh
+vite.config.ts.timestamp-*.mjs

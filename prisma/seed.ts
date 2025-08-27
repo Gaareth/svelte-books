@@ -205,7 +205,7 @@ async function createBooks(account) {
 }
 
 async function main() {
-  const { account, lists } = await seedInitial();
+  const { account } = await seedInitial();
   const series = await createSeries();
   // return;
 
