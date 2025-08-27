@@ -23,3 +23,5 @@ db-backups/
 
 #seed.js
 gitleaks-report.json
+
+delete-all-github-images.sh
