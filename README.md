@@ -39,12 +39,12 @@ Then run one of:
 
 ## Todos
 
-- private books
+- more finegrained privacy/visibility settings: e.g., private books, private reading activities
 - tension stats draw yourself - check
   - let user add more graphs
+  
 - auto google api connection
 - add or remove google api
-
 - update googleapi values
 
 - crud for lists
@@ -52,6 +52,7 @@ Then run one of:
 - statistics page
 - books read over time or github like graph
 - per month, year, day etc
+- min/avg/max time for started reading to finished. similarly for to-read to started or finished? 
 
 - fix last month selector when is january?
 - fix optionaldate unique
