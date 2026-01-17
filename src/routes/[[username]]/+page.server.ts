@@ -22,7 +22,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
       (await getReadingActivityVisibility(
         requestedAccount.id,
         READING_STATUS.READING
-      )) === VISIBILITY.PUBLIC,
+      )) === VISIBILITY.PUBLIC || isAuthorizedToModify,
     readingActivity: await getReadingActivity({
       accountId: requestedAccount.id,
     }),

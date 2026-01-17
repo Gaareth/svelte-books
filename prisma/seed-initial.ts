@@ -67,10 +67,26 @@ export async function createLists(accountId: string) {
   return lists;
 }
 
-export async function createReadingActivityStatus(accountId: string) {
+export async function createReadingActivityStatus(
+  accountId: string,
+  checkExists = false
+) {
   const lists: ReadingActivityStatus[] = [];
 
   for (const status of READING_STATUS_VALUES) {
+    if (checkExists) {
+      const exists = await prisma.readingActivityStatus.findFirst({
+        where: {
+          status,
+          accountId,
+        },
+      });
+
+      if (exists) {
+        continue;
+      }
+    }
+
     lists.push(
       await prisma.readingActivityStatus.create({
         data: {
@@ -83,6 +99,20 @@ export async function createReadingActivityStatus(accountId: string) {
   }
 
   return lists;
+}
+
+export async function seedInitialAllAccounts() {
+  const accounts = await prisma.account.findMany();
+  for (const account of accounts) {
+    try {
+      await createReadingActivityStatus(account.id, true);
+    } catch (error) {
+      console.error(
+        `[!] failed to seed initial data for account ${account.id}:`,
+        error
+      );
+    }
+  }
 }
 
 export async function seedInitial() {

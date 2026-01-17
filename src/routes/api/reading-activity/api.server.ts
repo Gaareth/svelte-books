@@ -6,6 +6,33 @@ import type {
 } from "../../../schemas";
 
 import { prisma } from "$lib/server/prisma";
+import { createReadingActivityStatus } from "../../../../prisma/seed-initial";
+
+async function getOrCreateReadingActivityStatus(
+  accountId: string,
+  status: READING_STATUS
+): Promise<number> {
+  const getRaStatus = async () =>
+    await prisma.readingActivityStatus.findUniqueOrThrow({
+      where: {
+        status_accountId: {
+          status,
+          accountId,
+        },
+      },
+    });
+
+  try {
+    return (await getRaStatus()).id;
+  } catch (error) {
+    console.error(
+      "Error retrieving or creating reading activity status:",
+      error
+    );
+    await createReadingActivityStatus(accountId, true);
+    return (await getRaStatus()).id;
+  }
+}
 
 export async function createReadingActivity(
   accountId: string,
@@ -31,17 +58,7 @@ export async function createReadingActivity(
     });
   }
 
-  const statusId = (
-    await prisma.readingActivityStatus.findUniqueOrThrow({
-      where: {
-        status_accountId: {
-          status,
-          accountId,
-        },
-      },
-    })
-  ).id;
-
+  const statusId = await getOrCreateReadingActivityStatus(accountId, status);
   const readingActivity = await prisma.readingActivity.create({
     data: {
       accountId,

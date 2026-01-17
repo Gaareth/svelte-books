@@ -1,1 +1,1 @@
-sh docker-build.sh && ssh wintermute sh /home/gareth/scripts/update-book-store.sh;
+sh docker-build.sh && ssh wintermute sh /home/gareth/book-store/update-book-store.sh;

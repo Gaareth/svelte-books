@@ -17,6 +17,8 @@ if (!building) {
 
     console.log("[!] failed to seed initial data");
   }
+
+  await seed.seedInitialAllAccounts();
 }
 
 export const handle = SvelteKitAuth({
