@@ -33,8 +33,9 @@
       };
     };
   }>;
-  export let readingActivities: ActivityStatistics[];
-  readingActivities = readingActivities.filter(
+  export let readingActivities: ActivityStatistics[] = [];
+  let readingActivitiesFinished: ActivityStatistics[] = [];
+  $: readingActivitiesFinished = (readingActivities ?? []).filter(
     (a) => a.status.status == READING_STATUS.FINISHED
   );
 
@@ -59,8 +60,10 @@
     );
   }
 
-  const most_read_categories: [string, number][] =
-    calc_most_read_categories(readingActivities);
+  let most_read_categories: [string, number][] = [];
+  $: most_read_categories = calc_most_read_categories(
+    readingActivitiesFinished
+  );
 
   const AVERAGE_NUM_WORDS_PER_PAGE = 250;
   const AVERAGE_NUM_PAGES_PER_BOOK = 350;
@@ -81,20 +84,33 @@
       )
     );
 
-  let books_without_pagecount = readingActivities.filter(
+  let books_without_pagecount: ActivityStatistics[] = [];
+  $: books_without_pagecount = readingActivitiesFinished.filter(
     (e) => e.book.bookApiData?.pageCount == null
   );
 
-  let num_pages = count_pages(readingActivities);
-  let pagecount_accuracy =
-    1 - books_without_pagecount.length / readingActivities.length;
+  let num_pages = 0;
+  $: num_pages = count_pages(readingActivitiesFinished);
 
-  let books_without_words = readingActivities.filter(
+  let pagecount_accuracy = 0;
+  $: pagecount_accuracy =
+    readingActivitiesFinished.length === 0
+      ? 0
+      : 1 - books_without_pagecount.length / readingActivitiesFinished.length;
+
+  let books_without_words: ActivityStatistics[] = [];
+  $: books_without_words = readingActivitiesFinished.filter(
     (e) => e.book.bookApiData?.pageCount == null || e.book.wordsPerPage == null
   );
-  let num_words = count_words(readingActivities);
-  let wordcount_accuracy =
-    1 - books_without_words.length / readingActivities.length;
+
+  let num_words = 0;
+  $: num_words = count_words(readingActivitiesFinished);
+
+  let wordcount_accuracy = 0;
+  $: wordcount_accuracy =
+    readingActivitiesFinished.length === 0
+      ? 0
+      : 1 - books_without_words.length / readingActivitiesFinished.length;
 
   let showModal = false;
   let booksMissingList = [];
@@ -103,42 +119,48 @@
 
   let books_read_per_month = (month: number): ActivityStatistics[] => {
     month = month == 0 ? 12 : month;
-    return readingActivities.filter(
+    return readingActivitiesFinished.filter(
       (e) =>
         e.dateFinished?.year == now.getFullYear() &&
-        e.dateFinished.month !== null &&
-        e.dateFinished.month == month
+        e.dateFinished?.month !== null &&
+        e.dateFinished?.month == month
     );
   };
 
-  let books_this_month: ActivityStatistics[] = books_read_per_month(
-    now.getMonth() + 1
-  );
+  let books_this_month: ActivityStatistics[] = [];
+  $: books_this_month = books_read_per_month(now.getMonth() + 1);
 
-  let pages_this_month = count_pages(books_this_month);
-  let words_this_month = count_words(books_this_month);
+  let pages_this_month = 0;
+  $: pages_this_month = count_pages(books_this_month);
+  let words_this_month = 0;
+  $: words_this_month = count_words(books_this_month);
 
-  let books_last_month: ActivityStatistics[] = books_read_per_month(
-    now.getMonth()
-  );
-  let pages_last_month = count_pages(books_last_month);
-  let words_last_month = count_words(books_last_month);
+  let books_last_month: ActivityStatistics[] = [];
+  $: books_last_month = books_read_per_month(now.getMonth());
+  let pages_last_month = 0;
+  $: pages_last_month = count_pages(books_last_month);
+  let words_last_month = 0;
+  $: words_last_month = count_words(books_last_month);
 
   let books_read_per_year = (year: number): ActivityStatistics[] => {
-    return readingActivities.filter((e) => e.dateFinished?.year == year);
+    return readingActivitiesFinished.filter(
+      (e) => e.dateFinished?.year == year
+    );
   };
 
-  let books_this_year: ActivityStatistics[] = books_read_per_year(
-    now.getFullYear()
-  );
-  let pages_this_year = count_pages(books_this_year);
-  let words_this_year = count_words(books_this_year);
+  let books_this_year: ActivityStatistics[] = [];
+  $: books_this_year = books_read_per_year(now.getFullYear());
+  let pages_this_year = 0;
+  $: pages_this_year = count_pages(books_this_year);
+  let words_this_year = 0;
+  $: words_this_year = count_words(books_this_year);
 
-  let books_last_year: ActivityStatistics[] = books_read_per_year(
-    now.getFullYear() - 1
-  );
-  let pages_last_year = count_pages(books_last_year);
-  let words_last_year = count_words(books_last_year);
+  let books_last_year: ActivityStatistics[] = [];
+  $: books_last_year = books_read_per_year(now.getFullYear() - 1);
+  let pages_last_year = 0;
+  $: pages_last_year = count_pages(books_last_year);
+  let words_last_year = 0;
+  $: words_last_year = count_words(books_last_year);
 
   let calc_most_read_authors = (entries: ActivityStatistics[]) => {
     let authors = entries.map((e) => e.book.author);
@@ -152,7 +174,8 @@
     );
     return sortedArray;
   };
-  $: most_read_authors = calc_most_read_authors(readingActivities);
+  let most_read_authors: [string, number][] = [];
+  $: most_read_authors = calc_most_read_authors(readingActivitiesFinished);
 
   let selected_option: "books" | "pages" | "words" = "books";
 
@@ -225,7 +248,7 @@
   <ul class="list-disc p-2 sm:w-[30rem]">
     {#each selected_option == "pages" ? books_without_pagecount : books_without_words as entry}
       <li>
-        <a href="book/{entry.book.name}?edit=true" class="hover:underline">
+        <a href={`/book/${entry.book.name}?edit=true`} class="hover:underline">
           {entry.book.name}
         </a>
       </li>
@@ -237,7 +260,7 @@
   {#if selected_option == "books"}
     <Stats
       name="total books read"
-      value={readingActivities.length}
+      value={readingActivitiesFinished.length}
       class="!bg-transparent backdrop-blur" />
   {:else if selected_option == "pages"}
     <Stats name="total pages read" class="!bg-transparent backdrop-blur">
@@ -301,7 +324,7 @@
 </div>
 
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">
-  {#if readingActivities.length > 0}
+  {#if readingActivitiesFinished.length > 0}
     <Stats
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
       class="!bg-transparent backdrop-blur">
@@ -317,7 +340,7 @@
       </div>
     </Stats>
   {/if}
-  {#if readingActivities.length > 0 && most_read_categories[0] !== undefined}
+  {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
     <Stats
       value={most_read_categories[0][0] +
         " (" +
