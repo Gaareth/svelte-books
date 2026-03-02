@@ -87,7 +87,7 @@ export async function getReadingActivity(
         status: status,
         accountId: accountId,
         visibility:
-          requestedAccountId === accountId ? undefined : VISIBILITY.PUBLIC,
+          requestedAccountId === accountId ? undefined : VISIBILITY.PUBLIC, // request all if owner, otherwise only public ones
       },
     },
     include: {
