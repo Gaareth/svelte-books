@@ -42,6 +42,13 @@ export async function createAccount(admin = false) {
   return account;
 }
 
+export async function isDBSeeded() {
+  const accountCount = await prisma.account.count();
+  const serverSettingsCount = await prisma.serverSettings.count();
+
+  return accountCount > 0 && serverSettingsCount > 0;
+}
+
 export async function createServerSettings() {
   return await prisma.serverSettings.create({
     data: {

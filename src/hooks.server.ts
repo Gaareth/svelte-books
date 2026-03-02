@@ -8,14 +8,16 @@ import { building } from "$app/environment";
 import { prisma } from "$lib/server/prisma";
 
 if (!building) {
-  try {
-    await seed.seedInitial();
-    console.log("[!] seeded initial data");
-  } catch (e) {
-    // ignore
-    console.error(e);
+  if (!(await seed.isDBSeeded())) {
+    try {
+      await seed.seedInitial();
+      console.log("[!] seeded initial data");
+    } catch (e) {
+      // ignore
+      console.error(e);
 
-    console.log("[!] failed to seed initial data");
+      console.log("[!] failed to seed initial data");
+    }
   }
 
   await seed.seedInitialAllAccounts();
