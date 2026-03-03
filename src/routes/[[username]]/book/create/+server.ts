@@ -98,6 +98,8 @@ export async function POST(req: RequestEvent) {
       message: book_exist ? "Added reading activity" : "Created book",
     });
   }
+
+  console.log("Error parsing form data for creating a new book:", result.error);
   error(400);
 }
 

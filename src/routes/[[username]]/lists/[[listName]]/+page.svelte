@@ -6,7 +6,6 @@
   import BookNew from "$lib/BookNew.svelte";
 
   export let data: PageData;
-  let listName = data.listName;
 </script>
 
 <svelte:head>

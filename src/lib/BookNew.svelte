@@ -20,7 +20,7 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import { slideHeight } from "./utils";
 
-  import type { Prisma } from "$prismaBrowser";
+  import type { Prisma, ReadingActivityType } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull } from "$appTypes";
@@ -30,6 +30,14 @@
 
   const CREATABLE_READING_STATUS = ["read", "reading", "to read"] as const;
   type CreatableReadingStatus = (typeof CREATABLE_READING_STATUS)[number];
+  const DISPLAY_NAME_TO_READING_STATUS: Record<
+    CreatableReadingStatus,
+    ReadingActivityType
+  > = {
+    read: READING_ACTIVITY_TYPES.FINISHED,
+    reading: READING_ACTIVITY_TYPES.READING,
+    "to read": READING_ACTIVITY_TYPES.TO_READ,
+  };
 
   export let readingStatus: CreatableReadingStatus = "read";
 
@@ -73,10 +81,7 @@
         wordsPerPage,
         dateStarted,
         dateFinished,
-        readingStatus:
-          readingStatus == "read"
-            ? READING_ACTIVITY_TYPES.FINISHED
-            : readingStatus,
+        readingStatus: DISPLAY_NAME_TO_READING_STATUS[readingStatus],
       }),
       headers: {
         "content-type": "application/json",
