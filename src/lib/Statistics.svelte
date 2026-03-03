@@ -12,9 +12,8 @@
   import Stats from "./Stats.svelte";
   import { sum } from "./utils";
 
-  //@ts-ignore
-
   import { READING_STATUS } from "$appTypes";
+
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {
       status: true;
@@ -33,34 +32,26 @@
       };
     };
   }>;
+
   export let readingActivities: ActivityStatistics[] = [];
-  let readingActivitiesFinished: ActivityStatistics[] = [];
-  $: readingActivitiesFinished = (readingActivities ?? []).filter(
-    (a) => a.status.status == READING_STATUS.FINISHED
+
+  // Derived reactive variables
+  $: readingActivitiesFinished = readingActivities.filter(
+    (a) => a.status?.status === READING_STATUS.FINISHED
   );
 
   function calc_most_read_categories(
-    entry: ActivityStatistics[]
+    entries: ActivityStatistics[]
   ): [string, number][] {
     const category_count_map = new Map<string, number>();
-
-    // Count each category across all books
-    entry.forEach((entry: ActivityStatistics) => {
-      entry.book.bookApiData?.categories.forEach(({ name: category_name }) => {
-        category_count_map.set(
-          category_name,
-          (category_count_map.get(category_name) || 0) + 1
-        );
+    entries.forEach((entry) => {
+      entry.book.bookApiData?.categories.forEach(({ name }) => {
+        category_count_map.set(name, (category_count_map.get(name) || 0) + 1);
       });
     });
-
-    // Convert the map to an array of tuples and sort by count in descending order
-    return Array.from(category_count_map).sort(
-      ([, countA], [, countB]) => countB - countA
-    );
+    return Array.from(category_count_map).sort(([, a], [, b]) => b - a);
   }
 
-  let most_read_categories: [string, number][] = [];
   $: most_read_categories = calc_most_read_categories(
     readingActivitiesFinished
   );
@@ -84,103 +75,89 @@
       )
     );
 
-  let books_without_pagecount: ActivityStatistics[] = [];
   $: books_without_pagecount = readingActivitiesFinished.filter(
     (e) => e.book.bookApiData?.pageCount == null
   );
+  $: books_without_words = readingActivitiesFinished.filter(
+    (e) => e.book.bookApiData?.pageCount == null || e.book.wordsPerPage == null
+  );
 
-  let num_pages = 0;
   $: num_pages = count_pages(readingActivitiesFinished);
-
-  let pagecount_accuracy = 0;
   $: pagecount_accuracy =
     readingActivitiesFinished.length === 0
       ? 0
       : 1 - books_without_pagecount.length / readingActivitiesFinished.length;
 
-  let books_without_words: ActivityStatistics[] = [];
-  $: books_without_words = readingActivitiesFinished.filter(
-    (e) => e.book.bookApiData?.pageCount == null || e.book.wordsPerPage == null
-  );
-
-  let num_words = 0;
   $: num_words = count_words(readingActivitiesFinished);
-
-  let wordcount_accuracy = 0;
   $: wordcount_accuracy =
     readingActivitiesFinished.length === 0
       ? 0
       : 1 - books_without_words.length / readingActivitiesFinished.length;
 
   let showModal = false;
-  let booksMissingList = [];
-
-  let now = new Date();
-
-  let books_read_per_month = (month: number): ActivityStatistics[] => {
-    month = month == 0 ? 12 : month;
-    return readingActivitiesFinished.filter(
-      (e) =>
-        e.dateFinished?.year == now.getFullYear() &&
-        e.dateFinished?.month !== null &&
-        e.dateFinished?.month == month
-    );
-  };
-
-  let books_this_month: ActivityStatistics[] = [];
-  $: books_this_month = books_read_per_month(now.getMonth() + 1);
-
-  let pages_this_month = 0;
-  $: pages_this_month = count_pages(books_this_month);
-  let words_this_month = 0;
-  $: words_this_month = count_words(books_this_month);
-
-  let books_last_month: ActivityStatistics[] = [];
-  $: books_last_month = books_read_per_month(now.getMonth());
-  let pages_last_month = 0;
-  $: pages_last_month = count_pages(books_last_month);
-  let words_last_month = 0;
-  $: words_last_month = count_words(books_last_month);
-
-  let books_read_per_year = (year: number): ActivityStatistics[] => {
-    return readingActivitiesFinished.filter(
-      (e) => e.dateFinished?.year == year
-    );
-  };
-
-  let books_this_year: ActivityStatistics[] = [];
-  $: books_this_year = books_read_per_year(now.getFullYear());
-  let pages_this_year = 0;
-  $: pages_this_year = count_pages(books_this_year);
-  let words_this_year = 0;
-  $: words_this_year = count_words(books_this_year);
-
-  let books_last_year: ActivityStatistics[] = [];
-  $: books_last_year = books_read_per_year(now.getFullYear() - 1);
-  let pages_last_year = 0;
-  $: pages_last_year = count_pages(books_last_year);
-  let words_last_year = 0;
-  $: words_last_year = count_words(books_last_year);
-
-  let calc_most_read_authors = (entries: ActivityStatistics[]) => {
-    let authors = entries.map((e) => e.book.author);
-    let author_occur: { [key: string]: number } = {};
-    authors.forEach((a: string) =>
-      author_occur[a] ? ++author_occur[a] : (author_occur[a] = 1)
-    );
-
-    var sortedArray = Object.entries(author_occur).sort(
-      ([, a], [, b]) => b - a
-    );
-    return sortedArray;
-  };
-  let most_read_authors: [string, number][] = [];
-  $: most_read_authors = calc_most_read_authors(readingActivitiesFinished);
-
-  let selected_option: "books" | "pages" | "words" = "books";
-
   let showModalCats = false;
   let showModalAuthors = false;
+  let selected_option: "books" | "pages" | "words" = "books";
+
+  $: now = new Date();
+
+  const books_read_per_month = (
+    month: number,
+    year: number,
+    activities: ActivityStatistics[]
+  ) =>
+    activities.filter(
+      (e) =>
+        e.dateFinished?.year === year &&
+        e.dateFinished?.month !== null &&
+        e.dateFinished.month === (month === 0 ? 12 : month)
+    );
+
+  $: books_this_month = books_read_per_month(
+    now.getMonth() + 1,
+    now.getFullYear(),
+    readingActivitiesFinished
+  );
+  $: books_last_month = books_read_per_month(
+    now.getMonth(),
+    now.getFullYear(),
+    readingActivitiesFinished
+  );
+
+  $: pages_this_month = count_pages(books_this_month);
+  $: words_this_month = count_words(books_this_month);
+
+  $: pages_last_month = count_pages(books_last_month);
+  $: words_last_month = count_words(books_last_month);
+
+  const books_read_per_year = (
+    year: number,
+    activities: ActivityStatistics[]
+  ) => activities.filter((e) => e.dateFinished?.year === year);
+
+  $: books_this_year = books_read_per_year(
+    now.getFullYear(),
+    readingActivitiesFinished
+  );
+  $: books_last_year = books_read_per_year(
+    now.getFullYear() - 1,
+    readingActivitiesFinished
+  );
+  $: pages_this_year = count_pages(books_this_year);
+  $: words_this_year = count_words(books_this_year);
+  $: pages_last_year = count_pages(books_last_year);
+  $: words_last_year = count_words(books_last_year);
+
+  const calc_most_read_authors = (entries: ActivityStatistics[]) => {
+    const author_occur: Record<string, number> = {};
+    entries.forEach((e) => {
+      const author = e.book.author;
+      author_occur[author] = (author_occur[author] || 0) + 1;
+    });
+    return Object.entries(author_occur).sort(([, a], [, b]) => b - a);
+  };
+
+  $: most_read_authors = calc_most_read_authors(readingActivitiesFinished);
 </script>
 
 <div
@@ -300,7 +277,7 @@
       class="!bg-transparent backdrop-blur" />
   {/if}
 
-  {#if books_last_year.length > 0}
+  {#if books_last_year.length > 0 || true}
     {#if selected_option == "books"}
       <Stats
         name="books read this year"
