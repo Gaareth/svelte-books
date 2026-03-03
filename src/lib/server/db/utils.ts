@@ -1,6 +1,6 @@
 import { getAccountByUsername } from "../../../auth";
 
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "$prismaClient";
 
 import {
   VISIBILITY,

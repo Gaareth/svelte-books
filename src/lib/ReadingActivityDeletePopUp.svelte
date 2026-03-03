@@ -6,7 +6,7 @@
   import { formatShort } from "./DateSelector.svelte";
   import Popup from "./Popup.svelte";
 
-  import type { Prisma } from "@prisma/client";
+  import type { Prisma } from "$prismaClient";
 
   export let openModal: boolean;
   export let deletionEntry: Prisma.ReadingActivityGetPayload<{

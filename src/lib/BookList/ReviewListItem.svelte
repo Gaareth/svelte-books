@@ -5,7 +5,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import { type Book } from "@prisma/client";
+  import { type Book } from "$prismaClient";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   //@ts-ignore

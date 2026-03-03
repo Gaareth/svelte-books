@@ -20,7 +20,7 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import { slideHeight } from "./utils";
 
-  import type { Prisma } from "@prisma/client";
+  import type { Prisma } from "$prismaClient";
 
   import { invalidateAll } from "$app/navigation";
   import { READING_STATUS, type queriedBookFull } from "$appTypes";

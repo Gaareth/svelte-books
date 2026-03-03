@@ -1,5 +1,5 @@
-import { BookSeries, PrismaClient } from "@prisma/client";
-import dotenv from "dotenv";
+import { type BookSeries, PrismaClient } from "$prismaClient";
+import "dotenv/config";
 
 import { READING_STATUS } from "../src/app.d";
 import { hashPassword } from "../src/auth";
@@ -9,10 +9,15 @@ import {
   seedInitial,
 } from "./seed-initial";
 
-// Load environment variables
-dotenv.config();
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const prisma = new PrismaClient();
+// Load environment variables
+// dotenv.config();
+
+const connectionString = `${process.env.DATABASE_URL}`;
+
+const adapter = new PrismaBetterSqlite3({ url: connectionString });
+const prisma = new PrismaClient({ adapter });
 
 const books: { name: string; author: string; description: string }[] = [
   {

@@ -13,7 +13,7 @@
     BookRating,
     queriedBookFull,
   } from "../../../../app";
-  import type { BookList } from "@prisma/client";
+  import type { BookList } from "$prismaClient";
 
   import { applyAction, enhance } from "$app/forms";
   import { goto } from "$app/navigation";

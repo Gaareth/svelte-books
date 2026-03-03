@@ -1,7 +1,7 @@
 import { sineInOut } from "svelte/easing";
 
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
-import type { BookApiData } from "@prisma/client";
+import type { BookApiData } from "$prismaClient";
 import type { OptionalDate } from "./DateSelector.svelte";
 import type { THEME } from "./stores/stores";
 

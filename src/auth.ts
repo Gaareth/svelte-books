@@ -2,8 +2,8 @@ import { error, redirect } from "@sveltejs/kit";
 import * as argon2 from "argon2";
 import { StatusCodes } from "http-status-codes";
 
+import type { Account } from "$prismaClient";
 import type { Session } from "@auth/sveltekit";
-import type { Account } from "@prisma/client";
 
 import { VISIBILITY, type READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";

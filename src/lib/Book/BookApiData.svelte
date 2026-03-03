@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Prisma } from "@prisma/client";
+  import type { Prisma } from "$prismaClient";
 
   type BookApiData = Prisma.BookApiDataGetPayload<{
     include: { categories: true };

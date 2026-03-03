@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "$prismaClient";
 
 // for information about these interfaces
 declare global {
@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "$prismaClient";
 
 export type BookIncludeCategory = Prisma.BookGetPayload<{
   include: {

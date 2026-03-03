@@ -2,8 +2,8 @@
   import clsx from "clsx";
 
   import type { PageData } from "./$types";
-
   import { page } from "$app/stores";
+
   import { READING_STATUS } from "$appTypes";
   import BookListReading from "$lib/BookList/BookListReading.svelte";
   import ReadingList from "$lib/BookList/ReadingList.svelte";

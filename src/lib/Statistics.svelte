@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Prisma } from "@prisma/client";
+  import type { Prisma } from "$prismaClient";
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
   import { twMerge } from "tailwind-merge";

@@ -15,6 +15,7 @@ const config = {
     adapter: adapter(),
     alias: {
       $appTypes: "src/app.d.ts",
+      $prismaClient: "src/generated/prisma/client",
     },
   },
 };

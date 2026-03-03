@@ -2,16 +2,20 @@ import {
   PrismaClient,
   type BookList,
   type ReadingActivityStatus,
-} from "@prisma/client";
-import dotenv from "dotenv";
+} from "$prismaClient";
+import "dotenv/config";
 
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { DEFAULT_LISTS, READING_STATUS_VALUES, VISIBILITY } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 
 // Load environment variables
-dotenv.config();
+// dotenv.config();
 
-const prisma = new PrismaClient();
+const connectionString = `${process.env.DATABASE_URL}`;
+
+const adapter = new PrismaBetterSqlite3({ url: connectionString });
+const prisma = new PrismaClient({ adapter });
 
 export async function createAccount(admin = false) {
   const username = process.env.username;

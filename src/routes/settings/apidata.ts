@@ -2,7 +2,7 @@ import { getBookApiData, queryBooksFull } from "../book/api/api.server";
 import { SSE_DATA } from "../book/api/update_all/sse";
 
 import type { queriedBookFull } from "$appTypes";
-import type { Book, BookApiData } from "@prisma/client";
+import type { Book, BookApiData } from "$prismaClient";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
