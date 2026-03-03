@@ -8,6 +8,7 @@
  * 🟢 You can import this file directly.
  */
 
+import * as $Enums from "./enums";
 import type * as Prisma from "./internal/prismaNamespace";
 
 export type IntFilter<$PrismaModel = never> = {
@@ -116,6 +117,25 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>;
 };
 
+export type EnumVisibilityFilter<$PrismaModel = never> = {
+  equals?: $Enums.Visibility | Prisma.EnumVisibilityFieldRefInput<$PrismaModel>;
+  in?: $Enums.Visibility[];
+  notIn?: $Enums.Visibility[];
+  not?: Prisma.NestedEnumVisibilityFilter<$PrismaModel> | $Enums.Visibility;
+};
+
+export type EnumVisibilityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Visibility | Prisma.EnumVisibilityFieldRefInput<$PrismaModel>;
+  in?: $Enums.Visibility[];
+  notIn?: $Enums.Visibility[];
+  not?:
+    | Prisma.NestedEnumVisibilityWithAggregatesFilter<$PrismaModel>
+    | $Enums.Visibility;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumVisibilityFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumVisibilityFilter<$PrismaModel>;
+};
+
 export type StringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
   in?: string[] | null;
@@ -150,6 +170,32 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>;
 };
 
+export type EnumReadingActivityTypeFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ReadingActivityType
+    | Prisma.EnumReadingActivityTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.ReadingActivityType[];
+  notIn?: $Enums.ReadingActivityType[];
+  not?:
+    | Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>
+    | $Enums.ReadingActivityType;
+};
+
+export type EnumReadingActivityTypeWithAggregatesFilter<$PrismaModel = never> =
+  {
+    equals?:
+      | $Enums.ReadingActivityType
+      | Prisma.EnumReadingActivityTypeFieldRefInput<$PrismaModel>;
+    in?: $Enums.ReadingActivityType[];
+    notIn?: $Enums.ReadingActivityType[];
+    not?:
+      | Prisma.NestedEnumReadingActivityTypeWithAggregatesFilter<$PrismaModel>
+      | $Enums.ReadingActivityType;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>;
+  };
+
 export type DateTimeFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
   in?: Date[] | string[];
@@ -173,6 +219,64 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>;
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>;
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>;
+};
+
+export type DateTimeNullableFilter<$PrismaModel = never> = {
+  equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null;
+  in?: Date[] | string[] | null;
+  notIn?: Date[] | string[] | null;
+  lt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  lte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+    | Date
+    | string
+    | null;
+};
+
+export type EnumBookOwnershipFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.BookOwnership
+    | Prisma.EnumBookOwnershipFieldRefInput<$PrismaModel>;
+  in?: $Enums.BookOwnership[];
+  notIn?: $Enums.BookOwnership[];
+  not?:
+    | Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>
+    | $Enums.BookOwnership;
+};
+
+export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null;
+  in?: Date[] | string[] | null;
+  notIn?: Date[] | string[] | null;
+  lt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  lte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedDateTimeNullableWithAggregatesFilter<$PrismaModel>
+    | Date
+    | string
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
+};
+
+export type EnumBookOwnershipWithAggregatesFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.BookOwnership
+    | Prisma.EnumBookOwnershipFieldRefInput<$PrismaModel>;
+  in?: $Enums.BookOwnership[];
+  notIn?: $Enums.BookOwnership[];
+  not?:
+    | Prisma.NestedEnumBookOwnershipWithAggregatesFilter<$PrismaModel>
+    | $Enums.BookOwnership;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>;
 };
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -328,6 +432,25 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>;
 };
 
+export type NestedEnumVisibilityFilter<$PrismaModel = never> = {
+  equals?: $Enums.Visibility | Prisma.EnumVisibilityFieldRefInput<$PrismaModel>;
+  in?: $Enums.Visibility[];
+  notIn?: $Enums.Visibility[];
+  not?: Prisma.NestedEnumVisibilityFilter<$PrismaModel> | $Enums.Visibility;
+};
+
+export type NestedEnumVisibilityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Visibility | Prisma.EnumVisibilityFieldRefInput<$PrismaModel>;
+  in?: $Enums.Visibility[];
+  notIn?: $Enums.Visibility[];
+  not?:
+    | Prisma.NestedEnumVisibilityWithAggregatesFilter<$PrismaModel>
+    | $Enums.Visibility;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumVisibilityFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumVisibilityFilter<$PrismaModel>;
+};
+
 export type NestedStringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
   in?: string[] | null;
@@ -362,6 +485,33 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>;
 };
 
+export type NestedEnumReadingActivityTypeFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ReadingActivityType
+    | Prisma.EnumReadingActivityTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.ReadingActivityType[];
+  notIn?: $Enums.ReadingActivityType[];
+  not?:
+    | Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>
+    | $Enums.ReadingActivityType;
+};
+
+export type NestedEnumReadingActivityTypeWithAggregatesFilter<
+  $PrismaModel = never
+> = {
+  equals?:
+    | $Enums.ReadingActivityType
+    | Prisma.EnumReadingActivityTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.ReadingActivityType[];
+  notIn?: $Enums.ReadingActivityType[];
+  not?:
+    | Prisma.NestedEnumReadingActivityTypeWithAggregatesFilter<$PrismaModel>
+    | $Enums.ReadingActivityType;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumReadingActivityTypeFilter<$PrismaModel>;
+};
+
 export type NestedDateTimeFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
   in?: Date[] | string[];
@@ -386,6 +536,65 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>;
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>;
 };
+
+export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+  equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null;
+  in?: Date[] | string[] | null;
+  notIn?: Date[] | string[] | null;
+  lt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  lte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+    | Date
+    | string
+    | null;
+};
+
+export type NestedEnumBookOwnershipFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.BookOwnership
+    | Prisma.EnumBookOwnershipFieldRefInput<$PrismaModel>;
+  in?: $Enums.BookOwnership[];
+  notIn?: $Enums.BookOwnership[];
+  not?:
+    | Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>
+    | $Enums.BookOwnership;
+};
+
+export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null;
+  in?: Date[] | string[] | null;
+  notIn?: Date[] | string[] | null;
+  lt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  lte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gt?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  gte?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedDateTimeNullableWithAggregatesFilter<$PrismaModel>
+    | Date
+    | string
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
+};
+
+export type NestedEnumBookOwnershipWithAggregatesFilter<$PrismaModel = never> =
+  {
+    equals?:
+      | $Enums.BookOwnership
+      | Prisma.EnumBookOwnershipFieldRefInput<$PrismaModel>;
+    in?: $Enums.BookOwnership[];
+    notIn?: $Enums.BookOwnership[];
+    not?:
+      | Prisma.NestedEnumBookOwnershipWithAggregatesFilter<$PrismaModel>
+      | $Enums.BookOwnership;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumBookOwnershipFilter<$PrismaModel>;
+  };
 
 export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null;

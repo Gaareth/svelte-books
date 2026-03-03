@@ -8,6 +8,7 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums";
 import type * as Prisma from "../internal/prismaNamespace";
 
 /**
@@ -31,6 +32,7 @@ export type AccountMinAggregateOutputType = {
   isAdmin: boolean | null;
   isPublic: boolean | null;
   onlyToLoggedIn: boolean | null;
+  visibility: $Enums.Visibility | null;
 };
 
 export type AccountMaxAggregateOutputType = {
@@ -41,6 +43,7 @@ export type AccountMaxAggregateOutputType = {
   isAdmin: boolean | null;
   isPublic: boolean | null;
   onlyToLoggedIn: boolean | null;
+  visibility: $Enums.Visibility | null;
 };
 
 export type AccountCountAggregateOutputType = {
@@ -51,6 +54,7 @@ export type AccountCountAggregateOutputType = {
   isAdmin: number;
   isPublic: number;
   onlyToLoggedIn: number;
+  visibility: number;
   _all: number;
 };
 
@@ -62,6 +66,7 @@ export type AccountMinAggregateInputType = {
   isAdmin?: true;
   isPublic?: true;
   onlyToLoggedIn?: true;
+  visibility?: true;
 };
 
 export type AccountMaxAggregateInputType = {
@@ -72,6 +77,7 @@ export type AccountMaxAggregateInputType = {
   isAdmin?: true;
   isPublic?: true;
   onlyToLoggedIn?: true;
+  visibility?: true;
 };
 
 export type AccountCountAggregateInputType = {
@@ -82,6 +88,7 @@ export type AccountCountAggregateInputType = {
   isAdmin?: true;
   isPublic?: true;
   onlyToLoggedIn?: true;
+  visibility?: true;
   _all?: true;
 };
 
@@ -170,6 +177,7 @@ export type AccountGroupByOutputType = {
   isAdmin: boolean;
   isPublic: boolean;
   onlyToLoggedIn: boolean;
+  visibility: $Enums.Visibility;
   _count: AccountCountAggregateOutputType | null;
   _min: AccountMinAggregateOutputType | null;
   _max: AccountMaxAggregateOutputType | null;
@@ -199,6 +207,7 @@ export type AccountWhereInput = {
   isAdmin?: Prisma.BoolFilter<"Account"> | boolean;
   isPublic?: Prisma.BoolFilter<"Account"> | boolean;
   onlyToLoggedIn?: Prisma.BoolFilter<"Account"> | boolean;
+  visibility?: Prisma.EnumVisibilityFilter<"Account"> | $Enums.Visibility;
   books?: Prisma.BookListRelationFilter;
   bookList?: Prisma.BookListListRelationFilter;
   readingActivity?: Prisma.ReadingActivityListRelationFilter;
@@ -213,6 +222,7 @@ export type AccountOrderByWithRelationInput = {
   isAdmin?: Prisma.SortOrder;
   isPublic?: Prisma.SortOrder;
   onlyToLoggedIn?: Prisma.SortOrder;
+  visibility?: Prisma.SortOrder;
   books?: Prisma.BookOrderByRelationAggregateInput;
   bookList?: Prisma.BookListOrderByRelationAggregateInput;
   readingActivity?: Prisma.ReadingActivityOrderByRelationAggregateInput;
@@ -231,6 +241,7 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<
     isAdmin?: Prisma.BoolFilter<"Account"> | boolean;
     isPublic?: Prisma.BoolFilter<"Account"> | boolean;
     onlyToLoggedIn?: Prisma.BoolFilter<"Account"> | boolean;
+    visibility?: Prisma.EnumVisibilityFilter<"Account"> | $Enums.Visibility;
     books?: Prisma.BookListRelationFilter;
     bookList?: Prisma.BookListListRelationFilter;
     readingActivity?: Prisma.ReadingActivityListRelationFilter;
@@ -247,6 +258,7 @@ export type AccountOrderByWithAggregationInput = {
   isAdmin?: Prisma.SortOrder;
   isPublic?: Prisma.SortOrder;
   onlyToLoggedIn?: Prisma.SortOrder;
+  visibility?: Prisma.SortOrder;
   _count?: Prisma.AccountCountOrderByAggregateInput;
   _max?: Prisma.AccountMaxOrderByAggregateInput;
   _min?: Prisma.AccountMinOrderByAggregateInput;
@@ -267,6 +279,9 @@ export type AccountScalarWhereWithAggregatesInput = {
   isAdmin?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean;
   isPublic?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean;
   onlyToLoggedIn?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityWithAggregatesFilter<"Account">
+    | $Enums.Visibility;
 };
 
 export type AccountCreateInput = {
@@ -277,6 +292,7 @@ export type AccountCreateInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput;
@@ -291,6 +307,7 @@ export type AccountUncheckedCreateInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput;
@@ -305,6 +322,9 @@ export type AccountUpdateInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput;
@@ -319,6 +339,9 @@ export type AccountUncheckedUpdateInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput;
@@ -333,6 +356,7 @@ export type AccountCreateManyInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
 };
 
 export type AccountUpdateManyMutationInput = {
@@ -343,6 +367,9 @@ export type AccountUpdateManyMutationInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 export type AccountUncheckedUpdateManyInput = {
@@ -353,6 +380,9 @@ export type AccountUncheckedUpdateManyInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 export type AccountCountOrderByAggregateInput = {
@@ -363,6 +393,7 @@ export type AccountCountOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder;
   isPublic?: Prisma.SortOrder;
   onlyToLoggedIn?: Prisma.SortOrder;
+  visibility?: Prisma.SortOrder;
 };
 
 export type AccountMaxOrderByAggregateInput = {
@@ -373,6 +404,7 @@ export type AccountMaxOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder;
   isPublic?: Prisma.SortOrder;
   onlyToLoggedIn?: Prisma.SortOrder;
+  visibility?: Prisma.SortOrder;
 };
 
 export type AccountMinOrderByAggregateInput = {
@@ -383,11 +415,16 @@ export type AccountMinOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder;
   isPublic?: Prisma.SortOrder;
   onlyToLoggedIn?: Prisma.SortOrder;
+  visibility?: Prisma.SortOrder;
 };
 
 export type AccountScalarRelationFilter = {
   is?: Prisma.AccountWhereInput;
   isNot?: Prisma.AccountWhereInput;
+};
+
+export type EnumVisibilityFieldUpdateOperationsInput = {
+  set?: $Enums.Visibility;
 };
 
 export type AccountCreateNestedOneWithoutBookListInput = {
@@ -502,6 +539,7 @@ export type AccountCreateWithoutBookListInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusCreateNestedManyWithoutAccountInput;
@@ -515,6 +553,7 @@ export type AccountUncheckedCreateWithoutBookListInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedCreateNestedManyWithoutAccountInput;
@@ -556,6 +595,9 @@ export type AccountUpdateWithoutBookListInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUpdateManyWithoutAccountNestedInput;
@@ -569,6 +611,9 @@ export type AccountUncheckedUpdateWithoutBookListInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedUpdateManyWithoutAccountNestedInput;
@@ -582,6 +627,7 @@ export type AccountCreateWithoutReadingActivityStatusInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput;
@@ -595,6 +641,7 @@ export type AccountUncheckedCreateWithoutReadingActivityStatusInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput;
@@ -636,6 +683,9 @@ export type AccountUpdateWithoutReadingActivityStatusInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput;
@@ -649,6 +699,9 @@ export type AccountUncheckedUpdateWithoutReadingActivityStatusInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput;
@@ -662,6 +715,7 @@ export type AccountCreateWithoutReadingActivityInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusCreateNestedManyWithoutAccountInput;
@@ -675,6 +729,7 @@ export type AccountUncheckedCreateWithoutReadingActivityInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput;
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedCreateNestedManyWithoutAccountInput;
@@ -716,6 +771,9 @@ export type AccountUpdateWithoutReadingActivityInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUpdateManyWithoutAccountNestedInput;
@@ -729,6 +787,9 @@ export type AccountUncheckedUpdateWithoutReadingActivityInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput;
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedUpdateManyWithoutAccountNestedInput;
@@ -742,6 +803,7 @@ export type AccountCreateWithoutBooksInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusCreateNestedManyWithoutAccountInput;
@@ -755,6 +817,7 @@ export type AccountUncheckedCreateWithoutBooksInput = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: $Enums.Visibility;
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedCreateNestedManyWithoutAccountInput;
@@ -796,6 +859,9 @@ export type AccountUpdateWithoutBooksInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUpdateManyWithoutAccountNestedInput;
@@ -809,6 +875,9 @@ export type AccountUncheckedUpdateWithoutBooksInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput;
   readingActivityStatus?: Prisma.ReadingActivityStatusUncheckedUpdateManyWithoutAccountNestedInput;
@@ -895,6 +964,7 @@ export type AccountSelect<
     isAdmin?: boolean;
     isPublic?: boolean;
     onlyToLoggedIn?: boolean;
+    visibility?: boolean;
     books?: boolean | Prisma.Account$booksArgs<ExtArgs>;
     bookList?: boolean | Prisma.Account$bookListArgs<ExtArgs>;
     readingActivity?: boolean | Prisma.Account$readingActivityArgs<ExtArgs>;
@@ -917,6 +987,7 @@ export type AccountSelectCreateManyAndReturn<
     isAdmin?: boolean;
     isPublic?: boolean;
     onlyToLoggedIn?: boolean;
+    visibility?: boolean;
   },
   ExtArgs["result"]["account"]
 >;
@@ -932,6 +1003,7 @@ export type AccountSelectUpdateManyAndReturn<
     isAdmin?: boolean;
     isPublic?: boolean;
     onlyToLoggedIn?: boolean;
+    visibility?: boolean;
   },
   ExtArgs["result"]["account"]
 >;
@@ -944,6 +1016,7 @@ export type AccountSelectScalar = {
   isAdmin?: boolean;
   isPublic?: boolean;
   onlyToLoggedIn?: boolean;
+  visibility?: boolean;
 };
 
 export type AccountOmit<
@@ -955,7 +1028,8 @@ export type AccountOmit<
   | "password_salt"
   | "isAdmin"
   | "isPublic"
-  | "onlyToLoggedIn",
+  | "onlyToLoggedIn"
+  | "visibility",
   ExtArgs["result"]["account"]
 >;
 export type AccountInclude<
@@ -995,6 +1069,7 @@ export type $AccountPayload<
       isAdmin: boolean;
       isPublic: boolean;
       onlyToLoggedIn: boolean;
+      visibility: $Enums.Visibility;
     },
     ExtArgs["result"]["account"]
   >;
@@ -1632,6 +1707,7 @@ export interface AccountFieldRefs {
   readonly isAdmin: Prisma.FieldRef<"Account", "Boolean">;
   readonly isPublic: Prisma.FieldRef<"Account", "Boolean">;
   readonly onlyToLoggedIn: Prisma.FieldRef<"Account", "Boolean">;
+  readonly visibility: Prisma.FieldRef<"Account", "Visibility">;
 }
 
 // Custom InputTypes

@@ -425,6 +425,7 @@ export const ModelName = {
   ReadingActivityStatus: "ReadingActivityStatus",
   ReadingActivity: "ReadingActivity",
   Book: "Book",
+  Ownership: "Ownership",
   Rating: "Rating",
 } as const;
 
@@ -459,6 +460,7 @@ export type TypeMap<
       | "readingActivityStatus"
       | "readingActivity"
       | "book"
+      | "ownership"
       | "rating";
     txIsolationLevel: TransactionIsolationLevel;
   };
@@ -1375,6 +1377,82 @@ export type TypeMap<
         };
       };
     };
+    Ownership: {
+      payload: Prisma.$OwnershipPayload<ExtArgs>;
+      fields: Prisma.OwnershipFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.OwnershipFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.OwnershipFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        findFirst: {
+          args: Prisma.OwnershipFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.OwnershipFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        findMany: {
+          args: Prisma.OwnershipFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>[];
+        };
+        create: {
+          args: Prisma.OwnershipCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        createMany: {
+          args: Prisma.OwnershipCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.OwnershipCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>[];
+        };
+        delete: {
+          args: Prisma.OwnershipDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        update: {
+          args: Prisma.OwnershipUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        deleteMany: {
+          args: Prisma.OwnershipDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.OwnershipUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.OwnershipUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>[];
+        };
+        upsert: {
+          args: Prisma.OwnershipUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnershipPayload>;
+        };
+        aggregate: {
+          args: Prisma.OwnershipAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnership>;
+        };
+        groupBy: {
+          args: Prisma.OwnershipGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.OwnershipGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.OwnershipCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.OwnershipCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
     Rating: {
       payload: Prisma.$RatingPayload<ExtArgs>;
       fields: Prisma.RatingFieldRefs;
@@ -1513,6 +1591,7 @@ export const AccountScalarFieldEnum = {
   isAdmin: "isAdmin",
   isPublic: "isPublic",
   onlyToLoggedIn: "onlyToLoggedIn",
+  visibility: "visibility",
 } as const;
 
 export type AccountScalarFieldEnum =
@@ -1621,13 +1700,24 @@ export const BookScalarFieldEnum = {
   bookApiDataId: "bookApiDataId",
   wordsPerPage: "wordsPerPage",
   accountId: "accountId",
-  location: "location",
-  recommendation: "recommendation",
+  recommendedBy: "recommendedBy",
   description: "description",
 } as const;
 
 export type BookScalarFieldEnum =
   (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum];
+
+export const OwnershipScalarFieldEnum = {
+  id: "id",
+  createdAt: "createdAt",
+  location: "location",
+  aquiredAt: "aquiredAt",
+  status: "status",
+  bookId: "bookId",
+} as const;
+
+export type OwnershipScalarFieldEnum =
+  (typeof OwnershipScalarFieldEnum)[keyof typeof OwnershipScalarFieldEnum];
 
 export const RatingScalarFieldEnum = {
   ratingId: "ratingId",
@@ -1682,11 +1772,33 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
+ * Reference to a field of type 'Visibility'
+ */
+export type EnumVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "Visibility"
+>;
+
+/**
+ * Reference to a field of type 'ReadingActivityType'
+ */
+export type EnumReadingActivityTypeFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, "ReadingActivityType">;
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   "DateTime"
+>;
+
+/**
+ * Reference to a field of type 'BookOwnership'
+ */
+export type EnumBookOwnershipFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "BookOwnership"
 >;
 
 /**
@@ -1812,6 +1924,7 @@ export type GlobalOmitConfig = {
   readingActivityStatus?: Prisma.ReadingActivityStatusOmit;
   readingActivity?: Prisma.ReadingActivityOmit;
   book?: Prisma.BookOmit;
+  ownership?: Prisma.OwnershipOmit;
   rating?: Prisma.RatingOmit;
 };
 

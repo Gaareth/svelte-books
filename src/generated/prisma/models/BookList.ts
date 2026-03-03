@@ -8,6 +8,7 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums";
 import type * as Prisma from "../internal/prismaNamespace";
 
 /**
@@ -36,14 +37,14 @@ export type BookListSumAggregateOutputType = {
 export type BookListMinAggregateOutputType = {
   id: number | null;
   name: string | null;
-  visibility: string | null;
+  visibility: $Enums.Visibility | null;
   accountId: string | null;
 };
 
 export type BookListMaxAggregateOutputType = {
   id: number | null;
   name: string | null;
-  visibility: string | null;
+  visibility: $Enums.Visibility | null;
   accountId: string | null;
 };
 
@@ -179,7 +180,7 @@ export type BookListGroupByArgs<
 export type BookListGroupByOutputType = {
   id: number;
   name: string;
-  visibility: string;
+  visibility: $Enums.Visibility;
   accountId: string;
   _count: BookListCountAggregateOutputType | null;
   _avg: BookListAvgAggregateOutputType | null;
@@ -207,7 +208,7 @@ export type BookListWhereInput = {
   NOT?: Prisma.BookListWhereInput | Prisma.BookListWhereInput[];
   id?: Prisma.IntFilter<"BookList"> | number;
   name?: Prisma.StringFilter<"BookList"> | string;
-  visibility?: Prisma.StringFilter<"BookList"> | string;
+  visibility?: Prisma.EnumVisibilityFilter<"BookList"> | $Enums.Visibility;
   accountId?: Prisma.StringFilter<"BookList"> | string;
   books?: Prisma.BookListRelationFilter;
   account?: Prisma.XOR<
@@ -233,7 +234,7 @@ export type BookListWhereUniqueInput = Prisma.AtLeast<
     OR?: Prisma.BookListWhereInput[];
     NOT?: Prisma.BookListWhereInput | Prisma.BookListWhereInput[];
     name?: Prisma.StringFilter<"BookList"> | string;
-    visibility?: Prisma.StringFilter<"BookList"> | string;
+    visibility?: Prisma.EnumVisibilityFilter<"BookList"> | $Enums.Visibility;
     accountId?: Prisma.StringFilter<"BookList"> | string;
     books?: Prisma.BookListRelationFilter;
     account?: Prisma.XOR<
@@ -266,13 +267,15 @@ export type BookListScalarWhereWithAggregatesInput = {
     | Prisma.BookListScalarWhereWithAggregatesInput[];
   id?: Prisma.IntWithAggregatesFilter<"BookList"> | number;
   name?: Prisma.StringWithAggregatesFilter<"BookList"> | string;
-  visibility?: Prisma.StringWithAggregatesFilter<"BookList"> | string;
+  visibility?:
+    | Prisma.EnumVisibilityWithAggregatesFilter<"BookList">
+    | $Enums.Visibility;
   accountId?: Prisma.StringWithAggregatesFilter<"BookList"> | string;
 };
 
 export type BookListCreateInput = {
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutBookListInput;
   account: Prisma.AccountCreateNestedOneWithoutBookListInput;
 };
@@ -280,14 +283,16 @@ export type BookListCreateInput = {
 export type BookListUncheckedCreateInput = {
   id?: number;
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   accountId: string;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutBookListInput;
 };
 
 export type BookListUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutBookListNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBookListNestedInput;
 };
@@ -295,7 +300,9 @@ export type BookListUpdateInput = {
 export type BookListUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
   books?: Prisma.BookUncheckedUpdateManyWithoutBookListNestedInput;
 };
@@ -303,19 +310,23 @@ export type BookListUncheckedUpdateInput = {
 export type BookListCreateManyInput = {
   id?: number;
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   accountId: string;
 };
 
 export type BookListUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 export type BookListUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -492,14 +503,14 @@ export type BookListUpdateOneWithoutBooksNestedInput = {
 
 export type BookListCreateWithoutAccountInput = {
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookCreateNestedManyWithoutBookListInput;
 };
 
 export type BookListUncheckedCreateWithoutAccountInput = {
   id?: number;
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   books?: Prisma.BookUncheckedCreateNestedManyWithoutBookListInput;
 };
 
@@ -551,20 +562,20 @@ export type BookListScalarWhereInput = {
   NOT?: Prisma.BookListScalarWhereInput | Prisma.BookListScalarWhereInput[];
   id?: Prisma.IntFilter<"BookList"> | number;
   name?: Prisma.StringFilter<"BookList"> | string;
-  visibility?: Prisma.StringFilter<"BookList"> | string;
+  visibility?: Prisma.EnumVisibilityFilter<"BookList"> | $Enums.Visibility;
   accountId?: Prisma.StringFilter<"BookList"> | string;
 };
 
 export type BookListCreateWithoutBooksInput = {
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   account: Prisma.AccountCreateNestedOneWithoutBookListInput;
 };
 
 export type BookListUncheckedCreateWithoutBooksInput = {
   id?: number;
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
   accountId: string;
 };
 
@@ -598,40 +609,50 @@ export type BookListUpdateToOneWithWhereWithoutBooksInput = {
 
 export type BookListUpdateWithoutBooksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   account?: Prisma.AccountUpdateOneRequiredWithoutBookListNestedInput;
 };
 
 export type BookListUncheckedUpdateWithoutBooksInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type BookListCreateManyAccountInput = {
   id?: number;
   name: string;
-  visibility?: string;
+  visibility?: $Enums.Visibility;
 };
 
 export type BookListUpdateWithoutAccountInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUpdateManyWithoutBookListNestedInput;
 };
 
 export type BookListUncheckedUpdateWithoutAccountInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   books?: Prisma.BookUncheckedUpdateManyWithoutBookListNestedInput;
 };
 
 export type BookListUncheckedUpdateManyWithoutAccountInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   name?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 /**
@@ -753,7 +774,7 @@ export type $BookListPayload<
     {
       id: number;
       name: string;
-      visibility: string;
+      visibility: $Enums.Visibility;
       accountId: string;
     },
     ExtArgs["result"]["bookList"]
@@ -1366,7 +1387,7 @@ export interface Prisma__BookListClient<
 export interface BookListFieldRefs {
   readonly id: Prisma.FieldRef<"BookList", "Int">;
   readonly name: Prisma.FieldRef<"BookList", "String">;
-  readonly visibility: Prisma.FieldRef<"BookList", "String">;
+  readonly visibility: Prisma.FieldRef<"BookList", "Visibility">;
   readonly accountId: Prisma.FieldRef<"BookList", "String">;
 }
 

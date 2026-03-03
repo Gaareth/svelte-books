@@ -34,6 +34,7 @@ model Account {
   isAdmin        Boolean @default(false)
   isPublic       Boolean @default(false)
   onlyToLoggedIn Boolean @default(false)
+  visibility      Visibility @default(PRIVATE)
 
   books Book[]
 
@@ -42,19 +43,19 @@ model Account {
   readingActivityStatus ReadingActivityStatus[]
 }
 
-// enum Visibility {
-//   PUBLIC
-//   PRIVATE
-//   UNLISTED
-// }
+enum Visibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+  AUTHENTICATED
+}
 
 model BookList {
   id    Int    @id @default(autoincrement())
   name  String
   books Book[]
 
-  // visibility Visibility @default(PRIVATE)
-  visibility String @default("private")
+  visibility Visibility @default(PRIVATE)
 
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
@@ -117,10 +118,19 @@ model Graph {
   readingActivityId Int
 }
 
+enum ReadingActivityType {
+  ACQUIRED
+  TO_READ
+  READING
+  FINISHED
+  DID_NOT_FINISH
+  PAUSED
+}
+
 model ReadingActivityStatus {
-  id         Int    @id @default(autoincrement())
-  status     String // reading, finished, did not finish, paused
-  visibility String @default("private")
+  id         Int        @id @default(autoincrement())
+  status     ReadingActivityType
+  visibility Visibility @default(PRIVATE)
 
   ReadingActivity ReadingActivity[]
 

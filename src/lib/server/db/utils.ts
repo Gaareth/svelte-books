@@ -1,12 +1,12 @@
 import { getAccountByUsername } from "../../../auth";
 
-import type { Prisma } from "$prismaClient";
-
 import {
-  VISIBILITY,
-  type queriedBookFull,
-  type READING_STATUS,
-} from "$appTypes";
+  Visibility,
+  type Prisma,
+  type ReadingActivityType,
+} from "$prismaClient";
+
+import { type queriedBookFull } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils";
 
@@ -66,7 +66,7 @@ export async function loadBooks(
 
 export async function getReadingActivity(
   sessionAccountParams: GetAccountParams,
-  status: READING_STATUS | undefined = undefined,
+  status: ReadingActivityType | undefined = undefined,
   requestedAccountUsername?: string
 ) {
   const { accountId, accountUsername } = sessionAccountParams;
@@ -87,7 +87,7 @@ export async function getReadingActivity(
         status: status,
         accountId: accountId,
         visibility:
-          requestedAccountId === accountId ? undefined : VISIBILITY.PUBLIC, // request all if owner, otherwise only public ones
+          requestedAccountId === accountId ? undefined : Visibility.PUBLIC, // request all if owner, otherwise only public ones
       },
     },
     include: {

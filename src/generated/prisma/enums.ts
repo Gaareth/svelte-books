@@ -8,5 +8,32 @@
  * 🟢 You can import this file directly.
  */
 
-// This file is empty because there are no enums in the schema.
-export {};
+export const Visibility = {
+  PUBLIC: "PUBLIC",
+  PRIVATE: "PRIVATE",
+  UNLISTED: "UNLISTED",
+  AUTHENTICATED: "AUTHENTICATED",
+} as const;
+
+export type Visibility = (typeof Visibility)[keyof typeof Visibility];
+
+export const ReadingActivityType = {
+  ACQUIRED: "ACQUIRED",
+  TO_READ: "TO_READ",
+  READING: "READING",
+  FINISHED: "FINISHED",
+  DID_NOT_FINISH: "DID_NOT_FINISH",
+  PAUSED: "PAUSED",
+} as const;
+
+export type ReadingActivityType =
+  (typeof ReadingActivityType)[keyof typeof ReadingActivityType];
+
+export const BookOwnership = {
+  OWNED: "OWNED",
+  NOT_OWNED: "NOT_OWNED",
+  BORROWED: "BORROWED",
+  LIBRARY: "LIBRARY",
+} as const;
+
+export type BookOwnership = (typeof BookOwnership)[keyof typeof BookOwnership];

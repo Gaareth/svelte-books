@@ -49,8 +49,7 @@ export type BookMinAggregateOutputType = {
   bookApiDataId: string | null;
   wordsPerPage: number | null;
   accountId: string | null;
-  location: string | null;
-  recommendation: string | null;
+  recommendedBy: string | null;
   description: string | null;
 };
 
@@ -66,8 +65,7 @@ export type BookMaxAggregateOutputType = {
   bookApiDataId: string | null;
   wordsPerPage: number | null;
   accountId: string | null;
-  location: string | null;
-  recommendation: string | null;
+  recommendedBy: string | null;
   description: string | null;
 };
 
@@ -83,8 +81,7 @@ export type BookCountAggregateOutputType = {
   bookApiDataId: number;
   wordsPerPage: number;
   accountId: number;
-  location: number;
-  recommendation: number;
+  recommendedBy: number;
   description: number;
   _all: number;
 };
@@ -113,8 +110,7 @@ export type BookMinAggregateInputType = {
   bookApiDataId?: true;
   wordsPerPage?: true;
   accountId?: true;
-  location?: true;
-  recommendation?: true;
+  recommendedBy?: true;
   description?: true;
 };
 
@@ -130,8 +126,7 @@ export type BookMaxAggregateInputType = {
   bookApiDataId?: true;
   wordsPerPage?: true;
   accountId?: true;
-  location?: true;
-  recommendation?: true;
+  recommendedBy?: true;
   description?: true;
 };
 
@@ -147,8 +142,7 @@ export type BookCountAggregateInputType = {
   bookApiDataId?: true;
   wordsPerPage?: true;
   accountId?: true;
-  location?: true;
-  recommendation?: true;
+  recommendedBy?: true;
   description?: true;
   _all?: true;
 };
@@ -256,8 +250,7 @@ export type BookGroupByOutputType = {
   bookApiDataId: string | null;
   wordsPerPage: number | null;
   accountId: string;
-  location: string | null;
-  recommendation: string | null;
+  recommendedBy: string | null;
   description: string | null;
   _count: BookCountAggregateOutputType | null;
   _avg: BookAvgAggregateOutputType | null;
@@ -293,8 +286,7 @@ export type BookWhereInput = {
   bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null;
   wordsPerPage?: Prisma.IntNullableFilter<"Book"> | number | null;
   accountId?: Prisma.StringFilter<"Book"> | string;
-  location?: Prisma.StringNullableFilter<"Book"> | string | null;
-  recommendation?: Prisma.StringNullableFilter<"Book"> | string | null;
+  recommendedBy?: Prisma.StringNullableFilter<"Book"> | string | null;
   description?: Prisma.StringNullableFilter<"Book"> | string | null;
   bookList?: Prisma.XOR<
     Prisma.BookListNullableScalarRelationFilter,
@@ -313,6 +305,10 @@ export type BookWhereInput = {
     Prisma.AccountWhereInput
   >;
   readingActivity?: Prisma.ReadingActivityListRelationFilter;
+  ownership?: Prisma.XOR<
+    Prisma.OwnershipNullableScalarRelationFilter,
+    Prisma.OwnershipWhereInput
+  > | null;
 };
 
 export type BookOrderByWithRelationInput = {
@@ -327,14 +323,14 @@ export type BookOrderByWithRelationInput = {
   bookApiDataId?: Prisma.SortOrderInput | Prisma.SortOrder;
   wordsPerPage?: Prisma.SortOrderInput | Prisma.SortOrder;
   accountId?: Prisma.SortOrder;
-  location?: Prisma.SortOrderInput | Prisma.SortOrder;
-  recommendation?: Prisma.SortOrderInput | Prisma.SortOrder;
+  recommendedBy?: Prisma.SortOrderInput | Prisma.SortOrder;
   description?: Prisma.SortOrderInput | Prisma.SortOrder;
   bookList?: Prisma.BookListOrderByWithRelationInput;
   bookSeries?: Prisma.BookSeriesOrderByWithRelationInput;
   bookApiData?: Prisma.BookApiDataOrderByWithRelationInput;
   account?: Prisma.AccountOrderByWithRelationInput;
   readingActivity?: Prisma.ReadingActivityOrderByRelationAggregateInput;
+  ownership?: Prisma.OwnershipOrderByWithRelationInput;
 };
 
 export type BookWhereUniqueInput = Prisma.AtLeast<
@@ -353,8 +349,7 @@ export type BookWhereUniqueInput = Prisma.AtLeast<
     bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null;
     wordsPerPage?: Prisma.IntNullableFilter<"Book"> | number | null;
     accountId?: Prisma.StringFilter<"Book"> | string;
-    location?: Prisma.StringNullableFilter<"Book"> | string | null;
-    recommendation?: Prisma.StringNullableFilter<"Book"> | string | null;
+    recommendedBy?: Prisma.StringNullableFilter<"Book"> | string | null;
     description?: Prisma.StringNullableFilter<"Book"> | string | null;
     bookList?: Prisma.XOR<
       Prisma.BookListNullableScalarRelationFilter,
@@ -373,6 +368,10 @@ export type BookWhereUniqueInput = Prisma.AtLeast<
       Prisma.AccountWhereInput
     >;
     readingActivity?: Prisma.ReadingActivityListRelationFilter;
+    ownership?: Prisma.XOR<
+      Prisma.OwnershipNullableScalarRelationFilter,
+      Prisma.OwnershipWhereInput
+    > | null;
   },
   "id"
 >;
@@ -389,8 +388,7 @@ export type BookOrderByWithAggregationInput = {
   bookApiDataId?: Prisma.SortOrderInput | Prisma.SortOrder;
   wordsPerPage?: Prisma.SortOrderInput | Prisma.SortOrder;
   accountId?: Prisma.SortOrder;
-  location?: Prisma.SortOrderInput | Prisma.SortOrder;
-  recommendation?: Prisma.SortOrderInput | Prisma.SortOrder;
+  recommendedBy?: Prisma.SortOrderInput | Prisma.SortOrder;
   description?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.BookCountOrderByAggregateInput;
   _avg?: Prisma.BookAvgOrderByAggregateInput;
@@ -424,8 +422,7 @@ export type BookScalarWhereWithAggregatesInput = {
     | null;
   wordsPerPage?: Prisma.IntNullableWithAggregatesFilter<"Book"> | number | null;
   accountId?: Prisma.StringWithAggregatesFilter<"Book"> | string;
-  location?: Prisma.StringNullableWithAggregatesFilter<"Book"> | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.StringNullableWithAggregatesFilter<"Book">
     | string
     | null;
@@ -443,14 +440,14 @@ export type BookCreateInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
   account: Prisma.AccountCreateNestedOneWithoutBooksInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateInput = {
@@ -465,10 +462,10 @@ export type BookUncheckedCreateInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookUpdateInput = {
@@ -479,8 +476,7 @@ export type BookUpdateInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -490,6 +486,7 @@ export type BookUpdateInput = {
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateInput = {
@@ -507,13 +504,13 @@ export type BookUncheckedUpdateInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
 };
 
 export type BookCreateManyInput = {
@@ -528,8 +525,7 @@ export type BookCreateManyInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
 };
 
@@ -541,8 +537,7 @@ export type BookUpdateManyMutationInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -564,8 +559,7 @@ export type BookUncheckedUpdateManyInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -599,8 +593,7 @@ export type BookCountOrderByAggregateInput = {
   bookApiDataId?: Prisma.SortOrder;
   wordsPerPage?: Prisma.SortOrder;
   accountId?: Prisma.SortOrder;
-  location?: Prisma.SortOrder;
-  recommendation?: Prisma.SortOrder;
+  recommendedBy?: Prisma.SortOrder;
   description?: Prisma.SortOrder;
 };
 
@@ -622,8 +615,7 @@ export type BookMaxOrderByAggregateInput = {
   bookApiDataId?: Prisma.SortOrder;
   wordsPerPage?: Prisma.SortOrder;
   accountId?: Prisma.SortOrder;
-  location?: Prisma.SortOrder;
-  recommendation?: Prisma.SortOrder;
+  recommendedBy?: Prisma.SortOrder;
   description?: Prisma.SortOrder;
 };
 
@@ -639,8 +631,7 @@ export type BookMinOrderByAggregateInput = {
   bookApiDataId?: Prisma.SortOrder;
   wordsPerPage?: Prisma.SortOrder;
   accountId?: Prisma.SortOrder;
-  location?: Prisma.SortOrder;
-  recommendation?: Prisma.SortOrder;
+  recommendedBy?: Prisma.SortOrder;
   description?: Prisma.SortOrder;
 };
 
@@ -1020,6 +1011,32 @@ export type BookUpdateOneRequiredWithoutReadingActivityNestedInput = {
   >;
 };
 
+export type BookCreateNestedOneWithoutOwnershipInput = {
+  create?: Prisma.XOR<
+    Prisma.BookCreateWithoutOwnershipInput,
+    Prisma.BookUncheckedCreateWithoutOwnershipInput
+  >;
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutOwnershipInput;
+  connect?: Prisma.BookWhereUniqueInput;
+};
+
+export type BookUpdateOneRequiredWithoutOwnershipNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.BookCreateWithoutOwnershipInput,
+    Prisma.BookUncheckedCreateWithoutOwnershipInput
+  >;
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutOwnershipInput;
+  upsert?: Prisma.BookUpsertWithoutOwnershipInput;
+  connect?: Prisma.BookWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.BookUpdateToOneWithWhereWithoutOwnershipInput,
+      Prisma.BookUpdateWithoutOwnershipInput
+    >,
+    Prisma.BookUncheckedUpdateWithoutOwnershipInput
+  >;
+};
+
 export type BookCreateWithoutAccountInput = {
   id?: string;
   createdAt?: Date | string;
@@ -1028,13 +1045,13 @@ export type BookCreateWithoutAccountInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateWithoutAccountInput = {
@@ -1048,10 +1065,10 @@ export type BookUncheckedCreateWithoutAccountInput = {
   bookSeriesId?: number | null;
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookCreateOrConnectWithoutAccountInput = {
@@ -1109,8 +1126,7 @@ export type BookScalarWhereInput = {
   bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null;
   wordsPerPage?: Prisma.IntNullableFilter<"Book"> | number | null;
   accountId?: Prisma.StringFilter<"Book"> | string;
-  location?: Prisma.StringNullableFilter<"Book"> | string | null;
-  recommendation?: Prisma.StringNullableFilter<"Book"> | string | null;
+  recommendedBy?: Prisma.StringNullableFilter<"Book"> | string | null;
   description?: Prisma.StringNullableFilter<"Book"> | string | null;
 };
 
@@ -1122,13 +1138,13 @@ export type BookCreateWithoutBookListInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
   account: Prisma.AccountCreateNestedOneWithoutBooksInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateWithoutBookListInput = {
@@ -1142,10 +1158,10 @@ export type BookUncheckedCreateWithoutBookListInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookCreateOrConnectWithoutBookListInput = {
@@ -1198,13 +1214,13 @@ export type BookCreateWithoutBookSeriesInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
   account: Prisma.AccountCreateNestedOneWithoutBooksInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateWithoutBookSeriesInput = {
@@ -1218,10 +1234,10 @@ export type BookUncheckedCreateWithoutBookSeriesInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookCreateOrConnectWithoutBookSeriesInput = {
@@ -1274,13 +1290,13 @@ export type BookCreateWithoutBookApiDataInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
   account: Prisma.AccountCreateNestedOneWithoutBooksInput;
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateWithoutBookApiDataInput = {
@@ -1294,10 +1310,10 @@ export type BookUncheckedCreateWithoutBookApiDataInput = {
   bookSeriesId?: number | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookCreateOrConnectWithoutBookApiDataInput = {
@@ -1350,13 +1366,13 @@ export type BookCreateWithoutReadingActivityInput = {
   author: string;
   coverImage?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
   account: Prisma.AccountCreateNestedOneWithoutBooksInput;
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput;
 };
 
 export type BookUncheckedCreateWithoutReadingActivityInput = {
@@ -1371,9 +1387,9 @@ export type BookUncheckedCreateWithoutReadingActivityInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput;
 };
 
 export type BookCreateOrConnectWithoutReadingActivityInput = {
@@ -1412,8 +1428,7 @@ export type BookUpdateWithoutReadingActivityInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1422,6 +1437,7 @@ export type BookUpdateWithoutReadingActivityInput = {
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput;
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateWithoutReadingActivityInput = {
@@ -1439,12 +1455,117 @@ export type BookUncheckedUpdateWithoutReadingActivityInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
+};
+
+export type BookCreateWithoutOwnershipInput = {
+  id?: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  name: string;
+  author: string;
+  coverImage?: string | null;
+  wordsPerPage?: number | null;
+  recommendedBy?: string | null;
+  description?: string | null;
+  bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput;
+  bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput;
+  bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput;
+  account: Prisma.AccountCreateNestedOneWithoutBooksInput;
+  readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput;
+};
+
+export type BookUncheckedCreateWithoutOwnershipInput = {
+  id?: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  name: string;
+  author: string;
+  coverImage?: string | null;
+  bookListId?: number | null;
+  bookSeriesId?: number | null;
+  bookApiDataId?: string | null;
+  wordsPerPage?: number | null;
+  accountId: string;
+  recommendedBy?: string | null;
+  description?: string | null;
+  readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput;
+};
+
+export type BookCreateOrConnectWithoutOwnershipInput = {
+  where: Prisma.BookWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.BookCreateWithoutOwnershipInput,
+    Prisma.BookUncheckedCreateWithoutOwnershipInput
+  >;
+};
+
+export type BookUpsertWithoutOwnershipInput = {
+  update: Prisma.XOR<
+    Prisma.BookUpdateWithoutOwnershipInput,
+    Prisma.BookUncheckedUpdateWithoutOwnershipInput
+  >;
+  create: Prisma.XOR<
+    Prisma.BookCreateWithoutOwnershipInput,
+    Prisma.BookUncheckedCreateWithoutOwnershipInput
+  >;
+  where?: Prisma.BookWhereInput;
+};
+
+export type BookUpdateToOneWithWhereWithoutOwnershipInput = {
+  where?: Prisma.BookWhereInput;
+  data: Prisma.XOR<
+    Prisma.BookUpdateWithoutOwnershipInput,
+    Prisma.BookUncheckedUpdateWithoutOwnershipInput
+  >;
+};
+
+export type BookUpdateWithoutOwnershipInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  author?: Prisma.StringFieldUpdateOperationsInput | string;
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  recommendedBy?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput;
+  bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput;
+  bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
+  account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
+  readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+};
+
+export type BookUncheckedUpdateWithoutOwnershipInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  author?: Prisma.StringFieldUpdateOperationsInput | string;
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  bookApiDataId?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string;
+  recommendedBy?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
 };
 
 export type BookCreateManyAccountInput = {
@@ -1458,8 +1579,7 @@ export type BookCreateManyAccountInput = {
   bookSeriesId?: number | null;
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
 };
 
@@ -1471,8 +1591,7 @@ export type BookUpdateWithoutAccountInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1481,6 +1600,7 @@ export type BookUpdateWithoutAccountInput = {
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput;
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateWithoutAccountInput = {
@@ -1497,13 +1617,13 @@ export type BookUncheckedUpdateWithoutAccountInput = {
     | string
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateManyWithoutAccountInput = {
@@ -1520,8 +1640,7 @@ export type BookUncheckedUpdateManyWithoutAccountInput = {
     | string
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1539,8 +1658,7 @@ export type BookCreateManyBookListInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
 };
 
@@ -1552,8 +1670,7 @@ export type BookUpdateWithoutBookListInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1562,6 +1679,7 @@ export type BookUpdateWithoutBookListInput = {
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateWithoutBookListInput = {
@@ -1578,13 +1696,13 @@ export type BookUncheckedUpdateWithoutBookListInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateManyWithoutBookListInput = {
@@ -1601,8 +1719,7 @@ export type BookUncheckedUpdateManyWithoutBookListInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1620,8 +1737,7 @@ export type BookCreateManyBookSeriesInput = {
   bookApiDataId?: string | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
 };
 
@@ -1633,8 +1749,7 @@ export type BookUpdateWithoutBookSeriesInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1643,6 +1758,7 @@ export type BookUpdateWithoutBookSeriesInput = {
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateWithoutBookSeriesInput = {
@@ -1659,13 +1775,13 @@ export type BookUncheckedUpdateWithoutBookSeriesInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateManyWithoutBookSeriesInput = {
@@ -1682,8 +1798,7 @@ export type BookUncheckedUpdateManyWithoutBookSeriesInput = {
     | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1701,8 +1816,7 @@ export type BookCreateManyBookApiDataInput = {
   bookSeriesId?: number | null;
   wordsPerPage?: number | null;
   accountId: string;
-  location?: string | null;
-  recommendation?: string | null;
+  recommendedBy?: string | null;
   description?: string | null;
 };
 
@@ -1714,8 +1828,7 @@ export type BookUpdateWithoutBookApiDataInput = {
   author?: Prisma.StringFieldUpdateOperationsInput | string;
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1724,6 +1837,7 @@ export type BookUpdateWithoutBookApiDataInput = {
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput;
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateWithoutBookApiDataInput = {
@@ -1737,13 +1851,13 @@ export type BookUncheckedUpdateWithoutBookApiDataInput = {
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput;
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput;
 };
 
 export type BookUncheckedUpdateManyWithoutBookApiDataInput = {
@@ -1757,8 +1871,7 @@ export type BookUncheckedUpdateManyWithoutBookApiDataInput = {
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  recommendation?:
+  recommendedBy?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1815,14 +1928,14 @@ export type BookSelect<
     bookApiDataId?: boolean;
     wordsPerPage?: boolean;
     accountId?: boolean;
-    location?: boolean;
-    recommendation?: boolean;
+    recommendedBy?: boolean;
     description?: boolean;
     bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>;
     bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>;
     bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>;
     account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>;
     readingActivity?: boolean | Prisma.Book$readingActivityArgs<ExtArgs>;
+    ownership?: boolean | Prisma.Book$ownershipArgs<ExtArgs>;
     _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs["result"]["book"]
@@ -1843,8 +1956,7 @@ export type BookSelectCreateManyAndReturn<
     bookApiDataId?: boolean;
     wordsPerPage?: boolean;
     accountId?: boolean;
-    location?: boolean;
-    recommendation?: boolean;
+    recommendedBy?: boolean;
     description?: boolean;
     bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>;
     bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>;
@@ -1869,8 +1981,7 @@ export type BookSelectUpdateManyAndReturn<
     bookApiDataId?: boolean;
     wordsPerPage?: boolean;
     accountId?: boolean;
-    location?: boolean;
-    recommendation?: boolean;
+    recommendedBy?: boolean;
     description?: boolean;
     bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>;
     bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>;
@@ -1892,8 +2003,7 @@ export type BookSelectScalar = {
   bookApiDataId?: boolean;
   wordsPerPage?: boolean;
   accountId?: boolean;
-  location?: boolean;
-  recommendation?: boolean;
+  recommendedBy?: boolean;
   description?: boolean;
 };
 
@@ -1911,8 +2021,7 @@ export type BookOmit<
   | "bookApiDataId"
   | "wordsPerPage"
   | "accountId"
-  | "location"
-  | "recommendation"
+  | "recommendedBy"
   | "description",
   ExtArgs["result"]["book"]
 >;
@@ -1924,6 +2033,7 @@ export type BookInclude<
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>;
   account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>;
   readingActivity?: boolean | Prisma.Book$readingActivityArgs<ExtArgs>;
+  ownership?: boolean | Prisma.Book$ownershipArgs<ExtArgs>;
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type BookIncludeCreateManyAndReturn<
@@ -1953,6 +2063,7 @@ export type $BookPayload<
     bookApiData: Prisma.$BookApiDataPayload<ExtArgs> | null;
     account: Prisma.$AccountPayload<ExtArgs>;
     readingActivity: Prisma.$ReadingActivityPayload<ExtArgs>[];
+    ownership: Prisma.$OwnershipPayload<ExtArgs> | null;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1967,8 +2078,7 @@ export type $BookPayload<
       bookApiDataId: string | null;
       wordsPerPage: number | null;
       accountId: string;
-      location: string | null;
-      recommendation: string | null;
+      recommendedBy: string | null;
       description: string | null;
     },
     ExtArgs["result"]["book"]
@@ -2576,6 +2686,19 @@ export interface Prisma__BookClient<
       >
     | Null
   >;
+  ownership<T extends Prisma.Book$ownershipArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Book$ownershipArgs<ExtArgs>>
+  ): Prisma.Prisma__OwnershipClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$OwnershipPayload<ExtArgs>,
+      T,
+      "findUniqueOrThrow",
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2629,8 +2752,7 @@ export interface BookFieldRefs {
   readonly bookApiDataId: Prisma.FieldRef<"Book", "String">;
   readonly wordsPerPage: Prisma.FieldRef<"Book", "Int">;
   readonly accountId: Prisma.FieldRef<"Book", "String">;
-  readonly location: Prisma.FieldRef<"Book", "String">;
-  readonly recommendation: Prisma.FieldRef<"Book", "String">;
+  readonly recommendedBy: Prisma.FieldRef<"Book", "String">;
   readonly description: Prisma.FieldRef<"Book", "String">;
 }
 
@@ -3155,6 +3277,27 @@ export type Book$readingActivityArgs<
   distinct?:
     | Prisma.ReadingActivityScalarFieldEnum
     | Prisma.ReadingActivityScalarFieldEnum[];
+};
+
+/**
+ * Book.ownership
+ */
+export type Book$ownershipArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the Ownership
+   */
+  select?: Prisma.OwnershipSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Ownership
+   */
+  omit?: Prisma.OwnershipOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnershipInclude<ExtArgs> | null;
+  where?: Prisma.OwnershipWhereInput;
 };
 
 /**

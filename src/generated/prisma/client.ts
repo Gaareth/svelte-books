@@ -103,6 +103,11 @@ export type ReadingActivity = Prisma.ReadingActivityModel;
  */
 export type Book = Prisma.BookModel;
 /**
+ * Model Ownership
+ *
+ */
+export type Ownership = Prisma.OwnershipModel;
+/**
  * Model Rating
  *
  */

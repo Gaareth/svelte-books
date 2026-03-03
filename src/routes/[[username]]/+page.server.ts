@@ -2,8 +2,8 @@ import { authorize, getReadingActivityVisibility } from "../../auth";
 
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
-import { READING_STATUS, VISIBILITY } from "$appTypes";
 import { getReadingActivity } from "$lib/server/db/utils";
+import { ReadingActivityType, Visibility } from "$prismaClient";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   const { sessionAccount, requestedAccount } = await authorize(
@@ -21,8 +21,8 @@ export async function load({ locals, params }: ServerLoadEvent) {
     isCurrentlyReadingPublic:
       (await getReadingActivityVisibility(
         requestedAccount.id,
-        READING_STATUS.READING
-      )) === VISIBILITY.PUBLIC || isAuthorizedToModify,
+        ReadingActivityType.READING
+      )) === Visibility.PUBLIC || isAuthorizedToModify,
     readingActivity: await getReadingActivity({
       accountId: requestedAccount.id,
     }),

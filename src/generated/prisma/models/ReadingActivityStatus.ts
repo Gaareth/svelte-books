@@ -8,6 +8,7 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums";
 import type * as Prisma from "../internal/prismaNamespace";
 
 /**
@@ -35,15 +36,15 @@ export type ReadingActivityStatusSumAggregateOutputType = {
 
 export type ReadingActivityStatusMinAggregateOutputType = {
   id: number | null;
-  status: string | null;
-  visibility: string | null;
+  status: $Enums.ReadingActivityType | null;
+  visibility: $Enums.Visibility | null;
   accountId: string | null;
 };
 
 export type ReadingActivityStatusMaxAggregateOutputType = {
   id: number | null;
-  status: string | null;
-  visibility: string | null;
+  status: $Enums.ReadingActivityType | null;
+  visibility: $Enums.Visibility | null;
   accountId: string | null;
 };
 
@@ -184,8 +185,8 @@ export type ReadingActivityStatusGroupByArgs<
 
 export type ReadingActivityStatusGroupByOutputType = {
   id: number;
-  status: string;
-  visibility: string;
+  status: $Enums.ReadingActivityType;
+  visibility: $Enums.Visibility;
   accountId: string;
   _count: ReadingActivityStatusCountAggregateOutputType | null;
   _avg: ReadingActivityStatusAvgAggregateOutputType | null;
@@ -221,8 +222,12 @@ export type ReadingActivityStatusWhereInput = {
     | Prisma.ReadingActivityStatusWhereInput
     | Prisma.ReadingActivityStatusWhereInput[];
   id?: Prisma.IntFilter<"ReadingActivityStatus"> | number;
-  status?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
-  visibility?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFilter<"ReadingActivityStatus">
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFilter<"ReadingActivityStatus">
+    | $Enums.Visibility;
   accountId?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
   ReadingActivity?: Prisma.ReadingActivityListRelationFilter;
   account?: Prisma.XOR<
@@ -251,8 +256,12 @@ export type ReadingActivityStatusWhereUniqueInput = Prisma.AtLeast<
     NOT?:
       | Prisma.ReadingActivityStatusWhereInput
       | Prisma.ReadingActivityStatusWhereInput[];
-    status?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
-    visibility?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
+    status?:
+      | Prisma.EnumReadingActivityTypeFilter<"ReadingActivityStatus">
+      | $Enums.ReadingActivityType;
+    visibility?:
+      | Prisma.EnumVisibilityFilter<"ReadingActivityStatus">
+      | $Enums.Visibility;
     accountId?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
     ReadingActivity?: Prisma.ReadingActivityListRelationFilter;
     account?: Prisma.XOR<
@@ -284,61 +293,79 @@ export type ReadingActivityStatusScalarWhereWithAggregatesInput = {
     | Prisma.ReadingActivityStatusScalarWhereWithAggregatesInput
     | Prisma.ReadingActivityStatusScalarWhereWithAggregatesInput[];
   id?: Prisma.IntWithAggregatesFilter<"ReadingActivityStatus"> | number;
-  status?: Prisma.StringWithAggregatesFilter<"ReadingActivityStatus"> | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeWithAggregatesFilter<"ReadingActivityStatus">
+    | $Enums.ReadingActivityType;
   visibility?:
-    | Prisma.StringWithAggregatesFilter<"ReadingActivityStatus">
-    | string;
+    | Prisma.EnumVisibilityWithAggregatesFilter<"ReadingActivityStatus">
+    | $Enums.Visibility;
   accountId?:
     | Prisma.StringWithAggregatesFilter<"ReadingActivityStatus">
     | string;
 };
 
 export type ReadingActivityStatusCreateInput = {
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutStatusInput;
   account: Prisma.AccountCreateNestedOneWithoutReadingActivityStatusInput;
 };
 
 export type ReadingActivityStatusUncheckedCreateInput = {
   id?: number;
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   accountId: string;
   ReadingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutStatusInput;
 };
 
 export type ReadingActivityStatusUpdateInput = {
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityUpdateManyWithoutStatusNestedInput;
   account?: Prisma.AccountUpdateOneRequiredWithoutReadingActivityStatusNestedInput;
 };
 
 export type ReadingActivityStatusUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
   ReadingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutStatusNestedInput;
 };
 
 export type ReadingActivityStatusCreateManyInput = {
   id?: number;
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   accountId: string;
 };
 
 export type ReadingActivityStatusUpdateManyMutationInput = {
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 export type ReadingActivityStatusUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -353,7 +380,7 @@ export type ReadingActivityStatusOrderByRelationAggregateInput = {
 };
 
 export type ReadingActivityStatusStatusAccountIdCompoundUniqueInput = {
-  status: string;
+  status: $Enums.ReadingActivityType;
   accountId: string;
 };
 
@@ -503,6 +530,10 @@ export type ReadingActivityStatusUncheckedUpdateManyWithoutAccountNestedInput =
       | Prisma.ReadingActivityStatusScalarWhereInput[];
   };
 
+export type EnumReadingActivityTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ReadingActivityType;
+};
+
 export type ReadingActivityStatusCreateNestedOneWithoutReadingActivityInput = {
   create?: Prisma.XOR<
     Prisma.ReadingActivityStatusCreateWithoutReadingActivityInput,
@@ -531,15 +562,15 @@ export type ReadingActivityStatusUpdateOneRequiredWithoutReadingActivityNestedIn
   };
 
 export type ReadingActivityStatusCreateWithoutAccountInput = {
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutStatusInput;
 };
 
 export type ReadingActivityStatusUncheckedCreateWithoutAccountInput = {
   id?: number;
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutStatusInput;
 };
 
@@ -594,21 +625,25 @@ export type ReadingActivityStatusScalarWhereInput = {
     | Prisma.ReadingActivityStatusScalarWhereInput
     | Prisma.ReadingActivityStatusScalarWhereInput[];
   id?: Prisma.IntFilter<"ReadingActivityStatus"> | number;
-  status?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
-  visibility?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFilter<"ReadingActivityStatus">
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFilter<"ReadingActivityStatus">
+    | $Enums.Visibility;
   accountId?: Prisma.StringFilter<"ReadingActivityStatus"> | string;
 };
 
 export type ReadingActivityStatusCreateWithoutReadingActivityInput = {
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   account: Prisma.AccountCreateNestedOneWithoutReadingActivityStatusInput;
 };
 
 export type ReadingActivityStatusUncheckedCreateWithoutReadingActivityInput = {
   id?: number;
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
   accountId: string;
 };
 
@@ -642,41 +677,61 @@ export type ReadingActivityStatusUpdateToOneWithWhereWithoutReadingActivityInput
   };
 
 export type ReadingActivityStatusUpdateWithoutReadingActivityInput = {
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   account?: Prisma.AccountUpdateOneRequiredWithoutReadingActivityStatusNestedInput;
 };
 
 export type ReadingActivityStatusUncheckedUpdateWithoutReadingActivityInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   accountId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type ReadingActivityStatusCreateManyAccountInput = {
   id?: number;
-  status: string;
-  visibility?: string;
+  status: $Enums.ReadingActivityType;
+  visibility?: $Enums.Visibility;
 };
 
 export type ReadingActivityStatusUpdateWithoutAccountInput = {
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityUpdateManyWithoutStatusNestedInput;
 };
 
 export type ReadingActivityStatusUncheckedUpdateWithoutAccountInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
   ReadingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutStatusNestedInput;
 };
 
 export type ReadingActivityStatusUncheckedUpdateManyWithoutAccountInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  status?: Prisma.StringFieldUpdateOperationsInput | string;
-  visibility?: Prisma.StringFieldUpdateOperationsInput | string;
+  status?:
+    | Prisma.EnumReadingActivityTypeFieldUpdateOperationsInput
+    | $Enums.ReadingActivityType;
+  visibility?:
+    | Prisma.EnumVisibilityFieldUpdateOperationsInput
+    | $Enums.Visibility;
 };
 
 /**
@@ -807,8 +862,8 @@ export type $ReadingActivityStatusPayload<
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: number;
-      status: string;
-      visibility: string;
+      status: $Enums.ReadingActivityType;
+      visibility: $Enums.Visibility;
       accountId: string;
     },
     ExtArgs["result"]["readingActivityStatus"]
@@ -1447,8 +1502,11 @@ export interface Prisma__ReadingActivityStatusClient<
  */
 export interface ReadingActivityStatusFieldRefs {
   readonly id: Prisma.FieldRef<"ReadingActivityStatus", "Int">;
-  readonly status: Prisma.FieldRef<"ReadingActivityStatus", "String">;
-  readonly visibility: Prisma.FieldRef<"ReadingActivityStatus", "String">;
+  readonly status: Prisma.FieldRef<
+    "ReadingActivityStatus",
+    "ReadingActivityType"
+  >;
+  readonly visibility: Prisma.FieldRef<"ReadingActivityStatus", "Visibility">;
   readonly accountId: Prisma.FieldRef<"ReadingActivityStatus", "String">;
 }
 

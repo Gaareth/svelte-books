@@ -2,10 +2,10 @@ import { error, redirect } from "@sveltejs/kit";
 import * as argon2 from "argon2";
 import { StatusCodes } from "http-status-codes";
 
-import type { Account } from "$prismaClient";
+import type { ReadingActivityType } from "$prismaClient";
+import { Visibility, type Account } from "$prismaClient";
 import type { Session } from "@auth/sveltekit";
 
-import { VISIBILITY, type READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 const { randomBytes } = await import("node:crypto");
 
@@ -32,7 +32,7 @@ export async function getAccountByUsername(username: string) {
 
 export async function getReadingActivityVisibility(
   accountId: string,
-  readingActivityStatus: READING_STATUS
+  readingActivityStatus: ReadingActivityType
 ) {
   return (
     await prisma.readingActivityStatus.findUnique({
@@ -119,7 +119,7 @@ export async function authorize(
 
 export const isReadingActivityPublic = async (
   accountId: string,
-  readingActivityStatus: READING_STATUS
+  readingActivityStatus: ReadingActivityType
 ) =>
   (
     await prisma.readingActivityStatus.findUnique({
@@ -127,7 +127,7 @@ export const isReadingActivityPublic = async (
         status_accountId: { status: readingActivityStatus, accountId },
       },
     })
-  )?.visibility == VISIBILITY.PUBLIC;
+  )?.visibility == Visibility.PUBLIC;
 
 export async function hashPassword(password: string) {
   const salt = randomBytes(64).toString("hex");

@@ -66,6 +66,7 @@ export const ModelName = {
   ReadingActivityStatus: "ReadingActivityStatus",
   ReadingActivity: "ReadingActivity",
   Book: "Book",
+  Ownership: "Ownership",
   Rating: "Rating",
 } as const;
 
@@ -108,6 +109,7 @@ export const AccountScalarFieldEnum = {
   isAdmin: "isAdmin",
   isPublic: "isPublic",
   onlyToLoggedIn: "onlyToLoggedIn",
+  visibility: "visibility",
 } as const;
 
 export type AccountScalarFieldEnum =
@@ -216,13 +218,24 @@ export const BookScalarFieldEnum = {
   bookApiDataId: "bookApiDataId",
   wordsPerPage: "wordsPerPage",
   accountId: "accountId",
-  location: "location",
-  recommendation: "recommendation",
+  recommendedBy: "recommendedBy",
   description: "description",
 } as const;
 
 export type BookScalarFieldEnum =
   (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum];
+
+export const OwnershipScalarFieldEnum = {
+  id: "id",
+  createdAt: "createdAt",
+  location: "location",
+  aquiredAt: "aquiredAt",
+  status: "status",
+  bookId: "bookId",
+} as const;
+
+export type OwnershipScalarFieldEnum =
+  (typeof OwnershipScalarFieldEnum)[keyof typeof OwnershipScalarFieldEnum];
 
 export const RatingScalarFieldEnum = {
   ratingId: "ratingId",

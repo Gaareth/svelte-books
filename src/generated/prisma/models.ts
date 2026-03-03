@@ -16,6 +16,7 @@ export type * from "./models/BookList";
 export type * from "./models/BookSeries";
 export type * from "./models/Graph";
 export type * from "./models/OptionalDatetime";
+export type * from "./models/Ownership";
 export type * from "./models/Rating";
 export type * from "./models/ReadingActivity";
 export type * from "./models/ReadingActivityStatus";

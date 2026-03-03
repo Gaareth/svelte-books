@@ -1,12 +1,14 @@
 import {
   PrismaClient,
+  ReadingActivityType,
+  Visibility,
   type BookList,
   type ReadingActivityStatus,
 } from "$prismaClient";
 import "dotenv/config";
 
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { DEFAULT_LISTS, READING_STATUS_VALUES, VISIBILITY } from "../src/app.d";
+import { DEFAULT_LISTS } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 
 // Load environment variables
@@ -84,7 +86,7 @@ export async function createReadingActivityStatus(
 ) {
   const lists: ReadingActivityStatus[] = [];
 
-  for (const status of READING_STATUS_VALUES) {
+  for (const status of Object.values(ReadingActivityType)) {
     if (checkExists) {
       const exists = await prisma.readingActivityStatus.findFirst({
         where: {
@@ -103,7 +105,7 @@ export async function createReadingActivityStatus(
         data: {
           status,
           accountId,
-          visibility: VISIBILITY.PRIVATE,
+          visibility: Visibility.PRIVATE,
         },
       })
     );
