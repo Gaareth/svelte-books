@@ -45,7 +45,7 @@
   <label for="bookApiQuery" class="w-full text-lg">
     {label}
   </label>
-  <div class="flex gap-2">
+  <form class="flex gap-2" on:submit|preventDefault={handleClick}>
     <input
       class="input dark:bg-slate-600 dark:border-slate-500"
       type="text"
@@ -53,13 +53,12 @@
       bind:value={query} />
 
     <button
-      type="button"
+      type="submit"
       class="btn-primary-black"
-      on:click={handleClick}
       disabled={!query || query?.length === 0}>
       Search
     </button>
-  </div>
+  </form>
   <div>
     {#if queriedBooksPromise !== undefined}
       {#await queriedBooksPromise}
