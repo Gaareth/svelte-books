@@ -1,4 +1,3 @@
-import type { READING_STATUS } from "$appTypes";
 import type z from "zod";
 import type {
   optionalDatetimeSchema,
@@ -7,10 +6,11 @@ import type {
 
 import { prisma } from "$lib/server/prisma";
 import { createReadingActivityStatus } from "../../../../prisma/seed-initial";
+import type { ReadingActivityStatusType } from "../../../constants/enums";
 
 async function getOrCreateReadingActivityStatus(
   accountId: string,
-  status: READING_STATUS
+  status: ReadingActivityStatusType
 ): Promise<number> {
   const getRaStatus = async () =>
     await prisma.readingActivityStatus.findUniqueOrThrow({
@@ -38,7 +38,7 @@ export async function createReadingActivity(
   accountId: string,
   bookId: string,
   stars: number | null | undefined,
-  status: READING_STATUS,
+  status: ReadingActivityStatusType,
   dateStarted: z.infer<typeof optionalDatetimeSchema> | undefined,
   dateFinished: z.infer<typeof optionalDatetimeSchema> | undefined,
   graphs: z.infer<typeof storyGraphSchema> | null | undefined,

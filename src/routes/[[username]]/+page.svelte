@@ -3,8 +3,8 @@
 
   import type { PageData } from "./$types";
   import { page } from "$app/stores";
+  import { READING_ACTIVITY_TYPES } from "../../constants/enums";
 
-  import { READING_STATUS } from "$appTypes";
   import BookListReading from "$lib/BookList/BookListReading.svelte";
   import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
@@ -46,8 +46,8 @@
       isAuthorizedToModify={data.isAuthorizedToModify}
       readingActivities={data.readingActivity.filter(
         (e) =>
-          e.status.status === READING_STATUS.READING ||
-          e.status.status === READING_STATUS.PAUSED
+          e.status.status === READING_ACTIVITY_TYPES.READING ||
+          e.status.status === READING_ACTIVITY_TYPES.PAUSED
       )} />
   </div>
 {/if}
@@ -62,8 +62,8 @@
   isAuthorizedToModify={data.isAuthorizedToModify}
   entries={data.readingActivity.filter(
     (e) =>
-      e.status.status === READING_STATUS.FINISHED ||
-      e.status.status === READING_STATUS.DID_NOT_FINISH
+      e.status.status === READING_ACTIVITY_TYPES.FINISHED ||
+      e.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH
   )} />
 
 <style>

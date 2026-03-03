@@ -2,8 +2,8 @@ import { getAccountByUsername } from "../../auth";
 
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
-import { VISIBILITY } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
+import { Visibility } from "$prismaClient";
 
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.auth();
@@ -33,7 +33,7 @@ export async function load({ locals }: ServerLoadEvent) {
       username: a.username,
       numBooks: a.books.length,
       readingActivityLists: a.readingActivityStatus.filter(
-        (r) => r.visibility == VISIBILITY.PUBLIC || account?.isAdmin
+        (r) => r.visibility == Visibility.PUBLIC || account?.isAdmin
       ),
     };
   });

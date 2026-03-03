@@ -5,7 +5,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import { type Book } from "$prismaClient";
+  import { type Book } from "$prismaBrowser";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   //@ts-ignore
@@ -14,10 +14,10 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   import ReadingActivityForm from "./ReadingActivityForm.svelte";
-  import { MAX_RATING } from "../../constants";
+  import { MAX_RATING } from "../../constants/constants";
 
   import { invalidateAll } from "$app/navigation";
-  import { READING_STATUS, type ReviewListItemType } from "$appTypes";
+  import { type ReviewListItemType } from "$appTypes";
   import { formatShort } from "$lib/DateSelector.svelte";
   import Dropdown from "$lib/Dropdown.svelte";
   import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
@@ -29,6 +29,10 @@
   import Modal from "$lib/Modal.svelte";
   import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
   import { dateDiffFormatted, optionalToDate } from "$lib/utils";
+  import {
+    READING_ACTIVITY_TYPES,
+    type ReadingActivityStatusType,
+  } from "../../constants/enums";
 
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
@@ -45,19 +49,21 @@
   let deleteExpanded = false;
 
   const getColor = (statuss: string) => {
-    const status = statuss as READING_STATUS;
+    const status = statuss as ReadingActivityStatusType;
 
     switch (status) {
-      case "reading":
+      case READING_ACTIVITY_TYPES.READING:
         return "bg-yellow-500";
-      case "did not finish":
+      case READING_ACTIVITY_TYPES.DID_NOT_FINISH:
         return "bg-red-600";
-      case "finished":
+      case READING_ACTIVITY_TYPES.FINISHED:
         return "bg-green-500";
-      case "paused":
+      case READING_ACTIVITY_TYPES.PAUSED:
         return "bg-gray-500";
-      case "to read":
+      case READING_ACTIVITY_TYPES.TO_READ:
         return "bg-blue-500";
+      case READING_ACTIVITY_TYPES.ACQUIRED:
+        return "bg-purple-500";
       default: {
         // This will cause a compile-time error if a case is missing
         // by ensuring 'never' type is handled

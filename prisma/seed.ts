@@ -1,7 +1,11 @@
-import { type BookSeries, PrismaClient } from "$prismaClient";
 import "dotenv/config";
+import {
+  type Account,
+  type BookSeries,
+  PrismaClient,
+  ReadingActivityType,
+} from "../src/generated/prisma/client";
 
-import { READING_STATUS } from "../src/app.d";
 import { hashPassword } from "../src/auth";
 import {
   createLists,
@@ -135,7 +139,7 @@ async function createDummyAccounts() {
   await createDummyAccount("JS Bach");
 }
 
-async function createBooks(account) {
+async function createBooks(account: Account) {
   for (const bookData of books) {
     const createdBook = await prisma.book.create({
       data: {
@@ -164,12 +168,12 @@ async function createBooks(account) {
           connectOrCreate: {
             where: {
               status_accountId: {
-                status: READING_STATUS.FINISHED,
+                status: ReadingActivityType.FINISHED,
                 accountId: account.id,
               },
             },
             create: {
-              status: READING_STATUS.FINISHED,
+              status: ReadingActivityType.FINISHED,
               account: {
                 connect: {
                   id: account.id,

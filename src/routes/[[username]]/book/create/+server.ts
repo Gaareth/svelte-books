@@ -8,17 +8,17 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { RequestEvent } from "./$types";
 
-import { READING_STATUS } from "$appTypes";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
+import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
   author: z.string().trim().min(1),
   stars: z.coerce.number().optional(),
   wordsPerPage: z.number().optional(),
-  readingStatus: z.nativeEnum(READING_STATUS),
+  readingStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
   volumeId: z.string().trim().optional(),
   dateStarted: optionalDatetimeSchema.optional(),
   dateFinished: optionalDatetimeSchema.optional(),

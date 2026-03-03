@@ -13,14 +13,15 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
-  import { MAX_RATING } from "../../constants";
+  import { MAX_RATING } from "../../constants/constants";
 
-  import { READING_STATUS, type ReadingListItemType } from "$appTypes";
+  import { type ReadingListItemType } from "$appTypes";
   import { formatShort } from "$lib/DateSelector.svelte";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import Pages from "$lib/icons/pages.svelte";
+  import { READING_ACTIVITY_TYPES } from "../../constants/enums";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;
@@ -80,8 +81,8 @@
 <div
   class={clsx(
     "item-border mb-3 p-2 items-center w-full grid gap-2",
-    (entry.status.status === READING_STATUS.PAUSED ||
-      entry.status.status === READING_STATUS.DID_NOT_FINISH) &&
+    (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
+      entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&
       "opacity-75"
   )}
   style="grid-template-columns: 4px 1fr;">
@@ -121,9 +122,9 @@
         </p>
       </div>
 
-      {#if entry.status.status === READING_STATUS.PAUSED}
+      {#if entry.status.status === READING_ACTIVITY_TYPES.PAUSED}
         <p class="text-secondary">Paused</p>
-      {:else if entry.status.status === READING_STATUS.DID_NOT_FINISH}
+      {:else if entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH}
         <p
           class="text-red-600 dark:text-red-500 flex justify-end flex-1 uppercase">
           Dropped

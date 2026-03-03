@@ -7,13 +7,13 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
-import { VISIBILITY } from "$appTypes";
 import {
   extractBookApiData,
   extractCategories,
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
+import { Visibility } from "$prismaClient";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -52,7 +52,7 @@ export async function load(page: ServerLoadEvent) {
                   status: {
                     visibility: isAuthorizedToModify
                       ? undefined
-                      : VISIBILITY.PUBLIC,
+                      : Visibility.PUBLIC,
                   },
                 },
                 include: {
@@ -75,7 +75,7 @@ export async function load(page: ServerLoadEvent) {
       readingActivity: {
         where: {
           status: {
-            visibility: isAuthorizedToModify ? undefined : VISIBILITY.PUBLIC,
+            visibility: isAuthorizedToModify ? undefined : Visibility.PUBLIC,
           },
         },
         include: {

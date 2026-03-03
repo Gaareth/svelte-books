@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Prisma } from "$prismaClient";
+  import type { Prisma } from "$prismaBrowser";
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
   import { twMerge } from "tailwind-merge";
@@ -11,8 +11,7 @@
   import Modal from "./Modal.svelte";
   import Stats from "./Stats.svelte";
   import { sum } from "./utils";
-
-  import { READING_STATUS } from "$appTypes";
+  import { READING_ACTIVITY_TYPES } from "../constants/enums";
 
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {
@@ -37,7 +36,7 @@
 
   // Derived reactive variables
   $: readingActivitiesFinished = readingActivities.filter(
-    (a) => a.status?.status === READING_STATUS.FINISHED
+    (a) => a.status?.status === READING_ACTIVITY_TYPES.FINISHED
   );
 
   function calc_most_read_categories(

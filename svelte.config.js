@@ -16,6 +16,7 @@ const config = {
     alias: {
       $appTypes: "src/app.d.ts",
       $prismaClient: "src/generated/prisma/client",
+      $prismaBrowser: "src/generated/prisma/browser",
     },
   },
 };

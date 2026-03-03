@@ -7,7 +7,7 @@
   import { Moon } from "svelte-loading-spinners";
   import { twMerge } from "tailwind-merge";
 
-  import { MAX_RATING } from "../constants";
+  import { MAX_RATING } from "../constants/constants";
   import BookApi from "./BookApiSelection/BookApi.svelte";
   import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
   import EventDone from "./icons/EventDone.svelte";
@@ -20,10 +20,11 @@
   import ToggleGroup from "./ToggleGroup.svelte";
   import { slideHeight } from "./utils";
 
-  import type { Prisma } from "$prismaClient";
+  import type { Prisma } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
-  import { READING_STATUS, type queriedBookFull } from "$appTypes";
+  import { type queriedBookFull } from "$appTypes";
+  import { READING_ACTIVITY_TYPES } from "../constants/enums";
 
   export let endpoint = "/book/create";
 
@@ -73,7 +74,9 @@
         dateStarted,
         dateFinished,
         readingStatus:
-          readingStatus == "read" ? READING_STATUS.FINISHED : readingStatus,
+          readingStatus == "read"
+            ? READING_ACTIVITY_TYPES.FINISHED
+            : readingStatus,
       }),
       headers: {
         "content-type": "application/json",

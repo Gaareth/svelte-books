@@ -10,9 +10,8 @@ import {
 } from "../../../../schemas";
 import { createReadingActivity } from "../api.server";
 
+import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
 import type { RequestEvent } from "./$types";
-
-import { READING_STATUS } from "$appTypes";
 
 const saveSchema = z
   .object({
@@ -23,11 +22,11 @@ const saveSchema = z
     dateStarted: optionalDatetimeSchema.nullish(),
     dateFinished: optionalDatetimeSchema.nullish(),
     graphs: storyGraphSchema.nullish(),
-    status: z.nativeEnum(READING_STATUS),
+    status: z.nativeEnum(READING_ACTIVITY_TYPES),
     bookId: z.string(),
   })
   .superRefine((data, ctx) => {
-    if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
+    if (data.status !== READING_ACTIVITY_TYPES.TO_READ && !data.dateStarted) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "A start date is required unless status is 'to read'",

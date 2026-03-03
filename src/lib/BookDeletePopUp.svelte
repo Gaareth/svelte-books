@@ -5,7 +5,7 @@
 
   import Popup from "./Popup.svelte";
 
-  import type { Book } from "$prismaClient";
+  import type { Book } from "$prismaBrowser";
 
   export let openModal: boolean;
   export let deletionBook: Book;

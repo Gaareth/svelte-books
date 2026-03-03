@@ -2,11 +2,10 @@
   import clsx from "clsx";
   import toast from "svelte-french-toast";
 
-  import { MAX_RATING } from "../../constants";
+  import { MAX_RATING } from "../../constants/constants";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { READING_STATUS, READING_STATUS_VALUES } from "$appTypes";
   import { type ReviewListItemType } from "$appTypes";
   import ClearButton from "$lib/ClearButton.svelte";
   import DateSelector, {
@@ -19,6 +18,10 @@
   import LineChartDrawer from "$lib/LineChartDrawer.svelte";
   import Modal from "$lib/Modal.svelte";
   import Rating from "$lib/Rating.svelte";
+  import {
+    READING_ACTIVITY_TYPES,
+    READING_STATUS_VALUES,
+  } from "../../constants/enums";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;
@@ -123,7 +126,7 @@
         />
       </div> -->
 
-      {#if readingStatus && readingStatus !== READING_STATUS.TO_READ}
+      {#if readingStatus && readingStatus !== READING_ACTIVITY_TYPES.TO_READ}
         <div>
           <InputAny name="dateStarted" error={error?.dateStarted}>
             <div class="icon-wrapper" slot="label">
@@ -145,7 +148,7 @@
         </div>
       {/if}
 
-      {#if readingStatus && (readingStatus == READING_STATUS.FINISHED || readingStatus == READING_STATUS.DID_NOT_FINISH)}
+      {#if readingStatus && (readingStatus == READING_ACTIVITY_TYPES.FINISHED || readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH)}
         <div>
           <InputAny name="dateFinished">
             <div class="icon-wrapper" slot="label">

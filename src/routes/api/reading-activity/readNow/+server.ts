@@ -3,8 +3,8 @@ import z from "zod";
 
 import { authorize } from "../../../../auth";
 
-import { READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
+import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
 
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());
@@ -36,7 +36,7 @@ export async function POST(req: RequestEvent) {
       status: {
         connect: {
           status_accountId: {
-            status: READING_STATUS.FINISHED,
+            status: READING_ACTIVITY_TYPES.FINISHED,
             accountId,
           },
         },

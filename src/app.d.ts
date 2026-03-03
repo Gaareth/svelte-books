@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { PrismaClient } from "$prismaClient";
+// import { type PrismaClient } from "$prismaClient";
 
 // for information about these interfaces
 declare global {
@@ -10,7 +10,7 @@ declare global {
     // interface PageData {}
     // interface Platform {}
   }
-  const prisma: PrismaClient;
+  // const prisma: PrismaClient;
   declare const APP_VERSION: string;
 
   namespace svelteHTML {
@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-import type { Prisma } from "$prismaClient";
+import type { Prisma } from "$prismaBrowser";
 
 export type BookIncludeCategory = Prisma.BookGetPayload<{
   include: {
@@ -172,31 +172,5 @@ export type queriedBookFull = {
 
 export const DEFAULT_LISTS = ["Read", "Reading", "To read"] as const;
 export type DEFAULT_LIST = (typeof DEFAULT_LISTS)[number];
-
-// export const READING_STATUS = {
-//   TO_READ: "to read",
-//   READING: "reading",
-//   FINISHED: "finished",
-//   DID_NOT_FINISH: "did not finish",
-//   PAUSED: "paused",
-// } as const;
-
-// export type READING_STATUS =
-//   (typeof READING_STATUS)[keyof typeof READING_STATUS];
-
-// export const READING_STATUS_VALUES = Object.values(READING_STATUS) as Array<
-//   (typeof READING_STATUS)[keyof typeof READING_STATUS]
-// >;
-// // Ensure READING_STATUS_VALUES is a tuple for Zod enum
-// export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
-//   string,
-//   ...string[]
-// ];
-
-// export const VISIBILITY = {
-//   PRIVATE: "private",
-//   PUBLIC: "public",
-//   UNLISTED: "unlisted",
-// } as const;
 
 export {};

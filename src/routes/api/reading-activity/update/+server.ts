@@ -11,8 +11,8 @@ import {
 
 import type { RequestEvent } from "./$types";
 
-import { READING_STATUS } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
+import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
 
 const saveSchema = z
   .object({
@@ -22,10 +22,10 @@ const saveSchema = z
     dateStarted: optionalDatetimeSchema.nullish(),
     dateFinished: optionalDatetimeSchema.nullish(),
     graphs: storyGraphSchema.nullish(),
-    status: z.nativeEnum(READING_STATUS).optional(),
+    status: z.nativeEnum(READING_ACTIVITY_TYPES).optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.status !== READING_STATUS.TO_READ && !data.dateStarted) {
+    if (data.status !== READING_ACTIVITY_TYPES.TO_READ && !data.dateStarted) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "A start date is required unless status is 'to read'",
