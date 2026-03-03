@@ -20,7 +20,7 @@
     "Ain't no books here, add one!",
     "Hey, your shelf's empty. Add a book!",
     "Don't leave that shelf empty, pal. Add a book!",
-    "Books are calling, boi. Add one!",
+    "Books are calling, friend. Add one!",
     "C'mon, your next read's waiting!",
     "Get some books, friend. It’s time!",
     "Hey, your library’s looking lonely. Add a book!",
