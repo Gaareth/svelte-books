@@ -68,19 +68,19 @@ model BookSeries {
 }
 
 model BookApiData {
-  id                    String  @id
-  title                 String
-  authors               String //TODO: author relation?
-  subtitle              String?
-  description           String?
-  thumbnailUrl          String?
-  imageLinksJSON        String? // JSON string of image links
-  isbn_13       String?
-  pageCount     Int?
-  categories    BookCategory[]
-  publishedDate String? //YYYY-MM-DD
-  publisher     String?
-  language      String
+  id             String         @id
+  title          String
+  authors        String //TODO: author relation?
+  subtitle       String?
+  description    String?
+  thumbnailUrl   String?
+  imageLinksJSON String? // JSON string of image links
+  isbn_13        String?
+  pageCount      Int?
+  categories     BookCategory[]
+  publishedDate  String? //YYYY-MM-DD
+  publisher      String?
+  language       String
 
   book Book[]
 }
@@ -183,10 +183,29 @@ model Book {
 
   readingActivity ReadingActivity[]
 
-  location       String?
-  recommendation String?
+  recommendedBy String?
 
   description String?
+  ownership   Ownership? // null means unknown
+}
+
+enum BookOwnership {
+  OWNED
+  NOT_OWNED
+  BORROWED
+  LIBRARY
+}
+
+model Ownership {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  location  String? // if owned where is it? if borrowed, from who? if library, which one?
+  aquiredAt DateTime? @default(now())
+
+  status BookOwnership @default(OWNED)
+  book   Book          @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId String        @unique
 }
 
 model Rating {
