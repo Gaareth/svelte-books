@@ -10,11 +10,9 @@ README.md
 .eslintrc.cjs
 .graphqlrc
 .editorconfig
-.svelte-kit
 .vscode
 node_modules
 build
-package
 **/.env
 **/.env*
 .vscode
@@ -30,4 +28,5 @@ package
 /backups
 gitleaks-report.json
 *.sh
+!docker-entrypoint.sh
 vite.config.ts.timestamp-*.mjs
