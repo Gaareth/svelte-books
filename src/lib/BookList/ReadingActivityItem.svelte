@@ -3,8 +3,6 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-
   import { type Book } from "$prismaBrowser";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -14,7 +12,7 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   import ReadingActivityForm from "./ReadingActivityForm.svelte";
-  import { MAX_RATING } from "../../constants/constants";
+  import { MAX_RATING } from "../constants/constants";
 
   import { invalidateAll } from "$app/navigation";
   import { type ReviewListItemType } from "$appTypes";
@@ -28,11 +26,18 @@
   import LineChartDrawer from "$lib/LineChartDrawer.svelte";
   import Modal from "$lib/Modal.svelte";
   import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
-  import { dateDiffFormatted, optionalToDate } from "$lib/utils";
+  import {
+    dateDiffFormatted,
+    dateToYYYY_MM_DD,
+    displayReadingActivityStatus,
+    optionalToDate,
+  } from "$lib/utils";
   import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,
-  } from "../../constants/enums";
+  } from "$lib/constants/enums";
+  import AccentBarItemCard from "$lib/AccentBarItemCard.svelte";
+  import ReadingActivityTimeDiff from "$lib/BookList/ReadingActivityTimeDiff.svelte";
 
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
@@ -40,9 +45,6 @@
   // export let deletionBook: Book | undefined = undefined;
   // export let openModal: boolean = false;
   export let allow_deletion: boolean | undefined = true;
-
-  const dispatch = createEventDispatcher<{ delete: ItemDeleteEvent }>();
-  console.log(entry.storyGraphs);
 
   let expanded = false;
   let editExpanded = false;
@@ -88,11 +90,12 @@
   let stars = entry.rating?.stars ?? 0;
 
   let dropdownOpen = false;
+  $: statusDisplayName = displayReadingActivityStatus(entry.status.status);
 </script>
 
-<div
-  class="item-border mb-3 p-2 items-center
-     w-full gap-2 flex"
+<AccentBarItemCard
+  barClass={getColor(entry.status.status)}
+  wrapperClass="flex"
   role="button"
   tabindex="0"
   on:dblclick={() => {
@@ -100,57 +103,10 @@
       dropdownOpen = true;
     }
   }}>
-  <div
-    class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
-      entry.status.status
-    )} rounded-md"
-    style="height: 98%;" />
   <div class="w-full flex flex-wrap items-center col-span-full gap-1">
-    <div class="flex flex-1"><p>{entry.status.status.toUpperCase()}</p></div>
+    <div class="flex flex-1"><p>{statusDisplayName}</p></div>
 
-    <div class="flex gap-4">
-      <p class="hidden lg:flex items-center gap-1">
-        {#if entry.dateStarted}
-          {formatShort(entry.dateStarted)}
-          <span class="icon" title="date started"><EventProgress /></span>
-        {:else}
-          <span class="flex-shrink leading-4">?</span>
-        {/if}
-      </p>
-
-      <span class="hidden lg:inline">-</span>
-
-      <p class="hidden lg:flex items-center gap-1">
-        {#if entry.dateFinished}
-          {formatShort(entry.dateFinished)}
-          <span class="icon" title="date read"><EventDone /></span>
-        {:else}
-          <span class="flex-shrink leading-4">?</span>
-        {/if}
-
-        {#if entry.dateFinished != null && entry.dateStarted != null}
-          <span>:</span>
-        {/if}
-      </p>
-
-      <div
-        title={`${formatShort(entry.dateStarted)} to ${formatShort(
-          entry.dateFinished
-        )}`}>
-        {#if entry.dateFinished != null && entry.dateStarted != null}
-          <p class="flex items-center gap-1">
-            {dateDiffFormatted(
-              optionalToDate(entry.dateStarted),
-              optionalToDate(entry.dateFinished)
-            )}
-
-            <span class="w-5 block mt-0.5 lg:hidden">
-              <InfoIcon />
-            </span>
-          </p>
-        {/if}
-      </div>
-    </div>
+    <ReadingActivityTimeDiff {entry} />
 
     {#if entry.rating?.stars}
       <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
@@ -280,7 +236,7 @@
       </Dropdown>
     </div>
   </div>
-</div>
+</AccentBarItemCard>
 
 <Modal
   bind:showModal={expanded}
@@ -289,27 +245,7 @@
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">Reading Activity</p>
 
-    <div class="flex items-center gap-2">
-      <p class="flex items-center gap-1">
-        {#if entry.dateStarted}
-          {formatShort(entry.dateStarted)}
-          <span class="icon" title="date started"><EventProgress /></span>
-        {:else}
-          <span class="flex-shrink leading-4">?</span>
-        {/if}
-      </p>
-
-      <span>-</span>
-
-      <p class="flex items-center gap-1">
-        {#if entry.dateFinished}
-          {formatShort(entry.dateFinished)}
-          <span class="icon" title="date read"><EventDone /></span>
-        {:else}
-          <span class="flex-shrink leading-4">?</span>
-        {/if}
-      </p>
-    </div>
+    <ReadingActivityTimeDiff {entry} />
   </div>
 
   <section class="mt-5">

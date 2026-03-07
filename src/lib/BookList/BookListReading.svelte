@@ -10,9 +10,14 @@
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import { type ReadingListItemType } from "$appTypes";
+  import { optionalToDate, sortReadingActivity } from "$lib/utils";
+  import { READING_ACTIVITY_TYPES } from "../constants/enums";
 
   export let readingActivities: ReadingListItemType[];
   export let isAuthorizedToModify = false;
+  $: readingActivitiesSorted = [...readingActivities].sort((a, b) => {
+    return sortReadingActivity(a, b);
+  });
 
   const sentences = [
     "Add a book, mate!",
@@ -46,9 +51,9 @@
 {/if}
 
 <div class="dark:bg-slate-800 bg-white">
-  {#each readingActivities as entry (entry.id)}
+  {#each readingActivitiesSorted as entry (entry.id)}
     <form
-      action={`api/reading-activity/readNow`}
+      action={`api/reading-activity/transform`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
@@ -64,6 +69,10 @@
         };
       }}>
       <input type="hidden" name="readingActivityId" value={entry.id} />
+      <input
+        type="hidden"
+        name="targetStatus"
+        value={READING_ACTIVITY_TYPES.FINISHED} />
 
       <ReadingListItem {entry} {isAuthorizedToModify}>
         <button

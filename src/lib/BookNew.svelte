@@ -7,7 +7,7 @@
   import { Moon } from "svelte-loading-spinners";
   import { twMerge } from "tailwind-merge";
 
-  import { MAX_RATING } from "../constants/constants";
+  import { MAX_RATING } from "./constants/constants";
   import BookApi from "./BookApiSelection/BookApi.svelte";
   import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
   import EventDone from "./icons/EventDone.svelte";
@@ -24,7 +24,7 @@
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "./constants/enums";
 
   export let endpoint = "/book/create";
 

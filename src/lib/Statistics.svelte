@@ -11,7 +11,8 @@
   import Modal from "./Modal.svelte";
   import Stats from "./Stats.svelte";
   import { sum } from "./utils";
-  import { READING_ACTIVITY_TYPES } from "../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "./constants/enums";
+  import ToggleGroup from "./ToggleGroup.svelte";
 
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {
@@ -161,35 +162,28 @@
 
 <div
   class="flex flex-col sm:flex-row gap-1 sm:gap-5 mb-1 items-center sm:h-12 sm:overflow-hidden">
-  <div class="btn-group dark:border-slate-700">
-    <button
-      class={twMerge(
-        "btn-group-btn flex items-center gap-1",
-        selected_option == "books" && "btn-group-selected"
-      )}
-      on:click={() => (selected_option = "books")}>
-      <span class="w-5"><Book /></span>
-      books
-    </button>
-    <button
-      class={twMerge(
-        "btn-group-btn flex items-center gap-1",
-        selected_option == "pages" && "btn-group-selected"
-      )}
-      on:click={() => (selected_option = "pages")}>
-      <span class="w-5"><Pages /></span>
-      pages
-    </button>
-    <button
-      class={twMerge(
-        "btn-group-btn flex items-center gap-1",
-        selected_option == "words" && "btn-group-selected"
-      )}
-      on:click={() => (selected_option = "words")}>
-      <span class="w-5"><Words /></span>
-      words
-    </button>
-  </div>
+  <ToggleGroup
+    options={["books", "pages", "words"]}
+    groupClass="inline-flex"
+    btnClass="px-4 py-1 border border-s-0 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700 flex items-center gap-1"
+    btnSelectedClass="dark:bg-slate-700 bg-gray-50"
+    startClass="border-s rounded-s-md"
+    endClass="rounded-e-md"
+    bind:selectedOption={selected_option}>
+    <svelte:fragment slot="default" let:option>
+      {#if option == "books"}
+        <span class="w-5"><Book /></span>
+        books
+      {:else if option == "pages"}
+        <span class="w-5"><Pages /></span>
+        pages
+      {:else}
+        <span class="w-5"><Words /></span>
+        words
+      {/if}
+    </svelte:fragment>
+  </ToggleGroup>
+
   <div class="text-secondary text-base">
     {#if selected_option == "pages" && pagecount_accuracy < 1}
       <div class="-mb-1">{(pagecount_accuracy * 100).toFixed(2)}% Accuracy</div>
@@ -362,14 +356,6 @@
 </style> -->
 
 <style lang="postcss">
-  .btn-group-btn {
-    @apply dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700;
-  }
-
-  .btn-group-selected {
-    @apply dark:bg-slate-700 bg-gray-50;
-  }
-
   .link-all {
     @apply text-slate-600 dark:text-slate-300 hover:underline;
   }

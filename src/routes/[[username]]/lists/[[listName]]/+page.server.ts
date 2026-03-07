@@ -7,7 +7,7 @@ import { getReadingActivity } from "$lib/server/db/utils";
 import {
   READING_STATUS_VALUES,
   type ReadingActivityStatusType,
-} from "../../../../constants/enums";
+} from "../../../../lib/constants/enums";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   console.log("Loading reading activity for list:", params.listName);

@@ -12,7 +12,7 @@ import {
 import type { RequestEvent } from "./$types";
 
 import { prisma } from "$lib/server/prisma";
-import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
+import { READING_ACTIVITY_TYPES } from "../../../../lib/constants/enums";
 
 const saveSchema = z
   .object({

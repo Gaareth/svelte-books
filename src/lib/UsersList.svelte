@@ -1,30 +1,34 @@
 <script lang="ts">
-  import Book from "./icons/book.svelte";
+  import type { ReadingActivityStatusType } from "$lib/constants/enums";
+  import Book from "$lib/icons/book.svelte";
+  import { displayReadingActivityStatus } from "$lib/utils";
 
   export let users: {
     username: string;
-    readingActivityLists: { status: string }[];
+    readingActivityLists: { status: ReadingActivityStatusType }[];
     numBooks: number;
   }[];
 </script>
 
 {#each users as user}
   <div
-    class="default-border flex flex-col lg:flex-row gap-1 lg:items-center p-3 lg:justify-between">
-    <a class="text-lg hover:underline" href="/{user.username}">
+    class="default-border flex flex-col lg:grid grid-cols-[1fr_auto_1fr] items-center p-3 gap-2">
+    <a
+      class="text-lg hover:underline justify-self-start"
+      href="/{user.username}">
       {user.username}
     </a>
 
-    <div class="flex gap-1 sm:gap-2 flex-wrap">
+    <div class="flex gap-1 sm:gap-2 flex-wrap justify-center">
       {#each user.readingActivityLists as list}
         <a href="/{user.username}/lists/{list?.status}" class="hover:underline">
-          {list?.status}
+          {displayReadingActivityStatus(list.status)}
         </a>
         |
       {/each}
     </div>
 
-    <span class="flex items-center lg:justify-end" title="total books">
+    <span class="flex items-center gap-1 justify-self-end" title="total books">
       {user.numBooks}
       <span class="block w-4">
         <Book />

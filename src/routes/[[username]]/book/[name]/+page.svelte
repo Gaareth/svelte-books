@@ -22,7 +22,7 @@
   import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
-  import ReviewListItem from "$lib/BookList/ReviewListItem.svelte";
+  import ReviewListItem from "$lib/BookList/ReadingActivityItem.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import Calendar from "$lib/icons/Calender.svelte";
   import Pages from "$lib/icons/pages.svelte";
@@ -33,7 +33,9 @@
   import InputText from "$lib/InputText.svelte";
   //@ts-ignore
   import Pill from "$lib/Pill.svelte";
-  import { getMaxResolutionImage } from "$lib/utils";
+  import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils";
+  import InfoIcon from "$lib/icons/InfoIcon.svelte";
+  import ReadingActivityItem from "$lib/BookList/ReadingActivityItem.svelte";
 
   export let data: PageData;
 
@@ -181,6 +183,10 @@
       e.detail.queriedBook.volumeInfo.imageLinks?.smallThumbnail ||
       null;
   }
+
+  $: readingActivitiesSorted = [...book.readingActivity].sort((a, b) => {
+    return sortReadingActivity(a, b);
+  });
 </script>
 
 <svelte:head>
@@ -399,7 +405,14 @@
 
         <div class="">
           <div class="flex mb-1 items-center">
-            <h2 class="text-2xl">Reading Activity</h2>
+            <div class="flex items-center gap-1">
+              <h2 class="text-2xl">Reading Activity</h2>
+              <span
+                class="block w-5 mt-0.5 text-secondary hover:text-inherit"
+                title="Every activity regarding this book. Use the latest for tracking current rating and comments">
+                <InfoIcon />
+              </span>
+            </div>
             {#if data.isAuthorizedToModify}
               <button
                 type="button"
@@ -413,8 +426,8 @@
             {/if}
           </div>
           <!-- <hr class="border-slate-600 mt-2" /> -->
-          {#each book.readingActivity as readingActivity}
-            <ReviewListItem
+          {#each readingActivitiesSorted as readingActivity}
+            <ReadingActivityItem
               entry={readingActivity}
               isAuthorizedToModify={data.isAuthorizedToModify} />
           {/each}

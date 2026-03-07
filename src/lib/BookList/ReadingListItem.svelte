@@ -13,7 +13,7 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
-  import { MAX_RATING } from "../../constants/constants";
+  import { MAX_RATING } from "../constants/constants";
 
   import { type ReadingListItemType } from "$appTypes";
   import { formatShort } from "$lib/DateSelector.svelte";
@@ -21,7 +21,8 @@
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import Pages from "$lib/icons/pages.svelte";
-  import { READING_ACTIVITY_TYPES } from "../../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "../constants/enums";
+  import AccentBarItemCard from "$lib/AccentBarItemCard.svelte";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;
@@ -78,20 +79,15 @@
   }
 </script>
 
-<div
-  class={clsx(
-    "item-border mb-3 p-2 items-center w-full grid gap-2",
+<AccentBarItemCard
+  style="grid-template-columns: 4px 1fr;"
+  barClass={getColor(book.name, book.author)}
+  wrapperClass={clsx(
+    "grid",
     (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
       entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&
       "opacity-75"
-  )}
-  style="grid-template-columns: 4px 1fr;">
-  <div
-    class="min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 {getColor(
-      book.name,
-      book.author
-    )} rounded-md"
-    style="height: 98%;" />
+  )}>
   <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
     <div class="col-span-full sm:col-span-3">
       <a
@@ -190,7 +186,7 @@
       {/if}
     </div>
   </div>
-</div>
+</AccentBarItemCard>
 
 <style lang="postcss">
   .icon {

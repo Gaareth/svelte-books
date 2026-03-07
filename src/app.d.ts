@@ -43,6 +43,10 @@ export type ReadingActivityWithDates = Prisma.ReadingActivityGetPayload<{
   include: { dateFinished: true; dateStarted: true };
 }>;
 
+export type ReadingActivityWithStatus = Prisma.ReadingActivityGetPayload<{
+  include: { status: true };
+}>;
+
 export type BookDate = Prisma.BookGetPayload<{
   include: {
     readingStatus: { include: { dateStarted: true; dateFinished: true } };
@@ -82,6 +86,17 @@ export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
 }>;
 
 export type ReviewListItemType = Prisma.ReadingActivityGetPayload<{
+  include: {
+    rating: true;
+    dateStarted: true;
+    dateFinished: true;
+    storyGraphs: true;
+    book: true;
+    status: true;
+  };
+}>;
+
+export type ReadingActivityFull = Prisma.ReadingActivityGetPayload<{
   include: {
     rating: true;
     dateStarted: true;

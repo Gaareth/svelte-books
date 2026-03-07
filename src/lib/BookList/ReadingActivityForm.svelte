@@ -2,7 +2,7 @@
   import clsx from "clsx";
   import toast from "svelte-french-toast";
 
-  import { MAX_RATING } from "../../constants/constants";
+  import { MAX_RATING } from "../constants/constants";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
@@ -21,7 +21,7 @@
   import {
     READING_ACTIVITY_TYPES,
     READING_STATUS_VALUES,
-  } from "../../constants/enums";
+  } from "../constants/enums";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;

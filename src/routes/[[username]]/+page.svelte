@@ -3,17 +3,25 @@
 
   import type { PageData } from "./$types";
   import { page } from "$app/stores";
-  import { READING_ACTIVITY_TYPES } from "../../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "../../lib/constants/enums";
 
   import BookListReading from "$lib/BookList/BookListReading.svelte";
   import ReadingList from "$lib/BookList/ReadingList.svelte";
   import BookNew from "$lib/BookNew.svelte";
   import Statistics from "$lib/Statistics.svelte";
+  import { getActiveActivies } from "$lib/utils";
 
   export let data: PageData;
 
   let chance = 20;
   let random = Math.floor(Math.random() * chance);
+
+  const activeActivies = getActiveActivies(data.readingActivity);
+  $: currentlyReadingActivities = activeActivies.filter(
+    (e) =>
+      e.status.status === READING_ACTIVITY_TYPES.READING ||
+      e.status.status === READING_ACTIVITY_TYPES.PAUSED
+  );
 </script>
 
 <svelte:head>
@@ -44,11 +52,7 @@
   <div class="mb-10">
     <BookListReading
       isAuthorizedToModify={data.isAuthorizedToModify}
-      readingActivities={data.readingActivity.filter(
-        (e) =>
-          e.status.status === READING_ACTIVITY_TYPES.READING ||
-          e.status.status === READING_ACTIVITY_TYPES.PAUSED
-      )} />
+      readingActivities={currentlyReadingActivities} />
   </div>
 {/if}
 

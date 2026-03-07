@@ -10,7 +10,7 @@ import {
 } from "../../../../schemas";
 import { createReadingActivity } from "../api.server";
 
-import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
+import { READING_ACTIVITY_TYPES } from "../../../../lib/constants/enums";
 import type { RequestEvent } from "./$types";
 
 const saveSchema = z

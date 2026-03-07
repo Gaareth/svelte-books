@@ -39,10 +39,26 @@ Then run one of:
 
 ## Todos
 
+- ownership
+
+  - do you own the book in new book
+
+- unify readinglistitem and reviewlistitem
+- when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
+
+- when searching new book, mark existing ones
+
+<!-- - currently reading filter to only the latest ones -->
+
+<!-- - display name for reading activity status, eg in admin or lists panel -->
+
+- shelves
+
+- color bar, similar color for similar books
+
 - more finegrained privacy/visibility settings: e.g., private books, private reading activities
 - tension stats draw yourself - check
   - let user add more graphs
-  
 - auto google api connection
 - add or remove google api
 - update googleapi values
@@ -52,7 +68,10 @@ Then run one of:
 - statistics page
 - books read over time or github like graph
 - per month, year, day etc
-- min/avg/max time for started reading to finished. similarly for to-read to started or finished? 
+- min/avg/max time for started reading to finished.
+
+  - similarly for to-read to started! or finished?
+  - avg time from to-read to acquired
 
 - fix last month selector when is january?
 - fix optionaldate unique

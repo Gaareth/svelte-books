@@ -8,6 +8,7 @@
   import Dropdown from "$lib/Dropdown.svelte";
   import IconAccount from "$lib/icons/IconAccount.svelte";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;
@@ -48,7 +49,9 @@
           Home
         </a>
         {#if $page.data.session}
-          <a class="nav-a" href="/lists/to read">To-Read</a>
+          <a class="nav-a" href="/lists/{READING_ACTIVITY_TYPES.TO_READ}">
+            To-Read
+          </a>
           {#if data.isAdmin}
             <a class="nav-a" href="/admin">Admin</a>
           {/if}

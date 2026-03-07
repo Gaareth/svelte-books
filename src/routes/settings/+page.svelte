@@ -13,6 +13,7 @@
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import ToggleGroup from "$lib/ToggleGroup.svelte";
+  import { displayReadingActivityStatus } from "$lib/utils";
 
   export let form;
   export let data: PageData;
@@ -64,7 +65,7 @@
       <ToggleGroup
         options={["private", "public"]}
         groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-        btnClass="px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
+        btnClass="w-20 px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
         btnSelectedClass="dark:bg-slate-500 bg-gray-100"
         on:select={(ev) => {
           const option = ev.detail;
@@ -98,12 +99,12 @@
               data.readingActivityLists[i].visibility &&
               "border-warning"
           )}>
-          <p>{list.status}</p>
+          <p>{displayReadingActivityStatus(list.status)}</p>
 
           <ToggleGroup
             options={["private", "public"]}
             groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-            btnClass="px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
+            btnClass="w-20 px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
             unToggleable={true}
             bind:selectedOption={data.readingActivityLists[i].visibility} />

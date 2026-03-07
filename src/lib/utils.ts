@@ -2,6 +2,7 @@ import { sineInOut } from "svelte/easing";
 
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
 import type { BookApiData } from "$prismaClient";
+import type { ReadingActivityStatusType } from "./constants/enums";
 import type { OptionalDate } from "./DateSelector.svelte";
 import type { THEME } from "./stores/stores";
 
@@ -91,6 +92,31 @@ export function optionalToDate(o: OptionalDate | null) {
 
 export function getReadDate(readingActivity: ReadingActivityWithDates) {
   return optionalToDate(readingActivity.dateFinished) ?? null;
+}
+
+export function getActiveActivies<
+  T extends { bookId: string; updatedAt: Date }
+>(readingActivity: T[]): T[] {
+  const bookToActiveActivity: Record<string, T> = {};
+
+  for (const activity of readingActivity) {
+    const active = bookToActiveActivity[activity.bookId];
+
+    if ((active && activity.updatedAt > active.updatedAt) || !active) {
+      bookToActiveActivity[activity.bookId] = activity;
+    }
+  }
+
+  return Object.values(bookToActiveActivity);
+}
+
+export function displayReadingActivityStatus(
+  status: ReadingActivityStatusType
+) {
+  return status
+    .split("_")
+    .map((word) => word[0] + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 // function sortBooksBy

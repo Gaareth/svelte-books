@@ -11,7 +11,7 @@ import type { RequestEvent } from "./$types";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { nullToUndefined } from "$lib/utils";
-import { READING_ACTIVITY_TYPES } from "../../../../constants/enums";
+import { READING_ACTIVITY_TYPES } from "../../../../lib/constants/enums";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),

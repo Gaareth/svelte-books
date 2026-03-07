@@ -39,7 +39,7 @@
           dispatch("select", option);
         }
       }}>
-      {option}
+      <slot {option} {i}>{option}</slot>
     </button>
   {/each}
 </div>
