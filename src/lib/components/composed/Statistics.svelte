@@ -2,17 +2,16 @@
   import type { Prisma } from "$prismaBrowser";
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
-  import { twMerge } from "tailwind-merge";
 
-  import Charts from "./Charts.svelte";
-  import Book from "./icons/book.svelte";
-  import Pages from "./icons/pages.svelte";
-  import Words from "./icons/words.svelte";
-  import Modal from "./Modal.svelte";
-  import Stats from "./Stats.svelte";
-  import { sum } from "./utils";
-  import { READING_ACTIVITY_TYPES } from "./constants/enums";
-  import ToggleGroup from "./ToggleGroup.svelte";
+  import Charts from "$components/composed/Charts.svelte";
+  import Book from "$lib/icons/book.svelte";
+  import Pages from "$lib/icons/pages.svelte";
+  import Words from "$lib/icons/words.svelte";
+  import Modal from "$components/Modal.svelte";
+  import Stats from "$components/composed/Stats.svelte";
+  import { sum } from "$lib/utils/utils";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import ToggleGroup from "$components/input/ToggleGroup.svelte";
 
   type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
     include: {

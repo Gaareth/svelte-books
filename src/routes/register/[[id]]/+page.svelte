@@ -5,8 +5,8 @@
 
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-  import InputAll from "$lib/InputAll.svelte";
-  import InputText from "$lib/InputText.svelte";
+  import InputAll from "$lib/components/input/InputAll.svelte";
+  import InputText from "$lib/components/input/InputText.svelte";
 
   export let data: PageData;
   export let form: ActionData;

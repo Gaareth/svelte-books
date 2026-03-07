@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ReadingActivityStatusType } from "$lib/constants/enums";
   import Book from "$lib/icons/book.svelte";
-  import { displayReadingActivityStatus } from "$lib/utils";
+  import { displayReadingActivityStatus } from "$lib/utils/utils";
 
   export let users: {
     username: string;

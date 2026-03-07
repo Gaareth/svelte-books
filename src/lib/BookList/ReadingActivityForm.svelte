@@ -7,17 +7,17 @@
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import { type ReviewListItemType } from "$appTypes";
-  import ClearButton from "$lib/ClearButton.svelte";
+  import ClearButton from "$components/ClearButton.svelte";
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
-  } from "$lib/DateSelector.svelte";
+  } from "$components/input/DateSelector.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputSelect from "$lib/InputSelect.svelte";
-  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
-  import Modal from "$lib/Modal.svelte";
-  import Rating from "$lib/Rating.svelte";
+  import InputAny from "$components/input/InputAny.svelte";
+  import InputSelect from "$components/input/InputSelect.svelte";
+  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
+  import Modal from "$components/Modal.svelte";
+  import Rating from "$lib/components/Rating.svelte";
   import {
     READING_ACTIVITY_TYPES,
     READING_STATUS_VALUES,

@@ -1,10 +1,10 @@
 import { sineInOut } from "svelte/easing";
 
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
+import type { OptionalDate } from "$components/input/DateSelector.svelte";
 import type { BookApiData } from "$prismaClient";
-import type { ReadingActivityStatusType } from "./constants/enums";
-import type { OptionalDate } from "./DateSelector.svelte";
-import type { THEME } from "./stores/stores";
+import type { ReadingActivityStatusType } from "../constants/enums";
+import type { THEME } from "../stores/stores";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

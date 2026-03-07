@@ -12,8 +12,8 @@
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import ToggleGroup from "$lib/ToggleGroup.svelte";
-  import { displayReadingActivityStatus } from "$lib/utils";
+  import ToggleGroup from "$lib/components/input/ToggleGroup.svelte";
+  import { displayReadingActivityStatus } from "$lib/utils/utils";
 
   export let form;
   export let data: PageData;

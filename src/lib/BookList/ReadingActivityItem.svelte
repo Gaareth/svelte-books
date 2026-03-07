@@ -16,27 +16,26 @@
 
   import { invalidateAll } from "$app/navigation";
   import { type ReviewListItemType } from "$appTypes";
-  import { formatShort } from "$lib/DateSelector.svelte";
-  import Dropdown from "$lib/Dropdown.svelte";
+  import Dropdown from "$components/input/Dropdown.svelte";
   import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import OpenNew from "$lib/icons/OpenNew.svelte";
-  import LineChartDrawer from "$lib/LineChartDrawer.svelte";
-  import Modal from "$lib/Modal.svelte";
-  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
+  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
+  import Modal from "$components/Modal.svelte";
+  import ReadingActivityDeletePopUp from "$components/composed/ReadingActivityDeletePopUp.svelte";
   import {
     dateDiffFormatted,
     dateToYYYY_MM_DD,
     displayReadingActivityStatus,
     optionalToDate,
-  } from "$lib/utils";
+  } from "$lib/utils/utils";
   import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
-  import AccentBarItemCard from "$lib/AccentBarItemCard.svelte";
+  import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import ReadingActivityTimeDiff from "$lib/BookList/ReadingActivityTimeDiff.svelte";
 
   export let entry: ReviewListItemType;

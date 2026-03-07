@@ -25,7 +25,7 @@
     dateToYYYY_MM_DD,
     optionalToDate,
     sortReadingActivity,
-  } from "$lib/utils";
+  } from "$lib/utils/utils";
 
   let books_displayed: BookFullType[];
   export let languages_used: string[];

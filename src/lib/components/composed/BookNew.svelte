@@ -7,17 +7,19 @@
   import { Moon } from "svelte-loading-spinners";
   import { twMerge } from "tailwind-merge";
 
-  import { MAX_RATING } from "./constants/constants";
-  import BookApi from "./BookApiSelection/BookApi.svelte";
-  import DateSelector, { type OptionalDate } from "./DateSelector.svelte";
-  import EventDone from "./icons/EventDone.svelte";
-  import EventProgress from "./icons/EventProgress.svelte";
-  import Words from "./icons/words.svelte";
-  import Rating from "./Rating.svelte";
+  import { MAX_RATING } from "$lib/constants/constants";
+  import BookApi from "$components/BookApiSelection/BookApi.svelte";
+  import DateSelector, {
+    type OptionalDate,
+  } from "$components/input/DateSelector.svelte";
+  import EventDone from "$components/icons/EventDone.svelte";
+  import EventProgress from "$components/icons/EventProgress.svelte";
+  import Words from "$lib/icons/words.svelte";
+  import Rating from "$components/components/Rating.svelte";
   import TabGroup from "./Tab/TabGroup.svelte";
   import TabPanel from "./Tab/TabPanel.svelte";
   import TabPanels from "./Tab/TabPanels.svelte";
-  import ToggleGroup from "./ToggleGroup.svelte";
+  import ToggleGroup from "./components/input/ToggleGroup.svelte";
   import { slideHeight } from "./utils";
 
   import type { Prisma, ReadingActivityType } from "$prismaBrowser";

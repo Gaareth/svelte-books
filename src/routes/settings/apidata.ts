@@ -6,7 +6,7 @@ import type { Book, BookApiData } from "$prismaClient";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { arrMax, getErrorMessage, zip } from "$lib/utils";
+import { arrMax, getErrorMessage, zip } from "$lib/utils/utils";
 
 type bookDiff = {
   bookName: string;

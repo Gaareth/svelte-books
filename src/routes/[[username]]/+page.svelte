@@ -7,9 +7,9 @@
 
   import BookListReading from "$lib/BookList/BookListReading.svelte";
   import ReadingList from "$lib/BookList/ReadingList.svelte";
-  import BookNew from "$lib/BookNew.svelte";
-  import Statistics from "$lib/Statistics.svelte";
-  import { getActiveActivies } from "$lib/utils";
+  import BookNew from "$components/composed/BookNew.svelte";
+  import Statistics from "$components/composed/Statistics.svelte";
+  import { getActiveActivies } from "$lib/utils/utils";
 
   export let data: PageData;
 

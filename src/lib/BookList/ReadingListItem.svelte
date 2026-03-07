@@ -16,13 +16,13 @@
   import { MAX_RATING } from "../constants/constants";
 
   import { type ReadingListItemType } from "$appTypes";
-  import { formatShort } from "$lib/DateSelector.svelte";
+  import { formatShort } from "$components/input/DateSelector.svelte";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import Pages from "$lib/icons/pages.svelte";
   import { READING_ACTIVITY_TYPES } from "../constants/enums";
-  import AccentBarItemCard from "$lib/AccentBarItemCard.svelte";
+  import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;

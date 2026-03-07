@@ -19,21 +19,20 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
-  import BookDeletePopUp from "$lib/BookDeletePopUp.svelte";
+  import BookDeletePopUp from "$components/composed/BookDeletePopUp.svelte";
   import BookListSeries from "$lib/BookList/BookListSeries.svelte";
   import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
-  import ReviewListItem from "$lib/BookList/ReadingActivityItem.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import Calendar from "$lib/icons/Calender.svelte";
   import Pages from "$lib/icons/pages.svelte";
   import Words from "$lib/icons/words.svelte";
-  import InputAny from "$lib/InputAny.svelte";
-  import InputNumber from "$lib/InputNumber.svelte";
-  import InputSelect from "$lib/InputSelect.svelte";
-  import InputText from "$lib/InputText.svelte";
+  import InputAny from "$components/input/InputAny.svelte";
+  import InputNumber from "$components/input/InputNumber.svelte";
+  import InputSelect from "$components/input/InputSelect.svelte";
+  import InputText from "$components/input/InputText.svelte";
   //@ts-ignore
-  import Pill from "$lib/Pill.svelte";
-  import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils";
+  import Pill from "$components/Pill.svelte";
+  import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils/utils";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import ReadingActivityItem from "$lib/BookList/ReadingActivityItem.svelte";
 

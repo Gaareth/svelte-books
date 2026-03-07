@@ -10,7 +10,7 @@ import type { RequestEvent } from "./$types";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { nullToUndefined } from "$lib/utils";
+import { nullToUndefined } from "$lib/utils/utils";
 import { READING_ACTIVITY_TYPES } from "../../../../lib/constants/enums";
 
 const createSchema = z.object({
