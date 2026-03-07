@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEBUG=false
+
 print_error() {
     echo -e "\033[31m$1\033[0m"
 }
@@ -9,6 +11,7 @@ cleanup() {
     docker stop book-store 2>/dev/null || true
     docker rm book-store 2>/dev/null || true
 }
+trap cleanup EXIT
 
 # Build the Docker image
 docker build . -t book-store
@@ -20,8 +23,7 @@ fi
 
 
 # Stop and remove any existing container named 'book-store'
-docker stop book-store 2>/dev/null || true
-docker rm book-store 2>/dev/null || true
+cleanup
 
 echo "> Starting container"
 # Run the Docker container in detached mode
@@ -39,9 +41,16 @@ if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 400 ]; then
     echo "URL returned 200 OK or any 300"
 else
     print_error "URL did not return 200 OK or any 300. Status code: $status_code"
-
-    cleanup
     exit 1
 fi
 
-cleanup
+if [ "$DEBUG" = true ]; then
+    echo "Press Ctrl+C to stop and cleanup."
+
+    # Wait until user interrupts
+    while true; do
+        sleep 1
+    done
+fi
+
+# cleanup by exit trap
