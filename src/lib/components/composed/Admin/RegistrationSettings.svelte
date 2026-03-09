@@ -37,8 +37,9 @@
     name="registrationOpen"
     id="registrationOpen"
     checked={registrationPossible}
-    on:change={() => {
+    on:change={(e) => {
       registrationPossible = !registrationPossible;
+      e.currentTarget.form?.requestSubmit();
     }}
     class="rounded" />
 </div>

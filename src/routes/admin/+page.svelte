@@ -19,6 +19,8 @@
       // @ts-ignore
       if (result.data.success) {
         toast.success("Successfully updated data");
+      } else {
+        toast.error("Failed to update data");
       }
 
       update({ reset: false });

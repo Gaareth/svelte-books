@@ -1,4 +1,4 @@
-import { type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
+import { fail, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
@@ -46,14 +46,23 @@ export const actions = {
     await adminAuth(await event.locals.auth());
 
     const formData = await event.request.formData();
-    const registrationOpen = formData.get("registrationOpen") != null;
+    const schema = z.object({
+      registrationOpen: z.string().optional(),
+    });
+
+    const result = schema.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+      return fail(400, { success: false, error: "Invalid form data" });
+    }
+
+    const { registrationOpen } = result.data;
 
     await prisma.serverSettings.update({
       where: {
         id: 1,
       },
       data: {
-        registrationPossible: registrationOpen,
+        registrationPossible: registrationOpen === "on",
       },
     });
 
@@ -97,7 +106,7 @@ export const actions = {
 
       return { success: true };
     } else {
-      return { success: false };
+      return fail(400, { success: false, error: "Invalid form data" });
     }
   },
 };
