@@ -35,9 +35,14 @@ export async function load({ locals, params }: ServerLoadEvent) {
     readingActivityStatus
   );
 
+  const isAuthorizedToModify =
+    (sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin) ??
+    false;
+
   return {
     readingActivity,
     username,
+    isAuthorizedToModify,
     listName: params.listName,
     exists: true,
   };

@@ -347,7 +347,7 @@
 
         <label class="flex flex-col">
           Languages
-          <select class="default-border" bind:value={lang_filter}>
+          <select class="default-border input-color-1" bind:value={lang_filter}>
             <option value="all" selected>all</option>
             {#each languages_used as lang}
               <option value={lang}>{lang}</option>
@@ -374,7 +374,7 @@
           Start date
           <input
             type="date"
-            class="default-border"
+            class="default-border input-color-1"
             value={start_filter && dateToYYYY_MM_DD(start_filter)}
             on:change={(e) => (start_filter = parseDateInput(e))} />
         </label>
@@ -383,7 +383,7 @@
           End date {end_filter && dateToYYYY_MM_DD(end_filter)}
           <input
             type="date"
-            class="default-border"
+            class="default-border input-color-1"
             value={end_filter && dateToYYYY_MM_DD(end_filter)}
             on:change={(e) => (end_filter = parseDateInput(e))} />
         </label>

@@ -17,6 +17,9 @@
   import { page } from "$app/stores";
   import ReadingActivityDeletePopUp from "$components/composed/BookList/ReadingActivityDeletePopUp.svelte";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import BookActions from "./Actions/BookActions.svelte";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import NowReadingAction from "./Actions/NowReadingAction.svelte";
 
   export let entries: ReadingListItemType[];
   export let showSearch = true;

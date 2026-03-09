@@ -40,7 +40,7 @@
     on:keyup={onKeyUp}
     id="searchBooks"
     type="search"
-    class="input rounded-md pr-10 shadow-sm sm:text-sm w-full mt-0 dark:border-slate-600"
+    class="input input-color-1 rounded-md pr-10 shadow-sm sm:text-sm w-full mt-0 dark:border-slate-600"
     placeholder="Search for books.." />
   <span
     class="pointer-events-none absolute inset-y-0 right-0 grid w-7 mx-1 mt-1 place-content-center

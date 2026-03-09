@@ -34,10 +34,15 @@
     LIST
   </h1>
 
-  <BookNew
-    readingStatus={"to read"}
-    readingActivities={data.readingActivity ?? []} />
-  <ReadingList entries={data.readingActivity} />
+  {#if data.isAuthorizedToModify}
+    <BookNew
+      readingStatus={"to read"}
+      readingActivities={data.readingActivity ?? []} />
+  {/if}
+
+  <ReadingList
+    entries={data.readingActivity}
+    isAuthorizedToModify={data.isAuthorizedToModify} />
 {:else}
   <h1 class="text-center text-5xl my-4 mb-6">This list does not exist</h1>
 {/if}

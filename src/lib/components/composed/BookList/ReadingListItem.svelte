@@ -8,10 +8,6 @@
   import clsx from "clsx";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-  //@ts-ignore
-  import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
-  //@ts-ignore
-  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   import { MAX_RATING } from "$lib/constants/constants";
 
@@ -23,6 +19,9 @@
   import Pages from "$lib/icons/pages.svelte";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
+  import Book from "$lib/icons/book.svelte";
+  import BookActions from "./Actions/BookActions.svelte";
+  import NowReadingAction from "./Actions/NowReadingAction.svelte";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;
@@ -141,49 +140,13 @@
         </div>
       {/if}
 
-      {#if isAuthorizedToModify}
-        <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
-          <span
-            class="inline-flex flex-row divide-x overflow-hidden rounded-md border bg-white shadow-sm
-            dark:bg-slate-600 dark:border-slate-700">
-            <a
-              class="group inline-block p-2 hover:bg-gray-50 focus:relative
-              dark:hover:bg-slate-500"
-              title="Edit book"
-              href="/book/{book_url}/?edit=true">
-              <span
-                class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                <IoMdSettings />
-              </span>
-            </a>
-
-            <slot name="delete">
-              {#if allow_deletion}
-                <button
-                  class="group p-2 btn-delete hidden sm:inline-block !border-0"
-                  title="Delete book"
-                  type="button"
-                  on:click={() => {
-                    dispatch("delete", { entry });
-                  }}>
-                  <span
-                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                    <IoMdTrash alt="red trash can" />
-                  </span>
-                </button>
-              {/if}
-            </slot>
-          </span>
-        </div>
-      {:else}
-        <div class="hidden sm:flex justify-end ms-2">
-          <a
-            class="underline-hover"
-            href="/{entry.account.username}/book/{book_url}">
-            View
-          </a>
-        </div>
-      {/if}
+      <slot name="actions">
+        <BookActions
+          {isAuthorizedToModify}
+          {allow_deletion}
+          {entry}
+          on:delete={(e) => dispatch("delete", e.detail)} />
+      </slot>
     </div>
   </div>
 </AccentBarItemCard>
