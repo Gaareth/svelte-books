@@ -1,6 +1,6 @@
 import { event } from "sveltekit-sse";
 
-import { getAccountIdfromSession } from "../../../../auth";
+import { getAccountIdfromSession } from "$lib/auth/auth";
 import { SSE_DATA } from "./sse";
 
 import { delay } from "$lib/utils/utils.js";

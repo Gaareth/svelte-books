@@ -13,7 +13,7 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
-  import { MAX_RATING } from "../constants/constants";
+  import { MAX_RATING } from "$lib/constants/constants";
 
   import { type ReadingListItemType } from "$appTypes";
   import { formatShort } from "$components/input/DateSelector.svelte";
@@ -21,7 +21,7 @@
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
   import Pages from "$lib/icons/pages.svelte";
-  import { READING_ACTIVITY_TYPES } from "../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
 
   export let entry: ReadingListItemType;

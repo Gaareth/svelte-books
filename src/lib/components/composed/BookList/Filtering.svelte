@@ -14,7 +14,7 @@
 
   import EqRelation from "./EqRelation.svelte";
   import SortOrder from "./SortOrder.svelte";
-  import { MAX_RATING } from "../constants/constants";
+  import { MAX_RATING } from "$lib/constants/constants";
 
   import type { BookFullType, ReadingListItemType } from "$appTypes";
 

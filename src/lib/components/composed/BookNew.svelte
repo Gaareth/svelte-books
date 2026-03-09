@@ -8,25 +8,26 @@
   import { twMerge } from "tailwind-merge";
 
   import { MAX_RATING } from "$lib/constants/constants";
-  import BookApi from "$components/BookApiSelection/BookApi.svelte";
+  import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
+
   import DateSelector, {
     type OptionalDate,
   } from "$components/input/DateSelector.svelte";
-  import EventDone from "$components/icons/EventDone.svelte";
-  import EventProgress from "$components/icons/EventProgress.svelte";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
   import Words from "$lib/icons/words.svelte";
-  import Rating from "$components/components/Rating.svelte";
-  import TabGroup from "./Tab/TabGroup.svelte";
-  import TabPanel from "./Tab/TabPanel.svelte";
-  import TabPanels from "./Tab/TabPanels.svelte";
-  import ToggleGroup from "./components/input/ToggleGroup.svelte";
-  import { slideHeight } from "./utils";
+  import Rating from "$components/Rating.svelte";
+  import TabGroup from "$components/composed/Tab/TabGroup.svelte";
+  import TabPanel from "$components/composed/Tab/TabPanel.svelte";
+  import TabPanels from "$components/composed/Tab/TabPanels.svelte";
+  import ToggleGroup from "$components/input/ToggleGroup.svelte";
+  import { slideHeight } from "$utils/utils";
 
   import type { Prisma, ReadingActivityType } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "./constants/enums";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
   export let endpoint = "/book/create";
 

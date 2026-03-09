@@ -4,8 +4,8 @@
   import clsx from "clsx";
   import { twMerge } from "tailwind-merge";
 
-  import { clickOutside } from "./clickOutside";
-  import Modal from "./Modal.svelte";
+  import { clickOutside } from "$components/input/clickOutside";
+  import Modal from "$components/Modal.svelte";
 
   import { browser } from "$app/environment";
 

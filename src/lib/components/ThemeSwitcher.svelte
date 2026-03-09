@@ -10,9 +10,9 @@
   //@ts-ignore
   import { twMerge } from "tailwind-merge";
 
-  import Dropdown from "./Dropdown.svelte";
-  import { theme } from "./stores/stores";
-  import { isDarkModeEnabled } from "./utils";
+  import Dropdown from "$components/input/Dropdown.svelte";
+  import { theme } from "$lib/stores/stores";
+  import { isDarkModeEnabled } from "$utils/utils";
 
   import { browser } from "$app/environment";
 

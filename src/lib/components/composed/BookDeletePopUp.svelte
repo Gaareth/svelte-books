@@ -3,7 +3,7 @@
 
   import toast from "svelte-french-toast";
 
-  import Popup from "./Popup.svelte";
+  import Popup from "$components/Popup.svelte";
 
   import type { Book } from "$prismaBrowser";
 

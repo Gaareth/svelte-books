@@ -5,9 +5,9 @@
   import { twMerge } from "tailwind-merge";
 
   import { page } from "$app/stores";
-  import Dropdown from "$lib/Dropdown.svelte";
+  import Dropdown from "$components/input/Dropdown.svelte";
   import IconAccount from "$lib/icons/IconAccount.svelte";
-  import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
+  import ThemeSwitcher from "$components/ThemeSwitcher.svelte";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
   // eslint-disable-next-line no-undef

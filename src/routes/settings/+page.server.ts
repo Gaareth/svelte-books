@@ -1,7 +1,7 @@
 import { type ServerLoadEvent } from "@sveltejs/kit";
 
-import { getAccountIdfromSession, userAuth } from "../../auth";
-import { parseFormArray } from "../../schemas";
+import { getAccountIdfromSession, userAuth } from "$lib/auth/auth";
+import { parseFormArray } from "$lib/schemas/schemas";
 import { SSE_DATA } from "../book/api/update_all/sse";
 import {
   createConnections,

@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { Moon } from "svelte-loading-spinners";
-  import { theme } from "./stores/stores";
+  import { theme } from "$lib/stores/stores";
 
   export let color: string | undefined = undefined;
   $: themedColor = $theme == "dark" ? "white" : "black";

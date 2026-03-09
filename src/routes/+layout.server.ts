@@ -1,4 +1,4 @@
-import { getAccountByUsername } from "../auth";
+import { getAccountByUsername } from "$lib/auth/auth";
 
 import type { LayoutServerLoad } from "./$types";
 

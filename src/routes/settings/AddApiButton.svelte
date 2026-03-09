@@ -9,7 +9,7 @@
   import type { SSE_EVENT } from "../book/api/update_all/sse";
 
   import { enhance } from "$app/forms";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
+  import LoadingSpinner from "$components/LoadingSpinner.svelte";
 
   let loading = false;
   let evtSource: EventSource;

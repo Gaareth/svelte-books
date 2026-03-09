@@ -6,8 +6,8 @@ import {
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
-import { createReadingActivityStatus } from "../../../../prisma/seed-initial";
-import { hashPassword } from "../../../auth";
+import { hashPassword } from "$lib/auth/auth";
+import { createAllReadingActivityStatus } from "$lib/server/db/create";
 
 import { prisma } from "$lib/server/prisma";
 
@@ -123,7 +123,7 @@ export const actions = {
 
       // create default lists, like read, to-read
       // await createLists(account.id);
-      await createReadingActivityStatus(account.id);
+      await createAllReadingActivityStatus(account.id);
 
       if (validCode) {
         await prisma.registrationCode.update({

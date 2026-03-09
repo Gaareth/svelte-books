@@ -11,7 +11,7 @@
   import { invalidateAll } from "$app/navigation";
   import { type ReadingListItemType } from "$appTypes";
   import { optionalToDate, sortReadingActivity } from "$lib/utils/utils";
-  import { READING_ACTIVITY_TYPES } from "../constants/enums";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
   export let readingActivities: ReadingListItemType[];
   export let isAuthorizedToModify = false;

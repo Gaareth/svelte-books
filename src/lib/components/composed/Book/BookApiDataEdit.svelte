@@ -3,8 +3,8 @@
 
   import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
 
-  import BookApi from "$lib/BookApiSelection/BookApi.svelte";
-  import BookApiConfirm from "$lib/BookApiSelection/BookApiConfirm.svelte";
+  import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
+  import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
 
   export let query: string | undefined = undefined;
   export let data: BookApiDataCategories | null;

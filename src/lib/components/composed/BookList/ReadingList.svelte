@@ -15,7 +15,7 @@
 
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
-  import ReadingActivityDeletePopUp from "$lib/ReadingActivityDeletePopUp.svelte";
+  import ReadingActivityDeletePopUp from "$components/composed/BookList/ReadingActivityDeletePopUp.svelte";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
 
   export let entries: ReadingListItemType[];

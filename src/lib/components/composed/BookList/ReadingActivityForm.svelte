@@ -2,12 +2,12 @@
   import clsx from "clsx";
   import toast from "svelte-french-toast";
 
-  import { MAX_RATING } from "../constants/constants";
+  import { MAX_RATING } from "$lib/constants/constants";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import { type ReviewListItemType } from "$appTypes";
-  import ClearButton from "$components/ClearButton.svelte";
+  import ClearButton from "$components/input/ClearButton.svelte";
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
   } from "$components/input/DateSelector.svelte";
@@ -21,7 +21,7 @@
   import {
     READING_ACTIVITY_TYPES,
     READING_STATUS_VALUES,
-  } from "../constants/enums";
+  } from "$lib/constants/enums";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;

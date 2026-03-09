@@ -18,10 +18,10 @@
   import { applyAction, enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import BookApiDataEdit from "$lib/Book/BookApiDataEdit.svelte";
+  import BookApiDataEdit from "$components/composed/Book/BookApiDataEdit.svelte";
   import BookDeletePopUp from "$components/composed/BookDeletePopUp.svelte";
-  import BookListSeries from "$lib/BookList/BookListSeries.svelte";
-  import ReadingActivityForm from "$lib/BookList/ReadingActivityForm.svelte";
+  import BookListSeries from "$components/composed/BookList/BookListSeries.svelte";
+  import ReadingActivityForm from "$components/composed/BookList/ReadingActivityForm.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import Calendar from "$lib/icons/Calender.svelte";
   import Pages from "$lib/icons/pages.svelte";
@@ -34,7 +34,7 @@
   import Pill from "$components/Pill.svelte";
   import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils/utils";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
-  import ReadingActivityItem from "$lib/BookList/ReadingActivityItem.svelte";
+  import ReadingActivityItem from "$components/composed/BookList/ReadingActivityItem.svelte";
 
   export let data: PageData;
 

@@ -1,6 +1,6 @@
 import { error, json, type RequestEvent } from "@sveltejs/kit";
 
-import { authorize } from "../../../../../auth";
+import { authorize } from "$lib/auth/auth";
 
 import { prisma } from "$lib/server/prisma";
 

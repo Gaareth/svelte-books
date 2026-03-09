@@ -12,7 +12,7 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   import ReadingActivityForm from "./ReadingActivityForm.svelte";
-  import { MAX_RATING } from "../constants/constants";
+  import { MAX_RATING } from "$lib/constants/constants";
 
   import { invalidateAll } from "$app/navigation";
   import { type ReviewListItemType } from "$appTypes";
@@ -24,7 +24,7 @@
   import OpenNew from "$lib/icons/OpenNew.svelte";
   import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
   import Modal from "$components/Modal.svelte";
-  import ReadingActivityDeletePopUp from "$components/composed/ReadingActivityDeletePopUp.svelte";
+  import ReadingActivityDeletePopUp from "$components/composed/BookList/ReadingActivityDeletePopUp.svelte";
   import {
     dateDiffFormatted,
     dateToYYYY_MM_DD,
@@ -36,7 +36,7 @@
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-  import ReadingActivityTimeDiff from "$lib/BookList/ReadingActivityTimeDiff.svelte";
+  import ReadingActivityTimeDiff from "$components/composed/BookList/ReadingActivityTimeDiff.svelte";
 
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
@@ -312,23 +312,5 @@
   .icon-edit {
     width: 20px;
     height: 20px;
-  }
-
-  .book-item-grid {
-    display: grid;
-    flex-grow: 1;
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
-    row-gap: 0;
-    align-items: center;
-    height: 100%;
-    /* grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); */
-    grid-template-rows: auto;
-  }
-
-  @media (min-width: 640px) {
-    .book-item-grid {
-      grid-template-rows: repeat(1, minmax(0, 1fr));
-    }
   }
 </style>

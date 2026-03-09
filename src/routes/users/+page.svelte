@@ -1,5 +1,5 @@
 <script lang="ts">
-  import UsersList from "$lib/UsersList.svelte";
+  import UsersList from "$components/composed/UsersList.svelte";
 
   export let data;
 </script>

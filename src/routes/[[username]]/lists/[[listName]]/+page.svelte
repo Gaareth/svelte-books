@@ -2,10 +2,21 @@
   import type { PageData } from "./$types";
 
   import { page } from "$app/stores";
-  import ReadingList from "$lib/BookList/ReadingList.svelte";
-  import BookNew from "$lib/BookNew.svelte";
+  import ReadingList from "$components/composed/BookList/ReadingList.svelte";
+  import BookNew from "$components/composed/BookNew.svelte";
+  import { displayReadingActivityStatus } from "$utils/utils";
+  import {
+    READING_STATUS_VALUES,
+    type ReadingActivityStatusType,
+  } from "$lib/constants/enums";
 
   export let data: PageData;
+
+  $: listDisplayName = READING_STATUS_VALUES.includes(
+    data.listName as ReadingActivityStatusType
+  )
+    ? displayReadingActivityStatus(data.listName as ReadingActivityStatusType)
+    : data.listName;
 </script>
 
 <svelte:head>
@@ -19,7 +30,8 @@
     {:else}
       {data.username}'s
     {/if}
-    {data.listName} LIST
+    <span class="italic text-5xl">{listDisplayName}</span>
+    LIST
   </h1>
 
   <BookNew

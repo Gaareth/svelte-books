@@ -1,4 +1,4 @@
-import { authorize, getReadingActivityVisibility } from "../../auth";
+import { authorize, getReadingActivityVisibility } from "$lib/auth/auth";
 
 import type { ServerLoadEvent } from "@sveltejs/kit";
 

@@ -1,13 +1,13 @@
-import type z from "zod";
 import type {
   optionalDatetimeSchema,
   storyGraphSchema,
-} from "../../../schemas";
+} from "$lib/schemas/schemas";
+import type z from "zod";
 
+import { type ReadingActivityStatusType } from "$lib/constants/enums";
+import { createAllReadingActivityStatus } from "$lib/server/db/create";
 import { prisma } from "$lib/server/prisma";
 import type { Prisma } from "$prismaBrowser";
-import { createReadingActivityStatus } from "../../../../prisma/seed-initial";
-import { type ReadingActivityStatusType } from "../../../lib/constants/enums";
 
 const readingActivityIncludes = {
   rating: true,
@@ -100,7 +100,7 @@ export async function getOrCreateReadingActivityStatus(
       "Error retrieving or creating reading activity status:",
       error
     );
-    await createReadingActivityStatus(accountId, true);
+    await createAllReadingActivityStatus(accountId, true);
     return (await getRaStatus()).id;
   }
 }

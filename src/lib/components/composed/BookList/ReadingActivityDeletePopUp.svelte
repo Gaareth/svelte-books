@@ -3,8 +3,8 @@
 
   import toast from "svelte-french-toast";
 
-  import { formatShort } from "./DateSelector.svelte";
-  import Popup from "./Popup.svelte";
+  import { formatShort } from "$components/input/DateSelector.svelte";
+  import Popup from "$components/Popup.svelte";
 
   import type { Prisma } from "$prismaBrowser";
 

@@ -1,18 +1,18 @@
 import { json } from "@sveltejs/kit";
 import z from "zod";
 
-import { authorize } from "../../../../auth";
+import { authorize } from "$lib/auth/auth";
 import {
   numericString,
   optionalDatetimeSchema,
   parseFormObject,
   storyGraphSchema,
-} from "../../../../schemas";
+} from "$lib/schemas/schemas";
 
 import type { RequestEvent } from "./$types";
 
+import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
-import { READING_ACTIVITY_TYPES } from "../../../../lib/constants/enums";
 
 const saveSchema = z
   .object({

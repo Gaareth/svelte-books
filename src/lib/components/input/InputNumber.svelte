@@ -1,7 +1,7 @@
 <script lang="ts">
   import { twMerge } from "tailwind-merge";
 
-  import ClearButton from "./ClearButton.svelte";
+  import ClearButton from "$components/input/ClearButton.svelte";
 
   export let value: unknown | null = null;
   export let name: string;

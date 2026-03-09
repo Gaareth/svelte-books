@@ -1,8 +1,8 @@
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { authorize } from "../../../../auth";
-import { optionalNumericString } from "../../../../schemas";
+import { authorize } from "$lib/auth/auth";
+import { optionalNumericString } from "$lib/schemas/schemas";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";

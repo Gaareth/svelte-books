@@ -2,9 +2,9 @@ import { sineInOut } from "svelte/easing";
 
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
 import type { OptionalDate } from "$components/input/DateSelector.svelte";
+import type { ReadingActivityStatusType } from "$lib/constants/enums";
+import type { THEME } from "$lib/stores/stores";
 import type { BookApiData } from "$prismaClient";
-import type { ReadingActivityStatusType } from "../constants/enums";
-import type { THEME } from "../stores/stores";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -261,4 +261,8 @@ export function getMaxResolutionImage(apiData: BookApiData | null) {
     imageLinks?.smallThumbnail ||
     null
   );
+}
+
+export function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
 }

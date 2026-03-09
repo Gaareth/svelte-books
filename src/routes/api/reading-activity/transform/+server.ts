@@ -1,7 +1,7 @@
 import { error, json, type RequestEvent } from "@sveltejs/kit";
 import z from "zod";
 
-import { authorize } from "../../../../auth";
+import { authorize } from "$lib/auth/auth";
 
 import {
   READING_ACTIVITY_TYPES,

@@ -2,8 +2,8 @@
   import { Chart, getElementAtEvent } from "svelte-chartjs";
 
   import "chart.js/auto";
-  import { defaultBgColor, tupleToDataset } from "../chartUtils";
-  import { theme } from "./stores/stores";
+  import { defaultBgColor, tupleToDataset } from "$utils/chartUtils";
+  import { theme } from "$lib/stores/stores";
 
   import { type ChartTypeRegistry } from "chart.js/auto";
 

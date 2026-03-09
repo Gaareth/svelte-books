@@ -2,7 +2,7 @@ import { type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import { adminAuth } from "../../auth";
+import { adminAuth } from "$lib/auth/auth";
 
 import { prisma } from "$lib/server/prisma";
 

@@ -1,5 +1,5 @@
 <script>
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
+  import LoadingSpinner from "$components/LoadingSpinner.svelte";
 </script>
 
 <div class="item-border-no-hover p-2 my-2 flex items-center">
