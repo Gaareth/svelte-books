@@ -3,8 +3,8 @@
   import ActiveIndicator from "$components/ActiveIndicator.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
-  import ReadingActivityActions from "../BookList/Actions/ReadingActivityActions.svelte";
-  import ReadingActivityItem from "../BookList/ReadingActivityItem.svelte";
+  import ReadingActivityActions from "$components/composed/BookList/Actions/ReadingActivityActions.svelte";
+  import ReadingActivityItem from "$components/composed/ReadingActivity/ReadingActivityItem.svelte";
 
   export let activeEntry: ReviewListItemType;
   export let readingActivitiesSorted: ReviewListItemType[];

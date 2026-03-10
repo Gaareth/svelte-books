@@ -19,9 +19,7 @@
   import Pages from "$lib/icons/pages.svelte";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-  import Book from "$lib/icons/book.svelte";
   import BookActions from "./Actions/BookActions.svelte";
-  import NowReadingAction from "./Actions/NowReadingAction.svelte";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;

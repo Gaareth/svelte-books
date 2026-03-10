@@ -21,7 +21,7 @@
   import BookApiDataEdit from "$components/composed/Book/BookApiDataEdit.svelte";
   import BookDeletePopUp from "$components/composed/BookDeletePopUp.svelte";
   import BookListSeries from "$components/composed/BookList/BookListSeries.svelte";
-  import ReadingActivityForm from "$components/composed/BookList/ReadingActivityForm.svelte";
+  import ReadingActivityForm from "$components/composed/ReadingActivity/ReadingActivityForm.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import Calendar from "$lib/icons/Calender.svelte";
   import Pages from "$lib/icons/pages.svelte";

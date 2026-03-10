@@ -11,7 +11,7 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
-  import ReadingActivityForm from "./ReadingActivityForm.svelte";
+  import ReadingActivityForm from "../ReadingActivity/ReadingActivityForm.svelte";
   import { MAX_RATING } from "$lib/constants/constants";
 
   import { invalidateAll } from "$app/navigation";
@@ -24,7 +24,7 @@
   import OpenNew from "$lib/icons/OpenNew.svelte";
   import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
   import Modal from "$components/Modal.svelte";
-  import ReadingActivityDeletePopUp from "$components/composed/BookList/ReadingActivityDeletePopUp.svelte";
+  import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
   import {
     dateDiffFormatted,
     dateToYYYY_MM_DD,
@@ -36,8 +36,7 @@
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-  import ReadingActivityTimeDiff from "$components/composed/BookList/ReadingActivityTimeDiff.svelte";
-  import ActiveIndicator from "$components/ActiveIndicator.svelte";
+  import ReadingActivityTimeDiff from "$components/composed/ReadingActivity/ReadingActivityTimeDiff.svelte";
 
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
