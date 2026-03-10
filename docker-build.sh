@@ -1,6 +1,6 @@
 set -e;
-
-npm run build && ./docker-build-local.sh && docker buildx build  --platform=linux/amd64 .;
+npm run check;
+npm run build && ./docker-build-local.sh && docker buildx build --platform=linux/amd64 .;
 npm version patch;
 git push;
 npm run build;

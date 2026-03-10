@@ -1,6 +1,7 @@
 <!-- Merged Material Symbols Icon material-symbols:family-home-rounded and material-symbols:book-2-rounded -->
 
 <svg
+  {...$$restProps}
   viewBox="0 0 24 24"
   version="1.1"
   id="svg1"
