@@ -1,4 +1,4 @@
-import { error, json } from "@sveltejs/kit";
+import { fail, json } from "@sveltejs/kit";
 import { z } from "zod";
 
 import { authorize } from "$lib/auth/auth";
@@ -11,7 +11,8 @@ import type { RequestEvent } from "./$types";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { nullToUndefined } from "$lib/utils/utils";
+import { nullToUndefined, optionalToDate } from "$lib/utils/utils";
+import { BookOwnership } from "$prismaBrowser";
 
 const createSchema = z.object({
   name: z.string().trim().min(1),
@@ -22,6 +23,10 @@ const createSchema = z.object({
   volumeId: z.string().trim().optional(),
   dateStarted: optionalDatetimeSchema.optional(),
   dateFinished: optionalDatetimeSchema.optional(),
+
+  bookOwnership: z.nativeEnum(BookOwnership).optional(),
+  location: z.string().trim().optional(),
+  acquiredAtDate: optionalDatetimeSchema.optional(),
 });
 
 export async function POST(req: RequestEvent) {
@@ -37,8 +42,17 @@ export async function POST(req: RequestEvent) {
   // TODO: return schema parsing errors
 
   if (result.success) {
-    const { name, author, stars, wordsPerPage, readingStatus, volumeId } =
-      result.data;
+    const {
+      name,
+      author,
+      stars,
+      wordsPerPage,
+      readingStatus,
+      volumeId,
+      bookOwnership,
+      location,
+      acquiredAtDate,
+    } = result.data;
 
     // null can be seen as delete, while undefined as ignore. I dont want to delete while creating
     const dateStarted = nullToUndefined(result.data.dateStarted);
@@ -75,6 +89,19 @@ export async function POST(req: RequestEvent) {
       await addApiData(volumeId, book.id);
     }
 
+    const ownership = await createOwnership(book.id, {
+      location,
+      status: bookOwnership,
+      aquiredAt: nullToUndefined(optionalToDate(acquiredAtDate)),
+    });
+
+    if (!ownership) {
+      return fail(500, {
+        success: false,
+        message: "Failed to create book ownership",
+      });
+    }
+
     const rA = await createReadingActivity(
       accountId,
       book.id,
@@ -87,7 +114,7 @@ export async function POST(req: RequestEvent) {
     );
 
     if (!rA) {
-      return json({
+      return fail(500, {
         success: false,
         message: "Failed to create reading activity",
       });
@@ -100,7 +127,30 @@ export async function POST(req: RequestEvent) {
   }
 
   console.log("Error parsing form data for creating a new book:", result.error);
-  error(400);
+  return fail(400, {
+    success: false,
+    message: "Invalid form data",
+  });
+}
+
+async function createOwnership(
+  bookId: string,
+  {
+    location,
+    status,
+    aquiredAt,
+  }: { location?: string; status?: BookOwnership; aquiredAt?: Date }
+) {
+  const ownership = await prisma.ownership.create({
+    data: {
+      bookId,
+      location,
+      status,
+      aquiredAt,
+    },
+  });
+
+  return ownership;
 }
 
 /// Adds API data to the book if volumeId is provided

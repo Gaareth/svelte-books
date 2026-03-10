@@ -28,6 +28,7 @@
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull } from "$appTypes";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import OwnershipForm from "./OwnershipForm.svelte";
 
   export let endpoint = "/book/create";
 
@@ -184,7 +185,7 @@
         <TabGroup
           btnClass="px-4 py-1 dark:hover:border-slate-400 text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
           btnSelectedClass="dark:text-slate-100 text-slate-900"
-          sliderClass="border-b-2 dark:border-slate-500 border-slate-400"
+          sliderClass="border-b-2 border-indigo-400"
           tabNames={["search", "manually"]}
           animate={false}>
           <!-- TODO: tabtrigger info if there is a book selected -->
@@ -202,13 +203,13 @@
             </TabPanel>
             <TabPanel className="px-0.5">
               <p>Enter info manually</p>
-              <div class="grid grid-cols-2 grid-rows-2 items-center gap-1">
+              <div class="grid grid-cols-2 grid-rows-2 items-center gap-y-2">
                 <label for="name">Name:</label>
                 <input
                   id="name"
                   name="name"
                   type="text"
-                  class="rounded-md dark:bg-slate-600 dark:border-slate-500"
+                  class="rounded-md w-full btn-generic-color-2"
                   bind:value={name} />
                 <label for="author">Author:</label>
                 <!-- <input
@@ -224,14 +225,16 @@
                   create={true}
                   id="author"
                   name="author"
-                  class="input border-gray-500 dark:bg-slate-600 dark:border-slate-500" />
+                  class="input btn-generic-color-2 w-full" />
               </div>
             </TabPanel>
           </TabPanels>
         </TabGroup>
 
         {#if showMore || (name.length > 0 && author.length > 0)}
-          <div class="grid grid-cols-2 gap-2">
+          <hr class="dark:border-slate-500 my-5" />
+
+          <div class="grid grid-cols-2 gap-y-2">
             {#if readingActivities.some((e) => e.book.name === name && e.book.author === author)}
               <p class="text-warning text-base col-span-2">
                 Info: A book with this name (and author) is already in this
@@ -240,7 +243,7 @@
             {/if}
             {#if readingStatus == "reading" || readingStatus == "read"}
               <label
-                class="col-span-2 flex flex-wrap items-center justify-between"
+                class="col-span-2 grid grid-cols-1 sm:grid-cols-2"
                 for="dateStarted">
                 <div class="icon-wrapper">
                   <span class="w-5 block" title="date read">
@@ -252,14 +255,14 @@
                 <DateSelector
                   id="dateStarted"
                   className="w-full sm:w-auto"
-                  inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
+                  inputClassName="btn-generic-color-2 rounded-md w-full"
                   bind:datetime={dateStarted} />
               </label>
             {/if}
 
             {#if readingStatus == "read"}
               <label
-                class="col-span-2 flex flex-wrap items-center justify-between"
+                class="col-span-2 grid grid-cols-1 sm:grid-cols-2"
                 for="dateEnd">
                 <div class="icon-wrapper">
                   <span class="w-5 block" title="date read">
@@ -271,13 +274,13 @@
                 <DateSelector
                   id="dateEnd"
                   className="w-full sm:w-auto"
-                  inputClassName="btn-generic-color-2 rounded-md w-full sm:w-auto"
+                  inputClassName="btn-generic-color-2 rounded-md w-full"
                   bind:datetime={dateFinished} />
               </label>
             {/if}
 
             {#if readingStatus != "to read"}
-              <div class="mt-1">
+              <div class="mt-1 w-full">
                 <label for="rating">Rating:</label>
                 <Rating
                   rating_max={MAX_RATING}
@@ -285,7 +288,7 @@
                   bind:rating={stars} />
               </div>
 
-              <div class="mt-1">
+              <div class="mt-1 w-full">
                 <label for="words-per-page" class="icon-wrapper">
                   <span class="w-5 block" title="date read">
                     <Words />
@@ -296,11 +299,13 @@
                   id="words-per-page"
                   name="words-per-page"
                   type="number"
-                  class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full"
+                  class="rounded-md btn-generic-color-2 w-full"
                   bind:value={wordsPerPage} />
               </div>
             {/if}
           </div>
+
+          <OwnershipForm className="mt-5" />
         {/if}
 
         <div class="flex justify-end">

@@ -13,7 +13,7 @@
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import ToggleGroup from "$lib/components/input/ToggleGroup.svelte";
-  import { displayReadingActivityStatus } from "$lib/utils/utils";
+  import { capitalize } from "$lib/utils/utils";
 
   export let form;
   export let data: PageData;
@@ -99,7 +99,7 @@
               data.readingActivityLists[i].visibility &&
               "border-warning"
           )}>
-          <p>{displayReadingActivityStatus(list.status)}</p>
+          <p>{capitalize(list.status)}</p>
 
           <ToggleGroup
             options={["private", "public"]}

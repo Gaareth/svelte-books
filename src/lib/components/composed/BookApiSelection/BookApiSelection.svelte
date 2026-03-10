@@ -47,7 +47,7 @@
   </label>
   <form class="flex gap-2" on:submit|preventDefault={handleClick}>
     <input
-      class="input dark:bg-slate-600 dark:border-slate-500"
+      class="input btn-generic-color-2"
       type="text"
       id="bookApiQuery"
       bind:value={query} />

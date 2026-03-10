@@ -61,7 +61,7 @@ export const DatetimeSchema = z.object({
   hour: numericString(z.number().int().min(0).max(23).nullish()),
   minute: numericString(z.number().int().min(0).max(59).nullish()),
 
-  timezone: z.coerce.number().min(0).nullish(), // Optional timezoneoffset in minutes
+  timezoneOffset: numericString(z.number().int().min(0).max(31).nullish()), // Optional timezoneoffset in minutes
 });
 
 export const requiredDatetimeSchema = DatetimeSchema.refine(

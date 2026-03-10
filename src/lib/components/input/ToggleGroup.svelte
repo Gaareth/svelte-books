@@ -24,6 +24,7 @@
   {#each options as option, i}
     <button
       type="button"
+      disabled={selectedOption == option && !unToggleable}
       class={twMerge(
         "flex items-center gap-1",
         btnClass,

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ReadingActivityStatusType } from "$lib/constants/enums";
   import Book from "$lib/icons/book.svelte";
-  import { displayReadingActivityStatus } from "$lib/utils/utils";
+  import { capitalize } from "$lib/utils/utils";
 
   export let users: {
     username: string;
@@ -22,7 +22,7 @@
     <div class="flex gap-1 sm:gap-2 flex-wrap justify-center">
       {#each user.readingActivityLists as list}
         <a href="/{user.username}/lists/{list?.status}" class="hover:underline">
-          {displayReadingActivityStatus(list.status)}
+          {capitalize(list.status)}
         </a>
         |
       {/each}

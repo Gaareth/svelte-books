@@ -34,6 +34,7 @@ async function transformAddCurrentDate(
         year: now.getFullYear(),
         hour: now.getHours(),
         minute: now.getMinutes(),
+        timezoneOffset: now.getTimezoneOffset(),
       },
     })
   ).id;
@@ -63,6 +64,7 @@ async function createNewReadFromScratch(accountId: string, bookId: string) {
     year: now.getFullYear(),
     hour: now.getHours(),
     minute: now.getMinutes(),
+    timezoneOffset: now.getTimezoneOffset(),
   };
 
   return await createReadingActivity(

@@ -22,13 +22,28 @@
     READING_ACTIVITY_TYPES,
     READING_STATUS_VALUES,
   } from "$lib/constants/enums";
+  import OwnershipForm from "../OwnershipForm.svelte";
 
   export let bookId: string | undefined = undefined;
   export let showModal = false;
   export let entry: ReviewListItemType | undefined = undefined;
+  $: createNew = entry === undefined;
 
   let stars = entry?.rating?.stars;
   $: readingStatus = entry?.status.status;
+  $: rateableStatus =
+    readingStatus &&
+    readingStatus !== READING_ACTIVITY_TYPES.TO_READ &&
+    readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
+  $: showFinishedDate =
+    readingStatus &&
+    (readingStatus == READING_ACTIVITY_TYPES.FINISHED ||
+      readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
+      readingStatus == READING_ACTIVITY_TYPES.PAUSED);
+  $: showStartedDate =
+    readingStatus &&
+    readingStatus !== READING_ACTIVITY_TYPES.TO_READ &&
+    readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
 
   let tensionGraph =
     entry?.storyGraphs && entry?.storyGraphs?.length > 0
@@ -53,7 +68,10 @@
     : { ...DEFAULT_OPTIONAL_DATETIME };
 </script>
 
-<Modal bind:showModal divClassName="w-full" className="w-full lg:w-2/5 ">
+<Modal
+  bind:showModal
+  divClassName="w-full h-full my-auto"
+  className="w-full lg:w-2/5">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">
       {entry != null ? "Edit" : "Create"} Reading Activity
@@ -65,7 +83,7 @@
       ? "/api/reading-activity/update"
       : "/api/reading-activity/create"}
     method="POST"
-    class="flex flex-col h-full"
+    class="flex flex-col h-full justify-center"
     use:enhance={() => {
       return async ({ update, result }) => {
         // console.log("result", result);
@@ -75,9 +93,7 @@
         //@ts-ignore
         if (result.success) {
           toast.success(
-            `Successfully ${
-              entry == null ? "created" : "updated"
-            } reading activity`
+            `Successfully ${createNew ? "created" : "updated"} reading activity`
           );
           showModal = false;
         } else {
@@ -87,7 +103,7 @@
           error = result.error;
 
           toast.error(
-            `Error ${entry == null ? "creating" : "updating"} reading activity`
+            `Error ${createNew ? "creating" : "updating"} reading activity`
           );
         }
       };
@@ -99,21 +115,23 @@
     {/if}
 
     <div class="mt-5 flex flex-col gap-4">
-      <div>
-        <InputSelect
-          bind:value={readingStatus}
-          displayName="Status"
-          name={"status"}
-          selectClassName="dark:bg-slate-600"
-          clearButton={false}
-          error={error?.status}>
-          {#each READING_STATUS_VALUES as status}
-            <option value={status}>
-              {status}
-            </option>
-          {/each}
-        </InputSelect>
-      </div>
+      {#if createNew}
+        <div>
+          <InputSelect
+            bind:value={readingStatus}
+            displayName="Status"
+            name={"status"}
+            selectClassName="dark:bg-slate-600"
+            clearButton={false}
+            error={error?.status}>
+            {#each READING_STATUS_VALUES as status}
+              <option value={status}>
+                {status}
+              </option>
+            {/each}
+          </InputSelect>
+        </div>
+      {/if}
 
       <!-- <div class="flex justify-center sm:mt-5">
         <ToggleGroup
@@ -126,7 +144,7 @@
         />
       </div> -->
 
-      {#if readingStatus && readingStatus !== READING_ACTIVITY_TYPES.TO_READ}
+      {#if showStartedDate}
         <div>
           <InputAny name="dateStarted" error={error?.dateStarted}>
             <div class="icon-wrapper" slot="label">
@@ -148,7 +166,7 @@
         </div>
       {/if}
 
-      {#if readingStatus && (readingStatus == READING_ACTIVITY_TYPES.FINISHED || readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH || readingStatus == READING_ACTIVITY_TYPES.PAUSED)}
+      {#if showFinishedDate}
         <div>
           <InputAny name="dateFinished">
             <div class="icon-wrapper" slot="label">
@@ -170,83 +188,94 @@
         </div>
       {/if}
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center my-2">
-        <div class="flex items-center gap-1">
-          <h2 class="text-xl">Rating</h2>
-          (
-          <input
-            class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
-            name="stars"
-            type="number"
-            step="0.5"
-            bind:value={stars}
-            min="0"
-            max={MAX_RATING} />
-          / {MAX_RATING})
-
-          <ClearButton bind:value={stars} />
-        </div>
-
-        <div class="flex sm:justify-center">
-          <Rating bind:rating={stars} rating_max={MAX_RATING} editable={true} />
-        </div>
-      </div>
-
-      <section>
-        <details>
-          <summary
-            class={clsx(
-              "cursor-pointer text-xl",
-              !entry?.rating?.comment && "text-secondary"
-            )}>
-            Comment
-          </summary>
-          <textarea
-            class="w-full input dark:bg-slate-600"
-            name="comment"
-            id="comment"
-            value={entry?.rating?.comment ?? ""}
-            rows="5" />
-        </details>
-      </section>
-
-      <section>
-        <details>
-          <summary
-            class={clsx(
-              "cursor-pointer text-xl",
-              entry?.storyGraphs?.length == 0 && "text-secondary"
-            )}>
-            Story graphs
-          </summary>
-          <div class="default-border p-2 dark:bg-slate-600">
-            <LineChartDrawer
-              allowEdits={true}
-              bgColorDark="#64748b"
-              inputClassName="dark:bg-slate-500 dark:border-slate-500"
-              bind:title={tensionGraph.title}
-              bind:labels={tensionGraph.labels}
-              bind:details={tensionGraph.details}
-              bind:data={tensionGraph.data} />
+      {#if rateableStatus}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center my-2">
+          <div class="flex items-center gap-1">
+            <h2 class="text-xl">Rating</h2>
+            (
             <input
-              type="hidden"
-              name="graphs[title]"
-              value={tensionGraph.title} />
-            <input
-              type="hidden"
-              name="graphs[labels]"
-              value={JSON.stringify(tensionGraph.labels)} />
-            <input
-              type="hidden"
-              name="graphs[details]"
-              value={JSON.stringify(tensionGraph.details)} />
-            <input
-              type="hidden"
-              name="graphs[data]"
-              value={JSON.stringify(tensionGraph.data)} />
+              class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
+              name="stars"
+              type="number"
+              step="0.5"
+              bind:value={stars}
+              min="0"
+              max={MAX_RATING} />
+            / {MAX_RATING})
+
+            <ClearButton bind:value={stars} />
           </div>
-        </details>
-      </section>
+
+          <div class="flex sm:justify-center">
+            <Rating
+              bind:rating={stars}
+              rating_max={MAX_RATING}
+              editable={true} />
+          </div>
+        </div>
+
+        <section>
+          <details>
+            <summary
+              class={clsx(
+                "cursor-pointer text-xl",
+                !entry?.rating?.comment && "text-secondary"
+              )}>
+              Comment
+            </summary>
+            <textarea
+              class="w-full input dark:bg-slate-600"
+              name="comment"
+              id="comment"
+              value={entry?.rating?.comment ?? ""}
+              rows="5" />
+          </details>
+        </section>
+
+        <section>
+          <details>
+            <summary
+              class={clsx(
+                "cursor-pointer text-xl",
+                entry?.storyGraphs?.length == 0 && "text-secondary"
+              )}>
+              Story graphs
+            </summary>
+            <div class="default-border p-2 dark:bg-slate-600">
+              <LineChartDrawer
+                allowEdits={true}
+                bgColorDark="#64748b"
+                inputClassName="dark:bg-slate-500 dark:border-slate-500"
+                bind:title={tensionGraph.title}
+                bind:labels={tensionGraph.labels}
+                bind:details={tensionGraph.details}
+                bind:data={tensionGraph.data} />
+              <input
+                type="hidden"
+                name="graphs[title]"
+                value={tensionGraph.title} />
+              <input
+                type="hidden"
+                name="graphs[labels]"
+                value={JSON.stringify(tensionGraph.labels)} />
+              <input
+                type="hidden"
+                name="graphs[details]"
+                value={JSON.stringify(tensionGraph.details)} />
+              <input
+                type="hidden"
+                name="graphs[data]"
+                value={JSON.stringify(tensionGraph.data)} />
+            </div>
+          </details>
+        </section>
+      {/if}
+
+      {#if entry?.status.status == READING_ACTIVITY_TYPES.ACQUIRED}
+        <OwnershipForm
+          className="flex flex-col items-center"
+          showQuestion={false} />
+      {/if}
     </div>
 
     <div

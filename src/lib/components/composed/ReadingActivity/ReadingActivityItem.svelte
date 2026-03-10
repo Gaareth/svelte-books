@@ -28,7 +28,7 @@
   import {
     dateDiffFormatted,
     dateToYYYY_MM_DD,
-    displayReadingActivityStatus,
+    capitalize,
     optionalToDate,
   } from "$lib/utils/utils";
   import {
@@ -89,7 +89,7 @@
   let stars = entry.rating?.stars ?? 0;
 
   let dropdownOpen = false;
-  $: statusDisplayName = displayReadingActivityStatus(entry.status.status);
+  $: statusDisplayName = capitalize(entry.status.status);
 </script>
 
 <AccentBarItemCard

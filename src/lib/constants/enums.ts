@@ -1,4 +1,8 @@
-import type { ReadingActivityType, Visibility } from "$prismaClient";
+import {
+  BookOwnership,
+  type ReadingActivityType,
+  type Visibility,
+} from "$prismaBrowser";
 
 export const VISIBILITY_TYPES = {
   PUBLIC: "PUBLIC",
@@ -29,3 +33,21 @@ export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
   string,
   ...string[]
 ];
+
+// export const BOOK_OWNERSHIP_TYPES = {
+//   OWNED: "OWNED",
+//   NOT_OWNED: "NOT_OWNED",
+//   BORROWED: "BORROWED",
+//   LIBRARY: "LIBRARY",
+// } as const satisfies { [K in BookOwnership]: K };
+
+// export type BookOwnershipType =
+//   (typeof BOOK_OWNERSHIP_TYPES)[keyof typeof BOOK_OWNERSHIP_TYPES];
+
+// export const OWNERSHIP_VALUES = Object.values(BOOK_OWNERSHIP_TYPES) as Array<
+//   (typeof BOOK_OWNERSHIP_TYPES)[keyof typeof BOOK_OWNERSHIP_TYPES]
+// >;
+
+export const OWNERSHIP_VALUES = Object.values(BookOwnership) as Array<
+  (typeof BookOwnership)[keyof typeof BookOwnership]
+>;

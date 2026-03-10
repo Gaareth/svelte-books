@@ -4,7 +4,7 @@
   import { page } from "$app/stores";
   import ReadingList from "$components/composed/BookList/ReadingList.svelte";
   import BookNew from "$components/composed/BookNew.svelte";
-  import { displayReadingActivityStatus } from "$utils/utils";
+  import { capitalize } from "$utils/utils";
   import {
     READING_STATUS_VALUES,
     type ReadingActivityStatusType,
@@ -15,7 +15,7 @@
   $: listDisplayName = READING_STATUS_VALUES.includes(
     data.listName as ReadingActivityStatusType
   )
-    ? displayReadingActivityStatus(data.listName as ReadingActivityStatusType)
+    ? capitalize(data.listName as ReadingActivityStatusType)
     : data.listName;
 </script>
 

@@ -2,7 +2,6 @@ import { sineInOut } from "svelte/easing";
 
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
 import type { OptionalDate } from "$components/input/DateSelector.svelte";
-import type { ReadingActivityStatusType } from "$lib/constants/enums";
 import type { THEME } from "$lib/stores/stores";
 import type { BookApiData } from "$prismaClient";
 
@@ -76,7 +75,28 @@ export function isValidDate(year: number, month: number, day: number): boolean {
   );
 }
 
-export function optionalToDate(o: OptionalDate | null) {
+// TODO:
+// export function optionalToDate(o: OptionalDate | null | undefined) {
+//   if (o?.year == null) {
+//     return null;
+//   }
+
+//   const date = new Date(Date.UTC(
+//     o.year,
+//     (o.month ?? 1) - 1,
+//     o.day ?? 1,
+//     o.hour ?? 0,
+//     o.minute ?? 0
+//   ));
+
+//   if (o.timezoneOffset != null) {
+//     date.setUTCMinutes(date.getUTCMinutes() - o.timezoneOffset);
+//   }
+
+//   return date;
+// }
+
+export function optionalToDate(o: OptionalDate | null | undefined) {
   if (o?.year == null) {
     return null;
   }
@@ -110,9 +130,7 @@ export function getActiveActivies<T extends ReadingActivityWithDates>(
   return Object.values(bookToActiveActivity);
 }
 
-export function displayReadingActivityStatus(
-  status: ReadingActivityStatusType
-) {
+export function capitalize(status: string) {
   return status
     .split("_")
     .map((word) => word[0] + word.slice(1).toLowerCase())
