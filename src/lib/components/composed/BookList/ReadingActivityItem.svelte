@@ -37,6 +37,7 @@
   } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import ReadingActivityTimeDiff from "$components/composed/BookList/ReadingActivityTimeDiff.svelte";
+  import ActiveIndicator from "$components/ActiveIndicator.svelte";
 
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
@@ -93,6 +94,7 @@
 </script>
 
 <AccentBarItemCard
+  wrapperClass=""
   barClass={getColor(entry.status.status)}
   role="button"
   tabindex="0"

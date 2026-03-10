@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BookFull, ReviewListItemType } from "$appTypes";
+  import ActiveIndicator from "$components/ActiveIndicator.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import ReadingActivityActions from "../BookList/Actions/ReadingActivityActions.svelte";
@@ -41,7 +42,15 @@
   </div>
   <!-- <hr class="border-slate-600 mt-2" /> -->
   {#each readingActivitiesSorted as readingActivity}
-    <ReadingActivityItem entry={readingActivity} {isAuthorizedToModify} />
+    <div class="relative">
+      <ReadingActivityItem entry={readingActivity} {isAuthorizedToModify} />
+
+      {#if readingActivity == activeEntry}
+        <div class="absolute top-[0.15rem] right-[0.15rem]">
+          <ActiveIndicator size="sm" />
+        </div>
+      {/if}
+    </div>
   {/each}
 
   {#if readingActivitiesSorted.length <= 0}
