@@ -9,6 +9,7 @@
   import PausedReadingAction from "./PausedReadingAction.svelte";
   import StoppedReadingAction from "./StoppedReadingAction.svelte";
   import AcquiredAction from "./AcquiredAction.svelte";
+  import ContinueReadingAction from "./ContinueReadingAction.svelte";
 
   export let activeEntry: ReviewListItemType;
   export let readingActivities: ReviewListItemType[];
@@ -23,7 +24,15 @@
 
   $: {
     actions = [];
-    if (activeStatus !== READING_ACTIVITY_TYPES.READING) {
+    if (activeStatus === READING_ACTIVITY_TYPES.PAUSED) {
+      actions.push({ component: ContinueReadingAction });
+      actions.push({ component: StoppedReadingAction });
+    }
+
+    if (
+      activeStatus !== READING_ACTIVITY_TYPES.READING &&
+      activeStatus !== READING_ACTIVITY_TYPES.PAUSED
+    ) {
       actions.push({ component: NowReadingAction });
     } else if (activeStatus === READING_ACTIVITY_TYPES.READING) {
       actions.push({ component: DoneReadingAction });

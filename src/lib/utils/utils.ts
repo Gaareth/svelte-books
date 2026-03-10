@@ -119,6 +119,16 @@ export function displayReadingActivityStatus(
     .join(" ");
 }
 
+function toMinutePrecision(date: Date) {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes()
+  ).getTime();
+}
+
 // function sortBooksBy
 export function sortReadingActivity(
   a: ReadingActivityWithDates,
@@ -127,16 +137,16 @@ export function sortReadingActivity(
   const read_date_a = getReadDate(a);
   const read_date_b = getReadDate(b);
 
-  let date_a: Date = read_date_a ?? a.createdAt;
-  let date_b: Date = read_date_b ?? b.createdAt;
+  // read_date dont store seconds. so we compare them with minute precision, and if they are the same we sort by createdAt
+  let date_a = toMinutePrecision(read_date_a ?? a.createdAt);
+  let date_b = toMinutePrecision(read_date_b ?? b.createdAt);
 
   // sort by date added, when the read date is the same
-  if (read_date_a?.getTime() == read_date_b?.getTime()) {
-    date_a = a.createdAt;
-    date_b = b.createdAt;
+  if (date_a == date_b) {
+    return (a.createdAt.getTime() - b.createdAt.getTime()) * -1;
   }
 
-  return (date_a.getTime() - date_b.getTime()) * -1;
+  return (date_a - date_b) * -1;
 }
 
 export const replaceStateWithQuery = (values: Record<string, string>) => {

@@ -44,7 +44,7 @@ export async function cloneReadingActivity(
   if (!readingActivity) {
     throw new Error("Reading activity not found");
   }
-  console.log(readingActivity.storyGraphs);
+  console.log(readingActivity.rating);
 
   const clonedReadingActivity = await prisma.readingActivity.create({
     data: {
@@ -59,10 +59,16 @@ export async function cloneReadingActivity(
       dateFinishedId:
         readingActivityOverwrite?.dateFinishedId ??
         readingActivity.dateFinishedId,
+
       rating: readingActivity.rating
         ? {
             create: {
-              ...(readingActivityOverwrite?.rating ?? readingActivity.rating),
+              stars:
+                readingActivityOverwrite?.rating?.stars ??
+                readingActivity.rating.stars,
+              comment:
+                readingActivityOverwrite?.rating?.comment ??
+                readingActivity.rating.comment,
             },
           }
         : undefined,
@@ -70,8 +76,18 @@ export async function cloneReadingActivity(
         readingActivity.storyGraphs.length > 0
           ? {
               create: {
-                ...(readingActivityOverwrite?.storyGraphs ??
-                  readingActivity.storyGraphs),
+                title:
+                  readingActivityOverwrite?.storyGraphs?.[0]?.title ??
+                  readingActivity.storyGraphs[0].title,
+                data:
+                  readingActivityOverwrite?.storyGraphs?.[0]?.data ??
+                  readingActivity.storyGraphs[0].data,
+                labels:
+                  readingActivityOverwrite?.storyGraphs?.[0]?.labels ??
+                  readingActivity.storyGraphs[0].labels,
+                details:
+                  readingActivityOverwrite?.storyGraphs?.[0]?.details ??
+                  readingActivity.storyGraphs[0].details,
               },
             }
           : undefined,
@@ -113,9 +129,9 @@ export async function createReadingActivity(
   stars: number | null | undefined,
   status: ReadingActivityStatusType,
   dateStarted: z.infer<typeof optionalDatetimeSchema> | undefined,
-  dateFinished: z.infer<typeof optionalDatetimeSchema> | undefined,
-  graphs: z.infer<typeof storyGraphSchema> | null | undefined,
-  comment: string | null | undefined
+  dateFinished?: z.infer<typeof optionalDatetimeSchema> | undefined,
+  graphs?: z.infer<typeof storyGraphSchema> | null | undefined,
+  comment?: string | null | undefined
 ) {
   // either create new optional datetimes or link to the provided ones db entries
 

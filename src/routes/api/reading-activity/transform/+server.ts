@@ -10,6 +10,7 @@ import {
 import { prisma } from "$lib/server/prisma";
 import {
   cloneReadingActivity,
+  createReadingActivity,
   getOrCreateReadingActivityStatus,
 } from "../api.server";
 
@@ -19,8 +20,8 @@ const transformSchema = z.object({
 });
 
 async function transformAddCurrentDate(
-  readingActivityId: number,
   accountId: string,
+  readingActivityId: number,
   targetStatus: ReadingActivityStatusType,
   targetReadingActivityStatusId: number
 ) {
@@ -54,6 +55,35 @@ async function transformAddCurrentDate(
   return await cloneReadingActivity(accountId, readingActivityId, update);
 }
 
+async function continueReading(
+  accountId: string,
+  readingActivityId: number,
+  readingActivityStatusId: number
+) {
+  return await cloneReadingActivity(accountId, readingActivityId, {
+    readingActivityStatusId,
+  });
+}
+
+async function createNewReadFromScratch(accountId: string, bookId: string) {
+  const now = new Date();
+  const oDt = {
+    day: now.getDate(),
+    month: now.getMonth() + 1,
+    year: now.getFullYear(),
+    hour: now.getHours(),
+    minute: now.getMinutes(),
+  };
+
+  return await createReadingActivity(
+    accountId,
+    bookId,
+    undefined,
+    READING_ACTIVITY_TYPES.READING,
+    oDt
+  );
+}
+
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());
   const accountId = requestedAccount.id;
@@ -81,32 +111,53 @@ export async function POST(req: RequestEvent) {
     targetStatus
   );
 
+  const currentStatus = readingActivity.status.status;
+
   let newReadingActivity;
-  if (
-    targetStatus === READING_ACTIVITY_TYPES.FINISHED ||
-    targetStatus === READING_ACTIVITY_TYPES.READING ||
-    targetStatus === READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
-    targetStatus === READING_ACTIVITY_TYPES.PAUSED
-  ) {
-    newReadingActivity = await transformAddCurrentDate(
-      readingActivityId,
-      accountId,
-      targetStatus,
-      targetReadingActivityStatusId
-    );
-  } else if (
-    targetStatus === READING_ACTIVITY_TYPES.ACQUIRED ||
-    targetStatus === READING_ACTIVITY_TYPES.TO_READ
-  ) {
-    newReadingActivity = await cloneReadingActivity(
-      accountId,
-      readingActivityId,
-      {
-        readingActivityStatusId: targetReadingActivityStatusId,
+
+  switch (targetStatus) {
+    case READING_ACTIVITY_TYPES.READING: {
+      if (currentStatus === READING_ACTIVITY_TYPES.PAUSED) {
+        newReadingActivity = await continueReading(
+          accountId,
+          readingActivityId,
+          targetReadingActivityStatusId
+        );
+      } else {
+        newReadingActivity = await createNewReadFromScratch(
+          accountId,
+          readingActivity.bookId
+        );
       }
-    );
-  } else {
-    throw error(400, "Unsupported target status");
+      break;
+    }
+
+    case READING_ACTIVITY_TYPES.FINISHED:
+    case READING_ACTIVITY_TYPES.DID_NOT_FINISH:
+    case READING_ACTIVITY_TYPES.PAUSED: {
+      newReadingActivity = await transformAddCurrentDate(
+        accountId,
+        readingActivityId,
+        targetStatus,
+        targetReadingActivityStatusId
+      );
+      break;
+    }
+
+    case READING_ACTIVITY_TYPES.ACQUIRED:
+    case READING_ACTIVITY_TYPES.TO_READ: {
+      newReadingActivity = await cloneReadingActivity(
+        accountId,
+        readingActivityId,
+        {
+          readingActivityStatusId: targetReadingActivityStatusId,
+        }
+      );
+      break;
+    }
+
+    default:
+      throw error(400, "Unsupported target status: " + targetStatus);
   }
 
   if (!newReadingActivity) {

@@ -14,7 +14,7 @@
 
   export let entry: ReviewListItemType;
 
-  let showStartandEnd =
+  $: showStartandEnd =
     entry.status.status === READING_ACTIVITY_TYPES.READING ||
     entry.status.status === READING_ACTIVITY_TYPES.FINISHED ||
     entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||

@@ -28,7 +28,7 @@
   export let entry: ReviewListItemType | undefined = undefined;
 
   let stars = entry?.rating?.stars;
-  let readingStatus = entry?.status.status;
+  $: readingStatus = entry?.status.status;
 
   let tensionGraph =
     entry?.storyGraphs && entry?.storyGraphs?.length > 0
@@ -70,6 +70,8 @@
       return async ({ update, result }) => {
         // console.log("result", result);
 
+        await invalidateAll();
+
         //@ts-ignore
         if (result.success) {
           toast.success(
@@ -88,8 +90,6 @@
             `Error ${entry == null ? "creating" : "updating"} reading activity`
           );
         }
-
-        await invalidateAll();
       };
     }}>
     {#if entry !== undefined}
