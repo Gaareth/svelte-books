@@ -38,21 +38,10 @@ async function transformAddCurrentDate(
     })
   ).id;
 
-  const update: Record<string, unknown> = {
+  return await cloneReadingActivity(accountId, readingActivityId, {
     readingActivityStatusId: targetReadingActivityStatusId,
-  };
-
-  if (
-    targetStatus === READING_ACTIVITY_TYPES.FINISHED ||
-    targetStatus === READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
-    targetStatus === READING_ACTIVITY_TYPES.PAUSED
-  ) {
-    update["dateFinishedId"] = dateId;
-  } else if (targetStatus === READING_ACTIVITY_TYPES.READING) {
-    update["dateStartedId"] = dateId;
-  }
-
-  return await cloneReadingActivity(accountId, readingActivityId, update);
+    dateFinishedId: dateId,
+  });
 }
 
 async function continueReading(
@@ -62,6 +51,7 @@ async function continueReading(
 ) {
   return await cloneReadingActivity(accountId, readingActivityId, {
     readingActivityStatusId,
+    dateFinishedId: null,
   });
 }
 

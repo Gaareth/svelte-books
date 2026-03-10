@@ -54,7 +54,7 @@
 
     switch (status) {
       case READING_ACTIVITY_TYPES.READING:
-        return "bg-yellow-500";
+        return "bg-blue-500";
       case READING_ACTIVITY_TYPES.DID_NOT_FINISH:
         return "bg-red-600";
       case READING_ACTIVITY_TYPES.FINISHED:
@@ -62,7 +62,7 @@
       case READING_ACTIVITY_TYPES.PAUSED:
         return "bg-gray-500";
       case READING_ACTIVITY_TYPES.TO_READ:
-        return "bg-blue-500";
+        return "bg-sky-300";
       case READING_ACTIVITY_TYPES.ACQUIRED:
         return "bg-purple-500";
       default: {

@@ -148,7 +148,7 @@
         </div>
       {/if}
 
-      {#if readingStatus && (readingStatus == READING_ACTIVITY_TYPES.FINISHED || readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH)}
+      {#if readingStatus && (readingStatus == READING_ACTIVITY_TYPES.FINISHED || readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH || readingStatus == READING_ACTIVITY_TYPES.PAUSED)}
         <div>
           <InputAny name="dateFinished">
             <div class="icon-wrapper" slot="label">

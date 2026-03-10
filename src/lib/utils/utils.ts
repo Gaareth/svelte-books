@@ -94,15 +94,15 @@ export function getReadDate(readingActivity: ReadingActivityWithDates) {
   return optionalToDate(readingActivity.dateFinished) ?? null;
 }
 
-export function getActiveActivies<
-  T extends { bookId: string; updatedAt: Date }
->(readingActivity: T[]): T[] {
+export function getActiveActivies<T extends ReadingActivityWithDates>(
+  readingActivity: T[]
+): T[] {
   const bookToActiveActivity: Record<string, T> = {};
 
   for (const activity of readingActivity) {
     const active = bookToActiveActivity[activity.bookId];
 
-    if ((active && activity.updatedAt > active.updatedAt) || !active) {
+    if ((active && sortReadingActivity(activity, active) < 0) || !active) {
       bookToActiveActivity[activity.bookId] = activity;
     }
   }
@@ -137,9 +137,12 @@ export function sortReadingActivity(
   const read_date_a = getReadDate(a);
   const read_date_b = getReadDate(b);
 
+  const start_date_a = optionalToDate(a.dateStarted);
+  const start_date_b = optionalToDate(b.dateStarted);
+
   // read_date dont store seconds. so we compare them with minute precision, and if they are the same we sort by createdAt
-  let date_a = toMinutePrecision(read_date_a ?? a.createdAt);
-  let date_b = toMinutePrecision(read_date_b ?? b.createdAt);
+  let date_a = toMinutePrecision(read_date_a ?? start_date_a ?? a.createdAt);
+  let date_b = toMinutePrecision(read_date_b ?? start_date_b ?? b.createdAt);
 
   // sort by date added, when the read date is the same
   if (date_a == date_b) {

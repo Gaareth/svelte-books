@@ -73,7 +73,7 @@
     {#each actions as action, i}
       <svelte:component
         this={action.component}
-        className={`group toggle-btn px-3 
+        className={`group toggle-btn px-3 py-2 
         ${i === 0 ? "toggle-btn-start" : ""} 
         ${i === actions.length - 1 ? "toggle-btn-end" : ""}`} />
     {/each}

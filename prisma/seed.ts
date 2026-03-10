@@ -6,12 +6,14 @@ import {
   ReadingActivityType,
 } from "../src/generated/prisma/client";
 
-import { hashPassword } from "../src/auth";
+import { seedInitial } from "./seed-initial";
+
 import {
   createLists,
   createReadingActivityStatus,
-  seedInitial,
-} from "./seed-initial";
+} from "$lib/server/db/create";
+
+import { hashPassword } from "$lib/auth/auth";
 
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 

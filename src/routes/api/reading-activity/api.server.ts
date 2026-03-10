@@ -44,7 +44,34 @@ export async function cloneReadingActivity(
   if (!readingActivity) {
     throw new Error("Reading activity not found");
   }
-  console.log(readingActivity.rating);
+
+  let dateStartedId = readingActivityOverwrite.dateStartedId;
+  if (
+    readingActivityOverwrite.dateStartedId === undefined &&
+    readingActivity.dateStarted
+  ) {
+    const { id, ...dateStartedData } = readingActivity.dateStarted;
+
+    dateStartedId = (
+      await prisma.optionalDatetime.create({
+        data: dateStartedData,
+      })
+    ).id;
+  }
+
+  let dateFinishedId = readingActivityOverwrite.dateFinishedId;
+  if (
+    readingActivityOverwrite.dateFinishedId === undefined &&
+    readingActivity.dateFinished
+  ) {
+    const { id, ...dateFinishedData } = readingActivity.dateFinished;
+
+    dateFinishedId = (
+      await prisma.optionalDatetime.create({
+        data: dateFinishedData,
+      })
+    ).id;
+  }
 
   const clonedReadingActivity = await prisma.readingActivity.create({
     data: {
@@ -53,13 +80,8 @@ export async function cloneReadingActivity(
       readingActivityStatusId:
         readingActivityOverwrite?.readingActivityStatusId ??
         readingActivity.readingActivityStatusId,
-      dateStartedId:
-        readingActivityOverwrite?.dateStartedId ??
-        readingActivity.dateStartedId,
-      dateFinishedId:
-        readingActivityOverwrite?.dateFinishedId ??
-        readingActivity.dateFinishedId,
-
+      dateStartedId,
+      dateFinishedId,
       rating: readingActivity.rating
         ? {
             create: {

@@ -14,6 +14,8 @@
 
   export let entry: ReviewListItemType;
 
+  $: showStart = entry.status.status === READING_ACTIVITY_TYPES.ACQUIRED;
+
   $: showStartandEnd =
     entry.status.status === READING_ACTIVITY_TYPES.READING ||
     entry.status.status === READING_ACTIVITY_TYPES.FINISHED ||
@@ -22,7 +24,12 @@
 </script>
 
 <div class="flex gap-4">
-  {#if !showStartandEnd}
+  {#if showStart}
+    <p class="flex items-center gap-1">
+      {formatShort(entry.dateStarted)}
+      <span class="icon" title="date started"><EventProgress /></span>
+    </p>
+  {:else if !showStartandEnd}
     <p class="flex items-center gap-1">
       {dateToYYYY_MM_DD(entry.createdAt)}
       <span class="icon" title="date of activity"><CalenderAdd /></span>
