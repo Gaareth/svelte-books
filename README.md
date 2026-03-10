@@ -42,6 +42,7 @@ Then run one of:
 - ownership
 
   - do you own the book in new book
+  - on the acquired activity form, add ownership info
 
 - unify readinglistitem and reviewlistitem
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)

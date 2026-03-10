@@ -104,19 +104,21 @@
     }
   }}>
   <div>
-    <div class="w-full flex flex-wrap items-center col-span-full gap-1">
+    <div class="w-full flex flex-wrap items-center col-span-full gap-2">
       <div class="flex flex-1"><p>{statusDisplayName}</p></div>
 
       <ReadingActivityTimeDiff {entry} />
 
       {#if entry.rating?.stars}
         <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
-          <p>{entry.rating.stars} / {MAX_RATING}</p>
-          <span class="icon" aria-label="stars"><IoIosStar /></span>
+          <p class="whitespace-nowrap">{entry.rating.stars} / {MAX_RATING}</p>
+          <span class="icon flex-shrink-0" aria-label="stars">
+            <IoIosStar />
+          </span>
         </div>
       {/if}
 
-      <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
+      <div class="flex justify-end sm:flex-1">
         <span
           class="hidden lg:inline-flex flex-row divide-x overflow-hidden rounded-md border dark:border-none bg-white shadow-sm
             dark:bg-slate-600 dark:border-slate-700">

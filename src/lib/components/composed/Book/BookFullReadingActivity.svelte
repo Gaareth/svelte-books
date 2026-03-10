@@ -46,7 +46,7 @@
       <ReadingActivityItem entry={readingActivity} {isAuthorizedToModify} />
 
       {#if readingActivity == activeEntry}
-        <div class="absolute top-[0.15rem] right-[0.15rem]">
+        <div class="absolute top-[0.2rem] right-[0.2rem]">
           <ActiveIndicator size="sm" />
         </div>
       {/if}

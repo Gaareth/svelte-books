@@ -23,7 +23,7 @@
     entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH;
 </script>
 
-<div class="flex gap-4">
+<div class="flex flex-wrap gap-1 sm:gap-4">
   {#if showStart}
     <p class="flex items-center gap-1">
       {formatShort(entry.dateStarted)}
@@ -60,19 +60,20 @@
     </p>
 
     <div
+      class="mx-auto"
       title={`${formatShort(entry.dateStarted)} to ${formatShort(
         entry.dateFinished
       )}`}>
       {#if entry.dateFinished != null && entry.dateStarted != null}
-        <p class="flex items-center gap-1">
+        <p class="flex items-center gap-1 text-secondary">
           {dateDiffFormatted(
             optionalToDate(entry.dateStarted),
             optionalToDate(entry.dateFinished)
           )}
 
-          <span class="w-5 block mt-0.5">
+          <!-- <span class="w-5 block mt-0.5">
             <InfoIcon />
-          </span>
+          </span> -->
         </p>
       {/if}
     </div>
