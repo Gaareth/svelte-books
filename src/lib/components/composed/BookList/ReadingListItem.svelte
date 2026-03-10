@@ -79,10 +79,8 @@
 </script>
 
 <AccentBarItemCard
-  style="grid-template-columns: 4px 1fr;"
   barClass={getColor(book.name, book.author)}
   wrapperClass={clsx(
-    "grid",
     (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
       entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&
       "opacity-75"

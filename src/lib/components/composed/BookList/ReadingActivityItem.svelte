@@ -94,7 +94,6 @@
 
 <AccentBarItemCard
   barClass={getColor(entry.status.status)}
-  wrapperClass="flex"
   role="button"
   tabindex="0"
   on:dblclick={() => {
@@ -102,137 +101,139 @@
       dropdownOpen = true;
     }
   }}>
-  <div class="w-full flex flex-wrap items-center col-span-full gap-1">
-    <div class="flex flex-1"><p>{statusDisplayName}</p></div>
+  <div>
+    <div class="w-full flex flex-wrap items-center col-span-full gap-1">
+      <div class="flex flex-1"><p>{statusDisplayName}</p></div>
 
-    <ReadingActivityTimeDiff {entry} />
+      <ReadingActivityTimeDiff {entry} />
 
-    {#if entry.rating?.stars}
-      <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
-        <p>{entry.rating.stars} / {MAX_RATING}</p>
-        <span class="icon" aria-label="stars"><IoIosStar /></span>
-      </div>
-    {/if}
+      {#if entry.rating?.stars}
+        <div class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
+          <p>{entry.rating.stars} / {MAX_RATING}</p>
+          <span class="icon" aria-label="stars"><IoIosStar /></span>
+        </div>
+      {/if}
 
-    <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
-      <span
-        class="hidden lg:inline-flex flex-row divide-x overflow-hidden rounded-md border dark:border-none bg-white shadow-sm
+      <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
+        <span
+          class="hidden lg:inline-flex flex-row divide-x overflow-hidden rounded-md border dark:border-none bg-white shadow-sm
             dark:bg-slate-600 dark:border-slate-700">
-        <button
-          class="group inline-block p-2 hover:bg-gray-50 focus:relative
-              dark:hover:bg-slate-500"
-          title="View"
-          type="button"
-          on:click={() => {
-            expanded = !expanded;
-          }}>
-          <span
-            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-            <OpenNew />
-          </span>
-        </button>
-
-        {#if isAuthorizedToModify}
           <button
             class="group inline-block p-2 hover:bg-gray-50 focus:relative
-              dark:hover:bg-slate-500 border-none"
-            title="Edit book"
+              dark:hover:bg-slate-500"
+            title="View"
             type="button"
             on:click={() => {
-              editExpanded = true;
+              expanded = !expanded;
             }}>
             <span
               class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-              <IoMdSettings />
+              <OpenNew />
             </span>
           </button>
 
-          <slot name="delete">
-            {#if allow_deletion}
-              <button
-                class="group p-2 btn-delete hidden sm:inline-block !border-none"
-                title="Delete book"
-                type="button"
-                on:click={() => {
-                  // dispatch("delete", { book });
-                  deleteExpanded = true;
-                }}>
-                <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                  <IoMdTrash alt="red trash can" />
-                </span>
-              </button>
-            {/if}
-          </slot>
-        {/if}
-      </span>
-
-      <Dropdown
-        className="lg:!hidden !flex items-center"
-        contentClass="!py-0"
-        closeOnClick={true}
-        bind:open={dropdownOpen}
-        buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1">
-        <span
-          slot="triggerContent"
-          aria-label="open dropdown"
-          class="block w-5">
-          <DropdownIcon />
-        </span>
-
-        <ul
-          slot="dropdown"
-          class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
-          <li>
+          {#if isAuthorizedToModify}
             <button
+              class="group inline-block p-2 hover:bg-gray-50 focus:relative
+              dark:hover:bg-slate-500 border-none"
+              title="Edit book"
+              type="button"
               on:click={() => {
-                expanded = !expanded;
-              }}
-              class="dropdown-item-button"
-              type="button">
+                editExpanded = true;
+              }}>
               <span
                 class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                <OpenNew />
+                <IoMdSettings />
               </span>
-              Open
             </button>
-          </li>
 
-          {#if isAuthorizedToModify}
+            <slot name="delete">
+              {#if allow_deletion}
+                <button
+                  class="group p-2 btn-delete hidden sm:inline-block !border-none"
+                  title="Delete book"
+                  type="button"
+                  on:click={() => {
+                    // dispatch("delete", { book });
+                    deleteExpanded = true;
+                  }}>
+                  <span
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                    <IoMdTrash alt="red trash can" />
+                  </span>
+                </button>
+              {/if}
+            </slot>
+          {/if}
+        </span>
+
+        <Dropdown
+          className="lg:!hidden !flex items-center"
+          contentClass="!py-0"
+          closeOnClick={true}
+          bind:open={dropdownOpen}
+          buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1">
+          <span
+            slot="triggerContent"
+            aria-label="open dropdown"
+            class="block w-5">
+            <DropdownIcon />
+          </span>
+
+          <ul
+            slot="dropdown"
+            class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
             <li>
               <button
                 on:click={() => {
-                  editExpanded = !editExpanded;
+                  expanded = !expanded;
                 }}
                 class="dropdown-item-button"
                 type="button">
                 <span
                   class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                  <IoMdSettings />
+                  <OpenNew />
                 </span>
-                Settings
+                Open
               </button>
             </li>
-          {/if}
 
-          {#if allow_deletion}
-            <li>
-              <button
-                on:click={() => {
-                  deleteExpanded = !deleteExpanded;
-                }}
-                class="dropdown-item-button text-error"
-                type="button">
-                <span
-                  class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                  <IoMdTrash alt="red trash can" />
-                </span>
-                Delete
-              </button>
-            </li>
-          {/if}
-        </ul>
-      </Dropdown>
+            {#if isAuthorizedToModify}
+              <li>
+                <button
+                  on:click={() => {
+                    editExpanded = !editExpanded;
+                  }}
+                  class="dropdown-item-button"
+                  type="button">
+                  <span
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                    <IoMdSettings />
+                  </span>
+                  Settings
+                </button>
+              </li>
+            {/if}
+
+            {#if allow_deletion}
+              <li>
+                <button
+                  on:click={() => {
+                    deleteExpanded = !deleteExpanded;
+                  }}
+                  class="dropdown-item-button text-error"
+                  type="button">
+                  <span
+                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                    <IoMdTrash alt="red trash can" />
+                  </span>
+                  Delete
+                </button>
+              </li>
+            {/if}
+          </ul>
+        </Dropdown>
+      </div>
     </div>
   </div>
 </AccentBarItemCard>

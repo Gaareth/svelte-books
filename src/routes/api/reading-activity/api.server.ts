@@ -44,6 +44,7 @@ export async function cloneReadingActivity(
   if (!readingActivity) {
     throw new Error("Reading activity not found");
   }
+  console.log(readingActivity.storyGraphs);
 
   const clonedReadingActivity = await prisma.readingActivity.create({
     data: {
@@ -65,14 +66,15 @@ export async function cloneReadingActivity(
             },
           }
         : undefined,
-      storyGraphs: readingActivity.storyGraphs
-        ? {
-            create: {
-              ...(readingActivityOverwrite?.storyGraphs ??
-                readingActivity.storyGraphs),
-            },
-          }
-        : undefined,
+      storyGraphs:
+        readingActivity.storyGraphs.length > 0
+          ? {
+              create: {
+                ...(readingActivityOverwrite?.storyGraphs ??
+                  readingActivity.storyGraphs),
+              },
+            }
+          : undefined,
     },
   });
 

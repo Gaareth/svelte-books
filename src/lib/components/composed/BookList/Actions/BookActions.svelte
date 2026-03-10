@@ -6,7 +6,6 @@
   import type { ReadingListItemType } from "$appTypes";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import NowReadingAction from "./NowReadingAction.svelte";
-  import StoppedReadingAction from "./StoppedReadingAction.svelte";
   import DoneReadingAction from "./DoneReadingAction.svelte";
   import DeleteAction from "./DeleteAction.svelte";
   import { enhance } from "$app/forms";
@@ -25,14 +24,14 @@
 {#if isAuthorizedToModify}
   <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
     <form
-      action={`api/reading-activity/transform`}
+      action={`/api/reading-activity/transform`}
       method="POST"
       use:enhance={() => {
         return async ({ result, update }) => {
           //@ts-ignore
           if (result.success === true) {
-            invalidateAll();
-            toast.success(`Successfully added book to read`);
+            await invalidateAll();
+            toast.success(`Successfully updated book!`);
           } else {
             toast.error("Failed updating book :(");
           }
@@ -65,8 +64,6 @@
           <NowReadingAction />
         {:else if statusType == READING_ACTIVITY_TYPES.READING}
           <DoneReadingAction />
-        {:else if statusType == READING_ACTIVITY_TYPES.FINISHED}
-          <StoppedReadingAction />
         {:else if allow_deletion}
           <DeleteAction on:delete={() => dispatch("delete", { entry })} />
         {/if}

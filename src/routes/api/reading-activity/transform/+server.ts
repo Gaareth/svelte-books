@@ -41,7 +41,11 @@ async function transformAddCurrentDate(
     readingActivityStatusId: targetReadingActivityStatusId,
   };
 
-  if (targetStatus === READING_ACTIVITY_TYPES.FINISHED) {
+  if (
+    targetStatus === READING_ACTIVITY_TYPES.FINISHED ||
+    targetStatus === READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
+    targetStatus === READING_ACTIVITY_TYPES.PAUSED
+  ) {
     update["dateFinishedId"] = dateId;
   } else if (targetStatus === READING_ACTIVITY_TYPES.READING) {
     update["dateStartedId"] = dateId;
@@ -80,7 +84,9 @@ export async function POST(req: RequestEvent) {
   let newReadingActivity;
   if (
     targetStatus === READING_ACTIVITY_TYPES.FINISHED ||
-    targetStatus === READING_ACTIVITY_TYPES.READING
+    targetStatus === READING_ACTIVITY_TYPES.READING ||
+    targetStatus === READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
+    targetStatus === READING_ACTIVITY_TYPES.PAUSED
   ) {
     newReadingActivity = await transformAddCurrentDate(
       readingActivityId,
@@ -90,8 +96,6 @@ export async function POST(req: RequestEvent) {
     );
   } else if (
     targetStatus === READING_ACTIVITY_TYPES.ACQUIRED ||
-    targetStatus === READING_ACTIVITY_TYPES.PAUSED ||
-    targetStatus === READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
     targetStatus === READING_ACTIVITY_TYPES.TO_READ
   ) {
     newReadingActivity = await cloneReadingActivity(

@@ -1,0 +1,49 @@
+.btn-delete {
+  @apply bg-red-100 border-red-100 text-red-600 focus:relative
+         hover:bg-red-200 hover:border-red-200
+         active:bg-red-300 active:border-red-300
+         dark:bg-red-500 dark:border-red-500
+         dark:hover:bg-red-400 dark:hover:border-red-400
+         dark:active:bg-red-300 dark:active:border-red-300
+         dark:text-red-100;
+}
+
+.btn-done {
+  @apply bg-green-200 border-green-200 text-green-600 focus:relative
+         hover:bg-green-300 hover:border-green-300
+         active:bg-green-400 active:border-green-400
+         dark:bg-green-600 dark:border-green-600
+         dark:hover:bg-green-500 dark:hover:border-green-500
+         dark:active:bg-green-400 dark:active:border-green-400
+         dark:text-green-100;
+}
+
+.btn-warn {
+  @apply bg-yellow-100 border-yellow-100 text-yellow-600 focus:relative
+         hover:bg-yellow-200 hover:border-yellow-200
+         active:bg-yellow-300 active:border-yellow-300
+         dark:bg-yellow-500 dark:border-yellow-500
+         dark:hover:bg-yellow-400 dark:hover:border-yellow-400
+         dark:active:bg-yellow-300 dark:active:border-yellow-300
+         dark:text-yellow-100;
+}
+
+.btn-purple {
+  @apply bg-purple-100 border-purple-100 text-purple-600 focus:relative
+         hover:bg-purple-200 hover:border-purple-200
+         active:bg-purple-300 active:border-purple-300
+         dark:bg-purple-500 dark:border-purple-500
+         dark:hover:bg-purple-400 dark:hover:border-purple-400
+         dark:active:bg-purple-300 dark:active:border-purple-300
+         dark:text-purple-200;
+}
+
+.btn-blue {
+  @apply bg-blue-100 border-blue-100 text-blue-600 focus:relative
+         hover:bg-blue-200 hover:border-blue-200
+         active:bg-blue-300 active:border-blue-300
+         dark:bg-blue-600 dark:border-blue-600
+         dark:hover:bg-blue-500 dark:hover:border-blue-500
+         dark:active:bg-blue-400 dark:active:border-blue-400
+         dark:text-blue-100;
+}

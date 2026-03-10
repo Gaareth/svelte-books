@@ -16,7 +16,7 @@
   let chance = 20;
   let random = Math.floor(Math.random() * chance);
 
-  const activeActivies = getActiveActivies(data.readingActivity);
+  $: activeActivies = getActiveActivies(data.readingActivity);
   $: currentlyReadingActivities = activeActivies.filter(
     (e) =>
       e.status.status === READING_ACTIVITY_TYPES.READING ||

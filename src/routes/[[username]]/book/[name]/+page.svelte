@@ -33,8 +33,8 @@
   //@ts-ignore
   import Pill from "$components/Pill.svelte";
   import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils/utils";
-  import InfoIcon from "$lib/icons/InfoIcon.svelte";
-  import ReadingActivityItem from "$components/composed/BookList/ReadingActivityItem.svelte";
+
+  import BookFullReadingActivity from "$components/composed/Book/BookFullReadingActivity.svelte";
 
   export let data: PageData;
 
@@ -186,6 +186,8 @@
   $: readingActivitiesSorted = [...book.readingActivity].sort((a, b) => {
     return sortReadingActivity(a, b);
   });
+
+  $: activeEntry = readingActivitiesSorted[0];
 </script>
 
 <svelte:head>
@@ -293,7 +295,7 @@
         </div>
       </div>
 
-      <div class={clsx("flex flex-col gap-5")}>
+      <div class={clsx("flex flex-col gap-7")}>
         <div class={clsx("lg:item-border-no-hover p-1 lg:p-4 flex flex-col")}>
           <div class="flex flex-col-reverse lg:flex-row">
             <h1 class="text-4xl overflow-hidden text-ellipsis font-bold">
@@ -402,39 +404,11 @@
           {/if}
         </div>
 
-        <div class="">
-          <div class="flex mb-1 items-center">
-            <div class="flex items-center gap-1">
-              <h2 class="text-2xl">Reading Activity</h2>
-              <span
-                class="block w-5 mt-0.5 text-secondary hover:text-inherit"
-                title="Every activity regarding this book. Use the latest for tracking current rating and comments">
-                <InfoIcon />
-              </span>
-            </div>
-            {#if data.isAuthorizedToModify}
-              <button
-                type="button"
-                class="ml-auto btn-generic p-2 w-16 sm:w-auto flex justify-center"
-                on:click={() => (showCreateReadingActivity = true)}
-                title="Create reading activity">
-                <span class="block w-5">
-                  <AddIcon />
-                </span>
-              </button>
-            {/if}
-          </div>
-          <!-- <hr class="border-slate-600 mt-2" /> -->
-          {#each readingActivitiesSorted as readingActivity}
-            <ReadingActivityItem
-              entry={readingActivity}
-              isAuthorizedToModify={data.isAuthorizedToModify} />
-          {/each}
-
-          {#if book.readingActivity.length <= 0}
-            <p class="text-secondary text-center">No reading activity found.</p>
-          {/if}
-        </div>
+        <BookFullReadingActivity
+          {activeEntry}
+          isAuthorizedToModify={data.isAuthorizedToModify}
+          bind:showCreateReadingActivity
+          {readingActivitiesSorted} />
       </div>
     </div>
 

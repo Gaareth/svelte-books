@@ -1,21 +1,18 @@
 <script>
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-  import clsx from "clsx";
-
-  //@ts-ignore
-  import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-
+  import PauseCircleRounded from "$lib/icons/PauseCircleRounded.svelte";
+  import { twMerge } from "tailwind-merge";
   export let className = "group p-2 !border-0 ";
 </script>
 
 <button
-  class={clsx("btn-done", className)}
-  title="done reading"
+  class={twMerge("btn-warn", className)}
+  title="paused book"
   name="targetStatus"
-  value={READING_ACTIVITY_TYPES.FINISHED}
+  value={READING_ACTIVITY_TYPES.PAUSED}
   type="submit">
   <span
     class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-    <IoMdDoneAll alt="check mark" />
+    <PauseCircleRounded alt="pause symbol" />
   </span>
 </button>

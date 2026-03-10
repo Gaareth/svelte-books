@@ -1,18 +1,18 @@
 <script>
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-  import NotStartedRounded from "$lib/icons/NotStartedRounded.svelte";
+  import BookInHouse from "$lib/icons/BookInHouse.svelte";
   import { twMerge } from "tailwind-merge";
   export let className = "group p-2 !border-0";
 </script>
 
 <button
-  class={twMerge("btn-blue", className)}
-  title="start reading"
+  class={twMerge("btn-purple", className)}
+  title="acquired book"
   name="targetStatus"
-  value={READING_ACTIVITY_TYPES.READING}
+  value={READING_ACTIVITY_TYPES.ACQUIRED}
   type="submit">
   <span
     class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-    <NotStartedRounded alt="not started symbol" />
+    <BookInHouse alt="book in house" />
   </span>
 </button>

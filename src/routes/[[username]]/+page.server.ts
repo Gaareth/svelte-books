@@ -17,15 +17,19 @@ export async function load({ locals, params }: ServerLoadEvent) {
   const isAuthorizedToModify =
     sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin;
 
+  const readingActivity = await getReadingActivity({
+    accountId: requestedAccount.id,
+  });
+
+  const isCurrentlyReadingPublic =
+    (await getReadingActivityVisibility(
+      requestedAccount.id,
+      ReadingActivityType.READING
+    )) === Visibility.PUBLIC || isAuthorizedToModify;
+
   return {
-    isCurrentlyReadingPublic:
-      (await getReadingActivityVisibility(
-        requestedAccount.id,
-        ReadingActivityType.READING
-      )) === Visibility.PUBLIC || isAuthorizedToModify,
-    readingActivity: await getReadingActivity({
-      accountId: requestedAccount.id,
-    }),
+    isCurrentlyReadingPublic,
+    readingActivity,
     username,
     isAuthorizedToModify,
   };

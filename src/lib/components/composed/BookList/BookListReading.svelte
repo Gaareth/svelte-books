@@ -1,19 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import toast from "svelte-french-toast";
-  //@ts-ignore
-  import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
-
   import ReadingListItem from "./ReadingListItem.svelte";
 
-  import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
   import { type ReadingListItemType } from "$appTypes";
   import { sortReadingActivity } from "$lib/utils/utils";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-  import DoneReadingAction from "./Actions/DoneReadingAction.svelte";
-  import BookActions from "./Actions/BookActions.svelte";
 
   export let readingActivities: ReadingListItemType[];
   export let isAuthorizedToModify = false;
