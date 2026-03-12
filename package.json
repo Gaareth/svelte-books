@@ -35,7 +35,7 @@
     "http-status-codes": "^2.3.0",
     "postcss": "^8.4.32",
     "prettier": "^2.8.8",
-    "prettier-plugin-organize-imports": "^4.2.0",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-svelte": "^2.10.1",
     "prisma": "^7.4.2",
     "simple-svelte-autocomplete": "^2.5.2",
