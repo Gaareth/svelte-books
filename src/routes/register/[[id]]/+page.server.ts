@@ -74,13 +74,13 @@ export const actions = {
 
     const formData = Object.fromEntries(await event.request.formData());
 
-    const schema = z.object({
+    const registrationSchema = z.object({
       username: z.string().min(1).max(64).trim(),
       password: z.string().min(8).max(256),
-      code: z.string().min(1).trim(),
+      code: z.string().min(1).trim().optional(),
     });
 
-    const result = schema.safeParse(formData);
+    const result = registrationSchema.safeParse(formData);
 
     if (result.success) {
       const { username, password, code } = result.data;
@@ -91,10 +91,11 @@ export const actions = {
         },
       });
 
-      const registrationCodes = serverSettings?.registrationCodes;
-      const validCode = registrationCodes?.find((c) => c.code == code);
-
+      let validCode;
       if (!serverSettings?.registrationPossible) {
+        const registrationCodes = serverSettings?.registrationCodes;
+        validCode = registrationCodes?.find((c) => c.code == code);
+
         if (!validCode) {
           return { success: false, message: "Invalid registration code" };
         }

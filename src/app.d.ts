@@ -39,6 +39,10 @@ export type BookFullType = Prisma.BookGetPayload<{
 
 export type BookRating = Prisma.BookGetPayload<{ include: { rating: true } }>;
 
+export type BookWithOwnership = Prisma.BookGetPayload<{
+  include: { ownership: true };
+}>;
+
 export type ReadingActivityWithDates = Prisma.ReadingActivityGetPayload<{
   include: { dateFinished: true; dateStarted: true };
 }>;

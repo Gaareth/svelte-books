@@ -28,17 +28,19 @@ export type AggregateOwnership = {
 
 export type OwnershipAvgAggregateOutputType = {
   id: number | null;
+  acquiredAtId: number | null;
 };
 
 export type OwnershipSumAggregateOutputType = {
   id: number | null;
+  acquiredAtId: number | null;
 };
 
 export type OwnershipMinAggregateOutputType = {
   id: number | null;
   createdAt: Date | null;
   location: string | null;
-  aquiredAt: Date | null;
+  acquiredAtId: number | null;
   status: $Enums.BookOwnership | null;
   bookId: string | null;
 };
@@ -47,7 +49,7 @@ export type OwnershipMaxAggregateOutputType = {
   id: number | null;
   createdAt: Date | null;
   location: string | null;
-  aquiredAt: Date | null;
+  acquiredAtId: number | null;
   status: $Enums.BookOwnership | null;
   bookId: string | null;
 };
@@ -56,7 +58,7 @@ export type OwnershipCountAggregateOutputType = {
   id: number;
   createdAt: number;
   location: number;
-  aquiredAt: number;
+  acquiredAtId: number;
   status: number;
   bookId: number;
   _all: number;
@@ -64,17 +66,19 @@ export type OwnershipCountAggregateOutputType = {
 
 export type OwnershipAvgAggregateInputType = {
   id?: true;
+  acquiredAtId?: true;
 };
 
 export type OwnershipSumAggregateInputType = {
   id?: true;
+  acquiredAtId?: true;
 };
 
 export type OwnershipMinAggregateInputType = {
   id?: true;
   createdAt?: true;
   location?: true;
-  aquiredAt?: true;
+  acquiredAtId?: true;
   status?: true;
   bookId?: true;
 };
@@ -83,7 +87,7 @@ export type OwnershipMaxAggregateInputType = {
   id?: true;
   createdAt?: true;
   location?: true;
-  aquiredAt?: true;
+  acquiredAtId?: true;
   status?: true;
   bookId?: true;
 };
@@ -92,7 +96,7 @@ export type OwnershipCountAggregateInputType = {
   id?: true;
   createdAt?: true;
   location?: true;
-  aquiredAt?: true;
+  acquiredAtId?: true;
   status?: true;
   bookId?: true;
   _all?: true;
@@ -193,7 +197,7 @@ export type OwnershipGroupByOutputType = {
   id: number;
   createdAt: Date;
   location: string | null;
-  aquiredAt: Date | null;
+  acquiredAtId: number | null;
   status: $Enums.BookOwnership;
   bookId: string;
   _count: OwnershipCountAggregateOutputType | null;
@@ -223,9 +227,13 @@ export type OwnershipWhereInput = {
   id?: Prisma.IntFilter<"Ownership"> | number;
   createdAt?: Prisma.DateTimeFilter<"Ownership"> | Date | string;
   location?: Prisma.StringNullableFilter<"Ownership"> | string | null;
-  aquiredAt?: Prisma.DateTimeNullableFilter<"Ownership"> | Date | string | null;
+  acquiredAtId?: Prisma.IntNullableFilter<"Ownership"> | number | null;
   status?: Prisma.EnumBookOwnershipFilter<"Ownership"> | $Enums.BookOwnership;
   bookId?: Prisma.StringFilter<"Ownership"> | string;
+  acquiredAt?: Prisma.XOR<
+    Prisma.OptionalDatetimeNullableScalarRelationFilter,
+    Prisma.OptionalDatetimeWhereInput
+  > | null;
   book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>;
 };
 
@@ -233,9 +241,10 @@ export type OwnershipOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   location?: Prisma.SortOrderInput | Prisma.SortOrder;
-  aquiredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrderInput | Prisma.SortOrder;
   status?: Prisma.SortOrder;
   bookId?: Prisma.SortOrder;
+  acquiredAt?: Prisma.OptionalDatetimeOrderByWithRelationInput;
   book?: Prisma.BookOrderByWithRelationInput;
 };
 
@@ -248,12 +257,12 @@ export type OwnershipWhereUniqueInput = Prisma.AtLeast<
     NOT?: Prisma.OwnershipWhereInput | Prisma.OwnershipWhereInput[];
     createdAt?: Prisma.DateTimeFilter<"Ownership"> | Date | string;
     location?: Prisma.StringNullableFilter<"Ownership"> | string | null;
-    aquiredAt?:
-      | Prisma.DateTimeNullableFilter<"Ownership">
-      | Date
-      | string
-      | null;
+    acquiredAtId?: Prisma.IntNullableFilter<"Ownership"> | number | null;
     status?: Prisma.EnumBookOwnershipFilter<"Ownership"> | $Enums.BookOwnership;
+    acquiredAt?: Prisma.XOR<
+      Prisma.OptionalDatetimeNullableScalarRelationFilter,
+      Prisma.OptionalDatetimeWhereInput
+    > | null;
     book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>;
   },
   "id" | "bookId"
@@ -263,7 +272,7 @@ export type OwnershipOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   location?: Prisma.SortOrderInput | Prisma.SortOrder;
-  aquiredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrderInput | Prisma.SortOrder;
   status?: Prisma.SortOrder;
   bookId?: Prisma.SortOrder;
   _count?: Prisma.OwnershipCountOrderByAggregateInput;
@@ -287,10 +296,9 @@ export type OwnershipScalarWhereWithAggregatesInput = {
     | Prisma.StringNullableWithAggregatesFilter<"Ownership">
     | string
     | null;
-  aquiredAt?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<"Ownership">
-    | Date
-    | string
+  acquiredAtId?:
+    | Prisma.IntNullableWithAggregatesFilter<"Ownership">
+    | number
     | null;
   status?:
     | Prisma.EnumBookOwnershipWithAggregatesFilter<"Ownership">
@@ -301,8 +309,8 @@ export type OwnershipScalarWhereWithAggregatesInput = {
 export type OwnershipCreateInput = {
   createdAt?: Date | string;
   location?: string | null;
-  aquiredAt?: Date | string | null;
   status?: $Enums.BookOwnership;
+  acquiredAt?: Prisma.OptionalDatetimeCreateNestedOneWithoutOwnershipsInput;
   book: Prisma.BookCreateNestedOneWithoutOwnershipInput;
 };
 
@@ -310,7 +318,7 @@ export type OwnershipUncheckedCreateInput = {
   id?: number;
   createdAt?: Date | string;
   location?: string | null;
-  aquiredAt?: Date | string | null;
+  acquiredAtId?: number | null;
   status?: $Enums.BookOwnership;
   bookId: string;
 };
@@ -318,14 +326,10 @@ export type OwnershipUncheckedCreateInput = {
 export type OwnershipUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
+  acquiredAt?: Prisma.OptionalDatetimeUpdateOneWithoutOwnershipsNestedInput;
   book?: Prisma.BookUpdateOneRequiredWithoutOwnershipNestedInput;
 };
 
@@ -333,11 +337,7 @@ export type OwnershipUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
+  acquiredAtId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
@@ -348,7 +348,7 @@ export type OwnershipCreateManyInput = {
   id?: number;
   createdAt?: Date | string;
   location?: string | null;
-  aquiredAt?: Date | string | null;
+  acquiredAtId?: number | null;
   status?: $Enums.BookOwnership;
   bookId: string;
 };
@@ -356,11 +356,6 @@ export type OwnershipCreateManyInput = {
 export type OwnershipUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
@@ -370,15 +365,21 @@ export type OwnershipUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
+  acquiredAtId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
   bookId?: Prisma.StringFieldUpdateOperationsInput | string;
+};
+
+export type OwnershipListRelationFilter = {
+  every?: Prisma.OwnershipWhereInput;
+  some?: Prisma.OwnershipWhereInput;
+  none?: Prisma.OwnershipWhereInput;
+};
+
+export type OwnershipOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder;
 };
 
 export type OwnershipNullableScalarRelationFilter = {
@@ -390,20 +391,21 @@ export type OwnershipCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   location?: Prisma.SortOrder;
-  aquiredAt?: Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   bookId?: Prisma.SortOrder;
 };
 
 export type OwnershipAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrder;
 };
 
 export type OwnershipMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   location?: Prisma.SortOrder;
-  aquiredAt?: Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   bookId?: Prisma.SortOrder;
 };
@@ -412,13 +414,120 @@ export type OwnershipMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   location?: Prisma.SortOrder;
-  aquiredAt?: Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   bookId?: Prisma.SortOrder;
 };
 
 export type OwnershipSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
+  acquiredAtId?: Prisma.SortOrder;
+};
+
+export type OwnershipCreateNestedManyWithoutAcquiredAtInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.OwnershipCreateWithoutAcquiredAtInput,
+        Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+      >
+    | Prisma.OwnershipCreateWithoutAcquiredAtInput[]
+    | Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput[];
+  connectOrCreate?:
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput[];
+  createMany?: Prisma.OwnershipCreateManyAcquiredAtInputEnvelope;
+  connect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+};
+
+export type OwnershipUncheckedCreateNestedManyWithoutAcquiredAtInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.OwnershipCreateWithoutAcquiredAtInput,
+        Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+      >
+    | Prisma.OwnershipCreateWithoutAcquiredAtInput[]
+    | Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput[];
+  connectOrCreate?:
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput[];
+  createMany?: Prisma.OwnershipCreateManyAcquiredAtInputEnvelope;
+  connect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+};
+
+export type OwnershipUpdateManyWithoutAcquiredAtNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.OwnershipCreateWithoutAcquiredAtInput,
+        Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+      >
+    | Prisma.OwnershipCreateWithoutAcquiredAtInput[]
+    | Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput[];
+  connectOrCreate?:
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput[];
+  upsert?:
+    | Prisma.OwnershipUpsertWithWhereUniqueWithoutAcquiredAtInput
+    | Prisma.OwnershipUpsertWithWhereUniqueWithoutAcquiredAtInput[];
+  createMany?: Prisma.OwnershipCreateManyAcquiredAtInputEnvelope;
+  set?: Prisma.OwnershipWhereUniqueInput | Prisma.OwnershipWhereUniqueInput[];
+  disconnect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  delete?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  connect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  update?:
+    | Prisma.OwnershipUpdateWithWhereUniqueWithoutAcquiredAtInput
+    | Prisma.OwnershipUpdateWithWhereUniqueWithoutAcquiredAtInput[];
+  updateMany?:
+    | Prisma.OwnershipUpdateManyWithWhereWithoutAcquiredAtInput
+    | Prisma.OwnershipUpdateManyWithWhereWithoutAcquiredAtInput[];
+  deleteMany?:
+    | Prisma.OwnershipScalarWhereInput
+    | Prisma.OwnershipScalarWhereInput[];
+};
+
+export type OwnershipUncheckedUpdateManyWithoutAcquiredAtNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.OwnershipCreateWithoutAcquiredAtInput,
+        Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+      >
+    | Prisma.OwnershipCreateWithoutAcquiredAtInput[]
+    | Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput[];
+  connectOrCreate?:
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput
+    | Prisma.OwnershipCreateOrConnectWithoutAcquiredAtInput[];
+  upsert?:
+    | Prisma.OwnershipUpsertWithWhereUniqueWithoutAcquiredAtInput
+    | Prisma.OwnershipUpsertWithWhereUniqueWithoutAcquiredAtInput[];
+  createMany?: Prisma.OwnershipCreateManyAcquiredAtInputEnvelope;
+  set?: Prisma.OwnershipWhereUniqueInput | Prisma.OwnershipWhereUniqueInput[];
+  disconnect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  delete?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  connect?:
+    | Prisma.OwnershipWhereUniqueInput
+    | Prisma.OwnershipWhereUniqueInput[];
+  update?:
+    | Prisma.OwnershipUpdateWithWhereUniqueWithoutAcquiredAtInput
+    | Prisma.OwnershipUpdateWithWhereUniqueWithoutAcquiredAtInput[];
+  updateMany?:
+    | Prisma.OwnershipUpdateManyWithWhereWithoutAcquiredAtInput
+    | Prisma.OwnershipUpdateManyWithWhereWithoutAcquiredAtInput[];
+  deleteMany?:
+    | Prisma.OwnershipScalarWhereInput
+    | Prisma.OwnershipScalarWhereInput[];
 };
 
 export type OwnershipCreateNestedOneWithoutBookInput = {
@@ -477,26 +586,91 @@ export type OwnershipUncheckedUpdateOneWithoutBookNestedInput = {
   >;
 };
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null;
-};
-
 export type EnumBookOwnershipFieldUpdateOperationsInput = {
   set?: $Enums.BookOwnership;
+};
+
+export type OwnershipCreateWithoutAcquiredAtInput = {
+  createdAt?: Date | string;
+  location?: string | null;
+  status?: $Enums.BookOwnership;
+  book: Prisma.BookCreateNestedOneWithoutOwnershipInput;
+};
+
+export type OwnershipUncheckedCreateWithoutAcquiredAtInput = {
+  id?: number;
+  createdAt?: Date | string;
+  location?: string | null;
+  status?: $Enums.BookOwnership;
+  bookId: string;
+};
+
+export type OwnershipCreateOrConnectWithoutAcquiredAtInput = {
+  where: Prisma.OwnershipWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.OwnershipCreateWithoutAcquiredAtInput,
+    Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+  >;
+};
+
+export type OwnershipCreateManyAcquiredAtInputEnvelope = {
+  data:
+    | Prisma.OwnershipCreateManyAcquiredAtInput
+    | Prisma.OwnershipCreateManyAcquiredAtInput[];
+};
+
+export type OwnershipUpsertWithWhereUniqueWithoutAcquiredAtInput = {
+  where: Prisma.OwnershipWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.OwnershipUpdateWithoutAcquiredAtInput,
+    Prisma.OwnershipUncheckedUpdateWithoutAcquiredAtInput
+  >;
+  create: Prisma.XOR<
+    Prisma.OwnershipCreateWithoutAcquiredAtInput,
+    Prisma.OwnershipUncheckedCreateWithoutAcquiredAtInput
+  >;
+};
+
+export type OwnershipUpdateWithWhereUniqueWithoutAcquiredAtInput = {
+  where: Prisma.OwnershipWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.OwnershipUpdateWithoutAcquiredAtInput,
+    Prisma.OwnershipUncheckedUpdateWithoutAcquiredAtInput
+  >;
+};
+
+export type OwnershipUpdateManyWithWhereWithoutAcquiredAtInput = {
+  where: Prisma.OwnershipScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.OwnershipUpdateManyMutationInput,
+    Prisma.OwnershipUncheckedUpdateManyWithoutAcquiredAtInput
+  >;
+};
+
+export type OwnershipScalarWhereInput = {
+  AND?: Prisma.OwnershipScalarWhereInput | Prisma.OwnershipScalarWhereInput[];
+  OR?: Prisma.OwnershipScalarWhereInput[];
+  NOT?: Prisma.OwnershipScalarWhereInput | Prisma.OwnershipScalarWhereInput[];
+  id?: Prisma.IntFilter<"Ownership"> | number;
+  createdAt?: Prisma.DateTimeFilter<"Ownership"> | Date | string;
+  location?: Prisma.StringNullableFilter<"Ownership"> | string | null;
+  acquiredAtId?: Prisma.IntNullableFilter<"Ownership"> | number | null;
+  status?: Prisma.EnumBookOwnershipFilter<"Ownership"> | $Enums.BookOwnership;
+  bookId?: Prisma.StringFilter<"Ownership"> | string;
 };
 
 export type OwnershipCreateWithoutBookInput = {
   createdAt?: Date | string;
   location?: string | null;
-  aquiredAt?: Date | string | null;
   status?: $Enums.BookOwnership;
+  acquiredAt?: Prisma.OptionalDatetimeCreateNestedOneWithoutOwnershipsInput;
 };
 
 export type OwnershipUncheckedCreateWithoutBookInput = {
   id?: number;
   createdAt?: Date | string;
   location?: string | null;
-  aquiredAt?: Date | string | null;
+  acquiredAtId?: number | null;
   status?: $Enums.BookOwnership;
 };
 
@@ -531,28 +705,57 @@ export type OwnershipUpdateToOneWithWhereWithoutBookInput = {
 export type OwnershipUpdateWithoutBookInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
+  acquiredAt?: Prisma.OptionalDatetimeUpdateOneWithoutOwnershipsNestedInput;
 };
 
 export type OwnershipUncheckedUpdateWithoutBookInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  aquiredAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
+  acquiredAtId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   status?:
     | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
     | $Enums.BookOwnership;
+};
+
+export type OwnershipCreateManyAcquiredAtInput = {
+  id?: number;
+  createdAt?: Date | string;
+  location?: string | null;
+  status?: $Enums.BookOwnership;
+  bookId: string;
+};
+
+export type OwnershipUpdateWithoutAcquiredAtInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  status?:
+    | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
+    | $Enums.BookOwnership;
+  book?: Prisma.BookUpdateOneRequiredWithoutOwnershipNestedInput;
+};
+
+export type OwnershipUncheckedUpdateWithoutAcquiredAtInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  status?:
+    | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
+    | $Enums.BookOwnership;
+  bookId?: Prisma.StringFieldUpdateOperationsInput | string;
+};
+
+export type OwnershipUncheckedUpdateManyWithoutAcquiredAtInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  status?:
+    | Prisma.EnumBookOwnershipFieldUpdateOperationsInput
+    | $Enums.BookOwnership;
+  bookId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type OwnershipSelect<
@@ -562,9 +765,10 @@ export type OwnershipSelect<
     id?: boolean;
     createdAt?: boolean;
     location?: boolean;
-    aquiredAt?: boolean;
+    acquiredAtId?: boolean;
     status?: boolean;
     bookId?: boolean;
+    acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
     book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
   },
   ExtArgs["result"]["ownership"]
@@ -577,9 +781,10 @@ export type OwnershipSelectCreateManyAndReturn<
     id?: boolean;
     createdAt?: boolean;
     location?: boolean;
-    aquiredAt?: boolean;
+    acquiredAtId?: boolean;
     status?: boolean;
     bookId?: boolean;
+    acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
     book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
   },
   ExtArgs["result"]["ownership"]
@@ -592,9 +797,10 @@ export type OwnershipSelectUpdateManyAndReturn<
     id?: boolean;
     createdAt?: boolean;
     location?: boolean;
-    aquiredAt?: boolean;
+    acquiredAtId?: boolean;
     status?: boolean;
     bookId?: boolean;
+    acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
     book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
   },
   ExtArgs["result"]["ownership"]
@@ -604,7 +810,7 @@ export type OwnershipSelectScalar = {
   id?: boolean;
   createdAt?: boolean;
   location?: boolean;
-  aquiredAt?: boolean;
+  acquiredAtId?: boolean;
   status?: boolean;
   bookId?: boolean;
 };
@@ -612,22 +818,25 @@ export type OwnershipSelectScalar = {
 export type OwnershipOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = runtime.Types.Extensions.GetOmit<
-  "id" | "createdAt" | "location" | "aquiredAt" | "status" | "bookId",
+  "id" | "createdAt" | "location" | "acquiredAtId" | "status" | "bookId",
   ExtArgs["result"]["ownership"]
 >;
 export type OwnershipInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
 };
 export type OwnershipIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
 };
 export type OwnershipIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  acquiredAt?: boolean | Prisma.Ownership$acquiredAtArgs<ExtArgs>;
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>;
 };
 
@@ -636,6 +845,7 @@ export type $OwnershipPayload<
 > = {
   name: "Ownership";
   objects: {
+    acquiredAt: Prisma.$OptionalDatetimePayload<ExtArgs> | null;
     book: Prisma.$BookPayload<ExtArgs>;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
@@ -643,7 +853,7 @@ export type $OwnershipPayload<
       id: number;
       createdAt: Date;
       location: string | null;
-      aquiredAt: Date | null;
+      acquiredAtId: number | null;
       status: $Enums.BookOwnership;
       bookId: string;
     },
@@ -1188,6 +1398,19 @@ export interface Prisma__OwnershipClient<
   GlobalOmitOptions = {}
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise";
+  acquiredAt<T extends Prisma.Ownership$acquiredAtArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Ownership$acquiredAtArgs<ExtArgs>>
+  ): Prisma.Prisma__OptionalDatetimeClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$OptionalDatetimePayload<ExtArgs>,
+      T,
+      "findUniqueOrThrow",
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   book<T extends Prisma.BookDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.BookDefaultArgs<ExtArgs>>
   ): Prisma.Prisma__BookClient<
@@ -1247,7 +1470,7 @@ export interface OwnershipFieldRefs {
   readonly id: Prisma.FieldRef<"Ownership", "Int">;
   readonly createdAt: Prisma.FieldRef<"Ownership", "DateTime">;
   readonly location: Prisma.FieldRef<"Ownership", "String">;
-  readonly aquiredAt: Prisma.FieldRef<"Ownership", "DateTime">;
+  readonly acquiredAtId: Prisma.FieldRef<"Ownership", "Int">;
   readonly status: Prisma.FieldRef<"Ownership", "BookOwnership">;
   readonly bookId: Prisma.FieldRef<"Ownership", "String">;
 }
@@ -1698,6 +1921,27 @@ export type OwnershipDeleteManyArgs<
    * Limit how many Ownerships to delete.
    */
   limit?: number;
+};
+
+/**
+ * Ownership.acquiredAt
+ */
+export type Ownership$acquiredAtArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the OptionalDatetime
+   */
+  select?: Prisma.OptionalDatetimeSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the OptionalDatetime
+   */
+  omit?: Prisma.OptionalDatetimeOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OptionalDatetimeInclude<ExtArgs> | null;
+  where?: Prisma.OptionalDatetimeWhereInput;
 };
 
 /**

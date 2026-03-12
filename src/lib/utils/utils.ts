@@ -110,6 +110,17 @@ export function optionalToDate(o: OptionalDate | null | undefined) {
   );
 }
 
+export function dateToOptional(date: Date) {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+    timezoneOffset: date.getTimezoneOffset(),
+  };
+}
+
 export function getReadDate(readingActivity: ReadingActivityWithDates) {
   return optionalToDate(readingActivity.dateFinished) ?? null;
 }
@@ -131,10 +142,19 @@ export function getActiveActivies<T extends ReadingActivityWithDates>(
 }
 
 export function capitalize(status: string) {
+  if (!status) return status;
+
   return status
     .split("_")
     .map((word) => word[0] + word.slice(1).toLowerCase())
     .join(" ");
+}
+
+export function decapitalize(status: string) {
+  return status
+    .split(" ")
+    .map((word) => word.toUpperCase())
+    .join("_");
 }
 
 function toMinutePrecision(date: Date) {

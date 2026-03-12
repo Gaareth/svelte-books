@@ -38,9 +38,9 @@
     @apply dark:bg-slate-800 text-black dark:text-white;
   }
 
-  input {
-    @apply dark:border-slate-800 dark:focus:border-blue-800 dark:bg-slate-700 dark:text-white;
-  }
+  /* input {
+    @apply dark:border-slate-800 dark:focus:border-indigo-400 dark:bg-slate-700 dark:text-white;
+  } */
 
   [type="text"],
   input:where(:not([type])),
@@ -58,7 +58,7 @@
   [multiple],
   textarea,
   select {
-    @apply dark:border-slate-800 dark:focus:border-blue-800 dark:bg-slate-700 dark:text-white;
+    @apply dark:border-slate-800  dark:focus:ring-indigo-400 dark:bg-slate-700 dark:text-white dark:focus:ring-2;
   }
 
   input[type="radio"] {
@@ -69,13 +69,13 @@
     @apply text-blue-600 checked:border-0 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-slate-600 dark:border-slate-500 !important;
   }
 
-  select {
+  /* select {
     @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700;
   }
 
   textarea {
     @apply dark:border-slate-800 dark:bg-slate-700 dark:text-white dark:focus:border-slate-700;
-  }
+  } */
 }
 
 @layer utilities {

@@ -6,7 +6,7 @@
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { type ReviewListItemType } from "$appTypes";
+  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
   import ClearButton from "$components/input/ClearButton.svelte";
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
@@ -23,27 +23,24 @@
     READING_STATUS_VALUES,
   } from "$lib/constants/enums";
   import OwnershipForm from "../OwnershipForm.svelte";
+  import {
+    shouldShowRating,
+    shouldShowFinishedDate,
+    shouldShowStartedDate,
+  } from "./utils";
 
+  export let book: BookWithOwnership;
   export let bookId: string | undefined = undefined;
   export let showModal = false;
   export let entry: ReviewListItemType | undefined = undefined;
   $: createNew = entry === undefined;
 
   let stars = entry?.rating?.stars;
-  $: readingStatus = entry?.status.status;
-  $: rateableStatus =
-    readingStatus &&
-    readingStatus !== READING_ACTIVITY_TYPES.TO_READ &&
-    readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
-  $: showFinishedDate =
-    readingStatus &&
-    (readingStatus == READING_ACTIVITY_TYPES.FINISHED ||
-      readingStatus == READING_ACTIVITY_TYPES.DID_NOT_FINISH ||
-      readingStatus == READING_ACTIVITY_TYPES.PAUSED);
-  $: showStartedDate =
-    readingStatus &&
-    readingStatus !== READING_ACTIVITY_TYPES.TO_READ &&
-    readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
+  let readingStatus = entry?.status.status;
+
+  $: showRating = shouldShowRating(readingStatus);
+  $: showFinishedDate = shouldShowFinishedDate(readingStatus);
+  $: showStartedDate = shouldShowStartedDate(readingStatus);
 
   let tensionGraph =
     entry?.storyGraphs && entry?.storyGraphs?.length > 0
@@ -57,7 +54,7 @@
           title: "tension", // the rest is default in the component
         };
 
-  let error: { dateStarted: any; status: any } | undefined = undefined;
+  let error: Record<string, any> | undefined = undefined;
 
   // Create separate copies to prevent DateSelector components from sharing the same object reference
   $: dateStartedValue = entry?.dateStarted
@@ -66,6 +63,9 @@
   $: dateFinishedValue = entry?.dateFinished
     ? { ...entry.dateFinished }
     : { ...DEFAULT_OPTIONAL_DATETIME };
+
+  $: bookOwnership = book.ownership?.status;
+  $: location = book.ownership?.location;
 </script>
 
 <Modal
@@ -96,6 +96,7 @@
             `Successfully ${createNew ? "created" : "updated"} reading activity`
           );
           showModal = false;
+          error = undefined;
         } else {
           //@ts-ignore
           console.log("error", result.error);
@@ -115,11 +116,11 @@
     {/if}
 
     <div class="mt-5 flex flex-col gap-4">
-      {#if createNew}
+      {#if true}
         <div>
           <InputSelect
             bind:value={readingStatus}
-            displayName="Status"
+            displayName="Status:"
             name={"status"}
             selectClassName="dark:bg-slate-600"
             clearButton={false}
@@ -188,7 +189,7 @@
         </div>
       {/if}
 
-      {#if rateableStatus}
+      {#if showRating}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center my-2">
           <div class="flex items-center gap-1">
             <h2 class="text-xl">Rating</h2>
@@ -271,10 +272,13 @@
         </section>
       {/if}
 
-      {#if entry?.status.status == READING_ACTIVITY_TYPES.ACQUIRED}
+      {#if readingStatus == READING_ACTIVITY_TYPES.ACQUIRED}
         <OwnershipForm
           className="flex flex-col items-center"
-          showQuestion={false} />
+          {bookOwnership}
+          {location}
+          {error}
+          acquiredAtDate={dateStartedValue} />
       {/if}
     </div>
 

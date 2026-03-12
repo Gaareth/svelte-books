@@ -1,39 +1,15 @@
 import { json } from "@sveltejs/kit";
-import z from "zod";
 
 import { authorize } from "$lib/auth/auth";
-import {
-  optionalDatetimeSchema,
-  optionalNumericString,
-  parseFormObject,
-  storyGraphSchema,
-} from "$lib/schemas/schemas";
+
 import { createReadingActivity } from "../api.server";
 
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import type { RequestEvent } from "./$types";
 
-const saveSchema = z
-  .object({
-    stars: optionalNumericString(
-      z.number().min(0).max(5).optional()
-    ).optional(),
-    comment: z.string().optional(),
-    dateStarted: optionalDatetimeSchema.nullish(),
-    dateFinished: optionalDatetimeSchema.nullish(),
-    graphs: storyGraphSchema.nullish(),
-    status: z.nativeEnum(READING_ACTIVITY_TYPES),
-    bookId: z.string(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.status !== READING_ACTIVITY_TYPES.TO_READ && !data.dateStarted) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "A start date is required unless status is 'to read'",
-        path: ["dateStarted"],
-      });
-    }
-  });
+import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+import { createSchema } from "$lib/schemas/readingActivity";
+import { parseFormObject } from "$lib/schemas/utils";
+import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
   const accountId = (await authorize(await req.locals.auth())).requestedAccount
@@ -51,10 +27,16 @@ export async function POST(req: RequestEvent) {
   formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
+  // console.log(formData);
+
+  // if (formData["graphs"] !== undefined) {
   // @ts-ignore
   formData["graphs"] = parseFormObject(formData, "graphs");
+  // }
+  // console.log(formData);
 
-  const result = saveSchema.safeParse(formData);
+  const result = createSchema.safeParse(formData);
   if (!result.success) {
     console.error("Validation failed:", result.error);
     return json(
@@ -77,6 +59,22 @@ export async function POST(req: RequestEvent) {
       graphs,
       comment
     );
+
+    if (status === READING_ACTIVITY_TYPES.ACQUIRED) {
+      const { location, bookOwnership } = result.data;
+      const ownership = await prisma.ownership.create({
+        data: {
+          bookId,
+          location,
+          status: bookOwnership,
+          acquiredAtId: readingActivity?.dateStartedId,
+        },
+      });
+
+      if (!ownership) {
+        return json({ success: false }, { status: 500 });
+      }
+    }
 
     return json({ success: readingActivity != null });
   } catch (error) {

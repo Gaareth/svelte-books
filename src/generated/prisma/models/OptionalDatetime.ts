@@ -264,6 +264,7 @@ export type OptionalDatetimeWhereInput = {
   timezoneOffset?: Prisma.IntNullableFilter<"OptionalDatetime"> | number | null;
   booksStarted?: Prisma.ReadingActivityListRelationFilter;
   booksFinished?: Prisma.ReadingActivityListRelationFilter;
+  ownerships?: Prisma.OwnershipListRelationFilter;
 };
 
 export type OptionalDatetimeOrderByWithRelationInput = {
@@ -276,6 +277,7 @@ export type OptionalDatetimeOrderByWithRelationInput = {
   timezoneOffset?: Prisma.SortOrderInput | Prisma.SortOrder;
   booksStarted?: Prisma.ReadingActivityOrderByRelationAggregateInput;
   booksFinished?: Prisma.ReadingActivityOrderByRelationAggregateInput;
+  ownerships?: Prisma.OwnershipOrderByRelationAggregateInput;
 };
 
 export type OptionalDatetimeWhereUniqueInput = Prisma.AtLeast<
@@ -299,6 +301,7 @@ export type OptionalDatetimeWhereUniqueInput = Prisma.AtLeast<
       | null;
     booksStarted?: Prisma.ReadingActivityListRelationFilter;
     booksFinished?: Prisma.ReadingActivityListRelationFilter;
+    ownerships?: Prisma.OwnershipListRelationFilter;
   },
   "id"
 >;
@@ -359,6 +362,7 @@ export type OptionalDatetimeCreateInput = {
   timezoneOffset?: number | null;
   booksStarted?: Prisma.ReadingActivityCreateNestedManyWithoutDateStartedInput;
   booksFinished?: Prisma.ReadingActivityCreateNestedManyWithoutDateFinishedInput;
+  ownerships?: Prisma.OwnershipCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeUncheckedCreateInput = {
@@ -371,6 +375,7 @@ export type OptionalDatetimeUncheckedCreateInput = {
   timezoneOffset?: number | null;
   booksStarted?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateStartedInput;
   booksFinished?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateFinishedInput;
+  ownerships?: Prisma.OwnershipUncheckedCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeUpdateInput = {
@@ -382,6 +387,7 @@ export type OptionalDatetimeUpdateInput = {
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksStarted?: Prisma.ReadingActivityUpdateManyWithoutDateStartedNestedInput;
   booksFinished?: Prisma.ReadingActivityUpdateManyWithoutDateFinishedNestedInput;
+  ownerships?: Prisma.OwnershipUpdateManyWithoutAcquiredAtNestedInput;
 };
 
 export type OptionalDatetimeUncheckedUpdateInput = {
@@ -394,6 +400,7 @@ export type OptionalDatetimeUncheckedUpdateInput = {
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksStarted?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateStartedNestedInput;
   booksFinished?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateFinishedNestedInput;
+  ownerships?: Prisma.OwnershipUncheckedUpdateManyWithoutAcquiredAtNestedInput;
 };
 
 export type OptionalDatetimeCreateManyInput = {
@@ -536,6 +543,34 @@ export type OptionalDatetimeUpdateOneWithoutBooksFinishedNestedInput = {
   >;
 };
 
+export type OptionalDatetimeCreateNestedOneWithoutOwnershipsInput = {
+  create?: Prisma.XOR<
+    Prisma.OptionalDatetimeCreateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedCreateWithoutOwnershipsInput
+  >;
+  connectOrCreate?: Prisma.OptionalDatetimeCreateOrConnectWithoutOwnershipsInput;
+  connect?: Prisma.OptionalDatetimeWhereUniqueInput;
+};
+
+export type OptionalDatetimeUpdateOneWithoutOwnershipsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.OptionalDatetimeCreateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedCreateWithoutOwnershipsInput
+  >;
+  connectOrCreate?: Prisma.OptionalDatetimeCreateOrConnectWithoutOwnershipsInput;
+  upsert?: Prisma.OptionalDatetimeUpsertWithoutOwnershipsInput;
+  disconnect?: Prisma.OptionalDatetimeWhereInput | boolean;
+  delete?: Prisma.OptionalDatetimeWhereInput | boolean;
+  connect?: Prisma.OptionalDatetimeWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.OptionalDatetimeUpdateToOneWithWhereWithoutOwnershipsInput,
+      Prisma.OptionalDatetimeUpdateWithoutOwnershipsInput
+    >,
+    Prisma.OptionalDatetimeUncheckedUpdateWithoutOwnershipsInput
+  >;
+};
+
 export type OptionalDatetimeCreateWithoutBooksStartedInput = {
   day?: number | null;
   month?: number | null;
@@ -544,6 +579,7 @@ export type OptionalDatetimeCreateWithoutBooksStartedInput = {
   minute?: number | null;
   timezoneOffset?: number | null;
   booksFinished?: Prisma.ReadingActivityCreateNestedManyWithoutDateFinishedInput;
+  ownerships?: Prisma.OwnershipCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeUncheckedCreateWithoutBooksStartedInput = {
@@ -555,6 +591,7 @@ export type OptionalDatetimeUncheckedCreateWithoutBooksStartedInput = {
   minute?: number | null;
   timezoneOffset?: number | null;
   booksFinished?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateFinishedInput;
+  ownerships?: Prisma.OwnershipUncheckedCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeCreateOrConnectWithoutBooksStartedInput = {
@@ -573,6 +610,7 @@ export type OptionalDatetimeCreateWithoutBooksFinishedInput = {
   minute?: number | null;
   timezoneOffset?: number | null;
   booksStarted?: Prisma.ReadingActivityCreateNestedManyWithoutDateStartedInput;
+  ownerships?: Prisma.OwnershipCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeUncheckedCreateWithoutBooksFinishedInput = {
@@ -584,6 +622,7 @@ export type OptionalDatetimeUncheckedCreateWithoutBooksFinishedInput = {
   minute?: number | null;
   timezoneOffset?: number | null;
   booksStarted?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateStartedInput;
+  ownerships?: Prisma.OwnershipUncheckedCreateNestedManyWithoutAcquiredAtInput;
 };
 
 export type OptionalDatetimeCreateOrConnectWithoutBooksFinishedInput = {
@@ -622,6 +661,7 @@ export type OptionalDatetimeUpdateWithoutBooksStartedInput = {
   minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksFinished?: Prisma.ReadingActivityUpdateManyWithoutDateFinishedNestedInput;
+  ownerships?: Prisma.OwnershipUpdateManyWithoutAcquiredAtNestedInput;
 };
 
 export type OptionalDatetimeUncheckedUpdateWithoutBooksStartedInput = {
@@ -633,6 +673,7 @@ export type OptionalDatetimeUncheckedUpdateWithoutBooksStartedInput = {
   minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksFinished?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateFinishedNestedInput;
+  ownerships?: Prisma.OwnershipUncheckedUpdateManyWithoutAcquiredAtNestedInput;
 };
 
 export type OptionalDatetimeUpsertWithoutBooksFinishedInput = {
@@ -663,6 +704,7 @@ export type OptionalDatetimeUpdateWithoutBooksFinishedInput = {
   minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksStarted?: Prisma.ReadingActivityUpdateManyWithoutDateStartedNestedInput;
+  ownerships?: Prisma.OwnershipUpdateManyWithoutAcquiredAtNestedInput;
 };
 
 export type OptionalDatetimeUncheckedUpdateWithoutBooksFinishedInput = {
@@ -674,6 +716,81 @@ export type OptionalDatetimeUncheckedUpdateWithoutBooksFinishedInput = {
   minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   booksStarted?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateStartedNestedInput;
+  ownerships?: Prisma.OwnershipUncheckedUpdateManyWithoutAcquiredAtNestedInput;
+};
+
+export type OptionalDatetimeCreateWithoutOwnershipsInput = {
+  day?: number | null;
+  month?: number | null;
+  year: number;
+  hour?: number | null;
+  minute?: number | null;
+  timezoneOffset?: number | null;
+  booksStarted?: Prisma.ReadingActivityCreateNestedManyWithoutDateStartedInput;
+  booksFinished?: Prisma.ReadingActivityCreateNestedManyWithoutDateFinishedInput;
+};
+
+export type OptionalDatetimeUncheckedCreateWithoutOwnershipsInput = {
+  id?: number;
+  day?: number | null;
+  month?: number | null;
+  year: number;
+  hour?: number | null;
+  minute?: number | null;
+  timezoneOffset?: number | null;
+  booksStarted?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateStartedInput;
+  booksFinished?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutDateFinishedInput;
+};
+
+export type OptionalDatetimeCreateOrConnectWithoutOwnershipsInput = {
+  where: Prisma.OptionalDatetimeWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.OptionalDatetimeCreateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedCreateWithoutOwnershipsInput
+  >;
+};
+
+export type OptionalDatetimeUpsertWithoutOwnershipsInput = {
+  update: Prisma.XOR<
+    Prisma.OptionalDatetimeUpdateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedUpdateWithoutOwnershipsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.OptionalDatetimeCreateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedCreateWithoutOwnershipsInput
+  >;
+  where?: Prisma.OptionalDatetimeWhereInput;
+};
+
+export type OptionalDatetimeUpdateToOneWithWhereWithoutOwnershipsInput = {
+  where?: Prisma.OptionalDatetimeWhereInput;
+  data: Prisma.XOR<
+    Prisma.OptionalDatetimeUpdateWithoutOwnershipsInput,
+    Prisma.OptionalDatetimeUncheckedUpdateWithoutOwnershipsInput
+  >;
+};
+
+export type OptionalDatetimeUpdateWithoutOwnershipsInput = {
+  day?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  month?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  year?: Prisma.IntFieldUpdateOperationsInput | number;
+  hour?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  booksStarted?: Prisma.ReadingActivityUpdateManyWithoutDateStartedNestedInput;
+  booksFinished?: Prisma.ReadingActivityUpdateManyWithoutDateFinishedNestedInput;
+};
+
+export type OptionalDatetimeUncheckedUpdateWithoutOwnershipsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  day?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  month?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  year?: Prisma.IntFieldUpdateOperationsInput | number;
+  hour?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  minute?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  timezoneOffset?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  booksStarted?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateStartedNestedInput;
+  booksFinished?: Prisma.ReadingActivityUncheckedUpdateManyWithoutDateFinishedNestedInput;
 };
 
 /**
@@ -683,6 +800,7 @@ export type OptionalDatetimeUncheckedUpdateWithoutBooksFinishedInput = {
 export type OptionalDatetimeCountOutputType = {
   booksStarted: number;
   booksFinished: number;
+  ownerships: number;
 };
 
 export type OptionalDatetimeCountOutputTypeSelect<
@@ -692,6 +810,7 @@ export type OptionalDatetimeCountOutputTypeSelect<
   booksFinished?:
     | boolean
     | OptionalDatetimeCountOutputTypeCountBooksFinishedArgs;
+  ownerships?: boolean | OptionalDatetimeCountOutputTypeCountOwnershipsArgs;
 };
 
 /**
@@ -724,6 +843,15 @@ export type OptionalDatetimeCountOutputTypeCountBooksFinishedArgs<
   where?: Prisma.ReadingActivityWhereInput;
 };
 
+/**
+ * OptionalDatetimeCountOutputType without action
+ */
+export type OptionalDatetimeCountOutputTypeCountOwnershipsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.OwnershipWhereInput;
+};
+
 export type OptionalDatetimeSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = runtime.Types.Extensions.GetSelect<
@@ -739,6 +867,7 @@ export type OptionalDatetimeSelect<
     booksFinished?:
       | boolean
       | Prisma.OptionalDatetime$booksFinishedArgs<ExtArgs>;
+    ownerships?: boolean | Prisma.OptionalDatetime$ownershipsArgs<ExtArgs>;
     _count?:
       | boolean
       | Prisma.OptionalDatetimeCountOutputTypeDefaultArgs<ExtArgs>;
@@ -797,6 +926,7 @@ export type OptionalDatetimeInclude<
 > = {
   booksStarted?: boolean | Prisma.OptionalDatetime$booksStartedArgs<ExtArgs>;
   booksFinished?: boolean | Prisma.OptionalDatetime$booksFinishedArgs<ExtArgs>;
+  ownerships?: boolean | Prisma.OptionalDatetime$ownershipsArgs<ExtArgs>;
   _count?: boolean | Prisma.OptionalDatetimeCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type OptionalDatetimeIncludeCreateManyAndReturn<
@@ -813,6 +943,7 @@ export type $OptionalDatetimePayload<
   objects: {
     booksStarted: Prisma.$ReadingActivityPayload<ExtArgs>[];
     booksFinished: Prisma.$ReadingActivityPayload<ExtArgs>[];
+    ownerships: Prisma.$OwnershipPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1407,6 +1538,17 @@ export interface Prisma__OptionalDatetimeClient<
       >
     | Null
   >;
+  ownerships<T extends Prisma.OptionalDatetime$ownershipsArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.OptionalDatetime$ownershipsArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$OwnershipPayload<ExtArgs>,
+        T,
+        "findMany",
+        GlobalOmitOptions
+      >
+    | Null
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1960,6 +2102,36 @@ export type OptionalDatetime$booksFinishedArgs<
   distinct?:
     | Prisma.ReadingActivityScalarFieldEnum
     | Prisma.ReadingActivityScalarFieldEnum[];
+};
+
+/**
+ * OptionalDatetime.ownerships
+ */
+export type OptionalDatetime$ownershipsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the Ownership
+   */
+  select?: Prisma.OwnershipSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Ownership
+   */
+  omit?: Prisma.OwnershipOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnershipInclude<ExtArgs> | null;
+  where?: Prisma.OwnershipWhereInput;
+  orderBy?:
+    | Prisma.OwnershipOrderByWithRelationInput
+    | Prisma.OwnershipOrderByWithRelationInput[];
+  cursor?: Prisma.OwnershipWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.OwnershipScalarFieldEnum
+    | Prisma.OwnershipScalarFieldEnum[];
 };
 
 /**

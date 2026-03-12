@@ -23,7 +23,7 @@
         toast.error("Failed to update data");
       }
 
-      update({ reset: false });
+      await update({ reset: false });
     };
   }}
   action="?/save">

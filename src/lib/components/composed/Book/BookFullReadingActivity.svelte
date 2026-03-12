@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { BookFull, ReviewListItemType } from "$appTypes";
+  import type { BookWithOwnership, ReviewListItemType } from "$appTypes";
   import ActiveIndicator from "$components/ActiveIndicator.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import ReadingActivityActions from "$components/composed/BookList/Actions/ReadingActivityActions.svelte";
   import ReadingActivityItem from "$components/composed/ReadingActivity/ReadingActivityItem.svelte";
 
+  export let book: BookWithOwnership;
   export let activeEntry: ReviewListItemType;
   export let readingActivitiesSorted: ReviewListItemType[];
   export let isAuthorizedToModify: boolean;
@@ -43,7 +44,10 @@
   <!-- <hr class="border-slate-600 mt-2" /> -->
   {#each readingActivitiesSorted as readingActivity}
     <div class="relative">
-      <ReadingActivityItem entry={readingActivity} {isAuthorizedToModify} />
+      <ReadingActivityItem
+        entry={readingActivity}
+        {isAuthorizedToModify}
+        {book} />
 
       {#if readingActivity == activeEntry}
         <div class="absolute top-[0.2rem] right-[0.2rem]">

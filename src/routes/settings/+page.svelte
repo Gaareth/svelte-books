@@ -106,7 +106,7 @@
             groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
             btnClass="w-20 px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
             btnSelectedClass="dark:bg-slate-500 bg-gray-100"
-            unToggleable={true}
+            deselectable={true}
             bind:selectedOption={data.readingActivityLists[i].visibility} />
           <input
             type="hidden"

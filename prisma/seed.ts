@@ -9,8 +9,8 @@ import {
 import { seedInitial } from "./seed-initial";
 
 import {
+  createAllReadingActivityStatus,
   createLists,
-  createReadingActivityStatus,
 } from "$lib/server/db/create";
 
 import { hashPassword } from "$lib/auth/auth";
@@ -134,7 +134,7 @@ async function createDummyAccounts() {
     });
 
     await createLists(acc.id);
-    await createReadingActivityStatus(acc.id);
+    await createAllReadingActivityStatus(acc.id);
   };
 
   await createDummyAccount("Carlos");

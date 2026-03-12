@@ -8,6 +8,7 @@ import {
   type ReadingActivityStatusType,
 } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
+import { BookOwnership } from "$prismaClient";
 import {
   cloneReadingActivity,
   createReadingActivity,
@@ -56,7 +57,11 @@ async function continueReading(
   });
 }
 
-async function createNewReadFromScratch(accountId: string, bookId: string) {
+async function createNewFromScratch(
+  accountId: string,
+  bookId: string,
+  targetStatus: ReadingActivityStatusType
+) {
   const now = new Date();
   const oDt = {
     day: now.getDate(),
@@ -71,7 +76,7 @@ async function createNewReadFromScratch(accountId: string, bookId: string) {
     accountId,
     bookId,
     undefined,
-    READING_ACTIVITY_TYPES.READING,
+    targetStatus,
     oDt
   );
 }
@@ -116,9 +121,10 @@ export async function POST(req: RequestEvent) {
           targetReadingActivityStatusId
         );
       } else {
-        newReadingActivity = await createNewReadFromScratch(
+        newReadingActivity = await createNewFromScratch(
           accountId,
-          readingActivity.bookId
+          readingActivity.bookId,
+          targetStatus
         );
       }
       break;
@@ -136,15 +142,37 @@ export async function POST(req: RequestEvent) {
       break;
     }
 
-    case READING_ACTIVITY_TYPES.ACQUIRED:
     case READING_ACTIVITY_TYPES.TO_READ: {
-      newReadingActivity = await cloneReadingActivity(
+      newReadingActivity = await createNewFromScratch(
         accountId,
-        readingActivityId,
-        {
-          readingActivityStatusId: targetReadingActivityStatusId,
-        }
+        readingActivity.bookId,
+        targetStatus
       );
+      break;
+    }
+
+    case READING_ACTIVITY_TYPES.ACQUIRED: {
+      newReadingActivity = await createNewFromScratch(
+        accountId,
+        readingActivity.bookId,
+        targetStatus
+      );
+
+      if (newReadingActivity) {
+        const ownership = await prisma.ownership.create({
+          data: {
+            bookId: readingActivity.bookId,
+            location: null,
+            status: BookOwnership.OWNED,
+            acquiredAtId: newReadingActivity.dateStartedId,
+          },
+        });
+
+        if (!ownership) {
+          throw error(500, "Failed to create ownership");
+        }
+      }
+
       break;
     }
 

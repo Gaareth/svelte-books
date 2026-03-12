@@ -2,6 +2,7 @@
   //@ts-ignore
   import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
   import { twMerge } from "tailwind-merge";
+  import InputAny from "./InputAny.svelte";
 
   export let value: unknown | null;
   $: {
@@ -27,9 +28,9 @@
       : "text-neutral-500";
 </script>
 
-<label for={name}>{displayName}:</label>
-<div class="flex flex-col mb-3 sm:mb-0">
-  <div class="flex gap-2">
+<InputAny {displayName} {name} {error} {...$$restProps}>
+  <label slot="label" for={name} class="capitalize">{displayName}</label>
+  <div class="flex gap-2" slot="input">
     <select
       bind:value
       {name}
@@ -47,22 +48,10 @@
         type="button"
         class="group flex"
         title="Clear Input">
-        <span class={twMerge("inline-block icon group self-center", hoverCss)}>
+        <span class={twMerge("inline-block w-5 group self-center", hoverCss)}>
           <IoIosRemoveCircle />
         </span>
       </button>
     {/if}
   </div>
-  <label for={name} class="label">
-    {#if error}
-      <span class="label-text-alt text-error">{error}</span>
-    {/if}
-  </label>
-</div>
-
-<style>
-  .icon {
-    width: 20px;
-    height: 20px;
-  }
-</style>
+</InputAny>

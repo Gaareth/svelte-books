@@ -1,38 +1,14 @@
 import { json } from "@sveltejs/kit";
-import z from "zod";
 
 import { authorize } from "$lib/auth/auth";
-import {
-  numericString,
-  optionalDatetimeSchema,
-  parseFormObject,
-  storyGraphSchema,
-} from "$lib/schemas/schemas";
 
 import type { RequestEvent } from "./$types";
 
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
 
-const saveSchema = z
-  .object({
-    id: z.coerce.number(),
-    stars: numericString(z.number().min(0).max(5).nullish()),
-    comment: z.string().optional(),
-    dateStarted: optionalDatetimeSchema.nullish(),
-    dateFinished: optionalDatetimeSchema.nullish(),
-    graphs: storyGraphSchema.nullish(),
-    status: z.nativeEnum(READING_ACTIVITY_TYPES).optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.status !== READING_ACTIVITY_TYPES.TO_READ && !data.dateStarted) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "A start date is required unless status is 'to read'",
-        path: ["dateStarted"],
-      });
-    }
-  });
+import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+import { updateSchema } from "$lib/schemas/readingActivity";
+import { parseFormObject } from "$lib/schemas/utils";
 
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());
@@ -52,16 +28,16 @@ export async function POST(req: RequestEvent) {
 
   // only add graphs if they are present
   // if (f.has("graphs")) {
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   // @ts-ignore
-  //   formData["graphs"] = parseFormObject(formData, "graphs");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // formData["graphs"] = parseFormObject(formData, "graphs");
   // }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   formData["graphs"] = parseFormObject(formData, "graphs");
 
-  const result = saveSchema.safeParse(formData);
+  const result = updateSchema.safeParse(formData);
   if (!result.success) {
     console.error("Validation failed:", result.error);
     return json(
@@ -153,6 +129,24 @@ export async function POST(req: RequestEvent) {
     });
     if (!readingActivity) {
       return json({ success: false });
+    }
+
+    if (status === READING_ACTIVITY_TYPES.ACQUIRED) {
+      const { location, bookOwnership } = result.data;
+      const ownership = await prisma.ownership.update({
+        where: {
+          bookId: readingActivity.bookId,
+        },
+        data: {
+          location,
+          status: bookOwnership,
+          acquiredAtId: readingActivity?.dateStartedId,
+        },
+      });
+
+      if (!ownership) {
+        return json({ success: false }, { status: 500 });
+      }
     }
 
     // todo: extend for multiple

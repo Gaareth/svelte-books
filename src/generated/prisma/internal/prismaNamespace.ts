@@ -1711,7 +1711,7 @@ export const OwnershipScalarFieldEnum = {
   id: "id",
   createdAt: "createdAt",
   location: "location",
-  aquiredAt: "aquiredAt",
+  acquiredAtId: "acquiredAtId",
   status: "status",
   bookId: "bookId",
 } as const;

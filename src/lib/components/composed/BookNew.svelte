@@ -21,9 +21,13 @@
   import TabPanel from "$components/composed/Tab/TabPanel.svelte";
   import TabPanels from "$components/composed/Tab/TabPanels.svelte";
   import ToggleGroup from "$components/input/ToggleGroup.svelte";
-  import { slideHeight } from "$utils/utils";
+  import { decapitalize, slideHeight } from "$utils/utils";
 
-  import type { Prisma, ReadingActivityType } from "$prismaBrowser";
+  import type {
+    BookOwnership,
+    Prisma,
+    ReadingActivityType,
+  } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull } from "$appTypes";
@@ -62,6 +66,9 @@
   let dateStarted: OptionalDate;
   let dateFinished: OptionalDate;
 
+  let location: string;
+  let bookOwnership: BookOwnership | null;
+
   let loading = false;
 
   let api_query = "";
@@ -86,6 +93,8 @@
         dateStarted,
         dateFinished,
         readingStatus: DISPLAY_NAME_TO_READING_STATUS[readingStatus],
+        location,
+        bookOwnership: bookOwnership ? decapitalize(bookOwnership) : null,
       }),
       headers: {
         "content-type": "application/json",
@@ -235,10 +244,10 @@
           <hr class="dark:border-slate-500 my-5" />
 
           <div class="grid grid-cols-2 gap-y-2">
-            {#if readingActivities.some((e) => e.book.name === name && e.book.author === author)}
-              <p class="text-warning text-base col-span-2">
-                Info: A book with this name (and author) is already in this
-                list.
+            {#if readingActivities.some((e) => e.book.name === name)}
+              <p class="text-warning text-base col-span-2 text-center">
+                Warning: A book with this name is already in this list. <br />
+                 Continuing will add a new reading activity to it.
               </p>
             {/if}
             {#if readingStatus == "reading" || readingStatus == "read"}
@@ -305,7 +314,12 @@
             {/if}
           </div>
 
-          <OwnershipForm className="mt-5" />
+          <OwnershipForm
+            className="mt-5"
+            optional={true}
+            bind:location
+            bind:acquiredAtDate={dateStarted}
+            bind:bookOwnership />
         {/if}
 
         <div class="flex justify-end">

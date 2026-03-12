@@ -31,10 +31,10 @@ model Account {
   password_hash String
   password_salt String @default("")
 
-  isAdmin        Boolean @default(false)
-  isPublic       Boolean @default(false)
-  onlyToLoggedIn Boolean @default(false)
-  visibility      Visibility @default(PRIVATE)
+  isAdmin        Boolean    @default(false)
+  isPublic       Boolean    @default(false)
+  onlyToLoggedIn Boolean    @default(false)
+  visibility     Visibility @default(PRIVATE)
 
   books Book[]
 
@@ -104,6 +104,8 @@ model OptionalDatetime {
 
   booksStarted  ReadingActivity[] @relation("dateStarted")
   booksFinished ReadingActivity[] @relation("dateFinished")
+
+  ownerships Ownership[]
 }
 
 model Graph {
@@ -128,9 +130,9 @@ enum ReadingActivityType {
 }
 
 model ReadingActivityStatus {
-  id         Int        @id @default(autoincrement())
+  id         Int                 @id @default(autoincrement())
   status     ReadingActivityType
-  visibility Visibility @default(PRIVATE)
+  visibility Visibility          @default(PRIVATE)
 
   ReadingActivity ReadingActivity[]
 
@@ -210,8 +212,10 @@ model Ownership {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
-  location  String? // if owned where is it? if borrowed, from who? if library, which one?
-  aquiredAt DateTime? @default(now())
+  location     String? // if owned where is it? if borrowed, from who? if library, which one?
+  // aquiredAt DateTime? @default(now())
+  acquiredAt   OptionalDatetime? @relation(fields: [acquiredAtId], references: [id])
+  acquiredAtId Int?
 
   status BookOwnership @default(OWNED)
   book   Book          @relation(fields: [bookId], references: [id], onDelete: Cascade)

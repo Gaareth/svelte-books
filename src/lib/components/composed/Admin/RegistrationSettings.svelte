@@ -86,7 +86,11 @@
                       dark:hover:bg-slate-500"
                   title="copy"
                   type="button"
-                  on:click={async () => await copyToClipboard(code.code)}>
+                  on:click={async () =>
+                    await copyToClipboard(
+                      code.code,
+                      "Copied registration code to clipboard"
+                    )}>
                   <span
                     class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
                     <IoMdCopy alt="copy icon" />

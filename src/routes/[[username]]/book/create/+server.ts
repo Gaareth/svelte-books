@@ -1,9 +1,15 @@
-import { fail, json } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 import { z } from "zod";
 
 import { authorize } from "$lib/auth/auth";
-import { optionalDatetimeSchema } from "$lib/schemas/schemas";
-import { createReadingActivity } from "../../../api/reading-activity/api.server";
+import {
+  optionalDatetimeSchema,
+  optionalOwnershipSchema,
+} from "$lib/schemas/schemas";
+import {
+  createReadingActivity,
+  getOrCreateReadingActivityStatus,
+} from "../../../api/reading-activity/api.server";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { RequestEvent } from "./$types";
@@ -11,23 +17,25 @@ import type { RequestEvent } from "./$types";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { nullToUndefined, optionalToDate } from "$lib/utils/utils";
+import {
+  dateToOptional,
+  nullToUndefined,
+  optionalToDate,
+} from "$lib/utils/utils";
 import { BookOwnership } from "$prismaBrowser";
 
-const createSchema = z.object({
-  name: z.string().trim().min(1),
-  author: z.string().trim().min(1),
-  stars: z.coerce.number().optional(),
-  wordsPerPage: z.number().optional(),
-  readingStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
-  volumeId: z.string().trim().optional(),
-  dateStarted: optionalDatetimeSchema.optional(),
-  dateFinished: optionalDatetimeSchema.optional(),
-
-  bookOwnership: z.nativeEnum(BookOwnership).optional(),
-  location: z.string().trim().optional(),
-  acquiredAtDate: optionalDatetimeSchema.optional(),
-});
+let createSchema = z
+  .object({
+    name: z.string().trim().min(1),
+    author: z.string().trim().min(1),
+    stars: z.coerce.number().optional(),
+    wordsPerPage: z.number().optional(),
+    readingStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
+    volumeId: z.string().trim().optional(),
+    dateStarted: optionalDatetimeSchema.optional(),
+    dateFinished: optionalDatetimeSchema.optional(),
+  })
+  .merge(optionalOwnershipSchema);
 
 export async function POST(req: RequestEvent) {
   const accountId = (
@@ -51,7 +59,6 @@ export async function POST(req: RequestEvent) {
       volumeId,
       bookOwnership,
       location,
-      acquiredAtDate,
     } = result.data;
 
     // null can be seen as delete, while undefined as ignore. I dont want to delete while creating
@@ -89,17 +96,18 @@ export async function POST(req: RequestEvent) {
       await addApiData(volumeId, book.id);
     }
 
-    const ownership = await createOwnership(book.id, {
-      location,
-      status: bookOwnership,
-      aquiredAt: nullToUndefined(optionalToDate(acquiredAtDate)),
-    });
-
-    if (!ownership) {
-      return fail(500, {
-        success: false,
-        message: "Failed to create book ownership",
+    if (bookOwnership != null && location != null) {
+      const ownership = await createOwnership(accountId, book.id, {
+        location,
+        status: bookOwnership,
+        aquiredAt: nullToUndefined(optionalToDate(dateStarted)),
       });
+
+      if (!ownership) {
+        error(500, {
+          message: "Failed to create book ownership",
+        });
+      }
     }
 
     const rA = await createReadingActivity(
@@ -114,8 +122,7 @@ export async function POST(req: RequestEvent) {
     );
 
     if (!rA) {
-      return fail(500, {
-        success: false,
+      error(500, {
         message: "Failed to create reading activity",
       });
     }
@@ -127,13 +134,13 @@ export async function POST(req: RequestEvent) {
   }
 
   console.log("Error parsing form data for creating a new book:", result.error);
-  return fail(400, {
-    success: false,
+  error(400, {
     message: "Invalid form data",
   });
 }
 
 async function createOwnership(
+  accountId: string,
   bookId: string,
   {
     location,
@@ -141,12 +148,32 @@ async function createOwnership(
     aquiredAt,
   }: { location?: string; status?: BookOwnership; aquiredAt?: Date }
 ) {
+  const dateAcquiredId = aquiredAt
+    ? (
+        await prisma.optionalDatetime.create({
+          data: dateToOptional(aquiredAt),
+        })
+      ).id
+    : undefined;
+
   const ownership = await prisma.ownership.create({
     data: {
       bookId,
       location,
       status,
-      aquiredAt,
+      acquiredAtId: dateAcquiredId,
+    },
+  });
+
+  await prisma.readingActivity.create({
+    data: {
+      bookId,
+      accountId,
+      readingActivityStatusId: await getOrCreateReadingActivityStatus(
+        accountId,
+        READING_ACTIVITY_TYPES.ACQUIRED
+      ),
+      dateStartedId: dateAcquiredId,
     },
   });
 

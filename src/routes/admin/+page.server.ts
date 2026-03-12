@@ -71,7 +71,7 @@ export const actions = {
   addRegistrationCode: async (event: RequestEvent) => {
     await adminAuth(await event.locals.auth());
 
-    return await prisma.serverSettings.update({
+    const serverSettings = await prisma.serverSettings.update({
       where: {
         id: 1,
       },
@@ -83,6 +83,15 @@ export const actions = {
         },
       },
     });
+
+    if (!serverSettings) {
+      return fail(400, {
+        success: false,
+        error: "Failed to add registration code",
+      });
+    }
+
+    return { success: true };
   },
 
   deleteRegistrationCode: async (event: RequestEvent) => {

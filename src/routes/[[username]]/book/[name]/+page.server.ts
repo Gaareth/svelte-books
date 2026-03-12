@@ -2,11 +2,11 @@ import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 
 import { authorize } from "$lib/auth/auth";
-import { optionalNumericString } from "$lib/schemas/schemas";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
+import { optionalNumericString } from "$lib/schemas/utils";
 import {
   extractBookApiData,
   extractCategories,
@@ -37,6 +37,7 @@ export async function load(page: ServerLoadEvent) {
       accountId: requestedAccount?.id,
     },
     include: {
+      ownership: true,
       bookList: true,
       bookSeries: {
         include: {

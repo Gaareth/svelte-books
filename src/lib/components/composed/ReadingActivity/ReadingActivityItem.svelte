@@ -15,7 +15,7 @@
   import { MAX_RATING } from "$lib/constants/constants";
 
   import { invalidateAll } from "$app/navigation";
-  import { type ReviewListItemType } from "$appTypes";
+  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
   import Dropdown from "$components/input/Dropdown.svelte";
   import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
@@ -37,7 +37,11 @@
   } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import ReadingActivityTimeDiff from "$components/composed/ReadingActivity/ReadingActivityTimeDiff.svelte";
+  import { shouldShowRating } from "./utils";
+  import OwnershipForm from "../OwnershipForm.svelte";
+  import { DEFAULT_OPTIONAL_DATETIME } from "$components/input/DateSelector.svelte";
 
+  export let book: BookWithOwnership;
   export let entry: ReviewListItemType;
   export let isAuthorizedToModify = false;
 
@@ -74,7 +78,7 @@
     }
   };
 
-  let tensionGraph =
+  $: tensionGraph =
     entry.storyGraphs.length > 0
       ? {
           labels: JSON.parse(entry.storyGraphs[0].labels),
@@ -90,6 +94,12 @@
 
   let dropdownOpen = false;
   $: statusDisplayName = capitalize(entry.status.status);
+
+  $: showRating = shouldShowRating(entry.status.status);
+
+  $: dateStartedValue = entry?.dateStarted
+    ? { ...entry.dateStarted }
+    : { ...DEFAULT_OPTIONAL_DATETIME };
 </script>
 
 <AccentBarItemCard
@@ -251,20 +261,33 @@
     <ReadingActivityTimeDiff {entry} />
   </div>
 
-  <section class="mt-5">
-    <div class="flex items-center gap-3">
-      <h2 class="text-xl">Review</h2>
+  {#if entry.status.status == READING_ACTIVITY_TYPES.ACQUIRED}
+    <OwnershipForm
+      className="my-5"
+      editable={false}
+      acquiredAtDate={dateStartedValue}
+      bookOwnership={book.ownership?.status}
+      location={book.ownership?.location} />
+  {/if}
 
-      {#if entry.rating?.stars}
-        <div class="flex gap-1 items-center">
-          <p>{entry.rating.stars} / {MAX_RATING}</p>
-          <span class="icon" aria-label="stars"><IoIosStar /></span>
-        </div>
-      {/if}
-    </div>
+  {#if showRating}
+    <section class="mt-5">
+      <div class="flex items-center gap-3">
+        <h2 class="text-xl">Review</h2>
 
-    <p class="text-secondary">{entry.rating?.comment ?? "No comment added"}</p>
-  </section>
+        {#if entry.rating?.stars}
+          <div class="flex gap-1 items-center">
+            <p>{entry.rating.stars} / {MAX_RATING}</p>
+            <span class="icon" aria-label="stars"><IoIosStar /></span>
+          </div>
+        {/if}
+      </div>
+
+      <p class="text-secondary">
+        {entry.rating?.comment ?? "No comment added"}
+      </p>
+    </section>
+  {/if}
 
   {#if entry.storyGraphs.length > 0}
     <section class="mt-5">
@@ -298,7 +321,7 @@
   </p>
 </Modal>
 
-<ReadingActivityForm bind:showModal={editExpanded} {entry} />
+<ReadingActivityForm bind:showModal={editExpanded} {entry} {book} />
 
 <ReadingActivityDeletePopUp
   deletionEntry={entry}

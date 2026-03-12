@@ -59,9 +59,22 @@
     </form>
   </div>
 {:else}
-  <div class="center-screen p-3 sm:p-6">
-    <div>
-      <h1 class="text-5xl text-center mb-10">Sign-up</h1>
+  <div class="center-screen p-3 sm:p-6 flex justify-center">
+    <div class="max-w-sm">
+      <div>
+        <h1 class="text-5xl text-center mb-5">Sign-up</h1>
+
+        <p class="text-secondary">
+          {#if data.validCode}
+            <span class="text-indigo-700 dark:text-indigo-300 font-bold">
+              Congratulations!
+            </span>
+             Your registration code is valid.
+          {/if}
+          Create an account to start tracking your reading activity and book collection!
+        </p>
+      </div>
+
       <div class="relative flex flex-1 flex-col items-center justify-center">
         <div class="mb-4">
           {#if form?.message}
@@ -84,7 +97,7 @@
               update({ reset: false });
             };
           }}
-          class="w-full max-w-sm">
+          class="w-full">
           <div>
             <InputText
               name="username"

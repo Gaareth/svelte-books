@@ -4,6 +4,7 @@ import { authorize } from "$lib/auth/auth";
 
 import type { RequestEvent } from "./$types";
 
+import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
@@ -21,9 +22,24 @@ export async function POST(req: RequestEvent) {
         id: id,
         accountId,
       },
+      include: {
+        status: true,
+      },
     });
     if (!readingActivity) {
       return json({ success: false });
+    }
+
+    if (readingActivity.status.status == READING_ACTIVITY_TYPES.ACQUIRED) {
+      const ownership = await prisma.ownership.delete({
+        where: {
+          bookId: readingActivity.bookId,
+        },
+      });
+
+      if (!ownership) {
+        return json({ success: false });
+      }
     }
 
     return json({ success: true });

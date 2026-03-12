@@ -405,6 +405,7 @@
         </div>
 
         <BookFullReadingActivity
+          {book}
           {activeEntry}
           isAuthorizedToModify={data.isAuthorizedToModify}
           bind:showCreateReadingActivity
@@ -435,12 +436,14 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 items-center sm:gap-3">
           <InputText
+            displayName="Name:"
             bind:value={book.name}
             name="name"
             error={form?.errors && "name" in form.errors
               ? form.errors.name?.[0]
               : undefined} />
           <InputText
+            displayName="Author:"
             bind:value={book.author}
             name="author"
             error={authorError} />
@@ -456,7 +459,7 @@
 
           <InputSelect
             value={book.bookList?.name}
-            displayName="List"
+            displayName="List:"
             name={"listName"}
             error={listNameError}>
             {#each bookLists as list}
@@ -515,7 +518,7 @@
             <InputNumber
               value={book.wordsPerPage}
               name="wordsPerPage"
-              displayName="Words per page estimate"
+              displayName="Words per page estimate:"
               error={wordsPerPageError}
               clearButton={true} />
           </section>
@@ -536,6 +539,7 @@
 
 <ReadingActivityForm
   bind:showModal={showCreateReadingActivity}
+  {book}
   bookId={book.id} />
 
 <BookDeletePopUp

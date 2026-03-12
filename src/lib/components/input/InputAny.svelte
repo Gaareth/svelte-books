@@ -2,7 +2,7 @@
   export let name: string;
   export let displayName: string | undefined = undefined;
   // export let type: string = "text"
-  export let error: string | undefined = undefined;
+  export let error: string | undefined | null = undefined;
 </script>
 
 <label for={name} class="capitalize">
