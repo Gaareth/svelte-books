@@ -1,4 +1,5 @@
 set -e;
+npx prisma generate;
 npm run check;
 npm run build && ./docker-build-local.sh && docker buildx build --platform=linux/amd64 .;
 npm version patch;

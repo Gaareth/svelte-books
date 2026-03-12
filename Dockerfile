@@ -1,7 +1,8 @@
 FROM node:24-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# RUN npm ci // sometimes fails only when using docker buildx??
+RUN npm install
 COPY . .
 
 ARG DATABASE_URL="file:./test.db"

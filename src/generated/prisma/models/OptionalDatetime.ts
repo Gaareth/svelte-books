@@ -1813,6 +1813,11 @@ export type OptionalDatetimeFindManyArgs<
    * Skip the first `n` OptionalDatetimes.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of OptionalDatetimes.
+   */
   distinct?:
     | Prisma.OptionalDatetimeScalarFieldEnum
     | Prisma.OptionalDatetimeScalarFieldEnum[];

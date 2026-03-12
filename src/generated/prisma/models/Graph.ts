@@ -1491,6 +1491,11 @@ export type GraphFindManyArgs<
    * Skip the first `n` Graphs.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of Graphs.
+   */
   distinct?: Prisma.GraphScalarFieldEnum | Prisma.GraphScalarFieldEnum[];
 };
 

@@ -1919,6 +1919,11 @@ export type AccountFindManyArgs<
    * Skip the first `n` Accounts.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of Accounts.
+   */
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[];
 };
 

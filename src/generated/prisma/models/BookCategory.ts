@@ -1327,6 +1327,11 @@ export type BookCategoryFindManyArgs<
    * Skip the first `n` BookCategories.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of BookCategories.
+   */
   distinct?:
     | Prisma.BookCategoryScalarFieldEnum
     | Prisma.BookCategoryScalarFieldEnum[];

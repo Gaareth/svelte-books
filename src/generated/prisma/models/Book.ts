@@ -2965,6 +2965,11 @@ export type BookFindManyArgs<
    * Skip the first `n` Books.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of Books.
+   */
   distinct?: Prisma.BookScalarFieldEnum | Prisma.BookScalarFieldEnum[];
 };
 

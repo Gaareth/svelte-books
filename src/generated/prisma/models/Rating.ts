@@ -1365,6 +1365,11 @@ export type RatingFindManyArgs<
    * Skip the first `n` Ratings.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of Ratings.
+   */
   distinct?: Prisma.RatingScalarFieldEnum | Prisma.RatingScalarFieldEnum[];
 };
 

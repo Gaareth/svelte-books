@@ -2025,6 +2025,11 @@ export type BookApiDataFindManyArgs<
    * Skip the first `n` BookApiData.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of BookApiData.
+   */
   distinct?:
     | Prisma.BookApiDataScalarFieldEnum
     | Prisma.BookApiDataScalarFieldEnum[];

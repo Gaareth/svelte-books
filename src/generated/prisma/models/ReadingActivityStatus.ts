@@ -1723,6 +1723,11 @@ export type ReadingActivityStatusFindManyArgs<
    * Skip the first `n` ReadingActivityStatuses.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of ReadingActivityStatuses.
+   */
   distinct?:
     | Prisma.ReadingActivityStatusScalarFieldEnum
     | Prisma.ReadingActivityStatusScalarFieldEnum[];

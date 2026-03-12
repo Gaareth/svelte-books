@@ -1250,6 +1250,11 @@ export type BookSeriesFindManyArgs<
    * Skip the first `n` BookSeries.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of BookSeries.
+   */
   distinct?:
     | Prisma.BookSeriesScalarFieldEnum
     | Prisma.BookSeriesScalarFieldEnum[];

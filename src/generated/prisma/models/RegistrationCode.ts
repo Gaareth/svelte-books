@@ -1538,6 +1538,11 @@ export type RegistrationCodeFindManyArgs<
    * Skip the first `n` RegistrationCodes.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of RegistrationCodes.
+   */
   distinct?:
     | Prisma.RegistrationCodeScalarFieldEnum
     | Prisma.RegistrationCodeScalarFieldEnum[];

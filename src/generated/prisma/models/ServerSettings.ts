@@ -1324,6 +1324,11 @@ export type ServerSettingsFindManyArgs<
    * Skip the first `n` ServerSettings.
    */
   skip?: number;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   *
+   * Filter by unique combinations of ServerSettings.
+   */
   distinct?:
     | Prisma.ServerSettingsScalarFieldEnum
     | Prisma.ServerSettingsScalarFieldEnum[];
