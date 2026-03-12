@@ -247,7 +247,7 @@
             {#if readingActivities.some((e) => e.book.name === name)}
               <p class="text-warning text-base col-span-2 text-center">
                 Warning: A book with this name is already in this list. <br />
-                 Continuing will add a new reading activity to it.
+                Continuing will add a new reading activity to it.
               </p>
             {/if}
             {#if readingStatus == "reading" || readingStatus == "read"}

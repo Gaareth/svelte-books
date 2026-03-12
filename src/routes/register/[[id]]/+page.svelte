@@ -69,7 +69,7 @@
             <span class="text-indigo-700 dark:text-indigo-300 font-bold">
               Congratulations!
             </span>
-             Your registration code is valid.
+            Your registration code is valid.
           {/if}
           Create an account to start tracking your reading activity and book collection!
         </p>
