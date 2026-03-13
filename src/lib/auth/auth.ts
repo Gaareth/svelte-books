@@ -30,19 +30,6 @@ export async function getAccountByUsername(username: string) {
   });
 }
 
-export async function getReadingActivityVisibility(
-  accountId: string,
-  readingActivityStatus: ReadingActivityType
-) {
-  return (
-    await prisma.readingActivityStatus.findUnique({
-      where: {
-        status_accountId: { status: readingActivityStatus, accountId },
-      },
-    })
-  )?.visibility;
-}
-
 export async function adminAuth(session: Session | null) {
   const account = await userAuth(session);
   if (!account?.isAdmin) {
