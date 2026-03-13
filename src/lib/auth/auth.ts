@@ -69,11 +69,32 @@ export async function userAuth(session: Session | null) {
   return account;
 }
 
+export function handlePublicOrAuthenticatedAccount(
+  requestedAccount: Account,
+  sessionAccount: Account | null
+) {
+  return visibilityIsPublicOrAuthenticated(
+    requestedAccount.visibility,
+    sessionAccount
+  );
+}
+
+export function visibilityIsPublicOrAuthenticated(
+  visibility: Visibility,
+  session: Session | Account | null
+) {
+  return (
+    visibility === Visibility.PUBLIC ||
+    (visibility === Visibility.AUTHENTICATED && session != null)
+  );
+}
+
 export async function authorize(
   session: Session | null,
   requestedAccountUsername?: string,
   isPublicPage: (
-    requestedAccount: Account
+    requestedAccount: Account,
+    sessionAccount: Account | null
   ) => boolean | Promise<boolean> = () => false
 ): Promise<{
   sessionAccount: Account | null;
@@ -106,7 +127,7 @@ export async function authorize(
   }
 
   const allow =
-    (await isPublicPage(requestedAccount)) ||
+    (await isPublicPage(requestedAccount, sessionAccount)) ||
     sessionAccount?.id === requestedAccount?.id ||
     sessionAccount?.isAdmin;
 
@@ -117,17 +138,25 @@ export async function authorize(
   return error(StatusCodes.FORBIDDEN, "You are not authorized");
 }
 
-export const isReadingActivityPublic = async (
+export async function isReadingActivityPublic(
   accountId: string,
+  session: Session | Account | null,
   readingActivityStatus: ReadingActivityType
-) =>
-  (
-    await prisma.readingActivityStatus.findUnique({
-      where: {
-        status_accountId: { status: readingActivityStatus, accountId },
-      },
-    })
-  )?.visibility == Visibility.PUBLIC;
+) {
+  const readingActivity = await prisma.readingActivityStatus.findUnique({
+    where: {
+      status_accountId: { status: readingActivityStatus, accountId },
+    },
+  });
+
+  const visibility = readingActivity?.visibility;
+  if (visibility == null) {
+    // default to private if not found, should not happen
+    return false;
+  }
+
+  return visibilityIsPublicOrAuthenticated(visibility, session);
+}
 
 export async function hashPassword(password: string) {
   const salt = randomBytes(64).toString("hex");

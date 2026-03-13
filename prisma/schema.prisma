@@ -32,8 +32,6 @@ model Account {
   password_salt String @default("")
 
   isAdmin        Boolean    @default(false)
-  isPublic       Boolean    @default(false)
-  onlyToLoggedIn Boolean    @default(false)
   visibility     Visibility @default(PRIVATE)
 
   books Book[]

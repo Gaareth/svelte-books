@@ -1,9 +1,9 @@
-import { getAccountByUsername } from "$lib/auth/auth";
-
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
 import { prisma } from "$lib/server/prisma";
 import { Visibility } from "$prismaClient";
+import { AUTHENTICATED, PUBLIC } from "$src/lib/constants/enums";
+import { whereVisibilityPublicOrAuthenticated } from "$src/lib/server/db/prismaUtils";
 
 export async function load({ locals }: ServerLoadEvent) {
   const session = await locals.auth();
@@ -11,13 +11,13 @@ export async function load({ locals }: ServerLoadEvent) {
     error(StatusCodes.UNAUTHORIZED);
   } */
 
+  // This should be a view of a regular user. Admin view under /admin
+
   const username = session?.user?.name;
-  const account = username ? await getAccountByUsername(username) : undefined;
+  // const account = username ? await getAccountByUsername(username) : undefined;
 
   const accounts = await prisma.account.findMany({
-    where: {
-      isPublic: account?.isAdmin ? undefined : true,
-    },
+    where: whereVisibilityPublicOrAuthenticated(session),
     include: {
       books: {
         select: {
@@ -28,12 +28,15 @@ export async function load({ locals }: ServerLoadEvent) {
     },
   });
 
+  const filterReadingActivityStatus = (v: Visibility) =>
+    v == PUBLIC || (session && v == AUTHENTICATED);
+
   const users = accounts.map((a) => {
     return {
       username: a.username,
       numBooks: a.books.length,
-      readingActivityLists: a.readingActivityStatus.filter(
-        (r) => r.visibility == Visibility.PUBLIC || account?.isAdmin
+      readingActivityLists: a.readingActivityStatus.filter((r) =>
+        filterReadingActivityStatus(r.visibility)
       ),
     };
   });

@@ -1,4 +1,8 @@
-import { authorize, getReadingActivityVisibility } from "$lib/auth/auth";
+import {
+  authorize,
+  getReadingActivityVisibility,
+  handlePublicOrAuthenticatedAccount,
+} from "$lib/auth/auth";
 
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
@@ -9,7 +13,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
   const { sessionAccount, requestedAccount } = await authorize(
     await locals.auth(),
     params.username,
-    (requestedAccount) => requestedAccount?.isPublic
+    handlePublicOrAuthenticatedAccount
   );
 
   const username = params.username;

@@ -1513,8 +1513,6 @@ export const AccountScalarFieldEnum = {
   password_hash: 'password_hash',
   password_salt: 'password_salt',
   isAdmin: 'isAdmin',
-  isPublic: 'isPublic',
-  onlyToLoggedIn: 'onlyToLoggedIn',
   visibility: 'visibility'
 } as const
 

@@ -1,7 +1,7 @@
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { authorize } from "$lib/auth/auth";
+import { authorize, handlePublicOrAuthenticatedAccount } from "$lib/auth/auth";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
@@ -13,7 +13,7 @@ import {
   loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { Visibility } from "$prismaClient";
+import { whereVisibilityPublicOrAuthenticatedOrAll } from "$src/lib/server/db/prismaUtils";
 
 export async function load(page: ServerLoadEvent) {
   const params = page.params;
@@ -22,7 +22,7 @@ export async function load(page: ServerLoadEvent) {
   const { sessionAccount, requestedAccount } = await authorize(
     session,
     params.username,
-    (requestedAccount) => requestedAccount?.isPublic
+    handlePublicOrAuthenticatedAccount
   );
 
   const isAuthorizedToModify =
@@ -50,11 +50,10 @@ export async function load(page: ServerLoadEvent) {
               },
               readingActivity: {
                 where: {
-                  status: {
-                    visibility: isAuthorizedToModify
-                      ? undefined
-                      : Visibility.PUBLIC,
-                  },
+                  status: whereVisibilityPublicOrAuthenticatedOrAll(
+                    session,
+                    isAuthorizedToModify
+                  ),
                 },
                 include: {
                   dateStarted: true,
@@ -75,9 +74,10 @@ export async function load(page: ServerLoadEvent) {
       },
       readingActivity: {
         where: {
-          status: {
-            visibility: isAuthorizedToModify ? undefined : Visibility.PUBLIC,
-          },
+          status: whereVisibilityPublicOrAuthenticatedOrAll(
+            session,
+            isAuthorizedToModify
+          ),
         },
         include: {
           dateStarted: true,

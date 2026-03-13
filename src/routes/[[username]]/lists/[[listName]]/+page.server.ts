@@ -10,8 +10,6 @@ import {
 import { getReadingActivity } from "$lib/server/db/utils";
 
 export async function load({ locals, params }: ServerLoadEvent) {
-  console.log("Loading reading activity for list:", params.listName);
-
   if (
     !READING_STATUS_VALUES.includes(
       params.listName as ReadingActivityStatusType
@@ -25,8 +23,12 @@ export async function load({ locals, params }: ServerLoadEvent) {
   const { sessionAccount, requestedAccount } = await authorize(
     await locals.auth(),
     params.username,
-    async (requestedAccount) =>
-      await isReadingActivityPublic(requestedAccount.id, readingActivityStatus)
+    async (requestedAccount, session) =>
+      await isReadingActivityPublic(
+        requestedAccount.id,
+        session,
+        readingActivityStatus
+      )
   );
 
   const username = params.username;

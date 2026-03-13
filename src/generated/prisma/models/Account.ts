@@ -30,8 +30,6 @@ export type AccountMinAggregateOutputType = {
   password_hash: string | null
   password_salt: string | null
   isAdmin: boolean | null
-  isPublic: boolean | null
-  onlyToLoggedIn: boolean | null
   visibility: $Enums.Visibility | null
 }
 
@@ -41,8 +39,6 @@ export type AccountMaxAggregateOutputType = {
   password_hash: string | null
   password_salt: string | null
   isAdmin: boolean | null
-  isPublic: boolean | null
-  onlyToLoggedIn: boolean | null
   visibility: $Enums.Visibility | null
 }
 
@@ -52,8 +48,6 @@ export type AccountCountAggregateOutputType = {
   password_hash: number
   password_salt: number
   isAdmin: number
-  isPublic: number
-  onlyToLoggedIn: number
   visibility: number
   _all: number
 }
@@ -65,8 +59,6 @@ export type AccountMinAggregateInputType = {
   password_hash?: true
   password_salt?: true
   isAdmin?: true
-  isPublic?: true
-  onlyToLoggedIn?: true
   visibility?: true
 }
 
@@ -76,8 +68,6 @@ export type AccountMaxAggregateInputType = {
   password_hash?: true
   password_salt?: true
   isAdmin?: true
-  isPublic?: true
-  onlyToLoggedIn?: true
   visibility?: true
 }
 
@@ -87,8 +77,6 @@ export type AccountCountAggregateInputType = {
   password_hash?: true
   password_salt?: true
   isAdmin?: true
-  isPublic?: true
-  onlyToLoggedIn?: true
   visibility?: true
   _all?: true
 }
@@ -171,8 +159,6 @@ export type AccountGroupByOutputType = {
   password_hash: string
   password_salt: string
   isAdmin: boolean
-  isPublic: boolean
-  onlyToLoggedIn: boolean
   visibility: $Enums.Visibility
   _count: AccountCountAggregateOutputType | null
   _min: AccountMinAggregateOutputType | null
@@ -203,8 +189,6 @@ export type AccountWhereInput = {
   password_hash?: Prisma.StringFilter<"Account"> | string
   password_salt?: Prisma.StringFilter<"Account"> | string
   isAdmin?: Prisma.BoolFilter<"Account"> | boolean
-  isPublic?: Prisma.BoolFilter<"Account"> | boolean
-  onlyToLoggedIn?: Prisma.BoolFilter<"Account"> | boolean
   visibility?: Prisma.EnumVisibilityFilter<"Account"> | $Enums.Visibility
   books?: Prisma.BookListRelationFilter
   bookList?: Prisma.BookListListRelationFilter
@@ -218,8 +202,6 @@ export type AccountOrderByWithRelationInput = {
   password_hash?: Prisma.SortOrder
   password_salt?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  isPublic?: Prisma.SortOrder
-  onlyToLoggedIn?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   books?: Prisma.BookOrderByRelationAggregateInput
   bookList?: Prisma.BookListOrderByRelationAggregateInput
@@ -236,8 +218,6 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<{
   password_hash?: Prisma.StringFilter<"Account"> | string
   password_salt?: Prisma.StringFilter<"Account"> | string
   isAdmin?: Prisma.BoolFilter<"Account"> | boolean
-  isPublic?: Prisma.BoolFilter<"Account"> | boolean
-  onlyToLoggedIn?: Prisma.BoolFilter<"Account"> | boolean
   visibility?: Prisma.EnumVisibilityFilter<"Account"> | $Enums.Visibility
   books?: Prisma.BookListRelationFilter
   bookList?: Prisma.BookListListRelationFilter
@@ -251,8 +231,6 @@ export type AccountOrderByWithAggregationInput = {
   password_hash?: Prisma.SortOrder
   password_salt?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  isPublic?: Prisma.SortOrder
-  onlyToLoggedIn?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   _count?: Prisma.AccountCountOrderByAggregateInput
   _max?: Prisma.AccountMaxOrderByAggregateInput
@@ -268,8 +246,6 @@ export type AccountScalarWhereWithAggregatesInput = {
   password_hash?: Prisma.StringWithAggregatesFilter<"Account"> | string
   password_salt?: Prisma.StringWithAggregatesFilter<"Account"> | string
   isAdmin?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean
-  isPublic?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean
-  onlyToLoggedIn?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean
   visibility?: Prisma.EnumVisibilityWithAggregatesFilter<"Account"> | $Enums.Visibility
 }
 
@@ -279,8 +255,6 @@ export type AccountCreateInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput
@@ -294,8 +268,6 @@ export type AccountUncheckedCreateInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput
@@ -309,8 +281,6 @@ export type AccountUpdateInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput
@@ -324,8 +294,6 @@ export type AccountUncheckedUpdateInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput
@@ -339,8 +307,6 @@ export type AccountCreateManyInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
 }
 
@@ -350,8 +316,6 @@ export type AccountUpdateManyMutationInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
 }
 
@@ -361,8 +325,6 @@ export type AccountUncheckedUpdateManyInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
 }
 
@@ -372,8 +334,6 @@ export type AccountCountOrderByAggregateInput = {
   password_hash?: Prisma.SortOrder
   password_salt?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  isPublic?: Prisma.SortOrder
-  onlyToLoggedIn?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
 }
 
@@ -383,8 +343,6 @@ export type AccountMaxOrderByAggregateInput = {
   password_hash?: Prisma.SortOrder
   password_salt?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  isPublic?: Prisma.SortOrder
-  onlyToLoggedIn?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
 }
 
@@ -394,8 +352,6 @@ export type AccountMinOrderByAggregateInput = {
   password_hash?: Prisma.SortOrder
   password_salt?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  isPublic?: Prisma.SortOrder
-  onlyToLoggedIn?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
 }
 
@@ -470,8 +426,6 @@ export type AccountCreateWithoutBookListInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookCreateNestedManyWithoutAccountInput
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput
@@ -484,8 +438,6 @@ export type AccountUncheckedCreateWithoutBookListInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput
@@ -514,8 +466,6 @@ export type AccountUpdateWithoutBookListInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput
@@ -528,8 +478,6 @@ export type AccountUncheckedUpdateWithoutBookListInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput
@@ -542,8 +490,6 @@ export type AccountCreateWithoutReadingActivityStatusInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput
@@ -556,8 +502,6 @@ export type AccountUncheckedCreateWithoutReadingActivityStatusInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput
@@ -586,8 +530,6 @@ export type AccountUpdateWithoutReadingActivityStatusInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput
@@ -600,8 +542,6 @@ export type AccountUncheckedUpdateWithoutReadingActivityStatusInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput
@@ -614,8 +554,6 @@ export type AccountCreateWithoutReadingActivityInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput
@@ -628,8 +566,6 @@ export type AccountUncheckedCreateWithoutReadingActivityInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   books?: Prisma.BookUncheckedCreateNestedManyWithoutAccountInput
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput
@@ -658,8 +594,6 @@ export type AccountUpdateWithoutReadingActivityInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput
@@ -672,8 +606,6 @@ export type AccountUncheckedUpdateWithoutReadingActivityInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   books?: Prisma.BookUncheckedUpdateManyWithoutAccountNestedInput
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput
@@ -686,8 +618,6 @@ export type AccountCreateWithoutBooksInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   bookList?: Prisma.BookListCreateNestedManyWithoutAccountInput
   readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutAccountInput
@@ -700,8 +630,6 @@ export type AccountUncheckedCreateWithoutBooksInput = {
   password_hash: string
   password_salt?: string
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: $Enums.Visibility
   bookList?: Prisma.BookListUncheckedCreateNestedManyWithoutAccountInput
   readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutAccountInput
@@ -730,8 +658,6 @@ export type AccountUpdateWithoutBooksInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   bookList?: Prisma.BookListUpdateManyWithoutAccountNestedInput
   readingActivity?: Prisma.ReadingActivityUpdateManyWithoutAccountNestedInput
@@ -744,8 +670,6 @@ export type AccountUncheckedUpdateWithoutBooksInput = {
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   password_salt?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  onlyToLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   bookList?: Prisma.BookListUncheckedUpdateManyWithoutAccountNestedInput
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutAccountNestedInput
@@ -816,8 +740,6 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   password_hash?: boolean
   password_salt?: boolean
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: boolean
   books?: boolean | Prisma.Account$booksArgs<ExtArgs>
   bookList?: boolean | Prisma.Account$bookListArgs<ExtArgs>
@@ -832,8 +754,6 @@ export type AccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password_hash?: boolean
   password_salt?: boolean
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: boolean
 }, ExtArgs["result"]["account"]>
 
@@ -843,8 +763,6 @@ export type AccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password_hash?: boolean
   password_salt?: boolean
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: boolean
 }, ExtArgs["result"]["account"]>
 
@@ -854,12 +772,10 @@ export type AccountSelectScalar = {
   password_hash?: boolean
   password_salt?: boolean
   isAdmin?: boolean
-  isPublic?: boolean
-  onlyToLoggedIn?: boolean
   visibility?: boolean
 }
 
-export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password_hash" | "password_salt" | "isAdmin" | "isPublic" | "onlyToLoggedIn" | "visibility", ExtArgs["result"]["account"]>
+export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password_hash" | "password_salt" | "isAdmin" | "visibility", ExtArgs["result"]["account"]>
 export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   books?: boolean | Prisma.Account$booksArgs<ExtArgs>
   bookList?: boolean | Prisma.Account$bookListArgs<ExtArgs>
@@ -884,8 +800,6 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     password_hash: string
     password_salt: string
     isAdmin: boolean
-    isPublic: boolean
-    onlyToLoggedIn: boolean
     visibility: $Enums.Visibility
   }, ExtArgs["result"]["account"]>
   composites: {}
@@ -1319,8 +1233,6 @@ export interface AccountFieldRefs {
   readonly password_hash: Prisma.FieldRef<"Account", 'String'>
   readonly password_salt: Prisma.FieldRef<"Account", 'String'>
   readonly isAdmin: Prisma.FieldRef<"Account", 'Boolean'>
-  readonly isPublic: Prisma.FieldRef<"Account", 'Boolean'>
-  readonly onlyToLoggedIn: Prisma.FieldRef<"Account", 'Boolean'>
   readonly visibility: Prisma.FieldRef<"Account", 'Visibility'>
 }
     

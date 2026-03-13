@@ -53,7 +53,7 @@
     }
   }
 
-  // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC];
+  // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC]; //TODO: support unlisted
   $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, PUBLIC];
 
   function changeAllVisiblities(ev: CustomEvent) {
