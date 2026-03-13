@@ -11,6 +11,12 @@ export const VISIBILITY_TYPES = {
   AUTHENTICATED: "AUTHENTICATED",
 } as const satisfies { [K in Visibility]: K };
 
+export const VISIBILITY_VALUES = Object.values(VISIBILITY_TYPES) as Array<
+  (typeof VISIBILITY_TYPES)[keyof typeof VISIBILITY_TYPES]
+>;
+
+export const { PUBLIC, PRIVATE, UNLISTED, AUTHENTICATED } = VISIBILITY_TYPES;
+
 export const READING_ACTIVITY_TYPES = {
   TO_READ: "TO_READ",
   READING: "READING",

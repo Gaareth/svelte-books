@@ -1,4 +1,4 @@
-import { type ServerLoadEvent } from "@sveltejs/kit";
+import { fail, type ServerLoadEvent } from "@sveltejs/kit";
 
 import { getAccountIdfromSession, userAuth } from "$lib/auth/auth";
 import { parseFormArray } from "$lib/schemas/utils";
@@ -11,8 +11,26 @@ import {
 } from "./apidata";
 
 import { prisma } from "$lib/server/prisma";
+import {
+  READING_ACTIVITY_TYPES,
+  VISIBILITY_TYPES,
+} from "$src/lib/constants/enums";
+import z from "zod";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
+
+export async function load({ locals }: ServerLoadEvent) {
+  const account = await userAuth(await locals.auth());
+
+  const readingActivityLists = await prisma.readingActivityStatus.findMany({
+    where: { accountId: account.id },
+  });
+
+  return {
+    globalVisibility: account.visibility,
+    readingActivityLists,
+  };
+}
 
 export const actions = {
   reload: async ({ locals }) => {
@@ -59,7 +77,7 @@ export const actions = {
     const accountId = await getAccountIdfromSession(session);
     const formData = await request.formData();
 
-    const formDataObject = Object.fromEntries(formData);
+    let formDataObject = Object.fromEntries(formData);
     // console.log(formDataObject);
 
     // const listNameVisibility = parseFormArray(
@@ -72,42 +90,55 @@ export const actions = {
       "readingActivityVisibility"
     );
 
-    const isPublic = formData.get("isPublic");
-    // console.log(isPublic);
+    // @ts-ignore
+    formDataObject["readingActivityVisibility"] = readingActivityVisibility;
 
-    if (isPublic != null) {
-      await prisma.account.update({
-        where: {
-          id: accountId,
-        },
-        data: {
-          isPublic: isPublic == "true",
-        },
-      });
-    }
+    const visibilitySchema = z.object({
+      globalVisibility: z.nativeEnum(VISIBILITY_TYPES).optional(),
+      readingActivityVisibility: z.array(
+        z.tuple([
+          z.nativeEnum(READING_ACTIVITY_TYPES),
+          z.nativeEnum(VISIBILITY_TYPES),
+        ])
+      ),
+    });
 
-    for (const list of readingActivityVisibility) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      const status = list[0];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      const visibility = list[1];
+    const result = visibilitySchema.safeParse(formDataObject);
+    if (result.success) {
+      const { globalVisibility, readingActivityVisibility } = result.data;
 
-      await prisma.readingActivityStatus.update({
-        where: {
-          status_accountId: {
-            status,
-            accountId,
+      if (globalVisibility != null) {
+        await prisma.account.update({
+          where: {
+            id: accountId,
           },
-        },
-        data: {
-          visibility,
-        },
-      });
+          data: {
+            visibility: globalVisibility,
+          },
+        });
+      }
+
+      for (const [status, visibility] of readingActivityVisibility) {
+        await prisma.readingActivityStatus.update({
+          where: {
+            status_accountId: {
+              status,
+              accountId,
+            },
+          },
+          data: {
+            visibility,
+          },
+        });
+      }
+
+      return { success: true };
     }
 
-    return { success: true };
+    return fail(400, {
+      success: false,
+      error: result.error.flatten().fieldErrors,
+    });
   },
 };
 
@@ -127,29 +158,3 @@ export const actions = {
 
 //   // return json({success: false})
 // }
-
-export async function load({ locals }: ServerLoadEvent) {
-  const account = await userAuth(await locals.auth());
-  // const lists = await prisma.bookList.findMany({
-  //   where: { accountId: account.id },
-  //   include: {
-  //     _count: {
-  //       select: {
-  //         books: true,
-  //       },
-  //     },
-  //   },
-  // });
-
-  const readingActivityLists = await prisma.readingActivityStatus.findMany({
-    where: { accountId: account.id },
-  });
-  // console.log("Reading Activity Lists:", readingActivityLists);
-
-  const isPublic = account.isPublic;
-
-  return {
-    globalVisibility: isPublic ? "public" : "private",
-    readingActivityLists,
-  };
-}

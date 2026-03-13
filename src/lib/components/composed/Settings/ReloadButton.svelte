@@ -8,7 +8,7 @@
   // @ts-ignore
   import RefreshIcon from "svelte-icons/io/IoMdRefresh.svelte";
 
-  import type { SSE_EVENT } from "../book/api/update_all/sse";
+  import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
   import { enhance } from "$app/forms";
   import LoadingSpinner from "$components/LoadingSpinner.svelte";

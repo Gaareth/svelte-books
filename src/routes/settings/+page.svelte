@@ -2,18 +2,27 @@
   import toast from "svelte-french-toast";
   import { twMerge } from "tailwind-merge";
 
-  import AddApiButton from "./AddApiButton.svelte";
-  import ApiResult from "./ApiResult.svelte";
-  import ReloadButton from "./ReloadButton.svelte";
+  import AddApiButton from "$components/composed/Settings/AddApiButton.svelte";
+  import ApiResult from "$components/composed/Settings/ApiResult.svelte";
+  import ReloadButton from "$components/composed/Settings/ReloadButton.svelte";
 
   import type { PageData } from "./$types.js";
-  import type { Visibility } from "../../prismaTypes";
-  import type { SSE_EVENT } from "../book/api/update_all/sse";
+  import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import ToggleGroup from "$lib/components/input/ToggleGroup.svelte";
-  import { capitalize } from "$lib/utils/utils";
+  import { capitalize, decapitalize } from "$lib/utils/utils";
+  import {
+    VISIBILITY_TYPES,
+    VISIBILITY_VALUES,
+    PRIVATE,
+    AUTHENTICATED,
+    UNLISTED,
+    PUBLIC,
+    type VisibilityType,
+  } from "$lib/constants/enums";
+  import { Visibility } from "$src/generated/prisma/enums.js";
 
   export let form;
   export let data: PageData;
@@ -34,12 +43,29 @@
   let allAsGlobal;
   $: allAsGlobal = data.readingActivityLists
     .filter((v) => v.visibility != null)
-    .every((v) => (v.visibility as Visibility) == data.globalVisibility);
+    .every((v) => (v.visibility as VisibilityType) == globalVisibility);
+
+  let globalVisibility = data.globalVisibility;
 
   $: {
     if (form?.success) {
       toast.success("Successfully applied changes");
     }
+  }
+
+  // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC];
+  $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, PUBLIC];
+
+  function changeAllVisiblities(ev: CustomEvent) {
+    const option = ev.detail;
+    for (let i = 0; i < data.readingActivityLists.length; i++) {
+      data.readingActivityLists[i].visibility = option;
+    }
+  }
+
+  async function resetForm() {
+    await invalidateAll();
+    globalVisibility = data.globalVisibility;
   }
 </script>
 
@@ -51,61 +77,74 @@
   <form method="POST" action="?/editVisibility" use:enhance>
     <div
       class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center">
-      <div>
+      <div class="max-w-52">
         <p>Global visibilty</p>
-        <p class="text-secondary text-base">
+        <p class="text-secondary text-base break-words">
           Applies to all lists as a fallback value.
-          {#if !allAsGlobal}
-            <span class="text-warning text-base hidden sm:inline">
-              Warning: Atleast one list is different.
-            </span>
-          {/if}
         </p>
       </div>
-      <ToggleGroup
-        options={["private", "public"]}
-        groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-        btnClass="w-20 px-4 py-1 dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
-        btnSelectedClass="dark:bg-slate-500 bg-gray-100"
-        on:select={(ev) => {
-          const option = ev.detail;
-          data.globalVisibility = option;
-          // data.lists = Array(data.lists.length).fill(option);
-          for (let i = 0; i < data.readingActivityLists.length; i++) {
-            data.readingActivityLists[i].visibility = option;
-          }
-        }}
-        defaultOption={data.globalVisibility == "private" ? 0 : 1} />
-      <input
-        type="hidden"
-        name="isPublic"
-        value={data.globalVisibility == "public"} />
+      <div>
+        <ToggleGroup
+          options={sortedSupportedVisibilites}
+          displayFn={capitalize}
+          btnClass="px-4 py-1 border border-s-0 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700 flex items-center gap-1 break-all"
+          btnSelectedClass="dark:bg-slate-700 bg-gray-50"
+          startClass="border-s rounded-s-md"
+          endClass="rounded-e-md"
+          bind:selectedOption={globalVisibility}
+          on:select={changeAllVisiblities}
+          defaultOption={globalVisibility == PRIVATE ? 0 : 1} />
+        <!-- <input
+          type="hidden"
+          name="isPublic"
+          value={data.globalVisibility == "public"} /> -->
+
+        <input type="hidden" name="globalVisibility" value={globalVisibility} />
+
+        <p class="text-secondary text-base">
+          Info:
+          {#if globalVisibility == PRIVATE}
+            Only you have access
+          {:else if globalVisibility == AUTHENTICATED}
+            Access requires an account
+          {:else if globalVisibility == PUBLIC}
+            Everyone has access
+          {:else if globalVisibility == UNLISTED}
+            Only people with the link have access
+          {:else}
+            Unknown visibility
+          {/if}
+        </p>
+
+        {#if !allAsGlobal}
+          <p class="text-warning text-base -mb-1">
+            Warning: Atleast one list is different.
+          </p>
+        {/if}
+      </div>
     </div>
 
-    <div class="flex items-center justify-between mt-4 mb-2">
+    <div class="mt-4 mb-2">
       <h3 class="text-2xl font-medium">Reading Activity Lists</h3>
-      {#if !allAsGlobal}
-        <span class="text-warning text-base inline sm:hidden">
-          Warning: Atleast one list is different.
-        </span>
-      {/if}
     </div>
     <div class="flex flex-col gap-2">
       {#each data.readingActivityLists as list, i}
         <div
           class={twMerge(
             "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",
-            data.readingActivityLists[i].visibility != data.globalVisibility &&
+            data.readingActivityLists[i].visibility != globalVisibility &&
               data.readingActivityLists[i].visibility &&
               "border-warning"
           )}>
           <p>{capitalize(list.status)}</p>
 
           <ToggleGroup
-            options={["private", "public"]}
-            groupClass="inline-flex border rounded-md dark:border-slate-500 dark:bg-slate-600"
-            btnClass="w-20 px-4 py-1 text-base dark:hover:bg-slate-500 hover:bg-gray-50 lowercase"
-            btnSelectedClass="dark:bg-slate-500 bg-gray-100"
+            options={sortedSupportedVisibilites}
+            displayFn={capitalize}
+            btnClass="px-4 py-1 border border-s-0 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700 flex items-center gap-1 break-all"
+            btnSelectedClass="dark:bg-slate-700 bg-gray-50"
+            startClass="border-s rounded-s-md"
+            endClass="rounded-e-md"
             deselectable={true}
             bind:selectedOption={data.readingActivityLists[i].visibility} />
           <input
@@ -116,12 +155,7 @@
       {/each}
     </div>
     <div class="mt-3 flex gap-2 justify-end">
-      <button
-        type="button"
-        class="btn-generic"
-        on:click={async () => {
-          await invalidateAll();
-        }}>
+      <button type="button" class="btn-generic" on:click={resetForm}>
         Cancel
       </button>
       <button type="submit" class="btn-primary-black w-36 flex justify-center">

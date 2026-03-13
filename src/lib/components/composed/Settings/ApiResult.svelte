@@ -7,7 +7,7 @@
   import type {
     settingsApiReloadResult,
     settingsApiCreateResult,
-  } from "./apidata";
+  } from "../../../../routes/settings/apidata";
 
   export let currentStatus: any;
   export let form: any;
