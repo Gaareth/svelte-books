@@ -128,11 +128,15 @@
   {books_displayed.length} results
 </h2>
 
-{#if entries.length <= 0}
-  <p>No books added at the moment :(</p>
-{:else if $searchStore.filtered.length <= 0}
-  <p>No books found matching your search :(</p>
-{/if}
+<p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
+  {#if entries.length <= 0 && isAuthorizedToModify}
+    No books added at the moment :(. Add one above!
+  {:else if entries.length <= 0}
+    No public books to display.
+  {:else if $searchStore.filtered.length <= 0}
+    No books found matching your search :(
+  {/if}
+</p>
 
 <div class="dark:bg-slate-800 bg-white">
   {#each books_displayed as entry (entry.id)}

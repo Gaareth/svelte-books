@@ -41,6 +41,10 @@
   <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
     {randomSentence}
   </p>
+{:else if readingActivities.length < 1}
+  <p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
+    No public active reading activities.
+  </p>
 {/if}
 
 <div class="dark:bg-slate-800 bg-white">

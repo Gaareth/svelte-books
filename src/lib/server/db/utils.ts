@@ -1,7 +1,5 @@
-import { getAccountByUsername } from "$lib/auth/auth";
-
 import {
-  Visibility,
+  type Account,
   type Prisma,
   type ReadingActivityType,
 } from "$prismaClient";
@@ -9,6 +7,8 @@ import {
 import { type queriedBookFull } from "$appTypes";
 import { prisma } from "$lib/server/prisma";
 import { sortReadingActivity } from "$lib/utils/utils";
+import type { Session } from "@auth/sveltekit";
+import { whereVisibilityPublicOrAuthenticatedOrAll } from "./prismaUtils";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
@@ -65,29 +65,17 @@ export async function loadBooks(
 }
 
 export async function getReadingActivity(
-  sessionAccountParams: GetAccountParams,
-  status: ReadingActivityType | undefined = undefined,
-  requestedAccountUsername?: string
+  requestedAccountId: string,
+  session: Session | Account | null,
+  returnAll: boolean = false,
+  status: ReadingActivityType | undefined = undefined
 ) {
-  const { accountId, accountUsername } = sessionAccountParams;
-  const requestedAccountId = requestedAccountUsername
-    ? await getAccountByUsername(requestedAccountUsername)
-    : accountId;
-
-  const whereClause = {
-    ...(accountId
-      ? { accountId }
-      : { account: { username: accountUsername as string } }),
-  };
-
   const readingActivity = await prisma.readingActivity.findMany({
     where: {
-      ...whereClause,
+      accountId: requestedAccountId,
       status: {
         status: status,
-        accountId: accountId,
-        visibility:
-          requestedAccountId === accountId ? undefined : Visibility.PUBLIC, // request all if owner, otherwise only public ones
+        ...whereVisibilityPublicOrAuthenticatedOrAll(session, returnAll),
       },
     },
     include: {

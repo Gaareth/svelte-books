@@ -1,4 +1,4 @@
-import { Visibility } from "$prismaClient";
+import { Visibility, type Account } from "$prismaClient";
 import type { Session } from "@auth/sveltekit";
 
 export function whereVisibilityPublicOrAuthenticated(session: Session | null) {
@@ -11,7 +11,7 @@ export function whereVisibilityPublicOrAuthenticated(session: Session | null) {
 }
 
 export function whereVisibilityPublicOrAuthenticatedOrAll(
-  session: Session | null,
+  session: Session | Account | null,
   returnAll: boolean
 ) {
   const wherePublicOrAuth = {

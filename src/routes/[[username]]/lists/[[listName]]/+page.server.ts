@@ -32,14 +32,17 @@ export async function load({ locals, params }: ServerLoadEvent) {
   );
 
   const username = params.username;
-  const readingActivity = await getReadingActivity(
-    { accountId: requestedAccount.id },
-    readingActivityStatus
-  );
 
   const isAuthorizedToModify =
     (sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin) ??
     false;
+
+  const readingActivity = await getReadingActivity(
+    requestedAccount.id,
+    sessionAccount,
+    isAuthorizedToModify,
+    readingActivityStatus
+  );
 
   return {
     readingActivity,

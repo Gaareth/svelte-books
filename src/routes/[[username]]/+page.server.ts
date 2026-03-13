@@ -21,16 +21,18 @@ export async function load({ locals, params }: ServerLoadEvent) {
   const isAuthorizedToModify =
     sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin;
 
-  const readingActivity = await getReadingActivity({
-    accountId: requestedAccount.id,
-  });
+  const readingActivity = await getReadingActivity(
+    requestedAccount.id,
+    sessionAccount,
+    isAuthorizedToModify
+  );
 
   const isCurrentlyReadingPublic =
-    isReadingActivityPublic(
+    (await isReadingActivityPublic(
       requestedAccount.id,
       sessionAccount,
       ReadingActivityType.READING
-    ) || isAuthorizedToModify;
+    )) || isAuthorizedToModify;
 
   return {
     isCurrentlyReadingPublic,
