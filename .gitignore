@@ -25,3 +25,5 @@ db-backups/
 gitleaks-report.json
 
 delete-all-github-images.sh
+
+embeddings/*

@@ -12,7 +12,8 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint .",
     "data-migration:add-optional-date": "node ./prisma/migrations/20241110174304_add_optional_date/data-migration.js",
-    "seed-initial": "tsx prisma/seed-initial.ts"
+    "seed-initial": "tsx prisma/seed-initial.ts",
+    "calculate-category-colors": "tsx src/categoryToColor/calculateVectors.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
@@ -56,6 +57,7 @@
     "@auth/sveltekit": "0.11.0",
     "@prisma/adapter-better-sqlite3": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@saehrimnir/druidjs": "^0.8.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@types/fuzzy-search": "^2.1.5",
     "argon2": "^0.41.1",
@@ -70,6 +72,7 @@
     "svelte-icons": "^2.1.0",
     "tailwind-merge": "^1.14.0",
     "uuid": "^11.0.3",
+    "word2vec": "^1.1.5",
     "zod": "^3.22.4"
   },
   "prisma": {

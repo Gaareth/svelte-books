@@ -11,7 +11,10 @@
 
   import { MAX_RATING } from "$lib/constants/constants";
 
-  import { type ReadingListItemType } from "$appTypes";
+  import {
+    type BookIncludeCategory,
+    type ReadingListItemType,
+  } from "$appTypes";
   import { formatShort } from "$components/input/DateSelector.svelte";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
@@ -20,6 +23,7 @@
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import BookActions from "./Actions/BookActions.svelte";
+  import { categoriesToColor } from "$src/categoryToColor/categoriesToColor";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;
@@ -49,14 +53,15 @@
     "bg-rose-600",
   ];
 
-  const getColor = (name: string, author: string) => {
-    const hash = hashCode(name + author);
-    let index = hash % colors.length;
-    if (index < 0) {
-      index += colors.length;
+  let accentColor: { hue: number; saturation: number };
+  $: {
+    const cats = book.bookApiData?.categories.map((cat) => cat.name);
+    if (!cats) {
+      accentColor = { hue: 0, saturation: 0 };
+    } else {
+      accentColor = categoriesToColor(cats);
     }
-    return colors[index];
-  };
+  }
 
   /**
    * Returns a hash code from a string
@@ -77,7 +82,7 @@
 </script>
 
 <AccentBarItemCard
-  barClass={getColor(book.name, book.author)}
+  accentStyle={`background-color: hsl(${accentColor.hue}, ${accentColor.saturation}%, 50%)`}
   wrapperClass={clsx(
     (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
       entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&
