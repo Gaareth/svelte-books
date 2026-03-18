@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   import toast from "svelte-french-toast";
 
@@ -36,6 +36,12 @@
     };
   });
 
+  onDestroy(() => {
+    if (evtSource) {
+      evtSource.close();
+    }
+  });
+
   export let currentStatus: SSE_EVENT | undefined;
 </script>
 
@@ -54,7 +60,9 @@
     return async ({ result, update }) => {
       update();
       loading = false;
-      evtSource.close();
+      if (evtSource) {
+        evtSource.close();
+      }
 
       // console.log(result);
       if (result === undefined) {
@@ -86,7 +94,7 @@
   }}>
   <div>
     <label class="flex items-center gap-2">
-      Connect all:
+      Connect all (also books with already an connection):
       <input type="checkbox" name="connect-all" class="" />
     </label>
     <p>Tries to connect all books with a matching google books api entry</p>

@@ -39,16 +39,27 @@ export const actions = {
 
     SSE_DATA[accountId] = { items: 0, msg: "", max: 0, id: "reload" };
 
-    const diffs = await updateData(accountId);
-    // console.log(SSE_DATA[accountId]);
+    try {
+      const diffs = await updateData(accountId);
+      // console.log(SSE_DATA[accountId]);
 
-    const response: settingsApiReloadResult = {
-      success: true,
-      ...diffs,
-    };
+      const response: settingsApiReloadResult = {
+        success: true,
+        ...diffs,
+      };
 
-    SSE_DATA[accountId].msg = "done";
-    return response;
+      SSE_DATA[accountId].msg = "done";
+      return response;
+    } catch (e: unknown) {
+      const response: settingsApiReloadResult = {
+        success: false,
+        diffs: [],
+        booksUpdated: 0,
+      };
+
+      SSE_DATA[accountId].msg = "done";
+      return response;
+    }
   },
 
   try_add: async ({ locals, request }) => {

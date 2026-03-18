@@ -35,6 +35,7 @@
   import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils/utils";
 
   import BookFullReadingActivity from "$components/composed/Book/BookFullReadingActivity.svelte";
+  import BookCategories from "$src/lib/components/composed/Book/BookCategories.svelte";
 
   export let data: PageData;
 
@@ -393,15 +394,7 @@
             {book.description ?? "No description available."}
           </p>
 
-          {#if (book.bookApiData?.categories ?? []).length > 0}
-            <div class="flex flex-wrap gap-1">
-              {#each book.bookApiData?.categories ?? [] as category}
-                <Pill className="dark:bg-slate-600">
-                  {category.name}
-                </Pill>
-              {/each}
-            </div>
-          {/if}
+          <BookCategories categories={book.bookApiData?.categories} />
         </div>
 
         <BookFullReadingActivity

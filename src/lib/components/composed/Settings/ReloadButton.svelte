@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   import toast from "svelte-french-toast";
 
@@ -35,6 +35,12 @@
       }
     };
   });
+
+  onDestroy(() => {
+    if (evtSource) {
+      evtSource.close();
+    }
+  });
 </script>
 
 <div>
@@ -53,7 +59,15 @@
       return async ({ result, update }) => {
         update();
         loading = false;
-        evtSource.close();
+        if (evtSource) {
+          evtSource.close();
+        }
+
+        // @ts-ignore
+        if (result?.data == null) {
+          toast.error("Failed to reload API data :(");
+          return;
+        }
 
         // @ts-ignore
         const { success, booksUpdated } = result.data;

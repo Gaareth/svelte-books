@@ -12,8 +12,7 @@ export async function queryBooksFull(
 
   const json = await (await fetch(url)).json();
   if (json.error !== undefined) {
-    console.log("Error fetching book API data with url: " + url);
-    return json;
+    throw Error(`Error fetching book API data: ${json.error.message}`);
   }
   return json.items;
 }
@@ -27,7 +26,7 @@ export async function queryBooks(query: string): Promise<queriedBook[]> {
   const json = await (await fetch(url)).json();
   // console.log(json);
   if (json.error !== undefined) {
-    return json;
+    throw Error(`Error fetching book API data: ${json.error.message}`);
   }
   return json.items;
 }
@@ -44,8 +43,7 @@ export async function getBookApiData(
 
   const json = await response.json();
   if (json.error !== undefined) {
-    console.log("Error fetching book API data with url: " + url);
-    return json;
+    throw Error(`Error fetching book API data: ${json.error.message}`);
   }
 
   return json;

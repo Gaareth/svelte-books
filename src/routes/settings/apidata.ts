@@ -6,7 +6,8 @@ import type { Book, BookApiData } from "$prismaClient";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { arrMax, getErrorMessage, zip } from "$lib/utils/utils";
+import { arrMax, delay, getErrorMessage, zip } from "$lib/utils/utils";
+import { GOOGLE_BOOKS_API_REQUEST_DELAY_MS } from "$src/lib/constants/constants";
 
 type bookDiff = {
   bookName: string;
@@ -37,7 +38,7 @@ export async function updateData(accountId: string) {
   SSE_DATA[accountId].max = bookDataList.length;
 
   for (const book of bookDataList) {
-    // await delay(1000);
+    await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
 
     const { id, title } = book;
     SSE_DATA[accountId].msg = "Updating: " + title;
@@ -48,15 +49,22 @@ export async function updateData(accountId: string) {
 
     // create non-existing categories
     for (const category_name of categories) {
-      // console.log(existingCategoryNames.includes(category_name));
-      // console.log(category_name);
-
       if (!existingCategoryNames.includes(category_name)) {
-        await prisma.bookCategory.create({
-          data: {
-            name: category_name,
-          },
-        });
+        try {
+          const createdCategory = await prisma.bookCategory.create({
+            data: {
+              name: category_name,
+            },
+          });
+          existingCategoryNames.push(createdCategory.name);
+        } catch (e: unknown) {
+          console.log(
+            "Error creating category: " +
+              category_name +
+              ", error: " +
+              getErrorMessage(e)
+          );
+        }
       }
     }
 
@@ -224,18 +232,11 @@ export async function createConnections(
   const errorsBooks: errorBooksType = [];
 
   for (const book of unconnectedBooks) {
-    console.log("book: " + book.name);
     SSE_DATA[accountId].msg = "Adding: " + book.name;
     SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
 
-    // try {
-    //   throw Error("oh no");
-    // } catch (e) {
-    //   errorsBooks.push({ book, error: getErrorMessage(e), volumeId: "4" });
-    // }
-
+    await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
     const res = await findVolumeId(book);
-    // console.log(res);
 
     if (res === undefined) {
       errorsBooks.push({
@@ -244,10 +245,10 @@ export async function createConnections(
         volumeId: undefined,
       });
     } else {
-      const { volumeId, score } = res;
-      console.log("Book: " + book.name + ", Score: " + score);
+      const { volumeId } = res;
 
       try {
+        await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
         createConnection(volumeId, book.id);
         // booksUpdated += 1;
       } catch (e) {
