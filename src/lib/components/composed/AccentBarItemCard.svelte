@@ -3,6 +3,7 @@
 
   export let wrapperClass = "";
   export let barClass = "";
+  export let accentStyle = "";
 </script>
 
 <div
@@ -17,7 +18,7 @@
       "min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 rounded-md",
       barClass
     )}
-    style="height: 98%;" />
+    style={`height: 98%; ${accentStyle}`} />
 
   <slot />
 </div>

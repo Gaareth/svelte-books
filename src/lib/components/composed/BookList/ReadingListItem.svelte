@@ -20,6 +20,7 @@
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import BookActions from "./Actions/BookActions.svelte";
+  import { categoriesToColor } from "$src/categoryToColor/colorMap";
 
   export let entry: ReadingListItemType;
   export let isAuthorizedToModify = false;
@@ -58,6 +59,16 @@
     return colors[index];
   };
 
+  let accentColor: { h: number; s: number; l: number } = { h: 0, s: 0, l: 0 };
+  $: {
+    const cats = book.bookApiData?.categories.map((cat) => cat.name);
+    if (!cats) {
+      accentColor = { h: 0, s: 0, l: 0 };
+    } else {
+      accentColor = categoriesToColor(cats);
+    }
+  }
+
   /**
    * Returns a hash code from a string
    * @param  {String} str The string to hash.
@@ -76,8 +87,12 @@
   }
 </script>
 
+<!-- barClass={getColor(book.name, book.author)} -->
+
 <AccentBarItemCard
-  barClass={getColor(book.name, book.author)}
+  accentStyle={`background-color: hsl(${accentColor.h * 360}, ${
+    accentColor.s * 100
+  }%, 50%);`}
   wrapperClass={clsx(
     (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
       entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&

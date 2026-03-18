@@ -317,3 +317,13 @@ export function getMaxResolutionImage(apiData: BookApiData | null) {
 export function deepClone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
+
+export function getRandomIntInclusive(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function getRandom(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
