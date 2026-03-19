@@ -62,11 +62,8 @@
   let accentColor: { h: number; s: number; l: number } = { h: 0, s: 0, l: 0 };
   $: {
     const cats = book.bookApiData?.categories.map((cat) => cat.name);
-    if (!cats) {
-      accentColor = { h: 0, s: 0, l: 0 };
-    } else {
-      accentColor = categoriesToColor(cats);
-    }
+
+    accentColor = categoriesToColor(cats);
   }
 
   /**

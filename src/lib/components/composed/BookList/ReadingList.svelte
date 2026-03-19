@@ -128,7 +128,7 @@
   {books_displayed.length} results
 </h2>
 
-<p class="text-center text-gray-600 dark:text-slate-300 min-h-8">
+<p class="text-center text-gray-600 dark:text-slate-300">
   {#if entries.length <= 0 && isAuthorizedToModify}
     No books added at the moment :(. Add one above!
   {:else if entries.length <= 0}

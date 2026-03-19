@@ -40,18 +40,27 @@ function averageNumbers(numbers: number[]) {
   return sum / numbers.length;
 }
 
-export function categoriesToColor(categories: string[]) {
+export function categoriesToColor(categories: string[] | undefined) {
+  // TODO: choose nicer colors
+  const randomColor = {
+    h: getRandom(0, 1),
+    s: getRandomIntInclusive(50, 100) / 100,
+    l: 50,
+  };
+
+  if (!categories || categories.length === 0) {
+    return randomColor;
+  }
+
   const { hues, saturations } = extract(categories);
   const avgHue = averageNumbers(hues);
   const avgSaturation = averageNumbers(saturations);
 
   if (isNaN(avgHue) || isNaN(avgSaturation)) {
-    return {
-      h: getRandom(0, 1),
-      s: getRandomIntInclusive(50, 100) / 100,
-      l: 50,
-    };
+    return randomColor;
   }
+
+  console.log(categories);
 
   return {
     h: avgHue,
