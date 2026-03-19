@@ -6,12 +6,13 @@
 
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
 
-  import type { queriedBook } from "$appTypes";
+  import type { queriedBook, ReadingActivityList } from "$appTypes";
+  import { twMerge } from "tailwind-merge";
+  import { getReadingActivityColor } from "$src/lib/constants/constants";
+  import clsx from "clsx";
+  import { capitalize, sortReadingActivity } from "$src/lib/utils/utils";
 
-  // const queryBooksDebug = async () => {
-  //   return (await fetch(`book/api/list/?query="Der dunkle wald"`)).json();
-  // };
-
+  export let readingActivities: ReadingActivityList[] = [];
   export let label: string;
   export let query: string | undefined = undefined;
   let queriedBooksPromise: Promise<queriedBook[]>;
@@ -31,7 +32,6 @@
 
   const handleClick = async () => {
     queriedBooksPromise = queryBooks();
-    // console.log(await queryBooks()); // TODO: remove
   };
 
   export let selectedBookId: string | undefined;
@@ -39,6 +39,22 @@
   export let dispatch: EventDispatcher<any>;
 
   //TODO: make tabbable, the radio button
+
+  function findActivities(book: queriedBook) {
+    return readingActivities.filter(
+      (a) => a.book.name === book.volumeInfo.title
+    );
+  }
+
+  function getColor(book: queriedBook) {
+    let activity = findActivities(book).sort(sortReadingActivity)[0];
+
+    if (activity?.status.status) {
+      return getReadingActivityColor(activity.status.status);
+    } else {
+      return "";
+    }
+  }
 </script>
 
 <div {...$$restProps}>
@@ -65,7 +81,9 @@
         <BookApiSkeleton />
       {:then queriedBooks}
         {#each queriedBooks as book}
-          <label class="item-border p-2 my-2 flex justify-between items-center">
+          <label
+            style={`border-color: ${getColor(book)}`}
+            class="item-border p-2 my-2 grid grid-cols-[1fr_auto] sm:flex justify-between items-center gap-1">
             <div class="flex items-center gap-4">
               <div>
                 {#if book.volumeInfo.imageLinks?.smallThumbnail}
@@ -84,6 +102,7 @@
               <div class="flex flex-col">
                 <p class="text-base">
                   {book.volumeInfo.title}
+
                   {#if book.volumeInfo.subtitle}
                     ({book.volumeInfo.subtitle})
                   {/if}
@@ -93,6 +112,17 @@
                 </p>
               </div>
             </div>
+
+            <div class="flex gap-1 col-span-2 row-start-2">
+              {#each findActivities(book) as activity}
+                <p
+                  style={`background-color: ${getColor(book)}`}
+                  class="rounded-md text-sm font-medium px-1 text-white/90 uppercase">
+                  {capitalize(activity.status.status)}
+                </p>
+              {/each}
+            </div>
+
             <div class="flex items-center gap-2">
               <input
                 type="radio"

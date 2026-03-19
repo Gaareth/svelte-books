@@ -23,7 +23,6 @@ const transformSchema = z.object({
 async function transformAddCurrentDate(
   accountId: string,
   readingActivityId: number,
-  targetStatus: ReadingActivityStatusType,
   targetReadingActivityStatusId: number
 ) {
   const now = new Date();
@@ -136,7 +135,6 @@ export async function POST(req: RequestEvent) {
       newReadingActivity = await transformAddCurrentDate(
         accountId,
         readingActivityId,
-        targetStatus,
         targetReadingActivityStatusId
       );
       break;

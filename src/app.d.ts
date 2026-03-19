@@ -51,6 +51,26 @@ export type ReadingActivityWithStatus = Prisma.ReadingActivityGetPayload<{
   include: { status: true };
 }>;
 
+export type ReadingActivityList = Prisma.ReadingActivityGetPayload<{
+  include: {
+    status: true;
+    dateStarted: true;
+    dateFinished: true;
+    rating: true;
+    account: true;
+    book: {
+      include: {
+        bookList: true;
+        bookApiData: {
+          include: {
+            categories: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
 export type BookDate = Prisma.BookGetPayload<{
   include: {
     readingStatus: { include: { dateStarted: true; dateFinished: true } };

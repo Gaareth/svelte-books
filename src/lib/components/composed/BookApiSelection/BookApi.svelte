@@ -5,7 +5,7 @@
   import BookApiConfirm from "./BookApiConfirm.svelte";
   import BookApiSelection from "./BookApiSelection.svelte";
 
-  import type { queriedBookFull } from "$appTypes";
+  import type { queriedBookFull, ReadingActivityList } from "$appTypes";
 
   export let volumeId: string | undefined = undefined;
   export let dispatch: EventDispatcher<any> = createEventDispatcher();
@@ -15,6 +15,7 @@
 
   export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
   export let label: string;
+  export let readingActivities: ReadingActivityList[] = [];
 
   $: {
     if (volumeId !== undefined && apiBookSelected) {
@@ -36,6 +37,7 @@
 <div hidden={apiBookSelected}>
   <BookApiSelection
     {label}
+    {readingActivities}
     class="my-2"
     bind:selectedBookId={volumeId}
     bind:apiBookSelected

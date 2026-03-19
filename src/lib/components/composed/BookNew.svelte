@@ -21,7 +21,7 @@
   import TabPanel from "$components/composed/Tab/TabPanel.svelte";
   import TabPanels from "$components/composed/Tab/TabPanels.svelte";
   import ToggleGroup from "$components/input/ToggleGroup.svelte";
-  import { decapitalize, slideHeight } from "$utils/utils";
+  import { capitalize, decapitalize, slideHeight } from "$utils/utils";
 
   import type {
     BookOwnership,
@@ -30,7 +30,7 @@
   } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
-  import { type queriedBookFull } from "$appTypes";
+  import { type queriedBookFull, type ReadingActivityList } from "$appTypes";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import OwnershipForm from "./OwnershipForm.svelte";
 
@@ -49,9 +49,7 @@
 
   export let readingStatus: CreatableReadingStatus = "read";
 
-  export let readingActivities: Prisma.ReadingActivityGetPayload<{
-    include: { book: { include: { bookList: true } } };
-  }>[];
+  export let readingActivities: ReadingActivityList[];
 
   let authors: string[] = readingActivities.map((e) => e.book.author);
 
@@ -154,6 +152,9 @@
   });
 
   let showMore = false;
+
+  let duplicateEntry: (typeof readingActivities)[0] | undefined;
+  $: duplicateEntry = readingActivities.find((e) => e.book.name === name);
 </script>
 
 <div
@@ -203,6 +204,7 @@
               <!-- <p class="-mb-1">Search using google books</p> -->
               <BookApi
                 label="Search using google books"
+                {readingActivities}
                 bind:volumeId
                 bind:getBookPromise
                 bind:query={api_query}
@@ -244,9 +246,12 @@
           <hr class="dark:border-slate-500 my-5" />
 
           <div class="grid grid-cols-2 gap-y-2">
-            {#if readingActivities.some((e) => e.book.name === name)}
-              <p class="text-warning text-base col-span-2 text-center">
-                Warning: A book with this name is already in this list. <br />
+            {#if duplicateEntry}
+              <p class="text-warning text-base col-span-2 text-center mb-3">
+                Warning: A book with this name is already in a list ({capitalize(
+                  duplicateEntry.status.status
+                )}).
+                <br />
                 Continuing will add a new reading activity to it.
               </p>
             {/if}

@@ -12,7 +12,10 @@
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   import ReadingActivityForm from "../ReadingActivity/ReadingActivityForm.svelte";
-  import { MAX_RATING } from "$lib/constants/constants";
+  import {
+    getReadingActivityColor,
+    MAX_RATING,
+  } from "$lib/constants/constants";
 
   import { invalidateAll } from "$app/navigation";
   import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
@@ -53,31 +56,6 @@
   let editExpanded = false;
   let deleteExpanded = false;
 
-  const getColor = (statuss: string) => {
-    const status = statuss as ReadingActivityStatusType;
-
-    switch (status) {
-      case READING_ACTIVITY_TYPES.READING:
-        return "bg-blue-500";
-      case READING_ACTIVITY_TYPES.DID_NOT_FINISH:
-        return "bg-red-600";
-      case READING_ACTIVITY_TYPES.FINISHED:
-        return "bg-green-500";
-      case READING_ACTIVITY_TYPES.PAUSED:
-        return "bg-gray-500";
-      case READING_ACTIVITY_TYPES.TO_READ:
-        return "bg-sky-300";
-      case READING_ACTIVITY_TYPES.ACQUIRED:
-        return "bg-purple-500";
-      default: {
-        // This will cause a compile-time error if a case is missing
-        // by ensuring 'never' type is handled
-        const exhaustiveCheck: never = status;
-        throw new Error(`Unhandled status: ${status}`);
-      }
-    }
-  };
-
   $: tensionGraph =
     entry.storyGraphs.length > 0
       ? {
@@ -104,7 +82,8 @@
 
 <AccentBarItemCard
   wrapperClass=""
-  barClass={getColor(entry.status.status)}
+  accentStyle={"background-color: " +
+    getReadingActivityColor(entry.status.status)}
   role="button"
   tabindex="0"
   on:dblclick={() => {

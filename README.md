@@ -39,15 +39,14 @@ Then run one of:
 
 ## Todos
 
+- rework readme
+
 - ownership
 
   - do you own the book in new book
   - on the acquired activity form, add ownership info
 
-- unify readinglistitem and reviewlistitem
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
-
-- when searching new book, mark existing ones
 
 <!-- - currently reading filter to only the latest ones -->
 
@@ -57,12 +56,21 @@ Then run one of:
 
 - color bar, similar color for similar books
 
-- more finegrained privacy/visibility settings: e.g., private books, private reading activities
+  - revisit some time
+
+- more finegrained privacy/visibility settings:
+
+  - private books
+
 - tension stats draw yourself - check
+
   - let user add more graphs
-- auto google api connection
+
 - add or remove google api
+
 - update googleapi values
+
+  - especially categories
 
 - crud for lists
 
@@ -74,8 +82,9 @@ Then run one of:
   - similarly for to-read to started! or finished?
   - avg time from to-read to acquired
 
-- fix last month selector when is january?
-- fix optionaldate unique
+- did i fix them already?
+  - fix last month selector when is january?
+  - fix optionaldate unique
 
 # Tech-Stack
 
