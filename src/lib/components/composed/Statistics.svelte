@@ -11,6 +11,7 @@
   import Stats from "$components/composed/Stats.svelte";
   import {
     ACQUIRED,
+    READING,
     READING_ACTIVITY_TYPES,
     TO_READ,
   } from "$lib/constants/enums";
@@ -28,6 +29,9 @@
     get_reading_duration,
   } from "$src/lib/utils/statisticUtils";
   import DynamicArrow from "$src/lib/icons/DynamicArrow.svelte";
+  import { getReadingActivityColor } from "$src/lib/constants/constants";
+  import { twMerge } from "tailwind-merge";
+  import clsx from "clsx";
 
   type ActivityStatistics = ReadingActivityList;
 
@@ -187,7 +191,8 @@
   </ul>
 </Modal>
 
-<div class="flex flex-wrap gap-1 sm:gap-2 mb-2 stats-wrapper">
+<div
+  class="grid grid-rows-2 grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-2 stats-wrapper">
   {#if selected_option == "books"}
     <Stats
       name="total books read"
@@ -254,10 +259,11 @@
   {/if}
 </div>
 
-<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2 mb-2">
+<div
+  class="grid grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-12 gap-2 mb-2">
   <Stats
     name="average reading time"
-    class="!bg-transparent backdrop-blur"
+    class="!bg-transparent backdrop-blur col-span-full sm:col-span-5"
     showStatsButton={true}
     on:statsClick={() => (showReadingDurationModal = true)}>
     <p class="font-bold self-center text-5xl flex flex-col" slot="value">
@@ -270,31 +276,46 @@
 
   <Stats
     name="average acquisition time (days)"
-    class="!bg-transparent backdrop-blur">
-    <div slot="value" class="flex flex-col w-full gap-1">
+    class="!bg-transparent backdrop-blur sm:col-span-7">
+    <div slot="value" class="flex flex-col w-full gap-1.5">
       <div class="flex items-end gap-3 justify-between break-keep">
-        To-Read
+        <p>To-Read</p>
+
         <div class="flex flex-col text-center">
-          {avg_acquisition_time.avg_to_read_to_acquired_days}
+          <p class="-mb-1 font-bold">
+            {avg_acquisition_time.avg_to_read_to_acquired_days}
+          </p>
           <div>
-            <DynamicArrow />
+            <DynamicArrow
+              minThickness={4}
+              colorStart={getReadingActivityColor(TO_READ)}
+              colorEnd={getReadingActivityColor(ACQUIRED)} />
           </div>
         </div>
 
-        Acquired
+        <p>Acquired</p>
 
         <div class="flex flex-col text-center">
-          {avg_acquisition_time.avg_acquired_to_reading_days}
-          <DynamicArrow />
+          <p class="-mb-1 font-bold">
+            {avg_acquisition_time.avg_acquired_to_reading_days}
+          </p>
+          <DynamicArrow
+            minThickness={4}
+            colorStart={getReadingActivityColor(ACQUIRED)}
+            colorEnd={getReadingActivityColor(READING)} />
         </div>
 
-        Reading
+        <p>Reading</p>
       </div>
 
-      <div class="text-center leading-tight">
-        {avg_acquisition_time.avg_to_read_to_reading_days}
-
-        <DynamicArrow thicknessRatio={0.008} />
+      <div class="text-center">
+        <p class="-mb-1 font-bold">
+          {avg_acquisition_time.avg_to_read_to_reading_days}
+        </p>
+        <DynamicArrow
+          maxThickness={1.5}
+          colorStart={getReadingActivityColor(TO_READ)}
+          colorEnd={getReadingActivityColor(READING)} />
       </div>
     </div>
   </Stats>
