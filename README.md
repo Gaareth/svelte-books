@@ -83,6 +83,9 @@ Then run one of:
   - fix optionaldate unique
 
 - reading activity icons?
+- acquired -> reading, maybe only count if book was wanted (ie. was in to-read)
+- remove split of bookapidata
+- input ui number field bigger step buttons
 
 # Tech-Stack
 
