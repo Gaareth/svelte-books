@@ -38,6 +38,16 @@
   let stars = entry?.rating?.stars;
   let readingStatus = entry?.status.status;
 
+  let prevShowModal = false;
+
+  $: {
+    if (showModal && !prevShowModal) {
+      readingStatus = entry?.status.status;
+    }
+
+    prevShowModal = showModal;
+  }
+
   $: showRating = shouldShowRating(readingStatus);
   $: showFinishedDate = shouldShowFinishedDate(readingStatus);
   $: showStartedDate = shouldShowStartedDate(readingStatus);

@@ -1,5 +1,4 @@
 import colorMapJSON from "$src/categoryToColor/colorMap.json";
-import { getRandom, getRandomIntInclusive } from "$src/lib/utils/utils";
 
 const colorMap = colorMapJSON as Record<
   string,
@@ -42,14 +41,15 @@ function averageNumbers(numbers: number[]) {
 
 export function categoriesToColor(categories: string[] | undefined) {
   // TODO: choose nicer colors
-  const randomColor = {
-    h: getRandom(0, 1),
-    s: getRandomIntInclusive(50, 100) / 100,
-    l: 50,
-  };
+  // const randomColor = {
+  //   h: getRandom(0, 1),
+  //   s: getRandomIntInclusive(50, 100) / 100,
+  //   l: 50,
+  // };
 
   if (!categories || categories.length === 0) {
-    return randomColor;
+    // return randomColor;
+    return null;
   }
 
   const { hues, saturations } = extract(categories);
@@ -57,7 +57,7 @@ export function categoriesToColor(categories: string[] | undefined) {
   const avgSaturation = averageNumbers(saturations);
 
   if (isNaN(avgHue) || isNaN(avgSaturation)) {
-    return randomColor;
+    return null;
   }
 
   console.log(categories);

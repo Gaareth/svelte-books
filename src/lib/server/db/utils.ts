@@ -83,7 +83,12 @@ export async function getReadingActivity(
       dateStarted: true,
       dateFinished: true,
       rating: true,
-      account: true,
+      account: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
       book: {
         include: {
           bookList: true,

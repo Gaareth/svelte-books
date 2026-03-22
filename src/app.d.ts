@@ -57,7 +57,9 @@ export type ReadingActivityList = Prisma.ReadingActivityGetPayload<{
     dateStarted: true;
     dateFinished: true;
     rating: true;
-    account: true;
+    account: {
+      select: typeof publicAccountSelect;
+    };
     book: {
       include: {
         bookList: true;
@@ -90,6 +92,12 @@ export type BookListItemType = Prisma.BookGetPayload<{
   };
 }>;
 
+const publicAccountSelect = {
+  id: true,
+  username: true,
+  // visibility: true,
+};
+
 export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
   include: {
     rating: true;
@@ -105,7 +113,9 @@ export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
     };
     dateStarted: true;
     dateFinished: true;
-    account: true;
+    account: {
+      select: typeof publicAccountSelect;
+    };
   };
 }>;
 

@@ -190,6 +190,13 @@ export function sortReadingActivity(
   return (date_a - date_b) * -1;
 }
 
+export function sortReadingActivityReversed(
+  a: ReadingActivityWithDates,
+  b: ReadingActivityWithDates
+) {
+  return sortReadingActivity(a, b) * -1;
+}
+
 export const replaceStateWithQuery = (values: Record<string, string>) => {
   const url = new URL(window.location.toString());
   for (const [k, v] of Object.entries(values)) {

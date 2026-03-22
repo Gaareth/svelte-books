@@ -35,19 +35,34 @@
 
   const book_url = encodeURIComponent(entry.book.name);
 
-  const colors = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-lime-500",
-    "bg-green-600",
-    "bg-emerald-500",
-    "bg-teal-600",
-    "bg-cyan-400",
-    "bg-blue-600",
-    "bg-indigo-500",
-    "bg-violet-600",
-    "bg-fuchsia-600",
-    "bg-rose-600",
+  // const colors = [
+  //   "bg-red-500",
+  //   "bg-orange-500",
+  //   "bg-lime-500",
+  //   "bg-green-600",
+  //   "bg-emerald-500",
+  //   "bg-teal-600",
+  //   "bg-cyan-400",
+  //   "bg-blue-600",
+  //   "bg-indigo-500",
+  //   "bg-violet-600",
+  //   "bg-fuchsia-600",
+  //   "bg-rose-600",
+  // ];
+
+  const colors: { h: number; s: number; l: number }[] = [
+    { h: 0.0, s: 0.84, l: 0.6 }, // red-500
+    { h: 0.067, s: 0.95, l: 0.53 }, // orange-500
+    { h: 0.233, s: 0.81, l: 0.44 }, // lime-500
+    { h: 0.394, s: 0.71, l: 0.45 }, // green-600
+    { h: 0.444, s: 0.84, l: 0.39 }, // emerald-500
+    { h: 0.481, s: 0.8, l: 0.36 }, // teal-600
+    { h: 0.525, s: 0.94, l: 0.43 }, // cyan-400
+    { h: 0.603, s: 0.91, l: 0.6 }, // blue-600
+    { h: 0.664, s: 0.84, l: 0.67 }, // indigo-500
+    { h: 0.728, s: 0.83, l: 0.58 }, // violet-600
+    { h: 0.811, s: 0.84, l: 0.61 }, // fuchsia-600
+    { h: 0.961, s: 0.87, l: 0.61 }, // rose-600
   ];
 
   const getColor = (name: string, author: string) => {
@@ -63,7 +78,7 @@
   $: {
     const cats = book.bookApiData?.categories.map((cat) => cat.name);
 
-    accentColor = categoriesToColor(cats);
+    accentColor = categoriesToColor(cats) ?? getColor(book.name, book.author);
   }
 
   /**

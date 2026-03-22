@@ -26,6 +26,9 @@ export const READING_ACTIVITY_TYPES = {
   ACQUIRED: "ACQUIRED",
 } as const satisfies { [K in ReadingActivityType]: K };
 
+export const { TO_READ, READING, FINISHED, PAUSED, DID_NOT_FINISH, ACQUIRED } =
+  READING_ACTIVITY_TYPES;
+
 export type VisibilityType = keyof typeof VISIBILITY_TYPES;
 export type ReadingActivityStatusType = keyof typeof READING_ACTIVITY_TYPES;
 

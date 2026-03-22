@@ -5,7 +5,6 @@
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";
-  import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import {
     dateToYYYY_MM_DD,
     dateDiffFormatted,

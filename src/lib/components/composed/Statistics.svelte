@@ -9,28 +9,27 @@
   import Words from "$lib/icons/words.svelte";
   import Modal from "$components/Modal.svelte";
   import Stats from "$components/composed/Stats.svelte";
-  import { sum } from "$lib/utils/utils";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import {
+    ACQUIRED,
+    READING_ACTIVITY_TYPES,
+    TO_READ,
+  } from "$lib/constants/enums";
   import ToggleGroup from "$components/input/ToggleGroup.svelte";
+  import type { ReadingActivityList } from "$src/app";
+  import {
+    books_read_per_month,
+    books_read_per_year,
+    calc_most_read_authors,
+    calc_most_read_categories,
+    count_pages,
+    count_words,
+    get_average_acquisition_time,
+    get_average_time_til_status,
+    get_reading_duration,
+  } from "$src/lib/utils/statisticUtils";
+  import DynamicArrow from "$src/lib/icons/DynamicArrow.svelte";
 
-  type ActivityStatistics = Prisma.ReadingActivityGetPayload<{
-    include: {
-      status: true;
-      dateStarted: true;
-      dateFinished: true;
-      rating: true;
-      book: {
-        include: {
-          bookList: true;
-          bookApiData: {
-            include: {
-              categories: true;
-            };
-          };
-        };
-      };
-    };
-  }>;
+  type ActivityStatistics = ReadingActivityList;
 
   export let readingActivities: ActivityStatistics[] = [];
 
@@ -39,40 +38,9 @@
     (a) => a.status?.status === READING_ACTIVITY_TYPES.FINISHED
   );
 
-  function calc_most_read_categories(
-    entries: ActivityStatistics[]
-  ): [string, number][] {
-    const category_count_map = new Map<string, number>();
-    entries.forEach((entry) => {
-      entry.book.bookApiData?.categories.forEach(({ name }) => {
-        category_count_map.set(name, (category_count_map.get(name) || 0) + 1);
-      });
-    });
-    return Array.from(category_count_map).sort(([, a], [, b]) => b - a);
-  }
-
   $: most_read_categories = calc_most_read_categories(
     readingActivitiesFinished
   );
-
-  const AVERAGE_NUM_WORDS_PER_PAGE = 250;
-  const AVERAGE_NUM_PAGES_PER_BOOK = 350;
-
-  const count_pages = (entries: ActivityStatistics[]) =>
-    sum(
-      entries.map(
-        (e) => e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK
-      )
-    );
-
-  const count_words = (entries: ActivityStatistics[]) =>
-    sum(
-      entries.map(
-        (e) =>
-          (e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK) *
-          (e.book.wordsPerPage ?? AVERAGE_NUM_WORDS_PER_PAGE)
-      )
-    );
 
   $: books_without_pagecount = readingActivitiesFinished.filter(
     (e) => e.book.bookApiData?.pageCount == null
@@ -96,21 +64,11 @@
   let showModal = false;
   let showModalCats = false;
   let showModalAuthors = false;
+  let showReadingDurationModal = false;
+
   let selected_option: "books" | "pages" | "words" = "books";
 
   $: now = new Date();
-
-  const books_read_per_month = (
-    month: number,
-    year: number,
-    activities: ActivityStatistics[]
-  ) =>
-    activities.filter(
-      (e) =>
-        e.dateFinished?.year === year &&
-        e.dateFinished?.month !== null &&
-        e.dateFinished.month === (month === 0 ? 12 : month)
-    );
 
   $: books_this_month = books_read_per_month(
     now.getMonth() + 1,
@@ -129,11 +87,6 @@
   $: pages_last_month = count_pages(books_last_month);
   $: words_last_month = count_words(books_last_month);
 
-  const books_read_per_year = (
-    year: number,
-    activities: ActivityStatistics[]
-  ) => activities.filter((e) => e.dateFinished?.year === year);
-
   $: books_this_year = books_read_per_year(
     now.getFullYear(),
     readingActivitiesFinished
@@ -147,16 +100,25 @@
   $: pages_last_year = count_pages(books_last_year);
   $: words_last_year = count_words(books_last_year);
 
-  const calc_most_read_authors = (entries: ActivityStatistics[]) => {
-    const author_occur: Record<string, number> = {};
-    entries.forEach((e) => {
-      const author = e.book.author;
-      author_occur[author] = (author_occur[author] || 0) + 1;
-    });
-    return Object.entries(author_occur).sort(([, a], [, b]) => b - a);
-  };
-
   $: most_read_authors = calc_most_read_authors(readingActivitiesFinished);
+
+  // let reading_duration;
+  $: reading_duration = get_reading_duration(readingActivities);
+  $: reading_duration_histogram = reading_duration.histogram_ms.map(
+    ([name, duration_ms]) =>
+      [name, duration_ms / (1000 * 60 * 60 * 24)] as [string, number]
+  ); // convert ms to days
+
+  $: reading_duration_average_days = (
+    reading_duration.averageDuration_ms /
+    (1000 * 60 * 60 * 24)
+  ).toFixed(2);
+  $: reading_duration_total_days = (
+    reading_duration.totalDuration_ms /
+    (1000 * 60 * 60 * 24)
+  ).toFixed(2);
+
+  $: avg_acquisition_time = get_average_acquisition_time(readingActivities);
 </script>
 
 <div
@@ -292,22 +254,60 @@
   {/if}
 </div>
 
+<div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2 mb-2">
+  <Stats
+    name="average reading time"
+    class="!bg-transparent backdrop-blur"
+    showStatsButton={true}
+    on:statsClick={() => (showReadingDurationModal = true)}>
+    <p class="font-bold self-center text-5xl flex flex-col" slot="value">
+      {reading_duration_average_days} days
+      <span class="text-secondary text-base">
+        {reading_duration_total_days} total days
+      </span>
+    </p>
+  </Stats>
+
+  <Stats
+    name="average acquisition time (days)"
+    class="!bg-transparent backdrop-blur">
+    <div slot="value" class="flex flex-col w-full gap-1">
+      <div class="flex items-end gap-3 justify-between break-keep">
+        To-Read
+        <div class="flex flex-col text-center">
+          {avg_acquisition_time.avg_to_read_to_acquired_days}
+          <div>
+            <DynamicArrow />
+          </div>
+        </div>
+
+        Acquired
+
+        <div class="flex flex-col text-center">
+          {avg_acquisition_time.avg_acquired_to_reading_days}
+          <DynamicArrow />
+        </div>
+
+        Reading
+      </div>
+
+      <div class="text-center leading-tight">
+        {avg_acquisition_time.avg_to_read_to_reading_days}
+
+        <DynamicArrow thicknessRatio={0.008} />
+      </div>
+    </div>
+  </Stats>
+</div>
+
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">
   {#if readingActivitiesFinished.length > 0}
     <Stats
+      name="most read author"
       value={most_read_authors[0][0] + " (" + most_read_authors[0][1] + ")"}
-      class="!bg-transparent backdrop-blur">
-      <div class="flex justify-between" slot="name">
-        <p class="text-gray-500 dark:text-gray-400 text-base">
-          most read author
-        </p>
-        <button
-          class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-          on:click={() => (showModalAuthors = true)}>
-          <span class="w-5 block"><IoIosStats /></span>
-        </button>
-      </div>
-    </Stats>
+      class="!bg-transparent backdrop-blur"
+      showStatsButton={true}
+      on:statsClick={() => (showModalAuthors = true)} />
   {/if}
   {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
     <Stats
@@ -315,18 +315,10 @@
         " (" +
         most_read_categories[0][1] +
         ")"}
-      class="!bg-transparent backdrop-blur">
-      <div class="flex justify-between" slot="name">
-        <p class="text-gray-500 dark:text-gray-400 text-base">
-          most read genre/category
-        </p>
-        <button
-          class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-          on:click={() => (showModalCats = true)}>
-          <span class="w-5 block"><IoIosStats /></span>
-        </button>
-      </div>
-    </Stats>
+      name="most read genre/category"
+      showStatsButton={true}
+      on:statsClick={() => (showModalCats = true)}
+      class="!bg-transparent backdrop-blur" />
   {/if}
 </div>
 
@@ -344,6 +336,15 @@
   </div>
 
   <Charts data={most_read_authors} />
+</Modal>
+
+<Modal bind:showModal={showReadingDurationModal} className="w-[900px]">
+  <div slot="header">
+    <p class="font-medium sm:text-lg">Reading Duration</p>
+  </div>
+
+  <!-- TODO: format as hours if less than a day, or just add hours to days  -->
+  <Charts data={reading_duration_histogram} label="days from start to finish" />
 </Modal>
 
 <!-- <style>

@@ -1,16 +1,23 @@
 <script lang="ts">
   import clsx from "clsx";
+  import { createEventDispatcher } from "svelte";
   //@ts-ignore
   import IoIosArrowDown from "svelte-icons/io/IoIosArrowDown.svelte";
   //@ts-ignore
   import IoIosArrowUp from "svelte-icons/io/IoIosArrowUp.svelte";
   //@ts-ignore
   import IoIosRemove from "svelte-icons/io/IoIosRemove.svelte";
+  //@ts-ignore
+  import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
+
   import { twMerge } from "tailwind-merge";
 
   export let name: string | undefined = undefined;
   export let value: number | string | undefined = undefined;
   export let last_value: typeof value | undefined = undefined;
+  export let showStatsButton = false;
+
+  const dispatch = createEventDispatcher();
 </script>
 
 <div
@@ -19,7 +26,20 @@
     $$restProps.class
   )}>
   <slot name="name">
-    <p class="text-gray-500 dark:text-gray-400 text-base">{name}</p>
+    <div class="flex justify-between">
+      <p class="text-gray-500 dark:text-gray-400 text-base">
+        {name}
+      </p>
+      <slot name="statsButton">
+        {#if showStatsButton}
+          <button
+            class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
+            on:click={() => dispatch("statsClick")}>
+            <span class="w-5 block"><IoIosStats /></span>
+          </button>
+        {/if}
+      </slot>
+    </div>
   </slot>
 
   <div class="flex gap-2 min-h-[50px] flex-grow">
