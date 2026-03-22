@@ -41,11 +41,6 @@ Then run one of:
 
 - rework readme
 
-- ownership
-
-  - do you own the book in new book
-  - on the acquired activity form, add ownership info
-
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
 <!-- - currently reading filter to only the latest ones -->
@@ -83,8 +78,11 @@ Then run one of:
   - avg time from to-read to acquired
 
 - did i fix them already?
+
   - fix last month selector when is january?
   - fix optionaldate unique
+
+- reading activity icons?
 
 # Tech-Stack
 
