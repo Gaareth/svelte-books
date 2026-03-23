@@ -85,7 +85,7 @@
   <h2 class="flex items-end text-2xl -mb-1">
     Books
     {#if !showOptions}
-      ({entries.length})
+      ({books_displayed.length})
     {/if}
   </h2>
   <div class="flex gap-1 sm:gap-2">

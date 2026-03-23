@@ -12,12 +12,7 @@
     search_term = $page.url.searchParams.get("q") ?? "";
   });
 
-  // $: search_term = $page.url.searchParams.get("q") ?? "";
-  // $: {
-  //   console.log($page.url.searchParams.get("q"));
-
-  //   $page.url.searchParams
-  // }
+  $: search_term = $page.url.searchParams.get("q") ?? "";
 
   const onKeyUp = (e: Event) => {
     if (!e.target) return;

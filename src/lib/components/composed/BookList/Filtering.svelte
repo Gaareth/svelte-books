@@ -44,21 +44,12 @@
   $: has_active = $searchStore.data[0].hasOwnProperty("active");
 
   // let params = $page.url.searchParams;
-  // $: {
-  //   allowed_categories_filter = JSON.parse(params.get("categories") ?? "[]");
-  //   rating_filter = params.get("rating") !== null
-  //       ? Number(params.get("rating")!)
-  //       : undefined;
-  //   start_filter =
-  //     params.get("start_date") !== null
-  //       ? new Date(params.get("start_date")!)
-  //       : undefined;
-  //   end_filter =
-  //     params.get("end_date") !== null
-  //       ? new Date(params.get("end_date")!)
-  //       : undefined;
-  //   lang_filter = $page.url.searchParams.get("lang") ?? "all";
-  // }
+  // update when url changes, back button pressed
+  $: params = $page.url.searchParams;
+  $: {
+    setFiltersFromParams();
+    params; // reactivity trigger
+  }
 
   let sortingReversed = false;
 
@@ -70,9 +61,7 @@
     | "rating";
   let selectedSort: sortOption;
 
-  let params = $page.url.searchParams;
-
-  onMount(() => {
+  function setFiltersFromParams() {
     let params = $page.url.searchParams;
 
     allowed_categories_filter = JSON.parse(params.get("categories") ?? "[]");
@@ -96,8 +85,11 @@
     // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
     selectedSort = (params.get("sort") as sortOption) ?? "date_read";
     sortingReversed = (params.get("order") ?? "desc") == "desc";
+  }
 
-    filter();
+  onMount(async () => {
+    setFiltersFromParams();
+    await filter(false);
   });
 
   const sortBooks = () => {
@@ -140,7 +132,7 @@
   };
 
   // apply filter
-  const filter = () => {
+  async function filter(setParams = true) {
     // filter functions
 
     let f_rating = (b: ReadingListItemType) =>
@@ -177,35 +169,37 @@
       lang_filter == "all" ||
       b.book.bookApiData?.language == lang_filter;
 
-    let params = $page.url.searchParams;
-    if (lang_filter !== undefined) {
-      params.set("lang", lang_filter);
+    if (setParams) {
+      let params = $page.url.searchParams;
+      if (lang_filter !== undefined) {
+        params.set("lang", lang_filter);
+      }
+
+      if (rating_filter !== undefined) {
+        params.set("rating", rating_filter.toString());
+      }
+
+      if (start_filter !== undefined) {
+        params.set("start_date", dateToYYYY_MM_DD(start_filter));
+      }
+
+      if (end_filter !== undefined) {
+        params.set("end_date", dateToYYYY_MM_DD(end_filter));
+      }
+
+      if (
+        allowed_categories_filter !== undefined &&
+        allowed_categories_filter.length > 0
+      ) {
+        params.set("categories", JSON.stringify(allowed_categories_filter));
+      }
+
+      params.set("filter", "true");
+
+      await goto("?" + params.toString(), {
+        noScroll: true,
+      });
     }
-
-    if (rating_filter !== undefined) {
-      params.set("rating", rating_filter.toString());
-    }
-
-    if (start_filter !== undefined) {
-      params.set("start_date", dateToYYYY_MM_DD(start_filter));
-    }
-
-    if (end_filter !== undefined) {
-      params.set("end_date", dateToYYYY_MM_DD(end_filter));
-    }
-
-    if (
-      allowed_categories_filter !== undefined &&
-      allowed_categories_filter.length > 0
-    ) {
-      params.set("categories", JSON.stringify(allowed_categories_filter));
-    }
-
-    params.set("filter", "true");
-
-    goto("?" + params.toString(), {
-      noScroll: true,
-    });
 
     $searchStore!.filter = (b: ReadingListItemType & { active?: boolean }) =>
       f_rating(b) &&
@@ -214,7 +208,7 @@
       f_start(b) &&
       f_end(b) &&
       (b.active || show_active_or_all == "all" || !has_active);
-  };
+  }
 
   const resetFilter = () => {
     allowed_categories_filter = undefined;
@@ -290,6 +284,18 @@
 
   const filterThisYear = () => {
     filterYear(0);
+  };
+
+  const changeLangFilter = (e: Event) => {
+    lang_filter = (e.target as HTMLSelectElement).value;
+  };
+
+  const changeCatFilter = (selected: string[]) => {
+    // to prevent infinite loop, because AutoComplete calls onChange when selectedItem is changed, and we also change selectedItem when params change
+    if (selected == allowed_categories_filter) {
+      return;
+    }
+    allowed_categories_filter = selected;
   };
 </script>
 
@@ -372,7 +378,10 @@
 
         <label class="flex flex-col">
           Languages
-          <select class="default-border input-color-1" bind:value={lang_filter}>
+          <select
+            class="default-border input-color-1"
+            on:change={changeLangFilter}
+            value={lang_filter}>
             <option value="all" selected>all</option>
             {#each languages_used as lang}
               <option value={lang}>{lang}</option>
@@ -386,7 +395,8 @@
           <AutoComplete
             disabled={category_names.length == 0}
             items={category_names}
-            bind:selectedItem={allowed_categories_filter}
+            selectedItem={allowed_categories_filter}
+            onChange={changeCatFilter}
             multiple={true}
             create={false}
             id="categories"
@@ -405,7 +415,7 @@
         </label>
 
         <label class="flex flex-col">
-          End date {end_filter && dateToYYYY_MM_DD(end_filter)}
+          End date
           <input
             type="date"
             class="default-border input-color-1"
@@ -436,7 +446,7 @@
         </button>
         <button
           class="btn-primary-black block my-3 px-8 text-center w-full md:w-fit"
-          on:click={filter}>
+          on:click={async () => await filter()}>
           Filter
         </button>
       </div>
