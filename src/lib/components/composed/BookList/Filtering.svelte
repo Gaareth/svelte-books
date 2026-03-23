@@ -27,8 +27,8 @@
     sortReadingActivity,
   } from "$lib/utils/utils";
   import ClearButton from "../../input/ClearButton.svelte";
+  import ToggleGroup from "../../input/ToggleGroup.svelte";
 
-  let books_displayed: BookFullType[];
   export let languages_used: string[];
   export let category_names: string[]; // not reactive
 
@@ -39,6 +39,9 @@
   let start_filter: Date | undefined;
   let end_filter: Date | undefined;
   let lang_filter: string | undefined;
+
+  let show_active_or_all: string = "only active";
+  $: has_active = $searchStore.data[0].hasOwnProperty("active");
 
   // let params = $page.url.searchParams;
   // $: {
@@ -93,6 +96,8 @@
     // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
     selectedSort = (params.get("sort") as sortOption) ?? "date_read";
     sortingReversed = (params.get("order") ?? "desc") == "desc";
+
+    filter();
   });
 
   const sortBooks = () => {
@@ -202,8 +207,13 @@
       noScroll: true,
     });
 
-    $searchStore!.filter = (b: ReadingListItemType) =>
-      f_rating(b) && f_lang(b) && f_category(b) && f_start(b) && f_end(b);
+    $searchStore!.filter = (b: ReadingListItemType & { active?: boolean }) =>
+      f_rating(b) &&
+      f_lang(b) &&
+      f_category(b) &&
+      f_start(b) &&
+      f_end(b) &&
+      (b.active || show_active_or_all == "all" || !has_active);
   };
 
   const resetFilter = () => {
@@ -212,6 +222,7 @@
     start_filter = undefined;
     end_filter = undefined;
     lang_filter = undefined;
+    show_active_or_all = "only active";
 
     let params = $page.url.searchParams;
     let new_params = new URLSearchParams();
@@ -324,7 +335,22 @@
           </span>
         </div>
       </summary>
-      <div class="flex flex-col flex-wrap gap-2 mt-2 md:justify-between">
+      <div class="flex flex-col flex-wrap gap-2.5 mt-2 md:justify-between">
+        {#if has_active}
+          <div class="flex flex-row items-center gap-1">
+            <label for="" class="whitespace-nowrap">Show active</label>
+            <ToggleGroup
+              options={["only active", "all"]}
+              wrapperClass="w-full"
+              groupClass="flex mx-auto"
+              btnClass="px-4 py-1 border border-s-0 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700 flex items-center gap-1"
+              btnSelectedClass="dark:bg-slate-700 bg-gray-50"
+              startClass="border-s rounded-s-md"
+              endClass="rounded-e-md"
+              bind:selectedOption={show_active_or_all} />
+          </div>
+        {/if}
+
         <label class="flex flex-col" id="rating-label">
           <div class="flex gap-2">
             Rating ({rating_filter} / {MAX_RATING})
@@ -391,7 +417,7 @@
           <button class="btn-generic" on:click={filterLastMonth}>
             Last month
           </button>
-          <button class="btn-generic mr-2" on:click={filterThisMonth}>
+          <button class="btn-generic mr-4" on:click={filterThisMonth}>
             This month
           </button>
           <button class="btn-generic" on:click={filterLastYear}>

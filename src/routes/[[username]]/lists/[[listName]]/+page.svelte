@@ -17,6 +17,8 @@
   )
     ? capitalize(data.listName as ReadingActivityStatusType)
     : data.listName;
+
+  $: readingActivity = data.readingActivity ?? [];
 </script>
 
 <svelte:head>
@@ -35,13 +37,11 @@
   </h1>
 
   {#if data.isAuthorizedToModify}
-    <BookNew
-      readingStatus={"to read"}
-      readingActivities={data.readingActivity ?? []} />
+    <BookNew readingStatus={"to read"} readingActivities={readingActivity} />
   {/if}
 
   <ReadingList
-    entries={data.readingActivity}
+    entries={readingActivity}
     isAuthorizedToModify={data.isAuthorizedToModify} />
 {:else}
   <h1 class="text-center text-5xl my-4 mb-6">This list does not exist</h1>

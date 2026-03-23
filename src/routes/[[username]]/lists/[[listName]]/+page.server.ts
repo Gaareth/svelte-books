@@ -8,6 +8,7 @@ import {
   type ReadingActivityStatusType,
 } from "$lib/constants/enums";
 import { getReadingActivity } from "$lib/server/db/utils";
+import { getActiveActivies } from "$src/lib/utils/utils";
 
 export async function load({ locals, params }: ServerLoadEvent) {
   if (
@@ -37,15 +38,25 @@ export async function load({ locals, params }: ServerLoadEvent) {
     (sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin) ??
     false;
 
-  const readingActivity = await getReadingActivity(
+  const completeReadingActivity = await getReadingActivity(
     requestedAccount.id,
     sessionAccount,
-    isAuthorizedToModify,
-    readingActivityStatus
+    isAuthorizedToModify
   );
 
+  const activeEntries = getActiveActivies(completeReadingActivity);
+
+  const readingActivity = completeReadingActivity
+    .filter((entry) => entry.status.status === readingActivityStatus)
+    .map((e) => {
+      return {
+        ...e,
+        active: activeEntries.some((active) => active.id === e.id),
+      };
+    });
+
   return {
-    readingActivity,
+    readingActivity: readingActivity,
     username,
     isAuthorizedToModify,
     listName: params.listName,

@@ -33,10 +33,16 @@
   import { type queriedBookFull, type ReadingActivityList } from "$appTypes";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import OwnershipForm from "./OwnershipForm.svelte";
+  import InputNumber from "../input/InputNumber.svelte";
 
   export let endpoint = "/book/create";
 
-  const CREATABLE_READING_STATUS = ["read", "reading", "to read"] as const;
+  const CREATABLE_READING_STATUS = [
+    "to read",
+    "acquired",
+    "reading",
+    "read",
+  ] as const;
   type CreatableReadingStatus = (typeof CREATABLE_READING_STATUS)[number];
   const DISPLAY_NAME_TO_READING_STATUS: Record<
     CreatableReadingStatus,
@@ -45,15 +51,15 @@
     read: READING_ACTIVITY_TYPES.FINISHED,
     reading: READING_ACTIVITY_TYPES.READING,
     "to read": READING_ACTIVITY_TYPES.TO_READ,
+    acquired: READING_ACTIVITY_TYPES.ACQUIRED,
   };
 
   export let readingStatus: CreatableReadingStatus = "read";
 
   export let readingActivities: ReadingActivityList[];
 
-  let authors: string[] = readingActivities.map((e) => e.book.author);
-
-  $: authors = [...new Set(authors)];
+  let authors: string[];
+  $: authors = [...new Set(readingActivities.map((e) => e.book.author))];
 
   let new_book_open = false;
   let name = "";
@@ -223,13 +229,7 @@
                   class="rounded-md w-full btn-generic-color-2"
                   bind:value={name} />
                 <label for="author">Author:</label>
-                <!-- <input
-                    id="author"
-                    name="author"
-                    type="text"
-                    class="input dark:bg-slate-600 dark:border-slate-500"
-                    bind:value={author}
-                  /> -->
+
                 <AutoComplete
                   items={authors}
                   bind:text={author}
@@ -293,7 +293,7 @@
               </label>
             {/if}
 
-            {#if readingStatus != "to read"}
+            {#if readingStatus != "to read" && readingStatus != "acquired"}
               <div class="mt-1 w-full">
                 <label for="rating">Rating:</label>
                 <Rating
@@ -301,7 +301,9 @@
                   editable={true}
                   bind:rating={stars} />
               </div>
+            {/if}
 
+            {#if readingStatus != "to read"}
               <div class="mt-1 w-full">
                 <label for="words-per-page" class="icon-wrapper">
                   <span class="w-5 block" title="date read">
@@ -309,11 +311,13 @@
                   </span>
                   Words per page:
                 </label>
-                <input
+                <InputNumber
+                  skipLabel={true}
                   id="words-per-page"
                   name="words-per-page"
                   type="number"
-                  class="rounded-md btn-generic-color-2 w-full"
+                  min={0}
+                  inputClass="rounded-md btn-generic-color-2 w-full"
                   bind:value={wordsPerPage} />
               </div>
             {/if}

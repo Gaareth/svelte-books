@@ -18,7 +18,7 @@
   import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
 
-  export let entries: ReadingListItemType[];
+  export let entries: (ReadingListItemType & { active: boolean })[];
   export let showSearch = true;
   export let isAuthorizedToModify = false;
 
@@ -116,7 +116,7 @@
     </Dropdown> -->
   </div>
 </div>
-
+<!-- TODO: filtering as modal -->
 <div hidden={!showOptions}>
   <Filtering {searchStore} {languages_used} {category_names} />
 </div>
