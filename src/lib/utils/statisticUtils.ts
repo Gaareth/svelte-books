@@ -103,6 +103,7 @@ export function get_reading_duration(readingActivities: ReadingActivityList[]) {
   }
 
   return {
+    count,
     averageDuration_ms: count > 0 ? totalDuration / count : 0,
     totalDuration_ms: totalDuration,
     histogram_ms: histogram,
@@ -212,6 +213,7 @@ export function get_average_time_til_status(
   }
 
   return {
+    count,
     averageDuration_ms: count > 0 ? totalDuration / count : 0,
     totalDuration_ms: totalDuration,
   };
@@ -251,17 +253,26 @@ export function get_average_acquisition_time(
   });
 
   return {
-    avg_to_read_to_acquired_days: (
-      to_read_to_acquired.averageDuration_ms /
-      (1000 * 60 * 60 * 24)
-    ).toFixed(0),
-    avg_acquired_to_reading_days: (
-      acquired_to_reading.averageDuration_ms /
-      (1000 * 60 * 60 * 24)
-    ).toFixed(0),
-    avg_to_read_to_reading_days: (
-      to_read_to_reading.averageDuration_ms /
-      (1000 * 60 * 60 * 24)
-    ).toFixed(0),
+    avg_to_read_to_acquired_days: {
+      count: to_read_to_acquired.count,
+      days: (
+        to_read_to_acquired.averageDuration_ms /
+        (1000 * 60 * 60 * 24)
+      ).toFixed(0),
+    },
+    avg_acquired_to_reading_days: {
+      count: acquired_to_reading.count,
+      days: (
+        acquired_to_reading.averageDuration_ms /
+        (1000 * 60 * 60 * 24)
+      ).toFixed(0),
+    },
+    avg_to_read_to_reading_days: {
+      count: to_read_to_reading.count,
+      days: (
+        to_read_to_reading.averageDuration_ms /
+        (1000 * 60 * 60 * 24)
+      ).toFixed(0),
+    },
   };
 }

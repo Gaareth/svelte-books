@@ -283,7 +283,11 @@
 
         <div class="flex flex-col text-center">
           <p class="-mb-1 font-bold">
-            {avg_acquisition_time.avg_to_read_to_acquired_days}
+            {#if avg_acquisition_time.avg_to_read_to_acquired_days.count > 0}
+              {avg_acquisition_time.avg_to_read_to_acquired_days.days}
+            {:else}
+              N/A
+            {/if}
           </p>
           <div>
             <DynamicArrow
@@ -297,7 +301,11 @@
 
         <div class="flex flex-col text-center">
           <p class="-mb-1 font-bold">
-            {avg_acquisition_time.avg_acquired_to_reading_days}
+            {#if avg_acquisition_time.avg_acquired_to_reading_days.count > 0}
+              {avg_acquisition_time.avg_acquired_to_reading_days.days}
+            {:else}
+              N/A
+            {/if}
           </p>
           <DynamicArrow
             minThickness={4}
@@ -310,7 +318,11 @@
 
       <div class="text-center">
         <p class="-mb-1 font-bold">
-          {avg_acquisition_time.avg_to_read_to_reading_days}
+          {#if avg_acquisition_time.avg_to_read_to_reading_days.count > 0}
+            {avg_acquisition_time.avg_to_read_to_reading_days.days}
+          {:else}
+            N/A
+          {/if}
         </p>
         <DynamicArrow
           maxThickness={1.5}
