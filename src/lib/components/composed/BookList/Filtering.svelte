@@ -26,6 +26,7 @@
     optionalToDate,
     sortReadingActivity,
   } from "$lib/utils/utils";
+  import ClearButton from "../../input/ClearButton.svelte";
 
   let books_displayed: BookFullType[];
   export let languages_used: string[];
@@ -327,11 +328,9 @@
         <label class="flex flex-col" id="rating-label">
           <div class="flex gap-2">
             Rating ({rating_filter} / {MAX_RATING})
-            <button
-              class="btn-generic px-2 py-0"
-              on:click={() => (rating_filter = undefined)}>
-              clear
-            </button>
+            <ClearButton
+              bind:value={rating_filter}
+              clearSelection={() => (rating_filter = undefined)} />
           </div>
           <div class="my-2" hidden={true}>
             <!-- TODO -->

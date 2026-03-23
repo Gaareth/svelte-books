@@ -110,14 +110,17 @@ export function extractCategories(apiData: queriedBookFull): string[] {
   for (const entry of apiData.volumeInfo.categories ?? []) {
     // entry can be: "Fiction / Science Fiction / General", which is a bit stupid, so we have to split it
     // entry can also be just "Fiction", don't ask me, ask google
+    // actually this is bisac format, which is really just a hierarchy of categories, so we  should NOT split it
 
-    if (entry.includes("/")) {
-      for (const category of entry.split("/")) {
-        categories.push(category.trim());
-      }
-    } else {
-      categories.push(entry);
-    }
+    // if (entry.includes("/")) {
+    //   for (const category of entry.split("/")) {
+    //     categories.push(category.trim());
+    //   }
+    // } else {
+    //   categories.push(entry);
+    // }
+
+    categories.push(entry);
   }
 
   return categories;

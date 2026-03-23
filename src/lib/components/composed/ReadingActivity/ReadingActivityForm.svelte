@@ -28,6 +28,7 @@
     shouldShowFinishedDate,
     shouldShowStartedDate,
   } from "./utils";
+  import InputNumber from "../../input/InputNumber.svelte";
 
   export let book: BookWithOwnership;
   export let bookId: string | undefined = undefined;
@@ -200,28 +201,30 @@
       {/if}
 
       {#if showRating}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center my-2">
-          <div class="flex items-center gap-1">
-            <h2 class="text-xl">Rating</h2>
-            (
-            <input
-              class="max-w-[3.5rem] p-0 text-center input dark:bg-slate-600"
-              name="stars"
-              type="number"
-              step="0.5"
-              bind:value={stars}
-              min="0"
-              max={MAX_RATING} />
-            / {MAX_RATING})
+        <div class="my-2">
+          <h2 class="text-xl">
+            <label for="stars">Rating</label>
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+            <div>
+              <InputNumber
+                inputClass="py-0.5 text-center btn-generic-color-2"
+                name="stars"
+                type="number"
+                step="0.5"
+                bind:value={stars}
+                min="0"
+                max={MAX_RATING}
+                skipLabel={true}
+                clearButton={true} />
+            </div>
 
-            <ClearButton bind:value={stars} />
-          </div>
-
-          <div class="flex sm:justify-center">
-            <Rating
-              bind:rating={stars}
-              rating_max={MAX_RATING}
-              editable={true} />
+            <div class="flex sm:justify-center">
+              <Rating
+                bind:rating={stars}
+                rating_max={MAX_RATING}
+                editable={true} />
+            </div>
           </div>
         </div>
 

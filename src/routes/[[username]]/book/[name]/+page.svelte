@@ -509,6 +509,7 @@
 
           <section>
             <InputNumber
+              inputClass="btn-generic px-0.5"
               value={book.wordsPerPage}
               name="wordsPerPage"
               displayName="Words per page estimate:"

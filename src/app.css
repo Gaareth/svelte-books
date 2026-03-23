@@ -165,7 +165,7 @@
   }
 
   .input {
-    @apply border-gray-200 dark:border-slate-700 rounded-md sm:text-sm w-full;
+    @apply border-gray-200 dark:border-slate-700 rounded-md w-full;
   }
 
   .input-color-1 {
