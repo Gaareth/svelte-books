@@ -31,30 +31,28 @@
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull, type ReadingActivityList } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import {
+    ACQUIRED,
+    FINISHED,
+    READING,
+    READING_ACTIVITY_TYPES,
+    READING_STATUS_VALUES,
+    TO_READ,
+    type ReadingActivityStatusType,
+  } from "$lib/constants/enums";
   import OwnershipForm from "./OwnershipForm.svelte";
   import InputNumber from "../input/InputNumber.svelte";
 
   export let endpoint = "/book/create";
 
-  const CREATABLE_READING_STATUS = [
-    "to read",
-    "acquired",
-    "reading",
-    "read",
-  ] as const;
-  type CreatableReadingStatus = (typeof CREATABLE_READING_STATUS)[number];
-  const DISPLAY_NAME_TO_READING_STATUS: Record<
-    CreatableReadingStatus,
-    ReadingActivityType
-  > = {
-    read: READING_ACTIVITY_TYPES.FINISHED,
-    reading: READING_ACTIVITY_TYPES.READING,
-    "to read": READING_ACTIVITY_TYPES.TO_READ,
-    acquired: READING_ACTIVITY_TYPES.ACQUIRED,
-  };
+  const CREATABLE_READING_STATUS_VALUES = [
+    TO_READ,
+    ACQUIRED,
+    READING,
+    FINISHED,
+  ];
 
-  export let readingStatus: CreatableReadingStatus = "read";
+  export let readingStatus: ReadingActivityStatusType = FINISHED;
 
   export let readingActivities: ReadingActivityList[];
 
@@ -96,7 +94,7 @@
         wordsPerPage,
         dateStarted,
         dateFinished,
-        readingStatus: DISPLAY_NAME_TO_READING_STATUS[readingStatus],
+        readingStatus,
         location,
         bookOwnership: bookOwnership ? decapitalize(bookOwnership) : null,
       }),
@@ -110,9 +108,7 @@
 
     if (success) {
       invalidateAll();
-      toast.success(
-        "Successfully added book" + (message ? ": " + message : "")
-      );
+      toast.success("Success" + (message ? ": " + message : ""));
     } else {
       if (message) {
         toast.error(message);
@@ -190,9 +186,13 @@
       <form>
         <p>Have you already read the book?</p>
         <ToggleGroup
-          options={[...CREATABLE_READING_STATUS]}
+          options={CREATABLE_READING_STATUS_VALUES}
+          displayFn={(option) => {
+            if (option == FINISHED) return "read";
+            else return capitalize(option);
+          }}
           groupClass="mb-5 mt-1 inline-flex"
-          btnClass="px-4 py-1 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
+          btnClass="px-4 py-1 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600 lowercase"
           btnSelectedClass="dark:bg-slate-500 bg-gray-100"
           startClass="border-s rounded-s-md"
           endClass="rounded-e-md"
@@ -255,7 +255,7 @@
                 Continuing will add a new reading activity to it.
               </p>
             {/if}
-            {#if readingStatus == "reading" || readingStatus == "read"}
+            {#if readingStatus == READING || readingStatus == FINISHED}
               <label
                 class="col-span-2 grid grid-cols-1 sm:grid-cols-2"
                 for="dateStarted">
@@ -274,7 +274,7 @@
               </label>
             {/if}
 
-            {#if readingStatus == "read"}
+            {#if readingStatus == FINISHED}
               <label
                 class="col-span-2 grid grid-cols-1 sm:grid-cols-2"
                 for="dateEnd">
@@ -293,7 +293,7 @@
               </label>
             {/if}
 
-            {#if readingStatus != "to read" && readingStatus != "acquired"}
+            {#if readingStatus != TO_READ && readingStatus != ACQUIRED}
               <div class="mt-1 w-full">
                 <label for="rating">Rating:</label>
                 <Rating
@@ -303,7 +303,7 @@
               </div>
             {/if}
 
-            {#if readingStatus != "to read"}
+            {#if readingStatus != TO_READ}
               <div class="mt-1 w-full">
                 <label for="words-per-page" class="icon-wrapper">
                   <span class="w-5 block" title="date read">

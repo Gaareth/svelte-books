@@ -1,7 +1,7 @@
 <div>
   <h1 class="text-5xl my-4">About</h1>
 
-  <div class="p-4 default-border">
+  <div class="p-4 default-border dark:border-indigo-400">
     <h2 class="text-2xl mb-2">Why</h2>
     <p>
       This website exists because, I wanted something to "store" the books I

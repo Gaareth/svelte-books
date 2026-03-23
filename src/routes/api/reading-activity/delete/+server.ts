@@ -6,6 +6,7 @@ import type { RequestEvent } from "./$types";
 
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
+import { Prisma } from "$prismaClient";
 
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());
@@ -31,14 +32,25 @@ export async function POST(req: RequestEvent) {
     }
 
     if (readingActivity.status.status == READING_ACTIVITY_TYPES.ACQUIRED) {
-      const ownership = await prisma.ownership.delete({
-        where: {
-          bookId: readingActivity.bookId,
-        },
-      });
+      try {
+        const ownership = await prisma.ownership.delete({
+          where: {
+            bookId: readingActivity.bookId,
+          },
+        });
 
-      if (!ownership) {
-        return json({ success: false });
+        if (!ownership) {
+          return json({ success: false });
+        }
+      } catch (error: unknown) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (error.code === "P2025") {
+            // no ownership found, can be ignored
+          } else {
+            throw error;
+          }
+        }
+        console.error("Error deleting ownership:", error);
       }
     }
 

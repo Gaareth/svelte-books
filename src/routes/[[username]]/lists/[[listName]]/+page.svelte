@@ -12,6 +12,8 @@
 
   export let data: PageData;
 
+  const listName = data.listName as ReadingActivityStatusType;
+
   $: listDisplayName = READING_STATUS_VALUES.includes(
     data.listName as ReadingActivityStatusType
   )
@@ -38,7 +40,7 @@
   </h1>
 
   {#if data.isAuthorizedToModify}
-    <BookNew readingStatus={"to read"} readingActivities={readingActivity} />
+    <BookNew readingStatus={listName} readingActivities={readingActivity} />
   {/if}
 
   <ReadingList

@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { ReviewListItemType } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import {
+    READING_ACTIVITY_TYPES,
+    type ReadingActivityStatusType,
+  } from "$lib/constants/enums";
   import NowReadingAction from "./NowReadingAction.svelte";
   import DoneReadingAction from "./DoneReadingAction.svelte";
   import { enhance } from "$app/forms";
@@ -15,6 +18,8 @@
   export let readingActivities: ReviewListItemType[];
   export let className = "";
 
+  // TODO: maybe allow creation here?
+  let activeStatus: ReadingActivityStatusType;
   $: activeStatus = activeEntry.status.status;
   $: isAlreadyAcquired = readingActivities.some(
     (activity) => activity.status.status === READING_ACTIVITY_TYPES.ACQUIRED

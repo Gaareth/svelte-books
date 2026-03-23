@@ -25,9 +25,11 @@
     </div>
     {#if isAuthorizedToModify}
       <div class="md:ml-auto flex items-center gap-1">
-        <ReadingActivityActions
-          {activeEntry}
-          readingActivities={readingActivitiesSorted} />
+        {#if activeEntry != null}
+          <ReadingActivityActions
+            {activeEntry}
+            readingActivities={readingActivitiesSorted} />
+        {/if}
 
         <button
           type="button"

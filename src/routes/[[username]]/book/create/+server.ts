@@ -29,7 +29,7 @@ let createSchema = z
     name: z.string().trim().min(1),
     author: z.string().trim().min(1),
     stars: z.coerce.number().optional(),
-    wordsPerPage: z.number().optional(),
+    wordsPerPage: z.number().optional().nullish(),
     readingStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
     volumeId: z.string().trim().optional(),
     dateStarted: optionalDatetimeSchema.optional(),
@@ -67,23 +67,18 @@ export async function POST(req: RequestEvent) {
 
     let book = await prisma.book.findFirst({ where: { name } });
     const book_exist = book != null;
-    // if (book_exist) {
-    //   return json({
-    //     success: false,
-    //     message: "Books titles have to be unique.\nPlease use another title",
-    //   });
-    // }
+
+    if (
+      bookOwnership == null &&
+      readingStatus === READING_ACTIVITY_TYPES.ACQUIRED
+    ) {
+      error(400, {
+        message:
+          "Ownership status is required when reading status is 'acquired'",
+      });
+    }
 
     if (book == null) {
-      // const bookList = await prisma.bookList.upsert({
-      //   where: { name_accountId: { accountId, name: listName } },
-      //   update: {}, // No update needed if it exists
-      //   create: {
-      //     name: listName,
-      //     accountId,
-      //   },
-      // });
-
       book = await prisma.book.create({
         data: {
           accountId,
