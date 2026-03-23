@@ -18,7 +18,7 @@
   import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
 
-  export let entries: (ReadingListItemType & { active: boolean })[];
+  export let entries: (ReadingListItemType & { active?: boolean })[];
   export let showSearch = true;
   export let isAuthorizedToModify = false;
 

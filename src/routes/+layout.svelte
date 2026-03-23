@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-  <title>{$page.data.title || "Books - Gareth"}</title>
+  <title>{$page.data.title || "BookList"}</title>
 </svelte:head>
 
 <header
@@ -126,21 +126,24 @@
   </div>
 </main>
 
-<footer class="bg-[#da3d0c] min-h-10 absolute bottom-[-100px] w-full">
-  <div class="text-white mx-auto max-w-3xl flex flex-col text-center gap-1 p-2">
+<footer class="bg-indigo-400 min-h-10 absolute bottom-[-100px] w-full">
+  <div
+    class="text-stone-900 mx-auto max-w-3xl flex flex-col text-center gap-1 p-2">
     <p class="text-md text-left sm:text-center sm:absolute w-full sm:w-fit">
       V{version}
     </p>
-    <p>
+    <p class="opacity-90">
       Made using
       <a href="https://svelte.dev/" class="underline font-semibold">Svelte</a>
       / - Kit and
-      <a href="/tech-stack">more</a>
-    </p>
-    <p>
-      by <a href="https://github.com/Gaareth" class="underline">Gareth</a>
+      <a href="/tech-stack" class="hover:underline">more</a>
     </p>
   </div>
+  <p class="absolute top-0 right-0 p-2 text-violet-900">
+    <a href="https://github.com/Gaareth/svelte-books" class="hover:underline">
+      by Gareth
+    </a>
+  </p>
 </footer>
 
 <style lang="postcss">

@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Books Tech-Stack</title>
+  <title>Books - Tech-Stack</title>
 </svelte:head>
 
 <div>
@@ -8,7 +8,7 @@
   from-svelte via-purple-500 to-pink-500">
     Tech-Stack
   </h1>
-  <p class="my-2">What I have used for this project:</p>
+  <p class="my-2">Selected technologies used:</p>
   <ul class="my-2 list-disc">
     <li>Svelte/kit</li>
     <li>Typescript</li>
@@ -29,7 +29,7 @@
   </ul>
 
   <ul class="my-2 list-disc">
-    <li>material icons</li>
+    <li>Icons: google material symbols</li>
   </ul>
 </div>
 

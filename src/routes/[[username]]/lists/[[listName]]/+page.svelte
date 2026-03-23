@@ -19,20 +19,21 @@
     : data.listName;
 
   $: readingActivity = data.readingActivity ?? [];
+
+  $: ownerName =
+    $page.data.session?.user?.name == data.username || data.username == null
+      ? "MY"
+      : `${data.username}'s`;
 </script>
 
 <svelte:head>
-  <title>Books {data.listName} - Gareth</title>
+  <title>{capitalize(ownerName)} Books in {listDisplayName}</title>
 </svelte:head>
 
 {#if data.exists}
   <h1 class="text-center text-5xl my-4 mb-6">
-    {#if $page.data.session?.user?.name == data.username || data.username == null}
-      MY
-    {:else}
-      {data.username}'s
-    {/if}
-    <span class="italic text-5xl">{listDisplayName}</span>
+    {ownerName}
+    <span class="italic text-5xl header-gradient pe-2">{listDisplayName}</span>
     LIST
   </h1>
 
