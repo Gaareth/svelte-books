@@ -59,7 +59,7 @@
 
 {#if data.isAuthorizedToModify}
   <BookNew
-    readingStatus={"read"}
+    readingStatus={"FINISHED"}
     readingActivities={data.readingActivity ?? []} />
 {/if}
 
