@@ -53,7 +53,7 @@
           title="Edit book"
           href="/book/{book_url}/?edit=true">
           <span
-            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+            class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
             <IoMdSettings />
           </span>
         </a>
@@ -77,14 +77,3 @@
     </a>
   </div>
 {/if}
-
-<style lang="postcss">
-  .icon {
-    width: 20px;
-    height: 20px;
-  }
-  .icon-edit {
-    width: 20px;
-    height: 20px;
-  }
-</style>

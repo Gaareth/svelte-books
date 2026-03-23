@@ -179,11 +179,8 @@
     width: 20px;
     height: 20px;
   }
-  .icon-edit {
-    width: 20px;
-    height: 20px;
-  }
 
+  /*
   .book-item-grid {
     display: grid;
     flex-grow: 1;
@@ -192,7 +189,7 @@
     row-gap: 0;
     align-items: center;
     height: 100%;
-    /* grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); */
+    // grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
     grid-template-rows: auto;
   }
 
@@ -201,4 +198,5 @@
       grid-template-rows: repeat(1, minmax(0, 1fr));
     }
   }
+  */
 </style>
