@@ -2,48 +2,69 @@
 
 A personal book tracking app focused on your reading activity, habits and progress, rather than social interaction.
 
+## Features
+
+- statistics about books/pages/words per year, month, day, etc
+  - average reading time, time from to-read to started, etc
+  - most read authors, categories
+- tracking of reading activity (to-read, reading, finished, did not finish, paused, acquired)
+- sortable and filterable book list, quick actions
+- privacy settings (private, public, authenticated users)
+- open registration and closed with invite links
+- google books api integration for easy adding of books
+- crude account management (no password reset, email verification, etc)
+
 ## Installation
 
 You can either use a docker image or build from source.
-However, first you have to create `.env.production` file similar to `env.example`.
+However, to configure the app, you first have to create `.env.production` file similar to `env.example`.
 Make sure to:
 
+- follow the format of the example file and fill in the values
 - not use quotes around the values as they are sometimes taken literally.
-- get a google books api key.
-- validate the host and port of the ORIGIN variable
 
-This will create an admin account with the specified credentials. Note: this happens on every startup.
+This will then initially create your admin account.
 
 ### Docker
 
-Use on of the docker images:
-
-`docker pull ghcr.io/gaareth/svelte-books`
-
-Then run one of:
+Run one of:
 
 - `./run-book-store.sh`
 
-- `docker run -it  -d -e DATABASE_URL=file:/database/prod.db -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books`
+- `docker run -it  -d --env-file .env.production -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books`
 
 - `docker compose up -d`
 
 ### Source
 
 1. `git clone https://github.com/Gaareth/svelte-books`
-2. `npm run ci`. DEV: `npm run install`
+2. `npm ci`.
 3. `npx prisma generate`
-4. `npx prisma migrate deploy`. DEV: `npx prisma migrate dev`
-5. `npm run build`. DEV: `npm run dev`
+4. `npx prisma migrate deploy`.
+5. `npm run build`.
 6. `node build`
+
+#### Development
+
+1. `git clone https://github.com/Gaareth/svelte-books`
+2. `npm install`
+3. `npx prisma generate`
+4. `npx prisma migrate dev`
+5. `npm run dev`
+
+If you changed the schema and want to test it:
+
+- `npx prisma db push`: To try out the changes without creating a migration
+- `npx prisma migrate dev --name <migration_name>`: To create a new migration file
 
 ## Todos
 
-- rework readme
-
+- upgrade to svelte5, tailwind4, vite8?, etc...
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
 - shelves
+
+- google books api throttling and caching, per user
 
 - color bar, similar color for similar books
 
