@@ -1,6 +1,7 @@
 services:
   web:
-    build: .
+    # build: .
+    image: ghcr.io/gaareth/svelte-books:latest
     ports:
       - 4000:3000 # to:from
     env_file:
