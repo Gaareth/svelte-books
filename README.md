@@ -2,6 +2,10 @@
 
 A personal book tracking app focused on your reading activity, habits and progress, rather than social interaction.
 
+<p align="center">
+  <img src="static/assets/images/mockup.png" width="400px">
+</p>
+
 ## Features
 
 - statistics about books/pages/words per year, month, day, etc

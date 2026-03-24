@@ -37,8 +37,6 @@
   $: {
     displayData = tupleToDataset(data.slice(0, maxShown), label);
     displayData.datasets[0].backgroundColor = defaultBgColor;
-
-    console.log("up", maxShown);
   }
 
   $: fgColor = $theme == "dark" ? "white" : "dark";
