@@ -41,7 +41,9 @@
   let lang_filter: string | undefined;
 
   let show_active_or_all: string = "only active";
-  $: has_active = $searchStore.data[0].hasOwnProperty("active");
+  $: has_active =
+    $searchStore.data.length > 0 &&
+    $searchStore.data[0].hasOwnProperty("active");
 
   // let params = $page.url.searchParams;
   // update when url changes, back button pressed
