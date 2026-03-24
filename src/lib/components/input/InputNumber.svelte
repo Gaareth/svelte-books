@@ -15,6 +15,8 @@
 
   export let clearButton = false;
 
+  export let buttonWrapperClass = "";
+
   const increment = () => {
     if (
       typeof value === "number" &&
@@ -42,7 +44,7 @@
     {displayName}
   </label>
   <div class="flex gap-2" slot="input">
-    <div class={twMerge("inline-flex")}>
+    <div class={twMerge("flex", buttonWrapperClass)}>
       <button
         on:click={decrement}
         class={twMerge(

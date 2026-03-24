@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import { authorize } from "$lib/auth/auth";
 import {
+  createOwnershipSchema,
   optionalDatetimeSchema,
-  optionalOwnershipSchema,
 } from "$lib/schemas/schemas";
 import {
   createReadingActivity,
@@ -35,7 +35,7 @@ let createSchema = z
     dateStarted: optionalDatetimeSchema.optional(),
     dateFinished: optionalDatetimeSchema.optional(),
   })
-  .merge(optionalOwnershipSchema);
+  .merge(createOwnershipSchema);
 
 export async function POST(req: RequestEvent) {
   const accountId = (
@@ -57,12 +57,18 @@ export async function POST(req: RequestEvent) {
       wordsPerPage,
       readingStatus,
       volumeId,
+      acquiredAtDate,
       bookOwnership,
       location,
     } = result.data;
 
     // null can be seen as delete, while undefined as ignore. I dont want to delete while creating
-    const dateStarted = nullToUndefined(result.data.dateStarted);
+    // if its acquired, let the start date be the acquired date
+    const dateStarted = nullToUndefined(
+      readingStatus === READING_ACTIVITY_TYPES.ACQUIRED
+        ? acquiredAtDate
+        : result.data.dateStarted
+    );
     const dateFinished = nullToUndefined(result.data.dateFinished);
 
     let book = await prisma.book.findFirst({ where: { name } });
@@ -91,12 +97,20 @@ export async function POST(req: RequestEvent) {
       await addApiData(volumeId, book.id);
     }
 
-    if (bookOwnership != null && location != null) {
-      const ownership = await createOwnership(accountId, book.id, {
-        location,
-        status: bookOwnership,
-        aquiredAt: nullToUndefined(optionalToDate(dateStarted)),
-      });
+    if (bookOwnership != null && location != null && acquiredAtDate != null) {
+      // if not status is acquired, create an extra reading activity
+      const createReadingActivity =
+        readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
+      const ownership = await createOwnership(
+        accountId,
+        book.id,
+        {
+          location,
+          status: bookOwnership,
+          aquiredAt: nullToUndefined(optionalToDate(acquiredAtDate)),
+        },
+        createReadingActivity
+      );
 
       if (!ownership) {
         error(500, {
@@ -141,7 +155,8 @@ async function createOwnership(
     location,
     status,
     aquiredAt,
-  }: { location?: string; status?: BookOwnership; aquiredAt?: Date }
+  }: { location?: string; status?: BookOwnership; aquiredAt?: Date },
+  createReadingActivity = true
 ) {
   const dateAcquiredId = aquiredAt
     ? (
@@ -160,19 +175,22 @@ async function createOwnership(
     },
   });
 
-  await prisma.readingActivity.create({
-    data: {
-      bookId,
-      accountId,
-      readingActivityStatusId: await getOrCreateReadingActivityStatus(
+  let readingActivity;
+  if (createReadingActivity) {
+    const readingActivity = await prisma.readingActivity.create({
+      data: {
+        bookId,
         accountId,
-        READING_ACTIVITY_TYPES.ACQUIRED
-      ),
-      dateStartedId: dateAcquiredId,
-    },
-  });
+        readingActivityStatusId: await getOrCreateReadingActivityStatus(
+          accountId,
+          READING_ACTIVITY_TYPES.ACQUIRED
+        ),
+        dateStartedId: dateAcquiredId,
+      },
+    });
+  }
 
-  return ownership;
+  return { ownership, readingActivity };
 }
 
 /// Adds API data to the book if volumeId is provided

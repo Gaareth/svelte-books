@@ -47,10 +47,11 @@ export const ownershipSchema = z.object({
   ...ownershipBase,
 });
 
-export const optionalOwnershipSchema = z.object({
+export const createOwnershipSchema = z.object({
   bookOwnership: z.preprocess(
     emptyStringToNull,
     z.nativeEnum(BookOwnership).optional().nullable()
   ),
+  acquiredAtDate: optionalDatetimeSchema.optional(), // but needed when creating book, as this means multiple reading actvities. cant reused dateStarted
   ...ownershipBase,
 });

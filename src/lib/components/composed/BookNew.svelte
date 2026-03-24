@@ -70,6 +70,7 @@
 
   let location: string;
   let bookOwnership: BookOwnership | null;
+  let acquiredAtDate: OptionalDate;
 
   let loading = false;
 
@@ -97,6 +98,7 @@
         readingStatus,
         location,
         bookOwnership: bookOwnership ? decapitalize(bookOwnership) : null,
+        acquiredAtDate,
       }),
       headers: {
         "content-type": "application/json",
@@ -245,7 +247,7 @@
         {#if showMore || (name.length > 0 && author.length > 0)}
           <hr class="dark:border-slate-500 my-5" />
 
-          <div class="grid grid-cols-2 gap-y-2">
+          <div class="grid grid-cols-2 gap-y-2.5">
             {#if duplicateEntry}
               <p class="text-warning text-base col-span-2 text-center mb-3">
                 Warning: A book with this name is already in a list ({capitalize(
@@ -327,7 +329,7 @@
             className="mt-5"
             optional={true}
             bind:location
-            bind:acquiredAtDate={dateStarted}
+            bind:acquiredAtDate
             bind:bookOwnership />
         {/if}
 

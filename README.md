@@ -43,10 +43,6 @@ Then run one of:
 
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
-<!-- - currently reading filter to only the latest ones -->
-
-<!-- - display name for reading activity status, eg in admin or lists panel -->
-
 - shelves
 
 - color bar, similar color for similar books

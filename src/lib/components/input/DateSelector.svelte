@@ -74,6 +74,7 @@
   import ToggleGroup from "$components/input/ToggleGroup.svelte";
   import { isValidDate } from "$utils/utils";
   import Dropdown from "$components/input/Dropdown.svelte";
+  import InputNumber from "./InputNumber.svelte";
 
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;
@@ -294,12 +295,14 @@
           Year
           <span class="text-red-400" title="required">*</span>
         </label>
-        <input
+        <InputNumber
+          skipLabel={true}
           type="number"
           id="year"
           bind:value={datetime.year}
           placeholder="YYYY"
-          class="w-full btn-generic-color-2"
+          inputClass="w-full btn-generic-color-2 rounded-none"
+          buttonWrapperClass="w-full"
           name={`${name}[year]`} />
       </div>
 
