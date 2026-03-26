@@ -66,6 +66,8 @@ If you changed the schema and want to test it:
 - upgrade to svelte5, tailwind4, vite8?, etc...
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
+- reading time relative to book length
+
 - shelves
 
 - google books api throttling and caching, per user
