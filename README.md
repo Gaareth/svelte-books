@@ -64,6 +64,9 @@ If you changed the schema and want to test it:
 ## Todos
 
 - upgrade to svelte5, tailwind4, vite8?, etc...
+
+- background show fav books covers sliding like steam loading animation
+
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
 - reading time relative to book length
@@ -109,6 +112,7 @@ If you changed the schema and want to test it:
 - acquired -> reading, maybe only count if book was wanted (ie. was in to-read)
 
 - rework dark mode colors, more consistent styles
+- violet-400 as accent color
 
 # Tech-Stack
 

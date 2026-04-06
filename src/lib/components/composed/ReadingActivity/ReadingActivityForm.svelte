@@ -79,10 +79,7 @@
   $: location = book.ownership?.location;
 </script>
 
-<Modal
-  bind:showModal
-  divClassName="w-full h-full my-auto"
-  className="w-full lg:w-2/5">
+<Modal bind:showModal divClassName="w-full" className="w-full lg:w-2/5">
   <div class="flex items-center gap-4 w-full" slot="header">
     <p class="font-medium">
       {entry != null ? "Edit" : "Create"} Reading Activity
@@ -126,7 +123,7 @@
       <input type="hidden" name="bookId" value={bookId} />
     {/if}
 
-    <div class="mt-5 flex flex-col gap-4">
+    <div class="mt-5 flex flex-col gap-2 sm:gap-4">
       {#if true}
         <div>
           <InputSelect
