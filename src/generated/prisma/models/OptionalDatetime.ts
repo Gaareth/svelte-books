@@ -230,7 +230,7 @@ export type OptionalDatetimeGroupByOutputType = {
   _max: OptionalDatetimeMaxAggregateOutputType | null
 }
 
-type GetOptionalDatetimeGroupByPayload<T extends OptionalDatetimeGroupByArgs> = Prisma.PrismaPromise<
+export type GetOptionalDatetimeGroupByPayload<T extends OptionalDatetimeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OptionalDatetimeGroupByOutputType, T['by']> &
       {
