@@ -203,7 +203,7 @@ export type GraphGroupByOutputType = {
   _max: GraphMaxAggregateOutputType | null
 }
 
-type GetGraphGroupByPayload<T extends GraphGroupByArgs> = Prisma.PrismaPromise<
+export type GetGraphGroupByPayload<T extends GraphGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<GraphGroupByOutputType, T['by']> &
       {

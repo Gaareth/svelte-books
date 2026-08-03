@@ -225,7 +225,7 @@ export type ReadingActivityGroupByOutputType = {
   _max: ReadingActivityMaxAggregateOutputType | null
 }
 
-type GetReadingActivityGroupByPayload<T extends ReadingActivityGroupByArgs> = Prisma.PrismaPromise<
+export type GetReadingActivityGroupByPayload<T extends ReadingActivityGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ReadingActivityGroupByOutputType, T['by']> &
       {

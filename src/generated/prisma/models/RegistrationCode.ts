@@ -193,7 +193,7 @@ export type RegistrationCodeGroupByOutputType = {
   _max: RegistrationCodeMaxAggregateOutputType | null
 }
 
-type GetRegistrationCodeGroupByPayload<T extends RegistrationCodeGroupByArgs> = Prisma.PrismaPromise<
+export type GetRegistrationCodeGroupByPayload<T extends RegistrationCodeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<RegistrationCodeGroupByOutputType, T['by']> &
       {

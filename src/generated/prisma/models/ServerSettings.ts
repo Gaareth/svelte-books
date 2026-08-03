@@ -171,7 +171,7 @@ export type ServerSettingsGroupByOutputType = {
   _max: ServerSettingsMaxAggregateOutputType | null
 }
 
-type GetServerSettingsGroupByPayload<T extends ServerSettingsGroupByArgs> = Prisma.PrismaPromise<
+export type GetServerSettingsGroupByPayload<T extends ServerSettingsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ServerSettingsGroupByOutputType, T['by']> &
       {
