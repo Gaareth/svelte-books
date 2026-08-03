@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Moon } from "svelte-loading-spinners";
+
   import { theme } from "$lib/stores/stores";
 
   export let color: string | undefined = undefined;

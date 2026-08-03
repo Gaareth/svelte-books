@@ -1,14 +1,16 @@
 <script lang="ts">
+  import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
+  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+
+  import type { Prisma } from "$prismaBrowser";
+
   import { enhance } from "$app/forms";
   import EyePlus from "$lib/icons/eye-plus.svelte";
-  import type { Prisma } from "$prismaBrowser";
   import { copyToClipboard } from "$utils/browserUtils";
   import { deepClone } from "$utils/utils";
 
   //@ts-ignore
-  import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
   //@ts-ignore
-  import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
   type ServerSettings = Prisma.ServerSettingsGetPayload<{
     include: { registrationCodes: true };

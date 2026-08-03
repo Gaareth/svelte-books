@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 

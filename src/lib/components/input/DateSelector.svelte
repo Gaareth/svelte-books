@@ -70,11 +70,12 @@
   import { twMerge } from "tailwind-merge";
   //@ts-ignore
 
+  import InputNumber from "./InputNumber.svelte";
+
   import ClearButton from "$components/input/ClearButton.svelte";
+  import Dropdown from "$components/input/Dropdown.svelte";
   import ToggleGroup from "$components/input/ToggleGroup.svelte";
   import { isValidDate } from "$utils/utils";
-  import Dropdown from "$components/input/Dropdown.svelte";
-  import InputNumber from "./InputNumber.svelte";
 
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;

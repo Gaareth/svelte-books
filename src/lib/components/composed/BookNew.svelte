@@ -7,41 +7,34 @@
   import { Moon } from "svelte-loading-spinners";
   import { twMerge } from "tailwind-merge";
 
-  import { MAX_RATING } from "$lib/constants/constants";
-  import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
+  import OwnershipForm from "./OwnershipForm.svelte";
+  import InputNumber from "../input/InputNumber.svelte";
 
-  import DateSelector, {
-    type OptionalDate,
-  } from "$components/input/DateSelector.svelte";
-  import EventDone from "$lib/icons/EventDone.svelte";
-  import EventProgress from "$lib/icons/EventProgress.svelte";
-  import Words from "$lib/icons/words.svelte";
-  import Rating from "$components/Rating.svelte";
-  import TabGroup from "$components/composed/Tab/TabGroup.svelte";
-  import TabPanel from "$components/composed/Tab/TabPanel.svelte";
-  import TabPanels from "$components/composed/Tab/TabPanels.svelte";
-  import ToggleGroup from "$components/input/ToggleGroup.svelte";
-  import { capitalize, decapitalize, slideHeight } from "$utils/utils";
-
-  import type {
-    BookOwnership,
-    Prisma,
-    ReadingActivityType,
-  } from "$prismaBrowser";
+  import type { BookOwnership } from "$prismaBrowser";
 
   import { invalidateAll } from "$app/navigation";
   import { type queriedBookFull, type ReadingActivityList } from "$appTypes";
+  import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
+  import TabGroup from "$components/composed/Tab/TabGroup.svelte";
+  import TabPanel from "$components/composed/Tab/TabPanel.svelte";
+  import TabPanels from "$components/composed/Tab/TabPanels.svelte";
+  import DateSelector, {
+    type OptionalDate,
+  } from "$components/input/DateSelector.svelte";
+  import ToggleGroup from "$components/input/ToggleGroup.svelte";
+  import Rating from "$components/Rating.svelte";
+  import { MAX_RATING } from "$lib/constants/constants";
   import {
     ACQUIRED,
     FINISHED,
     READING,
-    READING_ACTIVITY_TYPES,
-    READING_STATUS_VALUES,
     TO_READ,
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
-  import OwnershipForm from "./OwnershipForm.svelte";
-  import InputNumber from "../input/InputNumber.svelte";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
+  import Words from "$lib/icons/words.svelte";
+  import { capitalize, decapitalize, slideHeight } from "$utils/utils";
 
   export let endpoint = "/book/create";
 

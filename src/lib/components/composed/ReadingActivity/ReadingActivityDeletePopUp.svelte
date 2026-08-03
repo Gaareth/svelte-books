@@ -3,10 +3,10 @@
 
   import toast from "svelte-french-toast";
 
+  import type { Prisma } from "$prismaBrowser";
+
   import { formatShort } from "$components/input/DateSelector.svelte";
   import Popup from "$components/Popup.svelte";
-
-  import type { Prisma } from "$prismaBrowser";
 
   export let openModal: boolean;
   export let deletionEntry: Prisma.ReadingActivityGetPayload<{

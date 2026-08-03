@@ -1,7 +1,8 @@
 <script>
+  import { twMerge } from "tailwind-merge";
+
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import CancelRounded from "$lib/icons/CancelRounded.svelte";
-  import { twMerge } from "tailwind-merge";
   export let className = "group p-2 !border-0 ";
 </script>
 

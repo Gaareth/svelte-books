@@ -1,7 +1,6 @@
 import { error, json, type RequestEvent } from "@sveltejs/kit";
 
 import { authorize } from "$lib/auth/auth";
-
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {

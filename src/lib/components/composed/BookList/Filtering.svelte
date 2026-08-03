@@ -14,20 +14,20 @@
 
   import EqRelation from "./EqRelation.svelte";
   import SortOrder from "./SortOrder.svelte";
-  import { MAX_RATING } from "$lib/constants/constants";
+  import ClearButton from "../../input/ClearButton.svelte";
+  import ToggleGroup from "../../input/ToggleGroup.svelte";
 
-  import type { BookFullType, ReadingListItemType } from "$appTypes";
+  import type { ReadingListItemType } from "$appTypes";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import { MAX_RATING } from "$lib/constants/constants";
   import { createSearchStore } from "$lib/stores/search";
   import {
     dateToYYYY_MM_DD,
     optionalToDate,
     sortReadingActivity,
   } from "$lib/utils/utils";
-  import ClearButton from "../../input/ClearButton.svelte";
-  import ToggleGroup from "../../input/ToggleGroup.svelte";
 
   export let languages_used: string[];
   export let category_names: string[]; // not reactive
@@ -40,7 +40,7 @@
   let end_filter: Date | undefined;
   let lang_filter: string | undefined;
 
-  let show_active_or_all: string = "only active";
+  let show_active_or_all = "only active";
   $: has_active =
     $searchStore.data.length > 0 &&
     $searchStore.data[0].hasOwnProperty("active");

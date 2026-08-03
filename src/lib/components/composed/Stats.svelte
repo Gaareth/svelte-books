@@ -1,6 +1,7 @@
 <script lang="ts">
-  import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
+
+  import clsx from "clsx";
   //@ts-ignore
   import IoIosArrowDown from "svelte-icons/io/IoIosArrowDown.svelte";
   //@ts-ignore
@@ -9,7 +10,6 @@
   import IoIosRemove from "svelte-icons/io/IoIosRemove.svelte";
   //@ts-ignore
   import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
-
   import { twMerge } from "tailwind-merge";
 
   export let name: string | undefined = undefined;

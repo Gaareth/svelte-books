@@ -1,9 +1,10 @@
 <script>
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import clsx from "clsx";
 
   //@ts-ignore
   import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
+
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
   export let className = "group p-2 !border-0 ";
 </script>

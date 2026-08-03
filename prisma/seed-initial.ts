@@ -6,6 +6,7 @@ import {
   createAllReadingActivityStatus,
   createServerSettings,
 } from "$lib/server/db/create";
+
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 // Load environment variables

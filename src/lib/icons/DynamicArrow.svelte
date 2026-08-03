@@ -1,5 +1,6 @@
 <script lang="ts">
   import { twMerge } from "tailwind-merge";
+
   import { clamp } from "../utils/utils";
 
   export let length = 200;

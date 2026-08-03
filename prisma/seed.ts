@@ -1,21 +1,19 @@
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import "dotenv/config";
+
 import {
   type Account,
   type BookSeries,
   PrismaClient,
   ReadingActivityType,
 } from "../src/generated/prisma/client";
-
 import { seedInitial } from "./seed-initial";
 
+import { hashPassword } from "$lib/auth/auth";
 import {
   createAllReadingActivityStatus,
   createLists,
 } from "$lib/server/db/create";
-
-import { hashPassword } from "$lib/auth/auth";
-
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 // Load environment variables
 // dotenv.config();

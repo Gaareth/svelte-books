@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { BookWithOwnership, ReviewListItemType } from "$appTypes";
+
   import ActiveIndicator from "$components/ActiveIndicator.svelte";
-  import AddIcon from "$lib/icons/AddIcon.svelte";
-  import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import ReadingActivityActions from "$components/composed/BookList/Actions/ReadingActivityActions.svelte";
   import ReadingActivityItem from "$components/composed/ReadingActivity/ReadingActivityItem.svelte";
+  import AddIcon from "$lib/icons/AddIcon.svelte";
+  import InfoIcon from "$lib/icons/InfoIcon.svelte";
 
   export let book: BookWithOwnership;
   export let activeEntry: ReviewListItemType;

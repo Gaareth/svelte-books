@@ -2,8 +2,6 @@
   import { Chart, getElementAtEvent } from "svelte-chartjs";
 
   import "chart.js/auto";
-  import { defaultBgColor, tupleToDataset } from "$utils/chartUtils";
-  import { theme } from "$lib/stores/stores";
 
   import { type ChartTypeRegistry } from "chart.js/auto";
 
@@ -11,9 +9,11 @@
   import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
   //@ts-ignore
   import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
-  import RestartRounded from "$src/lib/icons/RestartRounded.svelte";
+
+  import { theme } from "$lib/stores/stores";
   import MoreDots from "$src/lib/icons/MoreDots.svelte";
-  import { onMount } from "svelte";
+  import RestartRounded from "$src/lib/icons/RestartRounded.svelte";
+  import { defaultBgColor, tupleToDataset } from "$utils/chartUtils";
 
   let chart: any;
   export let data: [any, number][];

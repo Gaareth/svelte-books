@@ -1,18 +1,21 @@
 <script lang="ts">
+  import toast from "svelte-french-toast";
+
+  import AcquiredAction from "./AcquiredAction.svelte";
+  import ContinueReadingAction from "./ContinueReadingAction.svelte";
+  import DoneReadingAction from "./DoneReadingAction.svelte";
+  import NowReadingAction from "./NowReadingAction.svelte";
+  import PausedReadingAction from "./PausedReadingAction.svelte";
+  import StoppedReadingAction from "./StoppedReadingAction.svelte";
+
   import type { ReviewListItemType } from "$appTypes";
+
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
   import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
-  import NowReadingAction from "./NowReadingAction.svelte";
-  import DoneReadingAction from "./DoneReadingAction.svelte";
-  import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
-  import toast from "svelte-french-toast";
-  import PausedReadingAction from "./PausedReadingAction.svelte";
-  import StoppedReadingAction from "./StoppedReadingAction.svelte";
-  import AcquiredAction from "./AcquiredAction.svelte";
-  import ContinueReadingAction from "./ContinueReadingAction.svelte";
 
   export let activeEntry: ReviewListItemType;
   export let readingActivities: ReviewListItemType[];

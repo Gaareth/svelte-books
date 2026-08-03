@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { ReviewListItemType } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+
   import { formatShort } from "$components/input/DateSelector.svelte";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
   import EventProgress from "$lib/icons/EventProgress.svelte";

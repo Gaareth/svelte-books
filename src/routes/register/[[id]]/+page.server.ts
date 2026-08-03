@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { hashPassword } from "$lib/auth/auth";
 import { createAllReadingActivityStatus } from "$lib/server/db/create";
-
 import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals, params }: ServerLoadEvent) {

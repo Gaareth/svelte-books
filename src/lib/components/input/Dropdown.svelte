@@ -4,10 +4,9 @@
   import clsx from "clsx";
   import { twMerge } from "tailwind-merge";
 
+  import { browser } from "$app/environment";
   import { clickOutside } from "$components/input/clickOutside";
   import Modal from "$components/Modal.svelte";
-
-  import { browser } from "$app/environment";
 
   export let className: string | undefined = undefined;
   export let buttonClass: string | undefined = undefined;

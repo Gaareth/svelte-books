@@ -1,14 +1,15 @@
+import { whereVisibilityPublicOrAuthenticatedOrAll } from "./prismaUtils";
+
+import type { Session } from "@auth/sveltekit";
+
+import { type queriedBookFull } from "$appTypes";
+import { prisma } from "$lib/server/prisma";
+import { sortReadingActivity } from "$lib/utils/utils";
 import {
   type Account,
   type Prisma,
   type ReadingActivityType,
 } from "$prismaClient";
-
-import { type queriedBookFull } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
-import { sortReadingActivity } from "$lib/utils/utils";
-import type { Session } from "@auth/sveltekit";
-import { whereVisibilityPublicOrAuthenticatedOrAll } from "./prismaUtils";
 
 // Define the input types using a discriminated union to ensure only one identifier is provided
 type GetAccountById = {
@@ -67,7 +68,7 @@ export async function loadBooks(
 export async function getReadingActivity(
   requestedAccountId: string,
   session: Session | Account | null,
-  returnAll: boolean = false,
+  returnAll = false,
   status: ReadingActivityType | undefined = undefined
 ) {
   const readingActivity = await prisma.readingActivity.findMany({

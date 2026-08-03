@@ -1,8 +1,8 @@
 <script>
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-  import NotStartedRounded from "$lib/icons/NotStartedRounded.svelte";
-  import ReplayCircleFilled from "$lib/icons/ReplayCircleFilled.svelte";
   import { twMerge } from "tailwind-merge";
+
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import ReplayCircleFilled from "$lib/icons/ReplayCircleFilled.svelte";
   export let className = "group p-2 !border-0";
 </script>
 

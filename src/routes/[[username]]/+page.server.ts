@@ -1,11 +1,10 @@
+import type { ServerLoadEvent } from "@sveltejs/kit";
+
 import {
   authorize,
   handlePublicOrAuthenticatedAccount,
   isReadingActivityPublic,
 } from "$lib/auth/auth";
-
-import type { ServerLoadEvent } from "@sveltejs/kit";
-
 import { getReadingActivity } from "$lib/server/db/utils";
 import { ReadingActivityType } from "$prismaClient";
 

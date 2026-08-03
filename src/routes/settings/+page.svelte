@@ -2,27 +2,23 @@
   import toast from "svelte-french-toast";
   import { twMerge } from "tailwind-merge";
 
-  import AddApiButton from "$components/composed/Settings/AddApiButton.svelte";
-  import ApiResult from "$components/composed/Settings/ApiResult.svelte";
-  import ReloadButton from "$components/composed/Settings/ReloadButton.svelte";
-
-  import type { PageData } from "./$types.js";
   import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
+  import type { PageData } from "./$types.js";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
+  import AddApiButton from "$components/composed/Settings/AddApiButton.svelte";
+  import ApiResult from "$components/composed/Settings/ApiResult.svelte";
+  import ReloadButton from "$components/composed/Settings/ReloadButton.svelte";
   import ToggleGroup from "$lib/components/input/ToggleGroup.svelte";
-  import { capitalize, decapitalize } from "$lib/utils/utils";
   import {
-    VISIBILITY_TYPES,
-    VISIBILITY_VALUES,
     PRIVATE,
     AUTHENTICATED,
     UNLISTED,
     PUBLIC,
     type VisibilityType,
   } from "$lib/constants/enums";
-  import { Visibility } from "$src/generated/prisma/enums.js";
+  import { capitalize } from "$lib/utils/utils";
 
   export let form;
   export let data: PageData;
