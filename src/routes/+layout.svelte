@@ -6,9 +6,9 @@
 
   import { page } from "$app/stores";
   import Dropdown from "$components/input/Dropdown.svelte";
-  import IconAccount from "$lib/icons/IconAccount.svelte";
   import ThemeSwitcher from "$components/ThemeSwitcher.svelte";
   import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+  import IconAccount from "$lib/icons/IconAccount.svelte";
 
   // eslint-disable-next-line no-undef
   const version = APP_VERSION;

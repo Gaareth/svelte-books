@@ -1,11 +1,10 @@
 import { json } from "@sveltejs/kit";
 
-import { authorize } from "$lib/auth/auth";
-
 import { createReadingActivity } from "../api.server";
 
 import type { RequestEvent } from "./$types";
 
+import { authorize } from "$lib/auth/auth";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { createSchema } from "$lib/schemas/readingActivity";
 import { parseFormObject } from "$lib/schemas/utils";

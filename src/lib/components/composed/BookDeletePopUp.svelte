@@ -3,9 +3,9 @@
 
   import toast from "svelte-french-toast";
 
-  import Popup from "$components/Popup.svelte";
-
   import type { Book } from "$prismaBrowser";
+
+  import Popup from "$components/Popup.svelte";
 
   export let openModal: boolean;
   export let deletionBook: Book;

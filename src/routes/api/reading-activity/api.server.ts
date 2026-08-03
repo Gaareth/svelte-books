@@ -2,12 +2,12 @@ import type {
   optionalDatetimeSchema,
   storyGraphSchema,
 } from "$lib/schemas/schemas";
+import type { Prisma } from "$prismaBrowser";
 import type z from "zod";
 
 import { type ReadingActivityStatusType } from "$lib/constants/enums";
 import { createAllReadingActivityStatus } from "$lib/server/db/create";
 import { prisma } from "$lib/server/prisma";
-import type { Prisma } from "$prismaBrowser";
 
 const readingActivityIncludes = {
   rating: true,

@@ -6,6 +6,7 @@
   // @ts-ignore
   import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
 
+  import type { BookList } from "$prismaBrowser";
   import type { ActionData, PageData } from "./$types";
   import type {
     BookFullType,
@@ -13,28 +14,24 @@
     BookRating,
     queriedBookFull,
   } from "../../../../app";
-  import type { BookList } from "$prismaBrowser";
 
   import { applyAction, enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import BookApiDataEdit from "$components/composed/Book/BookApiDataEdit.svelte";
+  import BookFullReadingActivity from "$components/composed/Book/BookFullReadingActivity.svelte";
   import BookDeletePopUp from "$components/composed/BookDeletePopUp.svelte";
   import BookListSeries from "$components/composed/BookList/BookListSeries.svelte";
   import ReadingActivityForm from "$components/composed/ReadingActivity/ReadingActivityForm.svelte";
-  import AddIcon from "$lib/icons/AddIcon.svelte";
-  import Calendar from "$lib/icons/Calender.svelte";
-  import Pages from "$lib/icons/pages.svelte";
-  import Words from "$lib/icons/words.svelte";
   import InputAny from "$components/input/InputAny.svelte";
   import InputNumber from "$components/input/InputNumber.svelte";
   import InputSelect from "$components/input/InputSelect.svelte";
   import InputText from "$components/input/InputText.svelte";
   //@ts-ignore
-  import Pill from "$components/Pill.svelte";
+  import Calendar from "$lib/icons/Calender.svelte";
+  import Pages from "$lib/icons/pages.svelte";
+  import Words from "$lib/icons/words.svelte";
   import { getMaxResolutionImage, sortReadingActivity } from "$lib/utils/utils";
-
-  import BookFullReadingActivity from "$components/composed/Book/BookFullReadingActivity.svelte";
   import BookCategories from "$src/lib/components/composed/Book/BookCategories.svelte";
 
   export let data: PageData;

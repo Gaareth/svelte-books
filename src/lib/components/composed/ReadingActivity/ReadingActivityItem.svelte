@@ -3,7 +3,6 @@
 </script>
 
 <script lang="ts">
-  import { type Book } from "$prismaBrowser";
   //@ts-ignore
   import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
   //@ts-ignore
@@ -11,38 +10,28 @@
   //@ts-ignore
   import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
+  import { shouldShowRating } from "./utils";
+  import OwnershipForm from "../OwnershipForm.svelte";
   import ReadingActivityForm from "../ReadingActivity/ReadingActivityForm.svelte";
+
+  import { invalidateAll } from "$app/navigation";
+  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
+  import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
+  import ReadingActivityTimeDiff from "$components/composed/ReadingActivity/ReadingActivityTimeDiff.svelte";
+  import { DEFAULT_OPTIONAL_DATETIME } from "$components/input/DateSelector.svelte";
+  import Dropdown from "$components/input/Dropdown.svelte";
+  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
+  import Modal from "$components/Modal.svelte";
+  import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
   import {
     getReadingActivityColor,
     MAX_RATING,
   } from "$lib/constants/constants";
-
-  import { invalidateAll } from "$app/navigation";
-  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
-  import Dropdown from "$components/input/Dropdown.svelte";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
-  import EventDone from "$lib/icons/EventDone.svelte";
-  import EventProgress from "$lib/icons/EventProgress.svelte";
-  import InfoIcon from "$lib/icons/InfoIcon.svelte";
   import OpenNew from "$lib/icons/OpenNew.svelte";
-  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
-  import Modal from "$components/Modal.svelte";
-  import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
-  import {
-    dateDiffFormatted,
-    dateToYYYY_MM_DD,
-    capitalize,
-    optionalToDate,
-  } from "$lib/utils/utils";
-  import {
-    READING_ACTIVITY_TYPES,
-    type ReadingActivityStatusType,
-  } from "$lib/constants/enums";
-  import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-  import ReadingActivityTimeDiff from "$components/composed/ReadingActivity/ReadingActivityTimeDiff.svelte";
-  import { shouldShowRating } from "./utils";
-  import OwnershipForm from "../OwnershipForm.svelte";
-  import { DEFAULT_OPTIONAL_DATETIME } from "$components/input/DateSelector.svelte";
+  import { capitalize } from "$lib/utils/utils";
+  import { type Book } from "$prismaBrowser";
 
   export let book: BookWithOwnership;
   export let entry: ReviewListItemType;

@@ -10,10 +10,10 @@
   import { getRelativePosition } from "chart.js/helpers";
   import { twMerge } from "tailwind-merge";
 
-  import { defaultBgColor } from "$utils/chartUtils";
   import Modal from "$components/Modal.svelte";
   import { theme } from "$lib/stores/stores";
   import { clamp } from "$lib/utils/utils";
+  import { defaultBgColor } from "$utils/chartUtils";
 
   export let allowEdits = false;
   export let title: string;

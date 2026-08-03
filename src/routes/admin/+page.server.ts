@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 import { adminAuth } from "$lib/auth/auth";
-
 import { prisma } from "$lib/server/prisma";
 
 export async function load({ locals }: ServerLoadEvent) {

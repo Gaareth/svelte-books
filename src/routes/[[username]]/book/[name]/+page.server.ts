@@ -1,11 +1,11 @@
 import { error, fail, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { authorize, handlePublicOrAuthenticatedAccount } from "$lib/auth/auth";
 import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
+import { authorize, handlePublicOrAuthenticatedAccount } from "$lib/auth/auth";
 import { optionalNumericString } from "$lib/schemas/utils";
 import {
   extractBookApiData,

@@ -1,14 +1,16 @@
-import {
-  READING_ACTIVITY_TYPES,
-  type ReadingActivityStatusType,
-} from "$lib/constants/enums";
 import z from "zod";
+
 import {
   optionalDatetimeSchema,
   ownershipSchema,
   storyGraphSchema,
 } from "./schemas";
 import { numericString, optionalNumericString } from "./utils";
+
+import {
+  READING_ACTIVITY_TYPES,
+  type ReadingActivityStatusType,
+} from "$lib/constants/enums";
 
 const baseSchema = {
   comment: z.string().optional(),

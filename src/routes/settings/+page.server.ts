@@ -1,7 +1,6 @@
 import { fail, type ServerLoadEvent } from "@sveltejs/kit";
+import z from "zod";
 
-import { getAccountIdfromSession, userAuth } from "$lib/auth/auth";
-import { parseFormArray } from "$lib/schemas/utils";
 import { SSE_DATA } from "../book/api/update_all/sse";
 import {
   createConnections,
@@ -10,12 +9,13 @@ import {
   type settingsApiReloadResult,
 } from "./apidata";
 
+import { getAccountIdfromSession, userAuth } from "$lib/auth/auth";
+import { parseFormArray } from "$lib/schemas/utils";
 import { prisma } from "$lib/server/prisma";
 import {
   READING_ACTIVITY_TYPES,
   VISIBILITY_TYPES,
 } from "$src/lib/constants/enums";
-import z from "zod";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 
@@ -88,7 +88,7 @@ export const actions = {
     const accountId = await getAccountIdfromSession(session);
     const formData = await request.formData();
 
-    let formDataObject = Object.fromEntries(formData);
+    const formDataObject = Object.fromEntries(formData);
     // console.log(formDataObject);
 
     // const listNameVisibility = parseFormArray(

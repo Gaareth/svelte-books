@@ -2,26 +2,6 @@
   import clsx from "clsx";
   import toast from "svelte-french-toast";
 
-  import { MAX_RATING } from "$lib/constants/constants";
-
-  import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
-  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
-  import ClearButton from "$components/input/ClearButton.svelte";
-  import DateSelector, {
-    DEFAULT_OPTIONAL_DATETIME,
-  } from "$components/input/DateSelector.svelte";
-  import EventDone from "$lib/icons/EventDone.svelte";
-  import EventProgress from "$lib/icons/EventProgress.svelte";
-  import InputAny from "$components/input/InputAny.svelte";
-  import InputSelect from "$components/input/InputSelect.svelte";
-  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
-  import Modal from "$components/Modal.svelte";
-  import Rating from "$lib/components/Rating.svelte";
-  import {
-    READING_ACTIVITY_TYPES,
-    READING_STATUS_VALUES,
-  } from "$lib/constants/enums";
   import OwnershipForm from "../OwnershipForm.svelte";
   import {
     shouldShowRating,
@@ -29,6 +9,25 @@
     shouldShowStartedDate,
   } from "./utils";
   import InputNumber from "../../input/InputNumber.svelte";
+
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+  import { type BookWithOwnership, type ReviewListItemType } from "$appTypes";
+  import DateSelector, {
+    DEFAULT_OPTIONAL_DATETIME,
+  } from "$components/input/DateSelector.svelte";
+  import InputAny from "$components/input/InputAny.svelte";
+  import InputSelect from "$components/input/InputSelect.svelte";
+  import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
+  import Modal from "$components/Modal.svelte";
+  import Rating from "$lib/components/Rating.svelte";
+  import { MAX_RATING } from "$lib/constants/constants";
+  import {
+    READING_ACTIVITY_TYPES,
+    READING_STATUS_VALUES,
+  } from "$lib/constants/enums";
+  import EventDone from "$lib/icons/EventDone.svelte";
+  import EventProgress from "$lib/icons/EventProgress.svelte";
 
   export let book: BookWithOwnership;
   export let bookId: string | undefined = undefined;

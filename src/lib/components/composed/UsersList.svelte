@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ReadingActivityStatusType } from "$lib/constants/enums";
+
   import Book from "$lib/icons/book.svelte";
   import { capitalize } from "$lib/utils/utils";
 

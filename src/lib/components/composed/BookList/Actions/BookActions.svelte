@@ -1,18 +1,21 @@
 <script lang="ts">
   //@ts-ignore
+  import { createEventDispatcher } from "svelte";
+
+  import toast from "svelte-french-toast";
   import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
 
-  import { createEventDispatcher } from "svelte";
-  import type { ReadingListItemType } from "$appTypes";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-  import NowReadingAction from "./NowReadingAction.svelte";
-  import DoneReadingAction from "./DoneReadingAction.svelte";
   import DeleteAction from "./DeleteAction.svelte";
+  import DoneReadingAction from "./DoneReadingAction.svelte";
+  import NowReadingAction from "./NowReadingAction.svelte";
+
+  import type { ReadingListItemType } from "$appTypes";
+
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import toast from "svelte-french-toast";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
-  export let isAuthorizedToModify: boolean = false;
+  export let isAuthorizedToModify = false;
   export let allow_deletion: boolean | undefined = false;
   export let entry: ReadingListItemType;
   $: book_url = encodeURIComponent(entry.book.name);

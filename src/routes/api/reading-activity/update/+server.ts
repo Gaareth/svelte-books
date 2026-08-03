@@ -1,14 +1,12 @@
 import { json } from "@sveltejs/kit";
 
-import { authorize } from "$lib/auth/auth";
-
 import type { RequestEvent } from "./$types";
 
-import { prisma } from "$lib/server/prisma";
-
+import { authorize } from "$lib/auth/auth";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { updateSchema } from "$lib/schemas/readingActivity";
 import { parseFormObject } from "$lib/schemas/utils";
+import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
   const { requestedAccount } = await authorize(await req.locals.auth());

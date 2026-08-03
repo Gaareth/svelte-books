@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { twMerge } from "tailwind-merge";
+
+  import type { BookOwnership } from "$prismaClient";
+
   import DateSelector, {
     DEFAULT_OPTIONAL_DATETIME,
     formatOptionalDate,
@@ -10,9 +14,7 @@
   import { OWNERSHIP_VALUES } from "$lib/constants/enums";
   import AddLocation from "$lib/icons/AddLocation.svelte";
   import EventDone from "$lib/icons/EventDone.svelte";
-  import type { BookOwnership } from "$prismaClient";
   import { capitalize } from "$utils/utils";
-  import { twMerge } from "tailwind-merge";
 
   export let className = "";
   export let editable = true;

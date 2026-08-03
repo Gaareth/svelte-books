@@ -1,9 +1,8 @@
 import { json } from "@sveltejs/kit";
 
-import { authorize } from "$lib/auth/auth";
-
 import type { RequestEvent } from "./$types";
 
+import { authorize } from "$lib/auth/auth";
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {

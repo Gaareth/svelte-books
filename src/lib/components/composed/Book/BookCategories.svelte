@@ -1,6 +1,6 @@
 <script lang="ts">
-  import DoubleArrowRounded from "$src/lib/icons/DoubleArrowRounded.svelte";
   import Pill from "$components/Pill.svelte";
+  import DoubleArrowRounded from "$src/lib/icons/DoubleArrowRounded.svelte";
 
   export let categories: { name: string }[] | undefined = [];
 </script>

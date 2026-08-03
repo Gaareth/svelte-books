@@ -4,8 +4,8 @@
   import type { PageData } from "./$types";
 
   import { enhance } from "$app/forms";
-  import UsersList from "$components/composed/UsersList.svelte";
   import RegistrationSettings from "$components/composed/Admin/RegistrationSettings.svelte";
+  import UsersList from "$components/composed/UsersList.svelte";
 
   export let data: PageData;
 </script>

@@ -1,11 +1,12 @@
-import type { ReadingActivityList } from "$src/app";
-import type { OptionalDate } from "../components/input/DateSelector.svelte";
 import {
   FINISHED,
   READING_ACTIVITY_TYPES,
   type ReadingActivityStatusType,
 } from "../constants/enums";
 import { optionalToDate, sortReadingActivityReversed, sum } from "./utils";
+
+import type { ReadingActivityList } from "$src/app";
+import type { OptionalDate } from "../components/input/DateSelector.svelte";
 
 export function calc_most_read_categories(
   entries: ReadingActivityList[]
@@ -68,7 +69,7 @@ export const books_read_per_month = (
 export function get_reading_duration(readingActivities: ReadingActivityList[]) {
   let totalDuration = 0;
   let count = 0;
-  let histogram: [string, number][] = [];
+  const histogram: [string, number][] = [];
 
   for (const activity of readingActivities) {
     if (
@@ -167,8 +168,8 @@ export function get_average_time_til_status(
     return acc;
   }, {} as Record<string, ReadingActivityList[]>);
 
-  let totalDuration: number = 0;
-  let count: number = 0;
+  let totalDuration = 0;
+  let count = 0;
 
   // to-read -> acquired
   // acquired -> reading

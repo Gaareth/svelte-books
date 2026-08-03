@@ -4,11 +4,11 @@
   import { page } from "$app/stores";
   import ReadingList from "$components/composed/BookList/ReadingList.svelte";
   import BookNew from "$components/composed/BookNew.svelte";
-  import { capitalize } from "$utils/utils";
   import {
     READING_STATUS_VALUES,
     type ReadingActivityStatusType,
   } from "$lib/constants/enums";
+  import { capitalize } from "$utils/utils";
 
   export let data: PageData;
 

@@ -2,13 +2,13 @@
   import clsx from "clsx";
 
   import type { PageData } from "./$types";
-  import { page } from "$app/stores";
-  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
+  import { page } from "$app/stores";
   import BookListReading from "$components/composed/BookList/BookListReading.svelte";
   import ReadingList from "$components/composed/BookList/ReadingList.svelte";
   import BookNew from "$components/composed/BookNew.svelte";
   import Statistics from "$components/composed/Statistics.svelte";
+  import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
   import { getActiveActivies } from "$lib/utils/utils";
 
   export let data: PageData;

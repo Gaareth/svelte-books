@@ -1,11 +1,6 @@
 import { error, json } from "@sveltejs/kit";
 import { z } from "zod";
 
-import { authorize } from "$lib/auth/auth";
-import {
-  createOwnershipSchema,
-  optionalDatetimeSchema,
-} from "$lib/schemas/schemas";
 import {
   createReadingActivity,
   getOrCreateReadingActivityStatus,
@@ -14,7 +9,12 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { RequestEvent } from "./$types";
 
+import { authorize } from "$lib/auth/auth";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+import {
+  createOwnershipSchema,
+  optionalDatetimeSchema,
+} from "$lib/schemas/schemas";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import {
@@ -24,7 +24,7 @@ import {
 } from "$lib/utils/utils";
 import { BookOwnership } from "$prismaBrowser";
 
-let createSchema = z
+const createSchema = z
   .object({
     name: z.string().trim().min(1),
     author: z.string().trim().min(1),

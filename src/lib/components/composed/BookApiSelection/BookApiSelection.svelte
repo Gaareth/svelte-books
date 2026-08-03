@@ -7,9 +7,8 @@
   import BookApiSkeleton from "./BookApiSkeleton.svelte";
 
   import type { queriedBook, ReadingActivityList } from "$appTypes";
-  import { twMerge } from "tailwind-merge";
+
   import { getReadingActivityColor } from "$src/lib/constants/constants";
-  import clsx from "clsx";
   import { capitalize, sortReadingActivity } from "$src/lib/utils/utils";
 
   export let readingActivities: ReadingActivityList[] = [];

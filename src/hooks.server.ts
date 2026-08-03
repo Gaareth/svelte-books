@@ -1,10 +1,10 @@
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { SvelteKitAuth } from "@auth/sveltekit";
 
-import { verifyPassword } from "$lib/auth/auth";
 import * as seed from "../prisma/seed-initial";
 
 import { building } from "$app/environment";
+import { verifyPassword } from "$lib/auth/auth";
 import { prisma } from "$lib/server/prisma";
 
 if (!building) {
