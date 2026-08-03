@@ -1,30 +1,30 @@
 name: NodeJS check
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 24
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 24
 
-      - name: Install
-        run: npm install
+            - name: Install
+              run: npm install
 
-      - name: svelte check
-        run: npm run check-noenv
+            - name: svelte check
+              run: npm run check-noenv
 
-      # - name: eslint
-      #   run: npm run lint
+            # - name: eslint
+            #   run: npm run lint
 
-      - name: vite build
-        run: npm run build-noenv
+            - name: vite build
+              run: npm run build-noenv

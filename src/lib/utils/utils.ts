@@ -8,71 +8,71 @@ import type { BookApiData } from "$prismaClient";
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const isDarkModeEnabled = (theme: THEME, window: Window): boolean => {
-  return (
-    theme == "dark" ||
-    (theme == "system" &&
-      window &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)
-  );
+    return (
+        theme == "dark" ||
+        (theme == "system" &&
+            window &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
 };
 
 export function arrMax(arr: number[]) {
-  if (arr.length === 0) {
-    return undefined;
-  }
-
-  let maxValue = arr[0];
-  let maxIndex = 0;
-
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i] > maxValue) {
-      maxIndex = i;
-      maxValue = arr[i];
+    if (arr.length === 0) {
+        return undefined;
     }
-  }
 
-  return { maxIndex, maxValue };
+    let maxValue = arr[0];
+    let maxIndex = 0;
+
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] > maxValue) {
+            maxIndex = i;
+            maxValue = arr[i];
+        }
+    }
+
+    return { maxIndex, maxValue };
 }
 
 export function getErrorMessage(error: unknown) {
-  if (error instanceof Error) return error.message;
-  return String(error);
+    if (error instanceof Error) return error.message;
+    return String(error);
 }
 
 export const sum = (list: any[]) => list.reduce((a, b) => a + b, 0);
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
 export function undefinedToNull<Type>(any: Type | undefined): Type | null {
-  return any === undefined ? null : any;
+    return any === undefined ? null : any;
 }
 
 export function nullToUndefined<Type>(any: Type | null): Type | undefined {
-  return any === null ? undefined : any;
+    return any === null ? undefined : any;
 }
 
 export function dateToYYYY_MM_DD(date: Date) {
-  // this ignores timezone
-  // return date.toISOString().split("T")[0];
+    // this ignores timezone
+    // return date.toISOString().split("T")[0];
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const dtString = `${year}-${month}-${day}`;
-  // Format the date to 'YYYY-MM-DD'
-  return dtString;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const dtString = `${year}-${month}-${day}`;
+    // Format the date to 'YYYY-MM-DD'
+    return dtString;
 }
 
 // month is zero based
 export function isValidDate(year: number, month: number, day: number): boolean {
-  // month is zero-based, so we create a date with the exact inputs
-  const date = new Date(year, month, day);
+    // month is zero-based, so we create a date with the exact inputs
+    const date = new Date(year, month, day);
 
-  // Check if the date matches the input values
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month &&
-    date.getDate() === day
-  );
+    // Check if the date matches the input values
+    return (
+        date.getFullYear() === year &&
+        date.getMonth() === month &&
+        date.getDate() === day
+    );
 }
 
 // TODO:
@@ -97,240 +97,244 @@ export function isValidDate(year: number, month: number, day: number): boolean {
 // }
 
 export function optionalToDate(o: OptionalDate | null | undefined) {
-  if (o?.year == null) {
-    return null;
-  }
+    if (o?.year == null) {
+        return null;
+    }
 
-  return new Date(
-    o.year,
-    (o.month ?? 0) - 1,
-    o.day ?? 1,
-    o.hour ?? 0,
-    o.minute ?? 0
-  );
+    return new Date(
+        o.year,
+        (o.month ?? 0) - 1,
+        o.day ?? 1,
+        o.hour ?? 0,
+        o.minute ?? 0
+    );
 }
 
 export function dateToOptional(date: Date) {
-  return {
-    year: date.getFullYear(),
-    month: date.getMonth() + 1,
-    day: date.getDate(),
-    hour: date.getHours(),
-    minute: date.getMinutes(),
-    timezoneOffset: date.getTimezoneOffset(),
-  };
+    return {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        timezoneOffset: date.getTimezoneOffset(),
+    };
 }
 
 export function getReadDate(readingActivity: ReadingActivityWithDates) {
-  return optionalToDate(readingActivity.dateFinished) ?? null;
+    return optionalToDate(readingActivity.dateFinished) ?? null;
 }
 
 export function getActiveActivies<T extends ReadingActivityWithDates>(
-  readingActivity: T[]
+    readingActivity: T[]
 ): T[] {
-  const bookToActiveActivity: Record<string, T> = {};
+    const bookToActiveActivity: Record<string, T> = {};
 
-  for (const activity of readingActivity) {
-    const active = bookToActiveActivity[activity.bookId];
+    for (const activity of readingActivity) {
+        const active = bookToActiveActivity[activity.bookId];
 
-    if ((active && sortReadingActivity(activity, active) < 0) || !active) {
-      bookToActiveActivity[activity.bookId] = activity;
+        if ((active && sortReadingActivity(activity, active) < 0) || !active) {
+            bookToActiveActivity[activity.bookId] = activity;
+        }
     }
-  }
 
-  return Object.values(bookToActiveActivity);
+    return Object.values(bookToActiveActivity);
 }
 
 export function capitalize(status: string) {
-  if (!status) return status;
+    if (!status) return status;
 
-  return status
-    .split("_")
-    .map((word) => word[0] + word.slice(1).toLowerCase())
-    .join(" ");
+    return status
+        .split("_")
+        .map((word) => word[0] + word.slice(1).toLowerCase())
+        .join(" ");
 }
 
 export function decapitalize(status: string) {
-  return status
-    .split(" ")
-    .map((word) => word.toUpperCase())
-    .join("_");
+    return status
+        .split(" ")
+        .map((word) => word.toUpperCase())
+        .join("_");
 }
 
 function toMinutePrecision(date: Date) {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes()
-  ).getTime();
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes()
+    ).getTime();
 }
 
 // function sortBooksBy
 export function sortReadingActivity(
-  a: ReadingActivityWithDates,
-  b: ReadingActivityWithDates
+    a: ReadingActivityWithDates,
+    b: ReadingActivityWithDates
 ) {
-  const read_date_a = getReadDate(a);
-  const read_date_b = getReadDate(b);
+    const read_date_a = getReadDate(a);
+    const read_date_b = getReadDate(b);
 
-  const start_date_a = optionalToDate(a.dateStarted);
-  const start_date_b = optionalToDate(b.dateStarted);
+    const start_date_a = optionalToDate(a.dateStarted);
+    const start_date_b = optionalToDate(b.dateStarted);
 
-  // read_date dont store seconds. so we compare them with minute precision, and if they are the same we sort by createdAt
-  const date_a = toMinutePrecision(read_date_a ?? start_date_a ?? a.createdAt);
-  const date_b = toMinutePrecision(read_date_b ?? start_date_b ?? b.createdAt);
+    // read_date dont store seconds. so we compare them with minute precision, and if they are the same we sort by createdAt
+    const date_a = toMinutePrecision(
+        read_date_a ?? start_date_a ?? a.createdAt
+    );
+    const date_b = toMinutePrecision(
+        read_date_b ?? start_date_b ?? b.createdAt
+    );
 
-  // sort by date added, when the read date is the same
-  if (date_a == date_b) {
-    return (a.createdAt.getTime() - b.createdAt.getTime()) * -1;
-  }
+    // sort by date added, when the read date is the same
+    if (date_a == date_b) {
+        return (a.createdAt.getTime() - b.createdAt.getTime()) * -1;
+    }
 
-  return (date_a - date_b) * -1;
+    return (date_a - date_b) * -1;
 }
 
 export function sortReadingActivityReversed(
-  a: ReadingActivityWithDates,
-  b: ReadingActivityWithDates
+    a: ReadingActivityWithDates,
+    b: ReadingActivityWithDates
 ) {
-  return sortReadingActivity(a, b) * -1;
+    return sortReadingActivity(a, b) * -1;
 }
 
 export const replaceStateWithQuery = (values: Record<string, string>) => {
-  const url = new URL(window.location.toString());
-  for (const [k, v] of Object.entries(values)) {
-    if (v) {
-      url.searchParams.set(k, v);
-    } else {
-      url.searchParams.delete(k);
+    const url = new URL(window.location.toString());
+    for (const [k, v] of Object.entries(values)) {
+        if (v) {
+            url.searchParams.set(k, v);
+        } else {
+            url.searchParams.delete(k);
+        }
     }
-  }
-  history.replaceState(history.state, "", url);
+    history.replaceState(history.state, "", url);
 };
 
 export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
+    return Math.min(Math.max(value, min), max);
 }
 
 // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
 export function uniq<T>(a: T[]): T[] {
-  const prims: Record<string, Set<unknown>> = {
-    boolean: new Set(),
-    number: new Set(),
-    string: new Set(),
-  };
-  const objs: T[] = [];
+    const prims: Record<string, Set<unknown>> = {
+        boolean: new Set(),
+        number: new Set(),
+        string: new Set(),
+    };
+    const objs: T[] = [];
 
-  return a.filter((item) => {
-    const type = typeof item;
-    if (type in prims) {
-      if (prims[type].has(item)) {
-        return false;
-      }
-      prims[type].add(item);
-      return true;
-    } else {
-      if (objs.includes(item)) {
-        return false;
-      }
-      objs.push(item);
-      return true;
-    }
-  });
+    return a.filter((item) => {
+        const type = typeof item;
+        if (type in prims) {
+            if (prims[type].has(item)) {
+                return false;
+            }
+            prims[type].add(item);
+            return true;
+        } else {
+            if (objs.includes(item)) {
+                return false;
+            }
+            objs.push(item);
+            return true;
+        }
+    });
 }
 
 export function uniqBy<T, K>(a: T[], key: (item: T) => K): T[] {
-  const seen: Record<string, boolean> = {};
+    const seen: Record<string, boolean> = {};
 
-  return a.filter((item) => {
-    const k = key(item) as unknown as string; // Ensure compatibility with `Record<string, boolean>`
-    return Object.prototype.hasOwnProperty.call(seen, k)
-      ? false
-      : (seen[k] = true);
-  });
+    return a.filter((item) => {
+        const k = key(item) as unknown as string; // Ensure compatibility with `Record<string, boolean>`
+        return Object.prototype.hasOwnProperty.call(seen, k)
+            ? false
+            : (seen[k] = true);
+    });
 }
 
 export function slideHeight(node: Element) {
-  const style = getComputedStyle(node);
-  const height = parseFloat(style.height);
+    const style = getComputedStyle(node);
+    const height = parseFloat(style.height);
 
-  return {
-    duration: 500,
-    css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
-    easing: sineInOut,
-  };
+    return {
+        duration: 500,
+        css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
+        easing: sineInOut,
+    };
 }
 
 export function dateDiffFormatted(
-  date1: Date | string | null,
-  date2: Date | string | null
+    date1: Date | string | null,
+    date2: Date | string | null
 ): string {
-  if (!date1 || !date2) {
-    return "N/A";
-  }
+    if (!date1 || !date2) {
+        return "N/A";
+    }
 
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
 
-  const diffMs = Math.abs(d1.getTime() - d2.getTime());
-  const seconds = Math.floor(diffMs / 1000);
+    const diffMs = Math.abs(d1.getTime() - d2.getTime());
+    const seconds = Math.floor(diffMs / 1000);
 
-  if (seconds < 60) {
-    return `${seconds} second${seconds !== 1 ? "s" : ""}`;
-  }
+    if (seconds < 60) {
+        return `${seconds} second${seconds !== 1 ? "s" : ""}`;
+    }
 
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
-  }
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+    }
 
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} hour${hours !== 1 ? "s" : ""}`;
-  }
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? "s" : ""}`;
+    }
 
-  const days = Math.floor(hours / 24);
-  if (days < 30) {
-    return `${days} day${days !== 1 ? "s" : ""}`;
-  }
+    const days = Math.floor(hours / 24);
+    if (days < 30) {
+        return `${days} day${days !== 1 ? "s" : ""}`;
+    }
 
-  const months = Math.floor(days / 30);
-  if (months < 12) {
-    return `${months} month${months !== 1 ? "s" : ""}`;
-  }
+    const months = Math.floor(days / 30);
+    if (months < 12) {
+        return `${months} month${months !== 1 ? "s" : ""}`;
+    }
 
-  const years = Math.floor(months / 12);
-  return `${years} year${years !== 1 ? "s" : ""}`;
+    const years = Math.floor(months / 12);
+    return `${years} year${years !== 1 ? "s" : ""}`;
 }
 
 export function getMaxResolutionImage(apiData: BookApiData | null) {
-  if (!apiData) return null;
+    if (!apiData) return null;
 
-  const imageLinks = JSON.parse(
-    apiData.imageLinksJSON || "{}"
-  ) as ImageLinksType;
+    const imageLinks = JSON.parse(
+        apiData.imageLinksJSON || "{}"
+    ) as ImageLinksType;
 
-  return (
-    imageLinks?.extraLarge ||
-    imageLinks?.large ||
-    imageLinks?.medium ||
-    imageLinks?.thumbnail ||
-    imageLinks?.smallThumbnail ||
-    null
-  );
+    return (
+        imageLinks?.extraLarge ||
+        imageLinks?.large ||
+        imageLinks?.medium ||
+        imageLinks?.thumbnail ||
+        imageLinks?.smallThumbnail ||
+        null
+    );
 }
 
 export function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
+    return JSON.parse(JSON.stringify(obj));
 }
 
 export function getRandomIntInclusive(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function getRandom(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min;
 }

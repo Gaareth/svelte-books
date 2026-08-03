@@ -1,193 +1,194 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
-  import clsx from "clsx";
-  import { twMerge } from "tailwind-merge";
+    import clsx from "clsx";
+    import { twMerge } from "tailwind-merge";
 
-  import { browser } from "$app/environment";
-  import { clickOutside } from "$components/input/clickOutside";
-  import Modal from "$components/Modal.svelte";
+    import { browser } from "$app/environment";
+    import { clickOutside } from "$components/input/clickOutside";
+    import Modal from "$components/Modal.svelte";
 
-  export let className: string | undefined = undefined;
-  export let buttonClass: string | undefined = undefined;
-  export let contentClass: string | undefined = undefined;
-  export let closeOnClick = true;
+    export let className: string | undefined = undefined;
+    export let buttonClass: string | undefined = undefined;
+    export let contentClass: string | undefined = undefined;
+    export let closeOnClick = true;
 
-  export let open = false;
-  let trigger_ref: HTMLElement;
+    export let open = false;
+    let trigger_ref: HTMLElement;
 
-  let showModal = false;
-  let width: number;
+    let showModal = false;
+    let width: number;
 
-  let dropdownWrapper: HTMLDivElement;
-  let dropdownContentWrapper: HTMLDivElement;
+    let dropdownWrapper: HTMLDivElement;
+    let dropdownContentWrapper: HTMLDivElement;
 
-  $: {
-    if (browser) {
-      // breakpoint: sm
-      showModal = open && width < 640;
+    $: {
+        if (browser) {
+            // breakpoint: sm
+            showModal = open && width < 640;
+        }
     }
-  }
 
-  onMount(() => {
-    width = document.documentElement.clientWidth;
-    window.addEventListener("resize", () => {
-      width = document.documentElement.clientWidth;
-      checkDropdownPosition();
+    onMount(() => {
+        width = document.documentElement.clientWidth;
+        window.addEventListener("resize", () => {
+            width = document.documentElement.clientWidth;
+            checkDropdownPosition();
+        });
+        window.addEventListener("scroll", checkDropdownPosition);
     });
-    window.addEventListener("scroll", checkDropdownPosition);
-  });
 
-  onDestroy(() => {
-    if (browser) {
-      window.removeEventListener("resize", checkDropdownPosition);
-      window.removeEventListener("scroll", checkDropdownPosition);
+    onDestroy(() => {
+        if (browser) {
+            window.removeEventListener("resize", checkDropdownPosition);
+            window.removeEventListener("scroll", checkDropdownPosition);
+        }
+    });
+
+    let openUpwards = false; // track dropdown direction
+    function checkDropdownPosition() {
+        if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
+
+        const triggerRect = dropdownWrapper.getBoundingClientRect();
+        const dropdownHeight = dropdownContentWrapper.scrollHeight + 75;
+
+        const spaceBelow = window.innerHeight - triggerRect.bottom;
+        const spaceAbove = triggerRect.top;
+
+        openUpwards =
+            spaceBelow < dropdownHeight && spaceAbove > dropdownHeight;
     }
-  });
 
-  let openUpwards = false; // track dropdown direction
-  function checkDropdownPosition() {
-    if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
+    const toggleOpen = () => {
+        // trigger_ref.focus();
+        // console.log("open");
 
-    const triggerRect = dropdownWrapper.getBoundingClientRect();
-    const dropdownHeight = dropdownContentWrapper.scrollHeight + 75;
+        open = !open;
+        if (open) {
+            checkDropdownPosition();
+        }
+    };
 
-    const spaceBelow = window.innerHeight - triggerRect.bottom;
-    const spaceAbove = triggerRect.top;
+    const click_outside = () => {
+        // console.log("clicked outside");
+        // open = false;
 
-    openUpwards = spaceBelow < dropdownHeight && spaceAbove > dropdownHeight;
-  }
-
-  const toggleOpen = () => {
-    // trigger_ref.focus();
-    // console.log("open");
-
-    open = !open;
-    if (open) {
-      checkDropdownPosition();
-    }
-  };
-
-  const click_outside = () => {
-    // console.log("clicked outside");
-    // open = false;
-
-    if (!showModal) {
-      open = false;
-    }
-  };
+        if (!showModal) {
+            open = false;
+        }
+    };
 </script>
 
 <div
-  class={twMerge("dropdown", className)}
-  use:clickOutside
-  on:click_outside={click_outside}
-  bind:this={dropdownWrapper}>
-  <slot name="triggerWrapper">
-    <button
-      class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
-      on:click={toggleOpen}
-      bind:this={trigger_ref}
-      type="button">
-      <slot name="triggerContent" />
-    </button>
-  </slot>
+    class={twMerge("dropdown", className)}
+    use:clickOutside
+    on:click_outside={click_outside}
+    bind:this={dropdownWrapper}>
+    <slot name="triggerWrapper">
+        <button
+            class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
+            on:click={toggleOpen}
+            bind:this={trigger_ref}
+            type="button">
+            <slot name="triggerContent" />
+        </button>
+    </slot>
 
-  <div
-    class={clsx(
-      "dropdown-content",
-      open == false ? "hidden-imp" : "",
-      "hidden sm:block",
-      contentClass
-    )}
-    style={openUpwards
-      ? `
+    <div
+        class={clsx(
+            "dropdown-content",
+            open == false ? "hidden-imp" : "",
+            "hidden sm:block",
+            contentClass
+        )}
+        style={openUpwards
+            ? `
       transform:  translateX(-50%) translateY(-${
-        (dropdownWrapper?.clientHeight ?? 0) + 10
+          (dropdownWrapper?.clientHeight ?? 0) + 10
       }px); 
       bottom: 0;
     `
-      : ""}
-    on:click={(e) => {
-      // e.preventDefault();
-      if (closeOnClick) {
-        click_outside();
-      }
-    }}
-    on:keydown
-    role="button"
-    tabindex="0"
-    bind:this={dropdownContentWrapper}>
-    <slot name="dropdown" />
-  </div>
+            : ""}
+        on:click={(e) => {
+            // e.preventDefault();
+            if (closeOnClick) {
+                click_outside();
+            }
+        }}
+        on:keydown
+        role="button"
+        tabindex="0"
+        bind:this={dropdownContentWrapper}>
+        <slot name="dropdown" />
+    </div>
 </div>
 
 <Modal
-  bind:showModal
-  showDividers={false}
-  divClassName="!p-0"
-  on:closed={() => (open = false)}>
-  <div
-    on:keydown
-    role="button"
-    tabindex="-1"
-    on:click={(e) => {
-      //e.preventDefault();
-      if (closeOnClick) {
-        open = false;
-      }
-    }}>
-    <slot name="dropdown" />
-  </div>
+    bind:showModal
+    showDividers={false}
+    divClassName="!p-0"
+    on:closed={() => (open = false)}>
+    <div
+        on:keydown
+        role="button"
+        tabindex="-1"
+        on:click={(e) => {
+            //e.preventDefault();
+            if (closeOnClick) {
+                open = false;
+            }
+        }}>
+        <slot name="dropdown" />
+    </div>
 </Modal>
 
 <style>
-  .hidden-imp {
-    visibility: hidden !important;
-    transform: translateX(-50%) translateY(0%) !important;
-    opacity: 0;
-    transition: visibility 0s 2s, opacity 2s linear;
-  }
+    .hidden-imp {
+        visibility: hidden !important;
+        transform: translateX(-50%) translateY(0%) !important;
+        opacity: 0;
+        transition: visibility 0s 2s, opacity 2s linear;
+    }
 
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  /* .dropdown-btn {
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    /* .dropdown-btn {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     outline: 0;
   } */
 
-  .dropdown-content {
-    left: 50%;
-    /* visibility: hidden; */
-    /* display: none; */
+    .dropdown-content {
+        left: 50%;
+        /* visibility: hidden; */
+        /* display: none; */
 
-    position: absolute;
-    background-color: #f9f9f9;
-    /* min-width: 60px; */
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 4px 0px;
-    z-index: 100;
-    border-radius: 0.25rem;
-    border-width: 1px;
+        position: absolute;
+        background-color: #f9f9f9;
+        /* min-width: 60px; */
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        padding: 4px 0px;
+        z-index: 100;
+        border-radius: 0.25rem;
+        border-width: 1px;
 
-    transform: translateX(-50%) translateY(15px);
+        transform: translateX(-50%) translateY(15px);
 
-    transition: all 150ms linear;
-  }
+        transition: all 150ms linear;
+    }
 
-  /* .dropdown:focus-within .dropdown-content {
+    /* .dropdown:focus-within .dropdown-content {
     visibility: visible;
     transform: translateX(-50%) translateY(10%);
   } */
 
-  :is(.dark .dropdown-content) {
-    background-color: #374151;
-    border-color: #475569;
-  }
+    :is(.dark .dropdown-content) {
+        background-color: #374151;
+        border-color: #475569;
+    }
 
-  /* .dropdown:hover .dropdown-content {
+    /* .dropdown:hover .dropdown-content {
     visibility: visible;
     transform: translateY(0);
 

@@ -1,70 +1,72 @@
 import colorMapJSON from "$src/categoryToColor/colorMap.json";
 
 const colorMap = colorMapJSON as Record<
-  string,
-  { h: number; s: number; l: number }
+    string,
+    { h: number; s: number; l: number }
 >;
 
 export function normalizeCategory(cat: string) {
-  return cat.toLowerCase();
+    return cat.toLowerCase();
 }
 
 function extract(categories: string[]): {
-  hues: number[];
-  saturations: number[];
+    hues: number[];
+    saturations: number[];
 } {
-  const hues: number[] = [];
-  const saturations: number[] = [];
+    const hues: number[] = [];
+    const saturations: number[] = [];
 
-  for (const cat of categories) {
-    if (!cat) continue;
+    for (const cat of categories) {
+        if (!cat) continue;
 
-    const normalizedCat = normalizeCategory(cat);
+        const normalizedCat = normalizeCategory(cat);
 
-    const data = colorMap[normalizedCat];
-    if (data) {
-      hues.push(data.h);
-      saturations.push(data.s);
-    } else {
-      console.warn(`Warn: No vector found for category: ${normalizedCat}`);
-      //   throw new Error(`No vector found for category: ${cat}`);
+        const data = colorMap[normalizedCat];
+        if (data) {
+            hues.push(data.h);
+            saturations.push(data.s);
+        } else {
+            console.warn(
+                `Warn: No vector found for category: ${normalizedCat}`
+            );
+            //   throw new Error(`No vector found for category: ${cat}`);
+        }
     }
-  }
 
-  return { hues, saturations };
+    return { hues, saturations };
 }
 
 function averageNumbers(numbers: number[]) {
-  const sum = numbers.reduce((acc, val) => acc + val, 0);
-  return sum / numbers.length;
+    const sum = numbers.reduce((acc, val) => acc + val, 0);
+    return sum / numbers.length;
 }
 
 export function categoriesToColor(categories: string[] | undefined) {
-  // TODO: choose nicer colors
-  // const randomColor = {
-  //   h: getRandom(0, 1),
-  //   s: getRandomIntInclusive(50, 100) / 100,
-  //   l: 50,
-  // };
+    // TODO: choose nicer colors
+    // const randomColor = {
+    //   h: getRandom(0, 1),
+    //   s: getRandomIntInclusive(50, 100) / 100,
+    //   l: 50,
+    // };
 
-  if (!categories || categories.length === 0) {
-    // return randomColor;
-    return null;
-  }
+    if (!categories || categories.length === 0) {
+        // return randomColor;
+        return null;
+    }
 
-  const { hues, saturations } = extract(categories);
-  const avgHue = averageNumbers(hues);
-  const avgSaturation = averageNumbers(saturations);
+    const { hues, saturations } = extract(categories);
+    const avgHue = averageNumbers(hues);
+    const avgSaturation = averageNumbers(saturations);
 
-  if (isNaN(avgHue) || isNaN(avgSaturation)) {
-    return null;
-  }
+    if (isNaN(avgHue) || isNaN(avgSaturation)) {
+        return null;
+    }
 
-  console.log(categories);
+    console.log(categories);
 
-  return {
-    h: avgHue,
-    s: avgSaturation,
-    l: 50, // Fixed lightness for now
-  };
+    return {
+        h: avgHue,
+        s: avgSaturation,
+        l: 50, // Fixed lightness for now
+    };
 }

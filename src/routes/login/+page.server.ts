@@ -1,17 +1,17 @@
 import { redirect, type ServerLoadEvent } from "@sveltejs/kit";
 
 export async function load(page: ServerLoadEvent) {
-  if (await page.locals.auth()) {
-    redirect(303, "/");
-  }
+    if (await page.locals.auth()) {
+        redirect(303, "/");
+    }
 
-  const csrfTokenResponse = await page.fetch("/auth/csrf");
-  const { csrfToken } = await csrfTokenResponse.json();
+    const csrfTokenResponse = await page.fetch("/auth/csrf");
+    const { csrfToken } = await csrfTokenResponse.json();
 
-  return {
-    csrfToken,
-    error: page.url.searchParams.get("error"),
-  };
+    return {
+        csrfToken,
+        error: page.url.searchParams.get("error"),
+    };
 }
 
 // export const actions = {

@@ -1,42 +1,42 @@
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
 import {
-  authorize,
-  handlePublicOrAuthenticatedAccount,
-  isReadingActivityPublic,
+    authorize,
+    handlePublicOrAuthenticatedAccount,
+    isReadingActivityPublic,
 } from "$lib/auth/auth";
 import { getReadingActivity } from "$lib/server/db/utils";
 import { ReadingActivityType } from "$prismaClient";
 
 export async function load({ locals, params }: ServerLoadEvent) {
-  const { sessionAccount, requestedAccount } = await authorize(
-    await locals.auth(),
-    params.username,
-    handlePublicOrAuthenticatedAccount
-  );
+    const { sessionAccount, requestedAccount } = await authorize(
+        await locals.auth(),
+        params.username,
+        handlePublicOrAuthenticatedAccount
+    );
 
-  const username = params.username;
+    const username = params.username;
 
-  const isAuthorizedToModify =
-    sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin;
+    const isAuthorizedToModify =
+        sessionAccount?.id === requestedAccount.id || sessionAccount?.isAdmin;
 
-  const readingActivity = await getReadingActivity(
-    requestedAccount.id,
-    sessionAccount,
-    isAuthorizedToModify
-  );
+    const readingActivity = await getReadingActivity(
+        requestedAccount.id,
+        sessionAccount,
+        isAuthorizedToModify
+    );
 
-  const isCurrentlyReadingPublic =
-    (await isReadingActivityPublic(
-      requestedAccount.id,
-      sessionAccount,
-      ReadingActivityType.READING
-    )) || isAuthorizedToModify;
+    const isCurrentlyReadingPublic =
+        (await isReadingActivityPublic(
+            requestedAccount.id,
+            sessionAccount,
+            ReadingActivityType.READING
+        )) || isAuthorizedToModify;
 
-  return {
-    isCurrentlyReadingPublic,
-    readingActivity,
-    username,
-    isAuthorizedToModify,
-  };
+    return {
+        isCurrentlyReadingPublic,
+        readingActivity,
+        username,
+        isAuthorizedToModify,
+    };
 }

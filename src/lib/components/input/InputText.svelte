@@ -1,12 +1,12 @@
 <script lang="ts">
-  import InputAll from "./InputAll.svelte";
+    import InputAll from "./InputAll.svelte";
 
-  export let value: unknown | undefined = undefined;
-  export let name: string;
-  export let displayName: string = name;
-  // export let type: string = "text"
-  export let error: string | undefined;
-  export let hasIcon = false;
+    export let value: unknown | undefined = undefined;
+    export let name: string;
+    export let displayName: string = name;
+    // export let type: string = "text"
+    export let error: string | undefined;
+    export let hasIcon = false;
 </script>
 
 <!-- <label for={name} class="capitalize">{displayName}:</label>
@@ -25,14 +25,14 @@
 </div> -->
 
 <InputAll {displayName} {name} {error} {...$$restProps} bind:value>
-  <label slot="label" for={name} class="capitalize">
-    {#if hasIcon}
-      <div class="icon-wrapper">
-        <slot name="icon" />
-        {displayName}
-      </div>
-    {:else}
-      {displayName}
-    {/if}
-  </label>
+    <label slot="label" for={name} class="capitalize">
+        {#if hasIcon}
+            <div class="icon-wrapper">
+                <slot name="icon" />
+                {displayName}
+            </div>
+        {:else}
+            {displayName}
+        {/if}
+    </label>
 </InputAll>

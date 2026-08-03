@@ -1,50 +1,51 @@
 import {
-  QUERIED_BOOK_FULL_FIELDS,
-  type queriedBook,
-  type queriedBookFull,
+    QUERIED_BOOK_FULL_FIELDS,
+    type queriedBook,
+    type queriedBookFull,
 } from "$appTypes";
 import { env } from "$env/dynamic/private";
 
 export async function queryBooksFull(
-  query: string
+    query: string
 ): Promise<queriedBookFull[]> {
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=FULL&fields=items(${QUERIED_BOOK_FULL_FIELDS})&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=FULL&fields=items(${QUERIED_BOOK_FULL_FIELDS})&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
 
-  const json = await (await fetch(url)).json();
-  if (json.error !== undefined) {
-    throw Error(`Error fetching book API data: ${json.error.message}`);
-  }
-  return json.items;
+    const json = await (await fetch(url)).json();
+    if (json.error !== undefined) {
+        throw Error(`Error fetching book API data: ${json.error.message}`);
+    }
+    return json.items;
 }
 
 export async function queryBooks(query: string): Promise<queriedBook[]> {
-  const fields = "items(id, volumeInfo(title, authors, subtitle, imageLinks))";
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=lite&fields=${fields}&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
+    const fields =
+        "items(id, volumeInfo(title, authors, subtitle, imageLinks))";
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&projection=lite&fields=${fields}&orderBy=relevance&key=${env.BOOKS_API_KEY}`;
 
-  // console.log(url);
+    // console.log(url);
 
-  const json = await (await fetch(url)).json();
-  // console.log(json);
-  if (json.error !== undefined) {
-    throw Error(`Error fetching book API data: ${json.error.message}`);
-  }
-  return json.items;
+    const json = await (await fetch(url)).json();
+    // console.log(json);
+    if (json.error !== undefined) {
+        throw Error(`Error fetching book API data: ${json.error.message}`);
+    }
+    return json.items;
 }
 
 export async function getBookApiData(
-  volumeId: string
+    volumeId: string
 ): Promise<queriedBookFull> {
-  const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}?fields=${QUERIED_BOOK_FULL_FIELDS}&key=${env.BOOKS_API_KEY}`;
+    const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}?fields=${QUERIED_BOOK_FULL_FIELDS}&key=${env.BOOKS_API_KEY}`;
 
-  const response = await fetch(url);
-  // if (!response.ok) {
-  //   return Promise.reject(`Error fetching book API data: ${response.statusText}`);
-  // }
+    const response = await fetch(url);
+    // if (!response.ok) {
+    //   return Promise.reject(`Error fetching book API data: ${response.statusText}`);
+    // }
 
-  const json = await response.json();
-  if (json.error !== undefined) {
-    throw Error(`Error fetching book API data: ${json.error.message}`);
-  }
+    const json = await response.json();
+    if (json.error !== undefined) {
+        throw Error(`Error fetching book API data: ${json.error.message}`);
+    }
 
-  return json;
+    return json;
 }
