@@ -9,9 +9,6 @@
     import { copyToClipboard } from "$utils/browserUtils";
     import { deepClone } from "$utils/utils";
 
-    //@ts-ignore
-    //@ts-ignore
-
     type ServerSettings = Prisma.ServerSettingsGetPayload<{
         include: { registrationCodes: true };
     }>;
