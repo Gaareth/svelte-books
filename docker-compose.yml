@@ -1,12 +1,12 @@
 services:
-  web:
-    # build: .
-    image: ghcr.io/gaareth/svelte-books:latest
-    ports:
-      - 4000:3000 # to:from
-    env_file:
-      - .env.production # see env.example for the required keys
-    volumes:
-      - book-store:/database
+    web:
+        # build: .
+        image: ghcr.io/gaareth/svelte-books:latest
+        ports:
+            - 4000:3000 # to:from
+        env_file:
+            - .env.production # see env.example for the required keys
+        volumes:
+            - book-store:/database
 volumes:
-  book-store:
+    book-store:

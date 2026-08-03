@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+    import { getContext, onMount } from "svelte";
 
-  import { twMerge } from "tailwind-merge";
+    import { twMerge } from "tailwind-merge";
 
-  import { TABS, type TabsContext } from "./TabGroup.svelte";
+    import { TABS, type TabsContext } from "./TabGroup.svelte";
 
-  let panel = {};
-  let thisPanel: HTMLDivElement;
-  const { registerPanel, selectedPanel, setPanelRef } =
-    getContext<TabsContext>(TABS);
+    let panel = {};
+    let thisPanel: HTMLDivElement;
+    const { registerPanel, selectedPanel, setPanelRef } =
+        getContext<TabsContext>(TABS);
 
-  export let className: string | undefined = undefined;
+    export let className: string | undefined = undefined;
 
-  let i = registerPanel(panel);
-  onMount(() => {
-    setPanelRef(i, thisPanel);
-  });
+    let i = registerPanel(panel);
+    onMount(() => {
+        setPanelRef(i, thisPanel);
+    });
 </script>
 
 <!-- {#if $selectedPanel === panel}
@@ -23,8 +23,8 @@
 {/if} -->
 
 <div
-  hidden={$selectedPanel !== panel}
-  class={twMerge("min-w-full", className)}
-  bind:this={thisPanel}>
-  <slot />
+    hidden={$selectedPanel !== panel}
+    class={twMerge("min-w-full", className)}
+    bind:this={thisPanel}>
+    <slot />
 </div>

@@ -3,17 +3,17 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { queryBooks } from "../api.server";
 
 export const GET: RequestHandler = async ({ url, locals }) => {
-  const session = await locals.auth();
-  if (!session) {
-    error(401);
-  }
+    const session = await locals.auth();
+    if (!session) {
+        error(401);
+    }
 
-  const query = url.searchParams.get("query");
-  if (query === null) {
-    error(400);
-  }
+    const query = url.searchParams.get("query");
+    if (query === null) {
+        error(400);
+    }
 
-  const data = await queryBooks(query);
+    const data = await queryBooks(query);
 
-  return json(data);
+    return json(data);
 };

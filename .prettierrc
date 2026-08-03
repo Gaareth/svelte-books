@@ -1,5 +1,7 @@
 {
-  "plugins": ["prettier-plugin-organize-imports"],
-  "htmlWhitespaceSensitivity": "ignore",
-  "bracketSameLine": true
+    "plugins": ["prettier-plugin-organize-imports"],
+    "htmlWhitespaceSensitivity": "ignore",
+    "bracketSameLine": true,
+    "tabWidth": 4,
+    "useTabs": false
 }

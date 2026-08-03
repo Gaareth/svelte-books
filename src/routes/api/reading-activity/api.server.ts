@@ -1,6 +1,6 @@
 import type {
-  optionalDatetimeSchema,
-  storyGraphSchema,
+    optionalDatetimeSchema,
+    storyGraphSchema,
 } from "$lib/schemas/schemas";
 import type { Prisma } from "$prismaBrowser";
 import type z from "zod";
@@ -10,213 +10,217 @@ import { createAllReadingActivityStatus } from "$lib/server/db/create";
 import { prisma } from "$lib/server/prisma";
 
 const readingActivityIncludes = {
-  rating: true,
-  dateStarted: true,
-  dateFinished: true,
-  storyGraphs: true,
-  book: true,
-  status: true,
+    rating: true,
+    dateStarted: true,
+    dateFinished: true,
+    storyGraphs: true,
+    book: true,
+    status: true,
 };
 
 type readingActivityInput = Prisma.ReadingActivityGetPayload<{
-  include: {
-    rating: true;
-    dateStarted: true;
-    dateFinished: true;
-    storyGraphs: true;
-    book: true;
-    status: true;
-  };
+    include: {
+        rating: true;
+        dateStarted: true;
+        dateFinished: true;
+        storyGraphs: true;
+        book: true;
+        status: true;
+    };
 }>;
 
 export async function cloneReadingActivity(
-  accountId: string,
-  readingActivityId: number,
-  readingActivityOverwrite: Partial<readingActivityInput> = {}
+    accountId: string,
+    readingActivityId: number,
+    readingActivityOverwrite: Partial<readingActivityInput> = {}
 ) {
-  const readingActivity = await prisma.readingActivity.findUnique({
-    where: { id: readingActivityId, accountId },
-    include: {
-      ...readingActivityIncludes,
-    },
-  });
+    const readingActivity = await prisma.readingActivity.findUnique({
+        where: { id: readingActivityId, accountId },
+        include: {
+            ...readingActivityIncludes,
+        },
+    });
 
-  if (!readingActivity) {
-    throw new Error("Reading activity not found");
-  }
+    if (!readingActivity) {
+        throw new Error("Reading activity not found");
+    }
 
-  let dateStartedId = readingActivityOverwrite.dateStartedId;
-  if (
-    readingActivityOverwrite.dateStartedId === undefined &&
-    readingActivity.dateStarted
-  ) {
-    const { id, ...dateStartedData } = readingActivity.dateStarted;
+    let dateStartedId = readingActivityOverwrite.dateStartedId;
+    if (
+        readingActivityOverwrite.dateStartedId === undefined &&
+        readingActivity.dateStarted
+    ) {
+        const { id, ...dateStartedData } = readingActivity.dateStarted;
 
-    dateStartedId = (
-      await prisma.optionalDatetime.create({
-        data: dateStartedData,
-      })
-    ).id;
-  }
+        dateStartedId = (
+            await prisma.optionalDatetime.create({
+                data: dateStartedData,
+            })
+        ).id;
+    }
 
-  let dateFinishedId = readingActivityOverwrite.dateFinishedId;
-  if (
-    readingActivityOverwrite.dateFinishedId === undefined &&
-    readingActivity.dateFinished
-  ) {
-    const { id, ...dateFinishedData } = readingActivity.dateFinished;
+    let dateFinishedId = readingActivityOverwrite.dateFinishedId;
+    if (
+        readingActivityOverwrite.dateFinishedId === undefined &&
+        readingActivity.dateFinished
+    ) {
+        const { id, ...dateFinishedData } = readingActivity.dateFinished;
 
-    dateFinishedId = (
-      await prisma.optionalDatetime.create({
-        data: dateFinishedData,
-      })
-    ).id;
-  }
+        dateFinishedId = (
+            await prisma.optionalDatetime.create({
+                data: dateFinishedData,
+            })
+        ).id;
+    }
 
-  const clonedReadingActivity = await prisma.readingActivity.create({
-    data: {
-      accountId,
-      bookId: readingActivityOverwrite?.bookId ?? readingActivity.bookId,
-      readingActivityStatusId:
-        readingActivityOverwrite?.readingActivityStatusId ??
-        readingActivity.readingActivityStatusId,
-      dateStartedId,
-      dateFinishedId,
-      rating: readingActivity.rating
-        ? {
-            create: {
-              stars:
-                readingActivityOverwrite?.rating?.stars ??
-                readingActivity.rating.stars,
-              comment:
-                readingActivityOverwrite?.rating?.comment ??
-                readingActivity.rating.comment,
-            },
-          }
-        : undefined,
-      storyGraphs:
-        readingActivity.storyGraphs.length > 0
-          ? {
-              create: {
-                title:
-                  readingActivityOverwrite?.storyGraphs?.[0]?.title ??
-                  readingActivity.storyGraphs[0].title,
-                data:
-                  readingActivityOverwrite?.storyGraphs?.[0]?.data ??
-                  readingActivity.storyGraphs[0].data,
-                labels:
-                  readingActivityOverwrite?.storyGraphs?.[0]?.labels ??
-                  readingActivity.storyGraphs[0].labels,
-                details:
-                  readingActivityOverwrite?.storyGraphs?.[0]?.details ??
-                  readingActivity.storyGraphs[0].details,
-              },
-            }
-          : undefined,
-    },
-  });
+    const clonedReadingActivity = await prisma.readingActivity.create({
+        data: {
+            accountId,
+            bookId: readingActivityOverwrite?.bookId ?? readingActivity.bookId,
+            readingActivityStatusId:
+                readingActivityOverwrite?.readingActivityStatusId ??
+                readingActivity.readingActivityStatusId,
+            dateStartedId,
+            dateFinishedId,
+            rating: readingActivity.rating
+                ? {
+                      create: {
+                          stars:
+                              readingActivityOverwrite?.rating?.stars ??
+                              readingActivity.rating.stars,
+                          comment:
+                              readingActivityOverwrite?.rating?.comment ??
+                              readingActivity.rating.comment,
+                      },
+                  }
+                : undefined,
+            storyGraphs:
+                readingActivity.storyGraphs.length > 0
+                    ? {
+                          create: {
+                              title:
+                                  readingActivityOverwrite?.storyGraphs?.[0]
+                                      ?.title ??
+                                  readingActivity.storyGraphs[0].title,
+                              data:
+                                  readingActivityOverwrite?.storyGraphs?.[0]
+                                      ?.data ??
+                                  readingActivity.storyGraphs[0].data,
+                              labels:
+                                  readingActivityOverwrite?.storyGraphs?.[0]
+                                      ?.labels ??
+                                  readingActivity.storyGraphs[0].labels,
+                              details:
+                                  readingActivityOverwrite?.storyGraphs?.[0]
+                                      ?.details ??
+                                  readingActivity.storyGraphs[0].details,
+                          },
+                      }
+                    : undefined,
+        },
+    });
 
-  return clonedReadingActivity;
+    return clonedReadingActivity;
 }
 
 export async function getOrCreateReadingActivityStatus(
-  accountId: string,
-  status: ReadingActivityStatusType
+    accountId: string,
+    status: ReadingActivityStatusType
 ): Promise<number> {
-  const getRaStatus = async () =>
-    await prisma.readingActivityStatus.findUniqueOrThrow({
-      where: {
-        status_accountId: {
-          status,
-          accountId,
-        },
-      },
-    });
+    const getRaStatus = async () =>
+        await prisma.readingActivityStatus.findUniqueOrThrow({
+            where: {
+                status_accountId: {
+                    status,
+                    accountId,
+                },
+            },
+        });
 
-  try {
-    return (await getRaStatus()).id;
-  } catch (error) {
-    console.error(
-      "Error retrieving or creating reading activity status:",
-      error
-    );
-    await createAllReadingActivityStatus(accountId, true);
-    return (await getRaStatus()).id;
-  }
+    try {
+        return (await getRaStatus()).id;
+    } catch (error) {
+        console.error(
+            "Error retrieving or creating reading activity status:",
+            error
+        );
+        await createAllReadingActivityStatus(accountId, true);
+        return (await getRaStatus()).id;
+    }
 }
 
 export async function createReadingActivity(
-  accountId: string,
-  bookId: string,
-  stars: number | null | undefined,
-  status: ReadingActivityStatusType,
-  dateStarted: z.infer<typeof optionalDatetimeSchema> | undefined,
-  dateFinished?: z.infer<typeof optionalDatetimeSchema> | undefined,
-  graphs?: z.infer<typeof storyGraphSchema> | null | undefined,
-  comment?: string | null | undefined
+    accountId: string,
+    bookId: string,
+    stars: number | null | undefined,
+    status: ReadingActivityStatusType,
+    dateStarted: z.infer<typeof optionalDatetimeSchema> | undefined,
+    dateFinished?: z.infer<typeof optionalDatetimeSchema> | undefined,
+    graphs?: z.infer<typeof storyGraphSchema> | null | undefined,
+    comment?: string | null | undefined
 ) {
-  // either create new optional datetimes or link to the provided ones db entries
+    // either create new optional datetimes or link to the provided ones db entries
 
-  let createdDateStartedId;
-  if (dateStarted) {
-    createdDateStartedId = (
-      await prisma.optionalDatetime.create({
-        data: dateStarted,
-      })
-    ).id;
-  }
-
-  let createdDateFinishedId;
-  if (dateFinished) {
-    createdDateFinishedId = (
-      await prisma.optionalDatetime.create({
-        data: dateFinished,
-      })
-    ).id;
-  }
-
-  const statusId = await getOrCreateReadingActivityStatus(accountId, status);
-  const readingActivity = await prisma.readingActivity.create({
-    data: {
-      accountId,
-      bookId,
-      readingActivityStatusId: statusId,
-      dateStartedId: createdDateStartedId,
-      dateFinishedId: createdDateFinishedId,
-      rating:
-        stars !== undefined
-          ? {
-              create: {
-                stars: stars,
-                comment: comment,
-              },
-            }
-          : undefined,
-    },
-  });
-
-  if (!readingActivity) {
-    return undefined;
-  }
-
-  // todo: extend for multiple
-  if (graphs != null) {
-    if (
-      Array.isArray(graphs.data) &&
-      graphs.data.some((value) => value != null)
-    ) {
-      // at least one value is present, so create the graph
-      await prisma.graph.create({
-        data: {
-          data: JSON.stringify(graphs.data),
-          labels: JSON.stringify(graphs.labels),
-          details: JSON.stringify(graphs.details),
-          title: graphs.title,
-          readingActivityId: readingActivity.id,
-        },
-      });
+    let createdDateStartedId;
+    if (dateStarted) {
+        createdDateStartedId = (
+            await prisma.optionalDatetime.create({
+                data: dateStarted,
+            })
+        ).id;
     }
-  }
 
-  return readingActivity;
+    let createdDateFinishedId;
+    if (dateFinished) {
+        createdDateFinishedId = (
+            await prisma.optionalDatetime.create({
+                data: dateFinished,
+            })
+        ).id;
+    }
+
+    const statusId = await getOrCreateReadingActivityStatus(accountId, status);
+    const readingActivity = await prisma.readingActivity.create({
+        data: {
+            accountId,
+            bookId,
+            readingActivityStatusId: statusId,
+            dateStartedId: createdDateStartedId,
+            dateFinishedId: createdDateFinishedId,
+            rating:
+                stars !== undefined
+                    ? {
+                          create: {
+                              stars: stars,
+                              comment: comment,
+                          },
+                      }
+                    : undefined,
+        },
+    });
+
+    if (!readingActivity) {
+        return undefined;
+    }
+
+    // todo: extend for multiple
+    if (graphs != null) {
+        if (
+            Array.isArray(graphs.data) &&
+            graphs.data.some((value) => value != null)
+        ) {
+            // at least one value is present, so create the graph
+            await prisma.graph.create({
+                data: {
+                    data: JSON.stringify(graphs.data),
+                    labels: JSON.stringify(graphs.labels),
+                    details: JSON.stringify(graphs.details),
+                    title: graphs.title,
+                    readingActivityId: readingActivity.id,
+                },
+            });
+        }
+    }
+
+    return readingActivity;
 }

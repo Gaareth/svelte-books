@@ -6,25 +6,25 @@ import { authorize } from "$lib/auth/auth";
 import { prisma } from "$lib/server/prisma";
 
 export async function POST(req: RequestEvent) {
-  const { requestedAccount } = await authorize(
-    await req.locals.auth(),
-    req.params.username
-  );
+    const { requestedAccount } = await authorize(
+        await req.locals.auth(),
+        req.params.username
+    );
 
-  const { id } = await req.request.json();
-  if (id === undefined) {
-    return json({ success: false });
-  }
+    const { id } = await req.request.json();
+    if (id === undefined) {
+        return json({ success: false });
+    }
 
-  const book = await prisma.book.delete({
-    where: {
-      id: id,
-      accountId: requestedAccount.id,
-    },
-  });
-  if (!book) {
-    return json({ success: false });
-  }
+    const book = await prisma.book.delete({
+        where: {
+            id: id,
+            accountId: requestedAccount.id,
+        },
+    });
+    if (!book) {
+        return json({ success: false });
+    }
 
-  return json({ success: true });
+    return json({ success: true });
 }

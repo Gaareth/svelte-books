@@ -1,113 +1,113 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher } from "svelte";
 
-  import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
+    import type { BookApiDataCategories, queriedBookFull } from "$appTypes";
 
-  import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
-  import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
+    import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
+    import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
 
-  export let query: string | undefined = undefined;
-  export let data: BookApiDataCategories | null;
-  let newVolumeId: string | undefined;
-  let bookSelected: boolean;
-  // let fetch_data = data;
-  const dispatch = createEventDispatcher();
+    export let query: string | undefined = undefined;
+    export let data: BookApiDataCategories | null;
+    let newVolumeId: string | undefined;
+    let bookSelected: boolean;
+    // let fetch_data = data;
+    const dispatch = createEventDispatcher();
 
-  let queriedBook: queriedBookFull;
-  if (data !== null) {
-    queriedBook = {
-      id: data.id,
-      volumeInfo: {
-        ...data,
-        description: data.description || undefined,
-        subtitle: data.subtitle || undefined,
-        authors: data.authors.split("|"),
-        publishedDate: data.publishedDate || undefined,
-        publisher: data.publisher || undefined,
-        industryIdentifiers: [
-          {
-            type: "ISBN_13",
-            identifier: data.isbn_13 ?? undefined,
-          },
-        ],
-        imageLinks:
-          data.thumbnailUrl !== null
-            ? {
-                smallThumbnail: data.thumbnailUrl,
-                thumbnail: data.thumbnailUrl,
-              }
-            : undefined,
-        printedPageCount: undefined,
-        pageCount: data.pageCount || undefined,
-        categories: data.categories.map((c) => c.name),
-      },
-    };
-  }
-
-  let currentBookData: Promise<queriedBookFull> = new Promise(
-    (resolve, reject) => {
-      resolve(queriedBook);
+    let queriedBook: queriedBookFull;
+    if (data !== null) {
+        queriedBook = {
+            id: data.id,
+            volumeInfo: {
+                ...data,
+                description: data.description || undefined,
+                subtitle: data.subtitle || undefined,
+                authors: data.authors.split("|"),
+                publishedDate: data.publishedDate || undefined,
+                publisher: data.publisher || undefined,
+                industryIdentifiers: [
+                    {
+                        type: "ISBN_13",
+                        identifier: data.isbn_13 ?? undefined,
+                    },
+                ],
+                imageLinks:
+                    data.thumbnailUrl !== null
+                        ? {
+                              smallThumbnail: data.thumbnailUrl,
+                              thumbnail: data.thumbnailUrl,
+                          }
+                        : undefined,
+                printedPageCount: undefined,
+                pageCount: data.pageCount || undefined,
+                categories: data.categories.map((c) => c.name),
+            },
+        };
     }
-  );
 
-  const reloadData = async () => {
-    currentBookData = (await fetch(`/book/api/get/${data?.id}`)).json();
-    bookSelected = true;
-    newVolumeId = data?.id;
-  };
+    let currentBookData: Promise<queriedBookFull> = new Promise(
+        (resolve, reject) => {
+            resolve(queriedBook);
+        }
+    );
 
-  const takeOver = () => {
-    dispatch("takeOver", {
-      volumeId: newVolumeId,
-      queriedBook: queriedBook,
-    });
-  };
+    const reloadData = async () => {
+        currentBookData = (await fetch(`/book/api/get/${data?.id}`)).json();
+        bookSelected = true;
+        newVolumeId = data?.id;
+    };
+
+    const takeOver = () => {
+        dispatch("takeOver", {
+            volumeId: newVolumeId,
+            queriedBook: queriedBook,
+        });
+    };
 </script>
 
 <section class="my-10">
-  <h2 class="text-xl flex items-center gap-1">
-    API Data
-    <a href="https://books.google.com/books" class="text-sm underline">
-      (Google Books)
-    </a>
+    <h2 class="text-xl flex items-center gap-1">
+        API Data
+        <a href="https://books.google.com/books" class="text-sm underline">
+            (Google Books)
+        </a>
+        {#if data !== null}
+            <div class="ml-auto">
+                <button type="button" class="btn-generic" on:click={reloadData}>
+                    <span class="w-4 h-4">
+                        <!-- <IoIosRefresh /> -->
+                    </span>
+                    reload
+                </button>
+                <button type="button" class="btn-generic" on:click={takeOver}>
+                    Take over
+                </button>
+            </div>
+        {/if}
+    </h2>
     {#if data !== null}
-      <div class="ml-auto">
-        <button type="button" class="btn-generic" on:click={reloadData}>
-          <span class="w-4 h-4">
-            <!-- <IoIosRefresh /> -->
-          </span>
-          reload
-        </button>
-        <button type="button" class="btn-generic" on:click={takeOver}>
-          Take over
-        </button>
-      </div>
+        <p class="text-sm text-slate-500 -mb-2">Current data:</p>
+        <BookApiConfirm
+            volumeId={data.id}
+            getBookPromise={currentBookData}
+            back_button={false} />
     {/if}
-  </h2>
-  {#if data !== null}
-    <p class="text-sm text-slate-500 -mb-2">Current data:</p>
-    <BookApiConfirm
-      volumeId={data.id}
-      getBookPromise={currentBookData}
-      back_button={false} />
-  {/if}
-  {#if bookSelected}
-    <input type="hidden" name="apiVolumeId" value={newVolumeId} />
-    <p class="text-base text-slate-500 text-center mt-3">
-      <span class="text-base text-stone-950 dark:text-gray-200">
-        Unsaved changes!
-      </span>
-      Don't forget to press the big
-      <span class="text-blue-700 text-base">blue</span>
-      save button
-    </p>
-  {/if}
+    {#if bookSelected}
+        <input type="hidden" name="apiVolumeId" value={newVolumeId} />
+        <p class="text-base text-slate-500 text-center mt-3">
+            <span class="text-base text-stone-950 dark:text-gray-200">
+                Unsaved changes!
+            </span>
+            Don't forget to press the big
+            <span class="text-blue-700 text-base">blue</span>
+            save button
+        </p>
+    {/if}
 
-  <BookApi
-    {query}
-    label={data !== null ? "Update Book API" : "Add Book API"}
-    bind:volumeId={newVolumeId}
-    on:select={() => (bookSelected = true)}
-    on:back={() => (bookSelected = false)} />
+    <BookApi
+        {query}
+        label={data !== null ? "Update Book API" : "Add Book API"}
+        bind:volumeId={newVolumeId}
+        on:select={() => (bookSelected = true)}
+        on:back={() => (bookSelected = false)} />
 </section>
 <!-- summary_text={data !== null ? "Update API connection" : undefined} -->

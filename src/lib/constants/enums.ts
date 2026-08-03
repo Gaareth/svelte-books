@@ -1,46 +1,46 @@
 import {
-  BookOwnership,
-  type ReadingActivityType,
-  type Visibility,
+    BookOwnership,
+    type ReadingActivityType,
+    type Visibility,
 } from "$prismaBrowser";
 
 export const VISIBILITY_TYPES = {
-  PUBLIC: "PUBLIC",
-  PRIVATE: "PRIVATE",
-  UNLISTED: "UNLISTED",
-  AUTHENTICATED: "AUTHENTICATED",
+    PUBLIC: "PUBLIC",
+    PRIVATE: "PRIVATE",
+    UNLISTED: "UNLISTED",
+    AUTHENTICATED: "AUTHENTICATED",
 } as const satisfies { [K in Visibility]: K };
 
 export const VISIBILITY_VALUES = Object.values(VISIBILITY_TYPES) as Array<
-  (typeof VISIBILITY_TYPES)[keyof typeof VISIBILITY_TYPES]
+    (typeof VISIBILITY_TYPES)[keyof typeof VISIBILITY_TYPES]
 >;
 
 export const { PUBLIC, PRIVATE, UNLISTED, AUTHENTICATED } = VISIBILITY_TYPES;
 
 export const READING_ACTIVITY_TYPES = {
-  TO_READ: "TO_READ",
-  READING: "READING",
-  FINISHED: "FINISHED",
-  PAUSED: "PAUSED",
-  DID_NOT_FINISH: "DID_NOT_FINISH",
-  ACQUIRED: "ACQUIRED",
+    TO_READ: "TO_READ",
+    READING: "READING",
+    FINISHED: "FINISHED",
+    PAUSED: "PAUSED",
+    DID_NOT_FINISH: "DID_NOT_FINISH",
+    ACQUIRED: "ACQUIRED",
 } as const satisfies { [K in ReadingActivityType]: K };
 
 export const { TO_READ, READING, FINISHED, PAUSED, DID_NOT_FINISH, ACQUIRED } =
-  READING_ACTIVITY_TYPES;
+    READING_ACTIVITY_TYPES;
 
 export type VisibilityType = keyof typeof VISIBILITY_TYPES;
 export type ReadingActivityStatusType = keyof typeof READING_ACTIVITY_TYPES;
 
 export const READING_STATUS_VALUES = Object.values(
-  READING_ACTIVITY_TYPES
+    READING_ACTIVITY_TYPES
 ) as Array<
-  (typeof READING_ACTIVITY_TYPES)[keyof typeof READING_ACTIVITY_TYPES]
+    (typeof READING_ACTIVITY_TYPES)[keyof typeof READING_ACTIVITY_TYPES]
 >;
 // Ensure READING_STATUS_VALUES is a tuple for Zod enum
 export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
-  string,
-  ...string[]
+    string,
+    ...string[]
 ];
 
 // export const BOOK_OWNERSHIP_TYPES = {
@@ -58,5 +58,5 @@ export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
 // >;
 
 export const OWNERSHIP_VALUES = Object.values(BookOwnership) as Array<
-  (typeof BookOwnership)[keyof typeof BookOwnership]
+    (typeof BookOwnership)[keyof typeof BookOwnership]
 >;

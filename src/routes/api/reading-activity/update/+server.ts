@@ -1,5 +1,9 @@
 import { json } from "@sveltejs/kit";
 
+import type {
+    BookOwnership,
+    ReadingActivity,
+} from "$src/generated/prisma/client";
 import type { RequestEvent } from "./$types";
 
 import { authorize } from "$lib/auth/auth";
@@ -7,10 +11,6 @@ import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { updateSchema } from "$lib/schemas/readingActivity";
 import { parseFormObject } from "$lib/schemas/utils";
 import { prisma } from "$lib/server/prisma";
-import type {
-    BookOwnership,
-    ReadingActivity,
-} from "$src/generated/prisma/client";
 
 /// Update readingActivity
 export async function POST(req: RequestEvent) {

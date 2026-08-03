@@ -3,30 +3,30 @@ import type { Session } from "@auth/sveltekit";
 import { Visibility, type Account } from "$prismaClient";
 
 export function whereVisibilityPublicOrAuthenticated(session: Session | null) {
-  return {
-    OR: [
-      { visibility: Visibility.PUBLIC },
-      ...(session ? [{ visibility: Visibility.AUTHENTICATED }] : []),
-    ],
-  };
+    return {
+        OR: [
+            { visibility: Visibility.PUBLIC },
+            ...(session ? [{ visibility: Visibility.AUTHENTICATED }] : []),
+        ],
+    };
 }
 
 export function whereVisibilityPublicOrAuthenticatedOrAll(
-  session: Session | Account | null,
-  returnAll: boolean
+    session: Session | Account | null,
+    returnAll: boolean
 ) {
-  const wherePublicOrAuth = {
-    OR: [
-      { visibility: Visibility.PUBLIC },
-      ...(session ? [{ visibility: Visibility.AUTHENTICATED }] : []),
-    ],
-  };
-
-  if (returnAll) {
-    return {
-      visibility: undefined,
+    const wherePublicOrAuth = {
+        OR: [
+            { visibility: Visibility.PUBLIC },
+            ...(session ? [{ visibility: Visibility.AUTHENTICATED }] : []),
+        ],
     };
-  } else {
-    return wherePublicOrAuth;
-  }
+
+    if (returnAll) {
+        return {
+            visibility: undefined,
+        };
+    } else {
+        return wherePublicOrAuth;
+    }
 }
