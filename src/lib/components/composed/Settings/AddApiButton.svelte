@@ -2,7 +2,6 @@
     import { onDestroy, onMount } from "svelte";
 
     import toast from "svelte-french-toast";
-
     // @ts-ignore
     import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
 

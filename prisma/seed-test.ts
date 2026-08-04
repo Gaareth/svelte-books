@@ -9,7 +9,9 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaBetterSqlite3({ url: connectionString });
 const prisma = new PrismaClient({ adapter });
 
-async function main() {}
+async function main() {
+    // dummy
+}
 
 // write simple seed
 main()

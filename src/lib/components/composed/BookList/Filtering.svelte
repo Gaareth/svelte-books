@@ -4,7 +4,6 @@
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     import AutoComplete from "simple-svelte-autocomplete";
-
     //@ts-ignore
     import FilterIcon from "svelte-icons/fa/FaFilter.svelte";
     //@ts-ignore
@@ -43,7 +42,7 @@
     let show_active_or_all = "only active";
     $: has_active =
         $searchStore.data.length > 0 &&
-        $searchStore.data[0].hasOwnProperty("active");
+        Object.prototype.hasOwnProperty.call($searchStore.data[0], "active");
 
     // let params = $page.url.searchParams;
     // update when url changes, back button pressed

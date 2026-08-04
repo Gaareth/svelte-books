@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
+    import DonePopup from "./Actions/DonePopup.svelte";
     import ReadingListItem from "./ReadingListItem.svelte";
 
     import { type ReadingListItemType } from "$appTypes";
@@ -29,6 +30,9 @@
         randomSentence =
             sentences[Math.floor(Math.random() * sentences.length)];
     });
+
+    let popupEntry: ReadingListItemType | undefined = undefined;
+    let popupOpen = false;
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">
@@ -50,6 +54,16 @@
 
 <div class="dark:bg-slate-800 bg-white">
     {#each readingActivitiesSorted as entry (entry.id)}
-        <ReadingListItem {entry} {isAuthorizedToModify} />
+        <ReadingListItem
+            {entry}
+            {isAuthorizedToModify}
+            on:done={() => {
+                popupEntry = entry;
+                popupOpen = true;
+            }} />
     {/each}
 </div>
+
+{#if popupEntry}
+    <DonePopup entry={popupEntry} bind:openModal={popupOpen} />
+{/if}

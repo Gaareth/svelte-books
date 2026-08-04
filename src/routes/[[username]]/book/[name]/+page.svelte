@@ -87,14 +87,10 @@
         }
 
         let selectedBook = books.find((b) => b.name == selectedSeriesBook.name);
-        console.log(selectedSeriesBook);
         if (!selectedBook) {
             series_error = "Please choose a valid book";
             return;
         }
-
-        console.log(book.bookSeries?.books);
-        console.log(selectedBook);
 
         let currentSeries = book.bookSeries?.books.map((b) => b.name);
         if (currentSeries?.includes(selectedBook.name)) {
@@ -144,20 +140,13 @@
 
     let showCreateReadingActivity = false;
 
-    const authorError =
-        form?.errors != null && "author" in form?.errors
-            ? form?.errors?.author?.[0]
-            : undefined;
+    function getFormError(field: string) {
+        return form?.errors?.[field as keyof typeof form.errors]?.[0];
+    }
 
-    const listNameError =
-        form?.errors != null && "listName" in form?.errors
-            ? form?.errors?.listName?.[0]
-            : undefined;
-
-    const wordsPerPageError =
-        form?.errors != null && "wordsPerPage" in form?.errors
-            ? form?.errors?.wordsPerPage?.[0]
-            : undefined;
+    const authorError = getFormError("author");
+    const listNameError = getFormError("listName");
+    const wordsPerPageError = getFormError("wordsPerPage");
 
     //lg:group-hover:opacity-50
     const imageClass = ` transition-all duration-300 relative bg-background-elevated text-transparent

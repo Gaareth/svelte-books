@@ -1,10 +1,7 @@
 <script lang="ts">
-    import { Chart, getElementAtEvent } from "svelte-chartjs";
-
-    import "chart.js/auto";
-
     import { type ChartTypeRegistry } from "chart.js/auto";
-
+    import { Chart, getElementAtEvent } from "svelte-chartjs";
+    import "chart.js/auto";
     //@ts-ignore
     import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
     //@ts-ignore

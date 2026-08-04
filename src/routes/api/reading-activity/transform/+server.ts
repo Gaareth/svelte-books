@@ -14,16 +14,28 @@ import {
 } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
 import { BookOwnership } from "$prismaClient";
+import { storyGraphSchema } from "$src/lib/schemas/schemas";
+import { optionalNumericString, parseFormObject } from "$src/lib/schemas/utils";
+import { undefinedToNull } from "$src/lib/utils/utils";
 
-const transformSchema = z.object({
-    readingActivityId: z.coerce.number(),
-    targetStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
+const updateRatingSchema = z.object({
+    stars: optionalNumericString(z.number().min(0).max(5).nullish()).optional(),
+    comment: z.string().optional(),
+    graphs: storyGraphSchema.optional(),
 });
+
+const transformSchema = z
+    .object({
+        readingActivityId: z.coerce.number(),
+        targetStatus: z.nativeEnum(READING_ACTIVITY_TYPES),
+    })
+    .merge(updateRatingSchema.partial());
 
 async function transformAddCurrentDate(
     accountId: string,
     readingActivityId: number,
-    targetReadingActivityStatusId: number
+    targetReadingActivityStatusId: number,
+    optionalRating: z.infer<typeof updateRatingSchema> | undefined = undefined
 ) {
     const now = new Date();
     const dateId = (
@@ -39,9 +51,25 @@ async function transformAddCurrentDate(
         })
     ).id;
 
+    const storyGraphs = optionalRating?.graphs
+        ? [
+              {
+                  title: optionalRating.graphs.title,
+                  labels: JSON.stringify(optionalRating.graphs.labels),
+                  details: JSON.stringify(optionalRating.graphs.details),
+                  data: JSON.stringify(optionalRating.graphs.data),
+              },
+          ]
+        : undefined;
+
     return await cloneReadingActivity(accountId, readingActivityId, {
         readingActivityStatusId: targetReadingActivityStatusId,
         dateFinishedId: dateId,
+        rating: {
+            stars: undefinedToNull(optionalRating?.stars),
+            comment: optionalRating?.comment,
+        },
+        storyGraphs,
     });
 }
 
@@ -85,8 +113,12 @@ export async function POST(req: RequestEvent) {
     const accountId = requestedAccount.id;
 
     const f = await req.request.formData();
+    const formData = Object.fromEntries(f);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    formData["graphs"] = parseFormObject(formData, "graphs");
 
-    const result = transformSchema.safeParse(Object.fromEntries(f));
+    const result = transformSchema.safeParse(formData);
     if (!result.success) {
         throw error(400, "Missing readingActivityId");
     }
@@ -130,10 +162,12 @@ export async function POST(req: RequestEvent) {
         case READING_ACTIVITY_TYPES.FINISHED:
         case READING_ACTIVITY_TYPES.DID_NOT_FINISH:
         case READING_ACTIVITY_TYPES.PAUSED: {
+            const { stars, comment, graphs } = result.data;
             newReadingActivity = await transformAddCurrentDate(
                 accountId,
                 readingActivityId,
-                targetReadingActivityStatusId
+                targetReadingActivityStatusId,
+                { stars, comment, graphs }
             );
             break;
         }

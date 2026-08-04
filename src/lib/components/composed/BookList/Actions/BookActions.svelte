@@ -66,7 +66,8 @@
                 {:else if statusType == READING_ACTIVITY_TYPES.TO_READ}
                     <NowReadingAction />
                 {:else if statusType == READING_ACTIVITY_TYPES.READING}
-                    <DoneReadingAction />
+                    <DoneReadingAction
+                        on:done={() => dispatch("done", { entry })} />
                 {:else if allow_deletion}
                     <DeleteAction
                         on:delete={() => dispatch("delete", { entry })} />

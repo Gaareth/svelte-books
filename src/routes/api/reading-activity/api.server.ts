@@ -29,10 +29,44 @@ type readingActivityInput = Prisma.ReadingActivityGetPayload<{
     };
 }>;
 
+function cloneRating(
+    originalRating: readingActivityInput["rating"] | null,
+    overwriteRating:
+        | DeepPartial<readingActivityInput["rating"]>
+        | null
+        | undefined
+) {
+    if (overwriteRating != null) {
+        return {
+            create: {
+                stars: overwriteRating.stars,
+                comment: overwriteRating.comment,
+            },
+        };
+    }
+
+    if (originalRating != null) {
+        return {
+            create: {
+                stars: originalRating.stars,
+                comment: originalRating.comment,
+            },
+        };
+    }
+
+    return undefined;
+}
+
+type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;
+
 export async function cloneReadingActivity(
     accountId: string,
     readingActivityId: number,
-    readingActivityOverwrite: Partial<readingActivityInput> = {}
+    readingActivityOverwrite: DeepPartial<readingActivityInput> = {}
 ) {
     const readingActivity = await prisma.readingActivity.findUnique({
         where: { id: readingActivityId, accountId },
@@ -82,19 +116,12 @@ export async function cloneReadingActivity(
                 readingActivity.readingActivityStatusId,
             dateStartedId,
             dateFinishedId,
-            rating: readingActivity.rating
-                ? {
-                      create: {
-                          stars:
-                              readingActivityOverwrite?.rating?.stars ??
-                              readingActivity.rating.stars,
-                          comment:
-                              readingActivityOverwrite?.rating?.comment ??
-                              readingActivity.rating.comment,
-                      },
-                  }
-                : undefined,
+            rating: cloneRating(
+                readingActivity.rating,
+                readingActivityOverwrite.rating
+            ),
             storyGraphs:
+                (readingActivityOverwrite.storyGraphs?.length ?? 0) > 0 ||
                 readingActivity.storyGraphs.length > 0
                     ? {
                           create: {

@@ -26,9 +26,9 @@ function extract(categories: string[]): {
             hues.push(data.h);
             saturations.push(data.s);
         } else {
-            console.warn(
-                `Warn: No vector found for category: ${normalizedCat}`
-            );
+            // console.warn(
+            //     `Warn: No vector found for category: ${normalizedCat}`
+            // );
             //   throw new Error(`No vector found for category: ${cat}`);
         }
     }

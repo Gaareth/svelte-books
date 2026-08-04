@@ -6,7 +6,6 @@
     import IoIosMoon from "svelte-icons/io/IoIosMoon.svelte";
     //@ts-ignore
     import IoIosSunny from "svelte-icons/io/IoIosSunny.svelte";
-
     //@ts-ignore
     import { twMerge } from "tailwind-merge";
 

@@ -101,6 +101,7 @@ const publicAccountSelect = {
 export type ReadingListItemType = Prisma.ReadingActivityGetPayload<{
     include: {
         rating: true;
+        // storyGraphs: true;
         status: true;
         book: {
             include: {
@@ -126,6 +127,16 @@ export type ReviewListItemType = Prisma.ReadingActivityGetPayload<{
         dateFinished: true;
         storyGraphs: true;
         book: true;
+        status: true;
+    };
+}>;
+
+export type ReadingActivityRating = Prisma.ReadingActivityGetPayload<{
+    include: {
+        rating: true;
+        dateStarted: true;
+        dateFinished: true;
+        storyGraphs: true;
         status: true;
     };
 }>;

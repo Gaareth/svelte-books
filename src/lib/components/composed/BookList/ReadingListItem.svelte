@@ -30,7 +30,10 @@
     // export let openModal: boolean = false;
     export let allow_deletion: boolean | undefined = true;
 
-    const dispatch = createEventDispatcher<{ delete: ItemDeleteEvent }>();
+    const dispatch = createEventDispatcher<{
+        delete: ItemDeleteEvent;
+        done: { entry: ReadingListItemType };
+    }>();
     // console.log(book);
 
     const book_url = encodeURIComponent(entry.book.name);
@@ -154,7 +157,7 @@
                 </p>
             {/if}
 
-            {#if entry.rating?.stars}
+            {#if entry.rating?.stars != null}
                 <div
                     class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
                     <p>{entry.rating.stars} / {MAX_RATING}</p>
@@ -162,7 +165,7 @@
                 </div>
             {/if}
 
-            {#if book.bookApiData?.pageCount}
+            {#if book.bookApiData?.pageCount != null}
                 <div
                     class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
                     <p>{book.bookApiData.pageCount}</p>
@@ -177,7 +180,8 @@
                     {isAuthorizedToModify}
                     {allow_deletion}
                     {entry}
-                    on:delete={(e) => dispatch("delete", e.detail)} />
+                    on:delete={(e) => dispatch("delete", e.detail)}
+                    on:done={(e) => dispatch("done", e.detail)} />
             </slot>
         </div>
     </div>

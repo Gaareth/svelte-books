@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Chart, getElementAtEvent } from "svelte-chartjs";
     import "chart.js/auto";
     import {
         Scale,
@@ -8,6 +7,7 @@
         type Tick,
     } from "chart.js/auto";
     import { getRelativePosition } from "chart.js/helpers";
+    import { Chart, getElementAtEvent } from "svelte-chartjs";
     import { twMerge } from "tailwind-merge";
 
     import Modal from "$components/Modal.svelte";

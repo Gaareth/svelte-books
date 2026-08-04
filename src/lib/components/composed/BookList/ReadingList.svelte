@@ -2,7 +2,6 @@
     import { onDestroy } from "svelte";
 
     import { fade, scale } from "svelte/transition";
-
     //@ts-ignore
     import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
 

@@ -86,7 +86,7 @@
 
             <ReadingActivityTimeDiff {entry} />
 
-            {#if entry.rating?.stars}
+            {#if entry.rating?.stars != null}
                 <div
                     class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
                     <p class="whitespace-nowrap">
@@ -246,7 +246,7 @@
             <div class="flex items-center gap-3">
                 <h2 class="text-xl">Review</h2>
 
-                {#if entry.rating?.stars}
+                {#if entry.rating?.stars != null}
                     <div class="flex gap-1 items-center">
                         <p>{entry.rating.stars} / {MAX_RATING}</p>
                         <span class="icon" aria-label="stars">

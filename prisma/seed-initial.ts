@@ -1,13 +1,12 @@
-import { PrismaClient } from "$prismaClient";
-import "dotenv/config";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 import {
     createAccount,
     createAllReadingActivityStatus,
     createServerSettings,
 } from "$lib/server/db/create";
-
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaClient } from "$prismaClient";
+import "dotenv/config";
 
 // Load environment variables
 // dotenv.config();

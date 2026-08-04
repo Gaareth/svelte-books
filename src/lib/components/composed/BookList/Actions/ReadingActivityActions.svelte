@@ -3,6 +3,7 @@
 
     import AcquiredAction from "./AcquiredAction.svelte";
     import ContinueReadingAction from "./ContinueReadingAction.svelte";
+    import DonePopup from "./DonePopup.svelte";
     import DoneReadingAction from "./DoneReadingAction.svelte";
     import NowReadingAction from "./NowReadingAction.svelte";
     import PausedReadingAction from "./PausedReadingAction.svelte";
@@ -53,6 +54,8 @@
             actions.push({ component: AcquiredAction });
         }
     }
+
+    let openModal = false;
 </script>
 
 <form
@@ -81,9 +84,16 @@
         {#each actions as action, i}
             <svelte:component
                 this={action.component}
+                on:done={() => {
+                    openModal = true;
+                }}
                 className={`group toggle-btn px-3 py-2 
         ${i === 0 ? "toggle-btn-start" : ""} 
         ${i === actions.length - 1 ? "toggle-btn-end" : ""}`} />
         {/each}
     </div>
 </form>
+
+{#if activeEntry}
+    <DonePopup entry={activeEntry} bind:openModal />
+{/if}

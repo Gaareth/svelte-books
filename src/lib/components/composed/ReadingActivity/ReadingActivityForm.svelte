@@ -1,14 +1,13 @@
 <script lang="ts">
-    import clsx from "clsx";
     import toast from "svelte-french-toast";
 
     import OwnershipForm from "../OwnershipForm.svelte";
+    import RatingForm from "./RatingForm.svelte";
     import {
         shouldShowRating,
         shouldShowFinishedDate,
         shouldShowStartedDate,
     } from "./utils";
-    import InputNumber from "../../input/InputNumber.svelte";
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
@@ -18,10 +17,7 @@
     } from "$components/input/DateSelector.svelte";
     import InputAny from "$components/input/InputAny.svelte";
     import InputSelect from "$components/input/InputSelect.svelte";
-    import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
     import Modal from "$components/Modal.svelte";
-    import Rating from "$lib/components/Rating.svelte";
-    import { MAX_RATING } from "$lib/constants/constants";
     import {
         READING_ACTIVITY_TYPES,
         READING_STATUS_VALUES,
@@ -35,7 +31,6 @@
     export let entry: ReviewListItemType | undefined = undefined;
     $: createNew = entry === undefined;
 
-    let stars = entry?.rating?.stars;
     let readingStatus = entry?.status.status;
 
     let prevShowModal = false;
@@ -51,18 +46,6 @@
     $: showRating = shouldShowRating(readingStatus);
     $: showFinishedDate = shouldShowFinishedDate(readingStatus);
     $: showStartedDate = shouldShowStartedDate(readingStatus);
-
-    let tensionGraph =
-        entry?.storyGraphs && entry?.storyGraphs?.length > 0
-            ? {
-                  labels: JSON.parse(entry.storyGraphs[0].labels),
-                  details: JSON.parse(entry.storyGraphs[0].details),
-                  data: JSON.parse(entry.storyGraphs[0].data),
-                  title: entry.storyGraphs[0].title,
-              }
-            : {
-                  title: "tension", // the rest is default in the component
-              };
 
     let error: Record<string, any> | undefined = undefined;
 
@@ -203,90 +186,7 @@
             {/if}
 
             {#if showRating}
-                <div class="my-2">
-                    <h2 class="text-xl">
-                        <label for="stars">Rating</label>
-                    </h2>
-                    <div
-                        class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
-                        <div>
-                            <InputNumber
-                                inputClass="py-0.5 text-center btn-generic-color-2"
-                                name="stars"
-                                type="number"
-                                step="0.5"
-                                bind:value={stars}
-                                min="0"
-                                max={MAX_RATING}
-                                skipLabel={true}
-                                clearButton={true} />
-                        </div>
-
-                        <div class="flex sm:justify-center">
-                            <Rating
-                                bind:rating={stars}
-                                rating_max={MAX_RATING}
-                                editable={true} />
-                        </div>
-                    </div>
-                </div>
-
-                <section>
-                    <details>
-                        <summary
-                            class={clsx(
-                                "cursor-pointer text-xl",
-                                !entry?.rating?.comment && "text-secondary"
-                            )}>
-                            Comment
-                        </summary>
-                        <textarea
-                            class="w-full input dark:bg-slate-600"
-                            name="comment"
-                            id="comment"
-                            value={entry?.rating?.comment ?? ""}
-                            rows="5" />
-                    </details>
-                </section>
-
-                <section>
-                    <details>
-                        <summary
-                            class={clsx(
-                                "cursor-pointer text-xl",
-                                entry?.storyGraphs?.length == 0 &&
-                                    "text-secondary"
-                            )}>
-                            Story graphs
-                        </summary>
-                        <div class="default-border p-2 dark:bg-slate-600">
-                            <LineChartDrawer
-                                allowEdits={true}
-                                bgColorDark="#64748b"
-                                inputClassName="dark:bg-slate-500 dark:border-slate-500"
-                                bind:title={tensionGraph.title}
-                                bind:labels={tensionGraph.labels}
-                                bind:details={tensionGraph.details}
-                                bind:data={tensionGraph.data} />
-                            <input
-                                type="hidden"
-                                name="graphs[title]"
-                                value={tensionGraph.title} />
-                            <input
-                                type="hidden"
-                                name="graphs[labels]"
-                                value={JSON.stringify(tensionGraph.labels)} />
-                            <input
-                                type="hidden"
-                                name="graphs[details]"
-                                value={JSON.stringify(tensionGraph.details)} />
-                            <input
-                                type="hidden"
-                                name="graphs[data]"
-                                value={JSON.stringify(tensionGraph.data)} />
-                        </div>
-                    </details>
-                </section>
+                <RatingForm {entry} />
             {/if}
 
             {#if readingStatus == READING_ACTIVITY_TYPES.ACQUIRED}
