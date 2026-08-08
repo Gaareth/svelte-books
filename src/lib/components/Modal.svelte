@@ -1,55 +1,74 @@
 <script lang="ts">
+    import { run, preventDefault, self, createBubbler, stopPropagation } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import { createEventDispatcher } from "svelte";
 
     //@ts-ignore
     import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
     import { twMerge } from "tailwind-merge";
 
-    export let showModal: boolean;
-    export let className: string | undefined = undefined;
-    export let divClassName: string | undefined = undefined;
 
-    export let showDividers = true;
+    interface Props {
+        showModal: boolean;
+        className?: string | undefined;
+        divClassName?: string | undefined;
+        showDividers?: boolean;
+        header?: import('svelte').Snippet;
+        children?: import('svelte').Snippet;
+    }
 
-    let dialog: HTMLDialogElement;
+    let {
+        showModal = $bindable(),
+        className = undefined,
+        divClassName = undefined,
+        showDividers = true,
+        header,
+        children
+    }: Props = $props();
+
+    let dialog: HTMLDialogElement | undefined = $state();
 
     const dispatch = createEventDispatcher();
 
-    $: if (dialog && showModal) {
-        dialog.showModal();
-        dispatch("opened");
-    }
-    $: if (!showModal && !!dialog) {
-        dialog.close();
-        dispatch("closed");
-    }
+    run(() => {
+        if (dialog && showModal) {
+            dialog.showModal();
+            dispatch("opened");
+        }
+    });
+    run(() => {
+        if (!showModal && !!dialog) {
+            dialog.close();
+            dispatch("closed");
+        }
+    });
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- eslint-disable-next-line svelte/valid-compile -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <dialog
     bind:this={dialog}
-    on:close|preventDefault={() => {
+    onclose={preventDefault(() => {
         showModal = false;
-    }}
-    on:click|self={() => dialog.close()}
+    })}
+    onclick={self(() => dialog?.close())}
     class={twMerge(
         "rounded-md border border-blue-100 bg-white dark:border-slate-700 dark:bg-slate-700 dark:text-white shadow-lg p-2 lg:p-4",
         className
     )}
     role="alertdialog">
-    <div on:click|stopPropagation class={divClassName}>
+    <div onclick={stopPropagation(bubble('click'))} class={divClassName}>
         <div class="flex justify-between item-center gap-3">
-            <slot name="header" />
+            {@render header?.()}
         </div>
-        <!-- svelte-ignore a11y-autofocus -->
+        <!-- svelte-ignore a11y_autofocus -->
         <button
             autofocus
-            on:click|preventDefault={() => {
-                dialog.close();
-            }}
+            onclick={preventDefault(() => {
+                dialog?.close();
+            })}
             title="Close modal"
             class="!flex items-center absolute top-2 right-2">
             <span class="w-[24px] h-[24px] inline-block hover:text-error">
@@ -58,7 +77,7 @@
         </button>
 
         <hr class="dark:border-slate-600" hidden={!showDividers} />
-        <slot />
+        {@render children?.()}
         <hr class="mt-4 dark:border-slate-600" hidden={!showDividers} />
     </div>
 </dialog>

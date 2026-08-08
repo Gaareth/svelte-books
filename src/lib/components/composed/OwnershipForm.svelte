@@ -4,7 +4,6 @@
     import type { BookOwnership } from "$prismaClient";
 
     import DateSelector, {
-        DEFAULT_OPTIONAL_DATETIME,
         formatOptionalDate,
         type OptionalDate,
     } from "$components/input/DateSelector.svelte";
@@ -16,15 +15,32 @@
     import EventDone from "$lib/icons/EventDone.svelte";
     import { capitalize } from "$utils/utils";
 
-    export let className = "";
-    export let editable = true;
-    export let optional = false;
-    export let error: Record<string, any> | undefined = undefined;
+    interface Props {
+        className?: string;
+        editable?: boolean;
+        optional?: boolean;
+        error?: Record<string, any> | undefined;
+        bookOwnership?: BookOwnership | null;
+        location?: string | null;
+        acquiredAtDate?: OptionalDate;
+    }
 
-    export let bookOwnership: BookOwnership | null = null;
+    let {
+        className = "",
+        editable = true,
+        optional = false,
+        error = undefined,
+        bookOwnership = $bindable(),
+        location = $bindable(),
+        acquiredAtDate = $bindable(),
+    }: Props = $props();
 
-    export let location: string | null = null;
-    export let acquiredAtDate: OptionalDate = DEFAULT_OPTIONAL_DATETIME;
+    // let acquiredAtDate2 = $derived(acquiredAtDate ?? DEFAULT_OPTIONAL_DATETIME);
+    // $effect(() => {
+    //     if (acquiredAtDate == null) {
+    //         acquiredAtDate = DEFAULT_OPTIONAL_DATETIME;
+    //     }
+    // });
 </script>
 
 <div class={twMerge(className, "mb-2")}>
@@ -62,32 +78,38 @@
                 disabled={!editable}
                 class="rounded-md dark:bg-slate-600 dark:border-slate-500 w-full btn-generic-color-2"
                 bind:value={location}>
-                <span class="w-5 block" title="add location" slot="icon">
-                    <AddLocation />
-                </span>
+                {#snippet icon()}
+                    <span class="w-5 block" title="add location">
+                        <AddLocation />
+                    </span>
+                {/snippet}
             </InputText>
 
             <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2">
-                <InputAny name="dateStarted" error={error?.dateStarted}>
-                    <div class="icon-wrapper" slot="label">
-                        <span class="w-5 block" title="date acquired">
-                            <EventDone />
-                        </span>
-                        Date acquired:
-                    </div>
+                <InputAny name="datAcquired" error={error?.dateStarted}>
+                    {#snippet label()}
+                        <div class="icon-wrapper">
+                            <span class="w-5 block" title="date acquired">
+                                <EventDone />
+                            </span>
+                            Date acquired:
+                        </div>
+                    {/snippet}
 
-                    <div slot="input">
-                        {#if editable}
-                            <DateSelector
-                                name="dateStarted"
-                                id="dateStarted"
-                                className="w-full sm:w-auto"
-                                inputClassName="btn-generic-color-2 rounded-md w-full"
-                                bind:datetime={acquiredAtDate} />
-                        {:else}
-                            <p>{formatOptionalDate(acquiredAtDate)}</p>
-                        {/if}
-                    </div>
+                    {#snippet input()}
+                        <div>
+                            {#if editable}
+                                <DateSelector
+                                    name="dateStarted"
+                                    id="dateStarted"
+                                    className="w-full sm:w-auto"
+                                    inputClassName="btn-generic-color-2 rounded-md w-full"
+                                    bind:datetime={acquiredAtDate} />
+                            {:else}
+                                <p>{formatOptionalDate(acquiredAtDate)}</p>
+                            {/if}
+                        </div>
+                    {/snippet}
                 </InputAny>
             </div>
         </div>

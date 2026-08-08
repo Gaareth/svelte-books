@@ -3,19 +3,23 @@
     import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
     import { twMerge } from "tailwind-merge";
 
-    export let value: any | null | undefined;
-    export let isValueNull: boolean | undefined = undefined;
 
-    $: hoverCss =
-        !isValueNull && value != null
+
+    interface Props {
+        value: any | null | undefined;
+        isValueNull?: boolean | undefined;
+        clearSelection?: (() => void) | undefined;
+    }
+
+    let { value = $bindable(), isValueNull = undefined, clearSelection = undefined }: Props = $props();
+    let hoverCss =
+        $derived(!isValueNull && value != null
             ? "group-hover:animate-drop-hover group-active:animate-drop-click"
-            : "text-neutral-500";
-
-    export let clearSelection: (() => void) | undefined = undefined;
+            : "text-neutral-500");
 </script>
 
 <button
-    on:click={() => {
+    onclick={() => {
         if (clearSelection) {
             clearSelection();
         } else {

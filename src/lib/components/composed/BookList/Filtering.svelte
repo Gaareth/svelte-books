@@ -1,8 +1,10 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    // import { onMount } from "svelte";
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+
+    //@ts-ignore
     import AutoComplete from "simple-svelte-autocomplete";
     //@ts-ignore
     import FilterIcon from "svelte-icons/fa/FaFilter.svelte";
@@ -19,7 +21,7 @@
     import type { ReadingListItemType } from "$appTypes";
 
     import { goto } from "$app/navigation";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import { MAX_RATING } from "$lib/constants/constants";
     import { createSearchStore } from "$lib/stores/search";
     import {
@@ -28,89 +30,199 @@
         sortReadingActivity,
     } from "$lib/utils/utils";
 
-    export let languages_used: string[];
-    export let category_names: string[]; // not reactive
-
-    export let searchStore: ReturnType<typeof createSearchStore<any>>;
-
-    let allowed_categories_filter: string[] | undefined;
-    let rating_filter: number | undefined;
-    let start_filter: Date | undefined;
-    let end_filter: Date | undefined;
-    let lang_filter: string | undefined;
-
-    let show_active_or_all = "only active";
-    $: has_active =
-        $searchStore.data.length > 0 &&
-        Object.prototype.hasOwnProperty.call($searchStore.data[0], "active");
-
-    // let params = $page.url.searchParams;
-    // update when url changes, back button pressed
-    $: params = $page.url.searchParams;
-    $: {
-        setFiltersFromParams();
-        params; // reactivity trigger
-    }
-
-    let sortingReversed = false;
-
     type sortOption =
-        | "date_created"
-        | "date_read"
-        | "author"
-        | "title"
-        | "rating";
-    let selectedSort: sortOption;
+        "date_created" | "date_read" | "author" | "title" | "rating";
 
-    function setFiltersFromParams() {
-        let params = $page.url.searchParams;
-
-        allowed_categories_filter = JSON.parse(
-            params.get("categories") ?? "[]"
-        );
-        rating_filter =
-            params.get("rating") !== null
-                ? Number(params.get("rating")!)
-                : undefined;
-
-        start_filter =
-            params.get("start_date") !== null
-                ? new Date(params.get("start_date")!)
-                : undefined;
-        start_filter?.setHours(0, 0, 0, 0); // time is not 00:00, UTC reasons
-
-        end_filter =
-            params.get("end_date") !== null
-                ? new Date(params.get("end_date")!)
-                : undefined;
-        end_filter?.setHours(0, 0, 0, 0);
-
-        lang_filter = params.get("lang") ?? "all";
-
-        // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
-        selectedSort = (params.get("sort") as sortOption) ?? "date_read";
-        sortingReversed = (params.get("order") ?? "desc") == "desc";
+    interface Props {
+        languages_used: string[];
+        category_names: string[]; // not reactive
+        searchStore: ReturnType<typeof createSearchStore<any>>;
     }
 
-    onMount(async () => {
-        setFiltersFromParams();
-        await filter(false);
+    let { languages_used, category_names, searchStore }: Props = $props();
+
+    // update when url changes, back button pressed
+    const params = $derived(page.url.searchParams);
+
+    class FilterParams {
+        lang: string | undefined = $state();
+        rating: number | undefined = $state();
+        start_date: Date | undefined = $state();
+        end_date: Date | undefined = $state();
+        categories: string[] | undefined = $state();
+        show_active_or_all: "all" | "only active" = $state("only active");
+
+        constructor(
+            lang: string | undefined,
+            rating: number | undefined,
+            start_date: Date | undefined,
+            end_date: Date | undefined,
+            categories: string[] | undefined,
+            show_active_or_all: "all" | "only active" = "only active",
+        ) {
+            this.lang = lang;
+            this.rating = rating;
+            this.start_date = start_date;
+            this.end_date = end_date;
+            this.categories = categories;
+            this.show_active_or_all = show_active_or_all;
+        }
+
+        static fromParams(params: URLSearchParams): FilterParams {
+            return new FilterParams(
+                params.get("lang") ?? "all",
+                params.get("rating") !== null
+                    ? Number(params.get("rating"))
+                    : undefined,
+                parseFilterDate(params.get("start_date")),
+                parseFilterDate(params.get("end_date")),
+                JSON.parse(params.get("categories") ?? "[]") as string[],
+                params.get("active") === "all" ? "all" : "only active",
+            );
+        }
+
+        setParams(params: URLSearchParams): URLSearchParams {
+            if (this.lang !== undefined && this.lang !== "all") {
+                params.set("lang", this.lang);
+            } else {
+                params.delete("lang");
+            }
+
+            if (this.rating !== undefined) {
+                params.set("rating", String(this.rating));
+            } else {
+                params.delete("rating");
+            }
+
+            if (this.start_date !== undefined) {
+                params.set("start_date", dateToYYYY_MM_DD(this.start_date));
+            } else {
+                params.delete("start_date");
+            }
+
+            if (this.end_date !== undefined) {
+                params.set("end_date", dateToYYYY_MM_DD(this.end_date));
+            } else {
+                params.delete("end_date");
+            }
+
+            if (this.categories !== undefined && this.categories.length > 0) {
+                params.set("categories", JSON.stringify(this.categories));
+            } else {
+                params.delete("categories");
+            }
+
+            if (this.show_active_or_all === "all") {
+                params.set("active", "all");
+            } else {
+                params.delete("active");
+            }
+
+            params.set("filter", "true");
+
+            return params;
+        }
+
+        matchesRating(b: ReadingListItemType): boolean {
+            return (
+                this.rating === undefined ||
+                Math.floor(b.rating?.stars ?? 0) === this.rating
+            );
+        }
+
+        matchesStart(b: ReadingListItemType): boolean {
+            const startDate =
+                optionalToDate(b.dateStarted ?? b.dateFinished) ?? b.createdAt;
+
+            return (
+                this.start_date === undefined ||
+                (startDate != null && this.start_date <= startDate)
+            );
+        }
+
+        matchesEnd(b: ReadingListItemType): boolean {
+            const endDate =
+                optionalToDate(b.dateFinished ?? b.dateStarted) ?? b.createdAt;
+
+            return (
+                this.end_date === undefined ||
+                (endDate != null && this.end_date >= endDate)
+            );
+        }
+
+        matchesCategory(b: ReadingListItemType): boolean {
+            return (
+                this.categories === undefined ||
+                this.categories.length === 0 ||
+                !!b.book.bookApiData?.categories.find(({ name: c }) =>
+                    (this.categories ?? []).includes(c),
+                )
+            );
+        }
+
+        matchesLanguage(b: ReadingListItemType): boolean {
+            return (
+                this.lang === undefined ||
+                this.lang === "all" ||
+                b.book.bookApiData?.language === this.lang
+            );
+        }
+    }
+
+    // params from the url state
+    let filterParams = $derived(FilterParams.fromParams(params));
+
+    // locally editable input state
+    // svelte-ignore state_referenced_locally
+    let inputParams = $state(FilterParams.fromParams(params));
+    // upon pressing the filter button, the the inputParams are applied to the url params (in setParamsFromFilter)
+
+    $effect(() => {
+        // always apply filter from url params, so that back button works
+        $searchStore.filter = (b: ReadingListItemType) =>
+            filterParams.matchesRating(b) &&
+            filterParams.matchesStart(b) &&
+            filterParams.matchesEnd(b) &&
+            filterParams.matchesCategory(b) &&
+            filterParams.matchesLanguage(b);
+
+        inputParams = FilterParams.fromParams(params);
     });
 
+    // if not type of sortOption, than sorting will just use the default, so no need to explicitly check here
+    let selectedSort = $derived(
+        (params.get("sort") as sortOption) ?? "date_read",
+    );
+    let sortingReversed = $derived((params.get("order") ?? "desc") === "desc");
+
+    function parseFilterDate(value: string | null) {
+        if (!value) {
+            return undefined;
+        }
+
+        const date = new Date(value);
+        date.setHours(0, 0, 0, 0);
+
+        return date;
+    }
+
+    // onMount(async () => {
+    //     // setFiltersFromParams();
+    //     await filter(true);
+    // });
+
     const sortBooks = () => {
-        // console.log(books_displayed);
-        let params = $page.url.searchParams;
+        if (selectedSort === undefined) {
+            return;
+        }
+
+        let params = page.url.searchParams;
         params.set("order", sortingReversed ? "desc" : "asc");
         params.set("sort", selectedSort);
 
         goto("?" + params.toString(), {
             noScroll: true,
         });
-        // replaceStateWithQuery({order: "desc"})
-
-        // books_displayed = books_displayed.sort(
-        //   (a, b) => cmpBooks(a, b) * (sortingReversed ? -1 : 1)
-        // );
 
         $searchStore!.sort = (a: ReadingListItemType, b: ReadingListItemType) =>
             cmpBooks(a, b) * (sortingReversed ? -1 : 1);
@@ -137,114 +249,31 @@
     };
 
     // apply filter
-    async function filter(setParams = true) {
-        // filter functions
+    async function setParamsFromFilter() {
+        console.log("filter");
 
-        let f_rating = (b: ReadingListItemType) =>
-            rating_filter === undefined ||
-            Math.floor(b.rating?.stars ?? 0) == rating_filter;
+        let params = page.url.searchParams;
+        params = inputParams.setParams(params);
 
-        let f_start = (b: ReadingListItemType) => {
-            const startDate =
-                optionalToDate(b.dateStarted ?? b.dateFinished) ?? b.createdAt;
-
-            return (
-                start_filter === undefined ||
-                (startDate != null && start_filter <= startDate)
-            );
-        };
-
-        let f_end = (b: ReadingListItemType) => {
-            const endDate =
-                optionalToDate(b.dateFinished ?? b.dateStarted) ?? b.createdAt;
-            return (
-                end_filter === undefined ||
-                (endDate != null && end_filter >= endDate)
-            );
-        };
-
-        let f_category = (b: ReadingListItemType) =>
-            allowed_categories_filter === undefined ||
-            allowed_categories_filter.length == 0 ||
-            !!b.book.bookApiData?.categories.find(({ name: c }) =>
-                allowed_categories_filter!.includes(c)
-            );
-
-        let f_lang = (b: ReadingListItemType) =>
-            lang_filter === undefined ||
-            lang_filter == "all" ||
-            b.book.bookApiData?.language == lang_filter;
-
-        if (setParams) {
-            let params = $page.url.searchParams;
-            if (lang_filter !== undefined) {
-                params.set("lang", lang_filter);
-            }
-
-            if (rating_filter !== undefined) {
-                params.set("rating", rating_filter.toString());
-            }
-
-            if (start_filter !== undefined) {
-                params.set("start_date", dateToYYYY_MM_DD(start_filter));
-            }
-
-            if (end_filter !== undefined) {
-                params.set("end_date", dateToYYYY_MM_DD(end_filter));
-            }
-
-            if (
-                allowed_categories_filter !== undefined &&
-                allowed_categories_filter.length > 0
-            ) {
-                params.set(
-                    "categories",
-                    JSON.stringify(allowed_categories_filter)
-                );
-            }
-
-            params.set("filter", "true");
-
-            await goto("?" + params.toString(), {
-                noScroll: true,
-            });
-        }
-
-        $searchStore!.filter = (
-            b: ReadingListItemType & { active?: boolean }
-        ) =>
-            f_rating(b) &&
-            f_lang(b) &&
-            f_category(b) &&
-            f_start(b) &&
-            f_end(b) &&
-            (b.active || show_active_or_all == "all" || !has_active);
+        await goto("?" + params.toString(), {
+            noScroll: true,
+        });
     }
 
     const resetFilter = () => {
-        allowed_categories_filter = undefined;
-        rating_filter = undefined;
-        start_filter = undefined;
-        end_filter = undefined;
-        lang_filter = undefined;
-        show_active_or_all = "only active";
+        // const params = page.url.searchParams;
 
-        let params = $page.url.searchParams;
-        let new_params = new URLSearchParams();
-        new_params.set("filter", "true");
+        // // remove all filter params and only copy over query and sorting order
+        // const new_params = new URLSearchParams(
+        //     [...params].filter(([key]) => ["q", "order"].includes(key)),
+        // );
 
-        if (params.get("q") !== undefined && params.get("q") !== null) {
-            new_params.set("q", params.get("q")!);
-        }
+        // new_params.set("filter", "true");
 
-        if (params.get("order")) {
-            new_params.set("order", params.get("order")!);
-        }
-        // console.log(new_params);
-
-        goto("?" + new_params.toString(), {
-            noScroll: true,
-        });
+        // goto("?" + new_params.toString(), {
+        //     noScroll: true,
+        // });
+        inputParams = FilterParams.fromParams(new URLSearchParams());
     };
 
     function parseDateInput(event: Event) {
@@ -256,15 +285,19 @@
     }
 
     const filterMonth = (offset: number) => {
-        start_filter = new Date();
-        start_filter.setMonth(start_filter.getMonth() - offset);
-        start_filter.setDate(1);
-        start_filter?.setHours(0, 0, 0, 0);
+        inputParams.start_date = new Date();
+        inputParams.start_date.setMonth(
+            inputParams.start_date.getMonth() - offset,
+        );
+        inputParams.start_date.setDate(1);
+        inputParams.start_date?.setHours(0, 0, 0, 0);
 
-        end_filter = new Date();
-        end_filter.setMonth(end_filter.getMonth() - offset + 1); // one month to much
-        end_filter.setDate(0); // => set to last day of previous month
-        end_filter?.setHours(0, 0, 0, 0);
+        inputParams.end_date = new Date();
+        inputParams.end_date.setMonth(
+            inputParams.end_date.getMonth() - offset + 1,
+        ); // one month to much
+        inputParams.end_date.setDate(0); // => set to last day of previous month
+        inputParams.end_date?.setHours(0, 0, 0, 0);
     };
 
     const filterLastMonth = () => {
@@ -276,17 +309,21 @@
     };
 
     const filterYear = (offset: number) => {
-        start_filter = new Date();
-        start_filter.setFullYear(start_filter.getFullYear() - offset);
-        start_filter.setDate(1);
-        start_filter.setMonth(0);
-        start_filter?.setHours(0, 0, 0, 0);
+        inputParams.start_date = new Date();
+        inputParams.start_date.setFullYear(
+            inputParams.start_date.getFullYear() - offset,
+        );
+        inputParams.start_date.setDate(1);
+        inputParams.start_date.setMonth(0);
+        inputParams.start_date?.setHours(0, 0, 0, 0);
 
-        end_filter = new Date();
-        end_filter.setFullYear(end_filter.getFullYear() - offset);
-        end_filter.setDate(0); // calculates last day
-        end_filter.setMonth(11);
-        end_filter?.setHours(0, 0, 0, 0);
+        inputParams.end_date = new Date();
+        inputParams.end_date.setFullYear(
+            inputParams.end_date.getFullYear() - offset,
+        );
+        inputParams.end_date.setDate(0); // calculates last day
+        inputParams.end_date.setMonth(11);
+        inputParams.end_date?.setHours(0, 0, 0, 0);
     };
 
     const filterLastYear = () => {
@@ -298,16 +335,23 @@
     };
 
     const changeLangFilter = (e: Event) => {
-        lang_filter = (e.target as HTMLSelectElement).value;
+        inputParams.lang = (e.target as HTMLSelectElement).value;
     };
 
     const changeCatFilter = (selected: string[]) => {
         // to prevent infinite loop, because AutoComplete calls onChange when selectedItem is changed, and we also change selectedItem when params change
-        if (selected == allowed_categories_filter) {
+        if (selected == inputParams.categories) {
             return;
         }
-        allowed_categories_filter = selected;
+        inputParams.categories = selected;
     };
+    let has_active = $derived(
+        $searchStore.data.length > 0 &&
+            Object.prototype.hasOwnProperty.call(
+                $searchStore.data[0],
+                "active",
+            ),
+    );
 </script>
 
 <div class="mt-4 mb-8">
@@ -331,7 +375,7 @@
                 <select
                     class="default-border border-red-600 border"
                     bind:value={selectedSort}
-                    on:change={sortBooks}
+                    onchange={sortBooks}
                     aria-label="Sort by">
                     <option value="date_read">Sort by date</option>
                     <option value="date_created">Sort by date created</option>
@@ -359,7 +403,7 @@
                 {#if has_active}
                     <div class="flex flex-row items-center gap-1">
                         <label for="" class="whitespace-nowrap">
-                            Show active
+                            Show only active/latest or also old entries
                         </label>
                         <ToggleGroup
                             options={["only active", "all"]}
@@ -369,17 +413,19 @@
                             btnSelectedClass="dark:bg-slate-700 bg-gray-50"
                             startClass="border-s rounded-s-md"
                             endClass="rounded-e-md"
-                            bind:selectedOption={show_active_or_all} />
+                            bind:selectedOption={
+                                inputParams.show_active_or_all
+                            } />
                     </div>
                 {/if}
 
                 <label class="flex flex-col" id="rating-label">
                     <div class="flex gap-2">
-                        Rating ({rating_filter} / {MAX_RATING})
+                        Rating ({inputParams.rating} / {MAX_RATING})
                         <ClearButton
-                            bind:value={rating_filter}
+                            bind:value={inputParams.rating}
                             clearSelection={() =>
-                                (rating_filter = undefined)} />
+                                (inputParams.rating = undefined)} />
                     </div>
                     <div class="my-2" hidden={true}>
                         <!-- TODO -->
@@ -389,7 +435,7 @@
                         type="range"
                         min="0"
                         max={MAX_RATING}
-                        bind:value={rating_filter}
+                        bind:value={inputParams.rating}
                         aria-labelledby="rating-label" />
                 </label>
 
@@ -397,8 +443,8 @@
                     Languages
                     <select
                         class="default-border input-color-1"
-                        on:change={changeLangFilter}
-                        value={lang_filter}>
+                        onchange={changeLangFilter}
+                        value={inputParams.lang}>
                         <option value="all" selected>all</option>
                         {#each languages_used as lang}
                             <option value={lang}>{lang}</option>
@@ -406,13 +452,12 @@
                     </select>
                 </label>
 
-                <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label class="flex flex-col">
                     Categories {category_names.length == 0 ? "(empty)" : ""}
                     <AutoComplete
                         disabled={category_names.length == 0}
                         items={category_names}
-                        selectedItem={allowed_categories_filter}
+                        selectedItem={inputParams.categories}
                         onChange={changeCatFilter}
                         multiple={true}
                         create={false}
@@ -427,8 +472,10 @@
                     <input
                         type="date"
                         class="default-border input-color-1"
-                        value={start_filter && dateToYYYY_MM_DD(start_filter)}
-                        on:change={(e) => (start_filter = parseDateInput(e))} />
+                        value={inputParams.start_date &&
+                            dateToYYYY_MM_DD(inputParams.start_date)}
+                        onchange={(e) =>
+                            (inputParams.start_date = parseDateInput(e))} />
                 </label>
 
                 <label class="flex flex-col">
@@ -436,21 +483,23 @@
                     <input
                         type="date"
                         class="default-border input-color-1"
-                        value={end_filter && dateToYYYY_MM_DD(end_filter)}
-                        on:change={(e) => (end_filter = parseDateInput(e))} />
+                        value={inputParams.end_date &&
+                            dateToYYYY_MM_DD(inputParams.end_date)}
+                        onchange={(e) =>
+                            (inputParams.end_date = parseDateInput(e))} />
                 </label>
 
                 <div class="flex justify-center gap-2">
-                    <button class="btn-generic" on:click={filterLastMonth}>
+                    <button class="btn-generic" onclick={filterLastMonth}>
                         Last month
                     </button>
-                    <button class="btn-generic mr-4" on:click={filterThisMonth}>
+                    <button class="btn-generic mr-4" onclick={filterThisMonth}>
                         This month
                     </button>
-                    <button class="btn-generic" on:click={filterLastYear}>
+                    <button class="btn-generic" onclick={filterLastYear}>
                         Last year
                     </button>
-                    <button class="btn-generic" on:click={filterThisYear}>
+                    <button class="btn-generic" onclick={filterThisYear}>
                         This year
                     </button>
                 </div>
@@ -458,12 +507,12 @@
             <div class="w-full md:w-fit flex gap-2 self-end mt-2">
                 <button
                     class="btn-secondary-black block my-3 px-8 text-center w-full md:w-fit"
-                    on:click={resetFilter}>
+                    onclick={resetFilter}>
                     Reset
                 </button>
                 <button
                     class="btn-primary-black block my-3 px-8 text-center w-full md:w-fit"
-                    on:click={async () => await filter()}>
+                    onclick={async () => await setParamsFromFilter()}>
                     Filter
                 </button>
             </div>

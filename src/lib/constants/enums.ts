@@ -33,14 +33,14 @@ export type VisibilityType = keyof typeof VISIBILITY_TYPES;
 export type ReadingActivityStatusType = keyof typeof READING_ACTIVITY_TYPES;
 
 export const READING_STATUS_VALUES = Object.values(
-    READING_ACTIVITY_TYPES
+    READING_ACTIVITY_TYPES,
 ) as Array<
     (typeof READING_ACTIVITY_TYPES)[keyof typeof READING_ACTIVITY_TYPES]
 >;
 // Ensure READING_STATUS_VALUES is a tuple for Zod enum
 export const READING_STATUS_VALUES_TUPLE = READING_STATUS_VALUES as [
     string,
-    ...string[]
+    ...string[],
 ];
 
 // export const BOOK_OWNERSHIP_TYPES = {

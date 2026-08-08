@@ -12,15 +12,19 @@
         optionalToDate,
     } from "$lib/utils/utils";
 
-    export let entry: ReviewListItemType;
+    interface Props {
+        entry: ReviewListItemType;
+    }
 
-    $: showStart = entry.status.status === READING_ACTIVITY_TYPES.ACQUIRED;
+    let { entry }: Props = $props();
 
-    $: showStartandEnd =
-        entry.status.status === READING_ACTIVITY_TYPES.READING ||
+    let showStart = $derived(entry.status.status === READING_ACTIVITY_TYPES.ACQUIRED);
+
+    let showStartandEnd =
+        $derived(entry.status.status === READING_ACTIVITY_TYPES.READING ||
         entry.status.status === READING_ACTIVITY_TYPES.FINISHED ||
         entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
-        entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH;
+        entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH);
 </script>
 
 <div class="flex flex-wrap gap-1 sm:gap-4">

@@ -19,8 +19,12 @@
         };
     }>;
 
-    export let openModal: boolean;
-    export let entry: CurrentlyReadingEntry;
+    interface Props {
+        openModal: boolean;
+        entry: CurrentlyReadingEntry;
+    }
+
+    let { openModal = $bindable(), entry }: Props = $props();
 
     function rateBook() {
         return async ({ result }: { result: any }) => {
@@ -48,11 +52,13 @@
     bind:showModal={openModal}
     divClassName="w-full"
     className="w-full lg:w-2/6">
-    <div class="flex items-center gap-4 w-full" slot="header">
-        <p class="font-medium">
-            Finish and rate book: {entry.book.name}?
-        </p>
-    </div>
+    {#snippet header()}
+        <div class="flex items-center gap-4 w-full" >
+            <p class="font-medium">
+                Finish and rate book: {entry.book.name}?
+            </p>
+        </div>
+    {/snippet}
 
     <form
         action={"/api/reading-activity/transform"}
@@ -78,7 +84,7 @@
             <button
                 class="dark:text-white py-3 px-4 my-4 rounded-md w-full dark:bg-slate-600 dark:hover:bg-gray-500 btn-generic dark:border-none"
                 type="button"
-                on:click={() => (openModal = false)}>
+                onclick={() => (openModal = false)}>
                 Cancel
             </button>
         </div>

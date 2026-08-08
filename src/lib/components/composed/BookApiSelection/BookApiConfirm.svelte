@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type { EventDispatcher } from "svelte";
-
     import clsx from "clsx";
     //@ts-ignore
     import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
@@ -13,20 +11,29 @@
 
     import { browser } from "$app/environment";
 
-    export let volumeId: string | undefined;
-    export let apiBookSelected = true;
-    export let back_button = true;
-    export let dispatch: EventDispatcher<any> | undefined = undefined;
+    interface Props {
+        volumeId: string | undefined;
+        apiBookSelected?: boolean;
+        back_button?: boolean;
+        getBookPromise?: Promise<queriedBookFull> | undefined;
+        onBackClicked?: () => void;
+    }
 
-    export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
+    let {
+        volumeId,
+        apiBookSelected = $bindable(true),
+        back_button = true,
+        getBookPromise = undefined,
+        onBackClicked = undefined,
+    }: Props = $props();
 
-    let item_ref: HTMLElement | undefined = undefined;
-    let flexWrapHappened: boolean | undefined = undefined;
-    $: {
+    let item_ref: HTMLElement | undefined = $state(undefined);
+    let flexWrapHappened: boolean | undefined = $state(undefined);
+    $effect(() => {
         if (item_ref) {
             flexWrapHappened = item_ref.clientHeight > 100;
         }
-    }
+    });
     if (browser) {
         window.onresize = () => {
             if (item_ref) {
@@ -38,9 +45,9 @@
 
 {#if back_button}
     <button
-        on:click={() => {
+        onclick={() => {
             apiBookSelected = false;
-            dispatch && dispatch("back");
+            onBackClicked?.();
         }}
         class="mt-5 flex flex-row items-center gap-1"
         type="button">
@@ -56,7 +63,7 @@
     {:then book}
         {@const info = book.volumeInfo}
         {@const isbn_13 = info.industryIdentifiers?.find(
-            (t) => t.type == "ISBN_13"
+            (t) => t.type == "ISBN_13",
         )?.identifier}
         {@const categories = info.categories
             ? info.categories?.join(" | ")
@@ -114,7 +121,7 @@
             <div
                 class={clsx(
                     "api-stats flex gap-2 items-center flex-grow justify-between",
-                    !flexWrapHappened ? "md:justify-end" : ""
+                    !flexWrapHappened ? "md:justify-end" : "",
                 )}>
                 <div class="api-stats-cols">
                     <span class="self-auto md:self-end">

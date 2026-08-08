@@ -58,17 +58,17 @@ export async function userAuth(session: Session | null) {
 
 export function handlePublicOrAuthenticatedAccount(
     requestedAccount: Account,
-    sessionAccount: Account | null
+    sessionAccount: Account | null,
 ) {
     return visibilityIsPublicOrAuthenticated(
         requestedAccount.visibility,
-        sessionAccount
+        sessionAccount,
     );
 }
 
 export function visibilityIsPublicOrAuthenticated(
     visibility: Visibility,
-    session: Session | Account | null
+    session: Session | Account | null,
 ) {
     return (
         visibility === Visibility.PUBLIC ||
@@ -81,8 +81,8 @@ export async function authorize(
     requestedAccountUsername?: string,
     isPublicPage: (
         requestedAccount: Account,
-        sessionAccount: Account | null
-    ) => boolean | Promise<boolean> = () => false
+        sessionAccount: Account | null,
+    ) => boolean | Promise<boolean> = () => false,
 ): Promise<{
     sessionAccount: Account | null;
     requestedAccount: Account;
@@ -94,7 +94,7 @@ export async function authorize(
         if (sessionAccount == null) {
             return error(
                 StatusCodes.NOT_FOUND,
-                "No account linked to session found. Did you delete your account?"
+                "No account linked to session found. Did you delete your account?",
             );
         }
     }
@@ -109,7 +109,7 @@ export async function authorize(
     }
 
     const requestedAccount = await getAccountByUsername(
-        requestedAccountUsername
+        requestedAccountUsername,
     );
     if (requestedAccount == null) {
         return error(StatusCodes.NOT_FOUND, "Requested account not found");
@@ -130,7 +130,7 @@ export async function authorize(
 export async function isReadingActivityPublic(
     accountId: string,
     session: Session | Account | null,
-    readingActivityStatus: ReadingActivityType
+    readingActivityStatus: ReadingActivityType,
 ) {
     const readingActivity = await prisma.readingActivityStatus.findUnique({
         where: {
@@ -160,6 +160,6 @@ export async function hashPassword(password: string) {
 export async function verifyPassword(account: Account, password: string) {
     return await argon2.verify(
         account.password_hash,
-        password + account.password_salt
+        password + account.password_salt,
     );
 }

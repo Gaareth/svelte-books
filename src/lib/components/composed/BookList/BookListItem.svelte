@@ -1,20 +1,29 @@
 <script lang="ts">
-    //@ts-ignore
     import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
-    import type { BookListItemType } from "$appTypes";
-    //@ts-ignore
+    import type { BookWithApiData } from "$src/app";
+    import type { Book } from "$src/generated/prisma/browser";
 
-    export let book: BookListItemType;
-    export let allow_deletion = false;
-    export let on_delete: ((b: BookListItemType) => unknown) | undefined =
-        undefined;
+    import { getMinResolutionImage } from "$src/lib/utils/utils";
+
+    interface Props {
+        //@ts-ignore
+        book: BookWithApiData;
+        allow_deletion?: boolean;
+        on_delete?: ((b: Book) => unknown) | undefined;
+    }
+
+    let {
+        book,
+        allow_deletion = false,
+        on_delete = undefined,
+    }: Props = $props();
 </script>
 
-<div class="flex flex-col items-center lg:items-start group">
+<div class="flex flex-col items-center lg:items-start group" >
     <div class="relative">
         <img
-            src={book.coverImage ?? "/cover.png"}
+            src={book.coverImage ?? getMinResolutionImage(book.bookApiData) ?? "/cover.png"}
             alt={book.name}
             class="rounded w-32 h-40 object-cover group-hover:opacity-50" />
 
@@ -25,15 +34,15 @@
                 title="Remove from series"
                 type="button"
                 hidden={!allow_deletion || !on_delete}
-                on:click={() => on_delete?.(book)}>
+                onclick={() => on_delete?.(book)}>
                 <span class="block w-[20px] group-active:animate-drop-click">
                     <IoIosRemoveCircle />
                 </span>
             </button>
         </div>
     </div>
-    <div class="flex flex-col text-start mt-0.5">
+    <a class="flex flex-col text-start mt-0.5" href={`../${encodeURIComponent(book.name)}`}>
         <p class="text-base">{book.name}</p>
         <p class="text-secondary text-base leading-tight">{book.author}</p>
-    </div>
+    </a>
 </div>

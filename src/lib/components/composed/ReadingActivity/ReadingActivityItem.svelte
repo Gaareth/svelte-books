@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
     export type ItemDeleteEvent = { book: Book };
 </script>
 
@@ -33,19 +33,30 @@
     import { capitalize } from "$lib/utils/utils";
     import { type Book } from "$prismaBrowser";
 
-    export let book: BookWithOwnership;
-    export let entry: ReviewListItemType;
-    export let isAuthorizedToModify = false;
+    interface Props {
+        book: BookWithOwnership;
+        entry: ReviewListItemType;
+        isAuthorizedToModify?: boolean;
+        deleteSnippet?: import("svelte").Snippet;
+        allow_deletion?: boolean;
+    }
+
+    let {
+        book,
+        entry,
+        deleteSnippet,
+        isAuthorizedToModify = false,
+        allow_deletion = true,
+    }: Props = $props();
 
     // export let deletionBook: Book | undefined = undefined;
     // export let openModal: boolean = false;
-    export let allow_deletion: boolean | undefined = true;
 
-    let expanded = false;
-    let editExpanded = false;
-    let deleteExpanded = false;
+    let expanded = $state(false);
+    let editExpanded = $state(false);
+    let deleteExpanded = $state(false);
 
-    $: tensionGraph =
+    let tensionGraph = $derived(
         entry.storyGraphs.length > 0
             ? {
                   labels: JSON.parse(entry.storyGraphs[0].labels),
@@ -55,18 +66,19 @@
               }
             : {
                   title: "tension", // the rest is default in the component
-              };
+              },
+    );
 
-    let stars = entry.rating?.stars ?? 0;
+    let dropdownOpen = $state(false);
+    let statusDisplayName = $derived(capitalize(entry.status.status));
 
-    let dropdownOpen = false;
-    $: statusDisplayName = capitalize(entry.status.status);
+    let showRating = $derived(shouldShowRating(entry.status.status));
 
-    $: showRating = shouldShowRating(entry.status.status);
-
-    $: dateStartedValue = entry?.dateStarted
-        ? { ...entry.dateStarted }
-        : { ...DEFAULT_OPTIONAL_DATETIME };
+    let dateStartedValue = $derived(
+        entry?.dateStarted
+            ? { ...entry.dateStarted }
+            : { ...DEFAULT_OPTIONAL_DATETIME },
+    );
 </script>
 
 <AccentBarItemCard
@@ -107,7 +119,7 @@
               dark:hover:bg-slate-500"
                         title="View"
                         type="button"
-                        on:click={() => {
+                        onclick={() => {
                             expanded = !expanded;
                         }}>
                         <span
@@ -122,7 +134,7 @@
               dark:hover:bg-slate-500 border-none"
                             title="Edit book"
                             type="button"
-                            on:click={() => {
+                            onclick={() => {
                                 editExpanded = true;
                             }}>
                             <span
@@ -131,23 +143,23 @@
                             </span>
                         </button>
 
-                        <slot name="delete">
-                            {#if allow_deletion}
-                                <button
-                                    class="group p-2 btn-delete hidden sm:inline-block !border-none"
-                                    title="Delete book"
-                                    type="button"
-                                    on:click={() => {
-                                        // dispatch("delete", { book });
-                                        deleteExpanded = true;
-                                    }}>
-                                    <span
-                                        class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <IoMdTrash alt="red trash can" />
-                                    </span>
-                                </button>
-                            {/if}
-                        </slot>
+                        {#if deleteSnippet}
+                            {@render deleteSnippet()}
+                        {:else if allow_deletion}
+                            <button
+                                class="group p-2 btn-delete hidden sm:inline-block !border-none"
+                                title="Delete book"
+                                type="button"
+                                onclick={() => {
+                                    // dispatch("delete", { book });
+                                    deleteExpanded = true;
+                                }}>
+                                <span
+                                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                                    <IoMdTrash alt="red trash can" />
+                                </span>
+                            </button>
+                        {/if}
                     {/if}
                 </span>
 
@@ -157,65 +169,65 @@
                     closeOnClick={true}
                     bind:open={dropdownOpen}
                     buttonClass="btn-generic btn-generic-color-2 generic-border dark:border-slate-600 p-1">
-                    <span
-                        slot="triggerContent"
-                        aria-label="open dropdown"
-                        class="block w-5">
-                        <DropdownIcon />
-                    </span>
+                    {#snippet triggerContent()}
+                        <span aria-label="open dropdown" class="block w-5">
+                            <DropdownIcon />
+                        </span>
+                    {/snippet}
 
-                    <ul
-                        slot="dropdown"
-                        class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
-                        <li>
-                            <button
-                                on:click={() => {
-                                    expanded = !expanded;
-                                }}
-                                class="dropdown-item-button"
-                                type="button">
-                                <span
-                                    class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                    <OpenNew />
-                                </span>
-                                Open
-                            </button>
-                        </li>
-
-                        {#if isAuthorizedToModify}
+                    {#snippet dropdown()}
+                        <ul
+                            class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <button
-                                    on:click={() => {
-                                        editExpanded = !editExpanded;
+                                    onclick={() => {
+                                        expanded = !expanded;
                                     }}
                                     class="dropdown-item-button"
                                     type="button">
                                     <span
                                         class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <IoMdSettings />
+                                        <OpenNew />
                                     </span>
-                                    Settings
+                                    Open
                                 </button>
                             </li>
-                        {/if}
 
-                        {#if allow_deletion}
-                            <li>
-                                <button
-                                    on:click={() => {
-                                        deleteExpanded = !deleteExpanded;
-                                    }}
-                                    class="dropdown-item-button text-error"
-                                    type="button">
-                                    <span
-                                        class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <IoMdTrash alt="red trash can" />
-                                    </span>
-                                    Delete
-                                </button>
-                            </li>
-                        {/if}
-                    </ul>
+                            {#if isAuthorizedToModify}
+                                <li>
+                                    <button
+                                        onclick={() => {
+                                            editExpanded = !editExpanded;
+                                        }}
+                                        class="dropdown-item-button"
+                                        type="button">
+                                        <span
+                                            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                                            <IoMdSettings />
+                                        </span>
+                                        Settings
+                                    </button>
+                                </li>
+                            {/if}
+
+                            {#if allow_deletion}
+                                <li>
+                                    <button
+                                        onclick={() => {
+                                            deleteExpanded = !deleteExpanded;
+                                        }}
+                                        class="dropdown-item-button text-error"
+                                        type="button">
+                                        <span
+                                            class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
+                                            <IoMdTrash alt="red trash can" />
+                                        </span>
+                                        Delete
+                                    </button>
+                                </li>
+                            {/if}
+                        </ul>
+                    {/snippet}
                 </Dropdown>
             </div>
         </div>
@@ -226,11 +238,13 @@
     bind:showModal={expanded}
     divClassName="w-full"
     className="w-[95%] lg:w-2/5">
-    <div class="flex items-center gap-4 w-full" slot="header">
-        <p class="font-medium">Reading Activity</p>
+    {#snippet header()}
+        <div class="flex items-center gap-4 w-full">
+            <p class="font-medium">Reading Activity</p>
 
-        <ReadingActivityTimeDiff {entry} />
-    </div>
+            <ReadingActivityTimeDiff {entry} />
+        </div>
+    {/snippet}
 
     {#if entry.status.status == READING_ACTIVITY_TYPES.ACQUIRED}
         <OwnershipForm

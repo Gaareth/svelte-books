@@ -4,6 +4,11 @@
     import { twMerge } from "tailwind-merge";
 
     import { TABS, type TabsContext } from "./TabGroup.svelte";
+    interface Props {
+        children?: import("svelte").Snippet;
+    }
+
+    let { children }: Props = $props();
 
     const thisTab = {};
     const {
@@ -29,17 +34,19 @@
         updateSlider(target);
     };
 
-    let clientWidth: number;
+    let clientWidth: number | undefined = $state();
 
-    $: if ($selectedTab == thisTab) {
-        $tabWidth = clientWidth;
-    }
+    $effect(() => {
+        if ($selectedTab == thisTab && clientWidth != null) {
+            $tabWidth = clientWidth;
+        }
+    });
 </script>
 
 <button
     class={twMerge(btnClass, $selectedTab === thisTab && btnSelectedClass)}
-    on:click={select}
+    onclick={select}
     type="button"
     bind:clientWidth>
-    <slot />
+    {@render children?.()}
 </button>

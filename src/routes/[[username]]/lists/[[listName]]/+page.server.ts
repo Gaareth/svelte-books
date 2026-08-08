@@ -12,7 +12,7 @@ import { getActiveActivies } from "$src/lib/utils/utils";
 export async function load({ locals, params }: ServerLoadEvent) {
     if (
         !READING_STATUS_VALUES.includes(
-            params.listName as ReadingActivityStatusType
+            params.listName as ReadingActivityStatusType,
         )
     ) {
         return error(StatusCodes.NOT_FOUND);
@@ -27,8 +27,8 @@ export async function load({ locals, params }: ServerLoadEvent) {
             await isReadingActivityPublic(
                 requestedAccount.id,
                 session,
-                readingActivityStatus
-            )
+                readingActivityStatus,
+            ),
     );
 
     const username = params.username;
@@ -41,7 +41,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
     const completeReadingActivity = await getReadingActivity(
         requestedAccount.id,
         sessionAccount,
-        isAuthorizedToModify
+        isAuthorizedToModify,
     );
 
     const activeEntries = getActiveActivies(completeReadingActivity);

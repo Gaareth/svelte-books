@@ -11,30 +11,34 @@
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import { getActiveActivies } from "$lib/utils/utils";
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
 
     let chance = 20;
     let random = Math.floor(Math.random() * chance);
 
-    $: activeActivies = getActiveActivies(data.readingActivity);
-    $: currentlyReadingActivities = activeActivies.filter(
+    let activeActivies = $derived(getActiveActivies(data.readingActivity));
+    let currentlyReadingActivities = $derived(activeActivies.filter(
         (e) =>
             e.status.status === READING_ACTIVITY_TYPES.READING ||
             e.status.status === READING_ACTIVITY_TYPES.PAUSED
-    );
+    ));
 
-    $: ownerName =
-        $page.data.session?.user?.name == data.username || data.username == null
+    let ownerName =
+        $derived($page.data.session?.user?.name == data.username || data.username == null
             ? "My"
-            : `${data.username}'s`;
+            : `${data.username}'s`);
 </script>
 
 <svelte:head>
     <title>{ownerName} Books</title>
 </svelte:head>
 
-<div class="background-pattern" />
-<div class="background-pattern-overlay" />
+<div class="background-pattern"></div>
+<div class="background-pattern-overlay"></div>
 
 <h1
     class={clsx(
@@ -47,7 +51,7 @@
 
 <Statistics readingActivities={data.readingActivity} />
 
-<div class="my-5" />
+<div class="my-5"></div>
 
 {#if data.isCurrentlyReadingPublic}
     <div class="mb-10">
@@ -87,7 +91,7 @@
         }
     }
 
-    :is(.dark .background-pattern) {
+    :global(.dark) .background-pattern {
         background-image: url("/book-pattern.svg");
         opacity: 0.05;
     }
@@ -109,7 +113,7 @@
         /* background-color: rgb(215 147 23); */
     }
 
-    :is(.dark .background-pattern-overlay) {
+    :global(.dark) .background-pattern-overlay {
         background: radial-gradient(circle, transparent 70%, rgb(30, 41, 59));
     }
 

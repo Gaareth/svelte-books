@@ -1,9 +1,13 @@
-<script>
+<script lang="ts">
     import { twMerge } from "tailwind-merge";
 
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import NotStartedRounded from "$lib/icons/NotStartedRounded.svelte";
-    export let className = "group p-2 !border-0";
+    interface Props {
+        className?: string;
+    }
+
+    let { className = "group p-2 !border-0" }: Props = $props();
 </script>
 
 <button

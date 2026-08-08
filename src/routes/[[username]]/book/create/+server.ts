@@ -67,7 +67,7 @@ export async function POST(req: RequestEvent) {
         const dateStarted = nullToUndefined(
             readingStatus === READING_ACTIVITY_TYPES.ACQUIRED
                 ? acquiredAtDate
-                : result.data.dateStarted
+                : result.data.dateStarted,
         );
         const dateFinished = nullToUndefined(result.data.dateFinished);
 
@@ -97,14 +97,11 @@ export async function POST(req: RequestEvent) {
             await addApiData(volumeId, book.id);
         }
 
-        if (
-            bookOwnership != null &&
-            location != null &&
-            acquiredAtDate != null
-        ) {
-            // if not status is acquired, create an extra reading activity
+        if (bookOwnership != null) {
+            // if status is not acquired, create an extra reading activity
             const createReadingActivity =
                 readingStatus !== READING_ACTIVITY_TYPES.ACQUIRED;
+
             const ownership = await createOwnership(
                 accountId,
                 book.id,
@@ -113,7 +110,7 @@ export async function POST(req: RequestEvent) {
                     status: bookOwnership,
                     aquiredAt: nullToUndefined(optionalToDate(acquiredAtDate)),
                 },
-                createReadingActivity
+                createReadingActivity,
             );
 
             if (!ownership) {
@@ -131,7 +128,7 @@ export async function POST(req: RequestEvent) {
             dateStarted,
             dateFinished,
             null,
-            null
+            null,
         );
 
         if (!rA) {
@@ -148,7 +145,7 @@ export async function POST(req: RequestEvent) {
 
     console.log(
         "Error parsing form data for creating a new book:",
-        result.error
+        result.error,
     );
     error(400, {
         message: "Invalid form data",
@@ -162,8 +159,8 @@ async function createOwnership(
         location,
         status,
         aquiredAt,
-    }: { location?: string; status?: BookOwnership; aquiredAt?: Date },
-    createReadingActivity = true
+    }: { location?: string | null; status: BookOwnership; aquiredAt?: Date },
+    createReadingActivity = true,
 ) {
     const dateAcquiredId = aquiredAt
         ? (
@@ -184,13 +181,13 @@ async function createOwnership(
 
     let readingActivity;
     if (createReadingActivity) {
-        const readingActivity = await prisma.readingActivity.create({
+        readingActivity = await prisma.readingActivity.create({
             data: {
                 bookId,
                 accountId,
                 readingActivityStatusId: await getOrCreateReadingActivityStatus(
                     accountId,
-                    READING_ACTIVITY_TYPES.ACQUIRED
+                    READING_ACTIVITY_TYPES.ACQUIRED,
                 ),
                 dateStartedId: dateAcquiredId,
             },

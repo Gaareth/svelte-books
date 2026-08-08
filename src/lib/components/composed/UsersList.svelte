@@ -4,11 +4,15 @@
     import Book from "$lib/icons/book.svelte";
     import { capitalize } from "$lib/utils/utils";
 
-    export let users: {
+    interface Props {
+        users: {
         username: string;
         readingActivityLists: { status: ReadingActivityStatusType }[];
         numBooks: number;
     }[];
+    }
+
+    let { users }: Props = $props();
 </script>
 
 {#each users as user}

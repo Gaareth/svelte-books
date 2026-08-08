@@ -3,33 +3,49 @@
 
     import { clamp } from "../utils/utils";
 
-    export let length = 200;
 
-    export let minThickness = 4;
-    export let maxThickness = 8;
 
-    export let thicknessRatio = 0.04;
-    export let headLengthFactor = 4;
-    export let headWidthFactor = 5;
 
-    export let className = "";
 
-    export let colorStart: string | undefined = undefined;
-    export let colorEnd = colorStart;
+    interface Props {
+        length?: number;
+        minThickness?: number;
+        maxThickness?: number;
+        thicknessRatio?: number;
+        headLengthFactor?: number;
+        headWidthFactor?: number;
+        className?: string;
+        colorStart?: string | undefined;
+        colorEnd?: any;
+        [key: string]: any
+    }
 
-    $: thickness = clamp(length * thicknessRatio, minThickness, maxThickness);
-    $: headLength = thickness * headLengthFactor;
-    $: headWidth = thickness * headWidthFactor;
+    let {
+        length = 200,
+        minThickness = 4,
+        maxThickness = 8,
+        thicknessRatio = 0.04,
+        headLengthFactor = 4,
+        headWidthFactor = 5,
+        className = "",
+        colorStart = undefined,
+        colorEnd = colorStart,
+        ...rest
+    }: Props = $props();
+
+    let thickness = $derived(clamp(length * thicknessRatio, minThickness, maxThickness));
+    let headLength = $derived(thickness * headLengthFactor);
+    let headWidth = $derived(thickness * headWidthFactor);
 
     const gradientId = `grad-${Math.random().toString(36).slice(2)}`;
 
-    const defaultColor = colorStart ? `url(#${gradientId})` : "currentColor";
+    const defaultColor = $derived(colorStart ? `url(#${gradientId})` : "currentColor");
 </script>
 
 <svg
     viewBox={`0 0 ${length} ${headWidth}`}
     class={twMerge("arrow text-neutral-900 dark:text-neutral-100", className)}
-    {...$$restProps}>
+    {...rest}>
     <defs>
         <linearGradient
             id={gradientId}

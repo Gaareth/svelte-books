@@ -2,7 +2,12 @@
     import clsx from "clsx";
     import { twMerge } from "tailwind-merge";
 
-    export let className = "";
+    interface Props {
+        className?: string;
+        children?: import('svelte').Snippet;
+    }
+
+    let { className = "", children }: Props = $props();
 </script>
 
 <div
@@ -12,5 +17,5 @@
             className
         )
     )}>
-    <slot />
+    {@render children?.()}
 </div>

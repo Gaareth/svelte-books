@@ -45,7 +45,7 @@ export async function POST(req: RequestEvent) {
         console.error("Validation failed:", result.error);
         return json(
             { success: false, error: result.error.flatten().fieldErrors },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -130,13 +130,13 @@ export async function POST(req: RequestEvent) {
             const ownership = await updateOwnershipRecord(
                 location,
                 bookOwnership,
-                readingActivity
+                readingActivity,
             );
 
             if (!ownership) {
                 return json(
                     { success: false, message: "Failed to update ownership" },
-                    { status: 500 }
+                    { status: 500 },
                 );
             }
         }
@@ -170,7 +170,7 @@ export async function POST(req: RequestEvent) {
 async function updateOwnershipRecord(
     location: string | null | undefined,
     bookOwnership: BookOwnership | undefined,
-    readingActivity: ReadingActivity
+    readingActivity: ReadingActivity,
 ) {
     const ownership = await prisma.ownership.upsert({
         where: {
@@ -215,7 +215,7 @@ async function checkDelete(
         | null
         | undefined,
     id: number,
-    accountId: string
+    accountId: string,
 ) {
     if (dateFinished == null || dateStarted == null) {
         const currentEntry = await prisma.readingActivity.findUnique({

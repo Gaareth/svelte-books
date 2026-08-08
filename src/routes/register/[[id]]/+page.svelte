@@ -8,10 +8,14 @@
     import InputAll from "$lib/components/input/InputAll.svelte";
     import InputText from "$lib/components/input/InputText.svelte";
 
-    export let data: PageData;
-    export let form: ActionData;
+    interface Props {
+        data: PageData;
+        form: ActionData; // console.log(form);
+    }
 
-    // console.log(form);
+    let { data, form }: Props = $props();
+
+    
 </script>
 
 {#if !data.showForm}

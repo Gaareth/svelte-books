@@ -21,7 +21,7 @@ const baseSchema = {
 
 const requireStartDate = (
     data: { status?: ReadingActivityStatusType; dateStarted?: unknown },
-    ctx: z.RefinementCtx
+    ctx: z.RefinementCtx,
 ) => {
     if (
         data.status !== READING_ACTIVITY_TYPES.TO_READ &&
@@ -39,7 +39,7 @@ const requireStartDate = (
 
 const requireOwnership = (
     data: { status?: ReadingActivityStatusType; dateStarted?: unknown },
-    ctx: z.RefinementCtx
+    ctx: z.RefinementCtx,
 ) => {
     if (data.status === READING_ACTIVITY_TYPES.ACQUIRED) {
         const result = ownershipSchema.safeParse(data); // parses the full ownership, not just ownerShipSchema.partial()
@@ -56,7 +56,7 @@ export const createSchema = z
     .object({
         ...baseSchema,
         stars: optionalNumericString(
-            z.number().min(0).max(5).optional()
+            z.number().min(0).max(5).optional(),
         ).optional(),
         status: z.nativeEnum(READING_ACTIVITY_TYPES),
         bookId: z.string(),

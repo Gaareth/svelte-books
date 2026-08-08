@@ -6,7 +6,11 @@
     }>;
 
     let datasource = "Google Books API";
-    export let data: BookApiData | null;
+    interface Props {
+        data: BookApiData | null;
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <details class="my-2">

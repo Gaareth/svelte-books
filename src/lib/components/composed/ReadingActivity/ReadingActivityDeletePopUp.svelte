@@ -8,8 +8,9 @@
     import { formatShort } from "$components/input/DateSelector.svelte";
     import Popup from "$components/Popup.svelte";
 
-    export let openModal: boolean;
-    export let deletionEntry: Prisma.ReadingActivityGetPayload<{
+    interface Props {
+        openModal: boolean;
+        deletionEntry: Prisma.ReadingActivityGetPayload<{
         include: {
             book: true;
             dateFinished: true;
@@ -17,6 +18,9 @@
             status: true;
         };
     }>;
+    }
+
+    let { openModal = $bindable(), deletionEntry }: Props = $props();
 
     const dispatch = createEventDispatcher();
 
@@ -73,18 +77,20 @@
     btn2_msg={"cancel"}
     type={"Error"}
     on:primary={deleteEntry}>
-    <div slot="content">
-        You won't be able to restore this entry, unless you create a new one.
-        <div>
-            Details:
-            <br />
-            ID: {deletionEntry.id}
-            <br />
-            Status: {deletionEntry.status.status}
-            <br />
-            Date started: {formatShort(deletionEntry.dateStarted)}
-            <br />
-            Date finished: {formatShort(deletionEntry.dateFinished)}
+    {#snippet content()}
+        <div >
+            You won't be able to restore this entry, unless you create a new one.
+            <div>
+                Details:
+                <br />
+                ID: {deletionEntry.id}
+                <br />
+                Status: {deletionEntry.status.status}
+                <br />
+                Date started: {formatShort(deletionEntry.dateStarted)}
+                <br />
+                Date finished: {formatShort(deletionEntry.dateFinished)}
+            </div>
         </div>
-    </div>
+    {/snippet}
 </Popup>

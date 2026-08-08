@@ -6,11 +6,16 @@
     import { TABS, type TabsContext } from "./TabGroup.svelte";
 
     let panel = {};
-    let thisPanel: HTMLDivElement;
+    let thisPanel: HTMLDivElement | undefined = $state();
     const { registerPanel, selectedPanel, setPanelRef } =
         getContext<TabsContext>(TABS);
 
-    export let className: string | undefined = undefined;
+    interface Props {
+        className?: string | undefined;
+        children?: import('svelte').Snippet;
+    }
+
+    let { className = undefined, children }: Props = $props();
 
     let i = registerPanel(panel);
     onMount(() => {
@@ -26,5 +31,5 @@
     hidden={$selectedPanel !== panel}
     class={twMerge("min-w-full", className)}
     bind:this={thisPanel}>
-    <slot />
+    {@render children?.()}
 </div>

@@ -31,7 +31,7 @@ export async function seedInitialAllAccounts() {
         } catch (error) {
             console.error(
                 `[!] failed to seed initial data for account ${account.id}:`,
-                error
+                error,
             );
         }
     }

@@ -12,13 +12,18 @@
     type ServerSettings = Prisma.ServerSettingsGetPayload<{
         include: { registrationCodes: true };
     }>;
-    export let serverSettings: ServerSettings;
+    interface Props {
+        serverSettings: ServerSettings;
+    }
+
+    let { serverSettings }: Props = $props();
+    // svelte-ignore state_referenced_locally
     let initialServerSettings: ServerSettings = deepClone(serverSettings);
 
-    $: formValues = deepClone(serverSettings);
+    let formValues = $derived(deepClone(serverSettings));
 
-    $: registrationCodes = formValues.registrationCodes;
-    $: registrationPossible = formValues.registrationPossible;
+    let registrationCodes = $derived(formValues.registrationCodes);
+    let registrationPossible = $derived(formValues.registrationPossible);
 
     function resetSettings() {
         formValues = deepClone(initialServerSettings);
@@ -38,7 +43,7 @@
         name="registrationOpen"
         id="registrationOpen"
         checked={registrationPossible}
-        on:change={(e) => {
+        onchange={(e) => {
             registrationPossible = !registrationPossible;
             e.currentTarget.form?.requestSubmit();
         }}
@@ -91,7 +96,7 @@
                       dark:hover:bg-slate-500"
                                     title="copy"
                                     type="button"
-                                    on:click={async () =>
+                                    onclick={async () =>
                                         await copyToClipboard(
                                             code.code,
                                             "Copied registration code to clipboard"
@@ -126,7 +131,7 @@
     <button
         type="button"
         class="btn-generic flex-1 sm:flex-initial"
-        on:click={resetSettings}>
+        onclick={resetSettings}>
         Cancel
     </button>
     <button

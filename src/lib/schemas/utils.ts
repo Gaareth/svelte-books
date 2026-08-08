@@ -102,7 +102,7 @@ export function mergeDeep(
 }
 export function parseFormObject(
     formData: { [k: string]: FormDataEntryValue },
-    attribute: string
+    attribute: string,
 ) {
     let object = {};
     let anyMatched = false;
@@ -139,7 +139,7 @@ export function parseFormObject(
 
 export function parseFormArray(
     formData: { [k: string]: FormDataEntryValue },
-    attribute: string
+    attribute: string,
 ) {
     const values = [];
     const regexObject = /([a-zA-Z]+)\[(.*)\]+/;

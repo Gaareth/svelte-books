@@ -32,9 +32,7 @@ type readingActivityInput = Prisma.ReadingActivityGetPayload<{
 function cloneRating(
     originalRating: readingActivityInput["rating"] | null,
     overwriteRating:
-        | DeepPartial<readingActivityInput["rating"]>
-        | null
-        | undefined
+        DeepPartial<readingActivityInput["rating"]> | null | undefined,
 ) {
     if (overwriteRating != null) {
         return {
@@ -66,7 +64,7 @@ type DeepPartial<T> = T extends object
 export async function cloneReadingActivity(
     accountId: string,
     readingActivityId: number,
-    readingActivityOverwrite: DeepPartial<readingActivityInput> = {}
+    readingActivityOverwrite: DeepPartial<readingActivityInput> = {},
 ) {
     const readingActivity = await prisma.readingActivity.findUnique({
         where: { id: readingActivityId, accountId },
@@ -118,7 +116,7 @@ export async function cloneReadingActivity(
             dateFinishedId,
             rating: cloneRating(
                 readingActivity.rating,
-                readingActivityOverwrite.rating
+                readingActivityOverwrite.rating,
             ),
             storyGraphs:
                 (readingActivityOverwrite.storyGraphs?.length ?? 0) > 0 ||
@@ -152,7 +150,7 @@ export async function cloneReadingActivity(
 
 export async function getOrCreateReadingActivityStatus(
     accountId: string,
-    status: ReadingActivityStatusType
+    status: ReadingActivityStatusType,
 ): Promise<number> {
     const getRaStatus = async () =>
         await prisma.readingActivityStatus.findUniqueOrThrow({
@@ -169,7 +167,7 @@ export async function getOrCreateReadingActivityStatus(
     } catch (error) {
         console.error(
             "Error retrieving or creating reading activity status:",
-            error
+            error,
         );
         await createAllReadingActivityStatus(accountId, true);
         return (await getRaStatus()).id;
@@ -184,7 +182,7 @@ export async function createReadingActivity(
     dateStarted: z.infer<typeof optionalDatetimeSchema> | undefined,
     dateFinished?: z.infer<typeof optionalDatetimeSchema> | undefined,
     graphs?: z.infer<typeof storyGraphSchema> | null | undefined,
-    comment?: string | null | undefined
+    comment?: string | null | undefined,
 ) {
     // either create new optional datetimes or link to the provided ones db entries
 

@@ -22,7 +22,7 @@ export async function load(page: ServerLoadEvent) {
     const { sessionAccount, requestedAccount } = await authorize(
         session,
         params.username,
-        handlePublicOrAuthenticatedAccount
+        handlePublicOrAuthenticatedAccount,
     );
 
     const isAuthorizedToModify =
@@ -53,7 +53,7 @@ export async function load(page: ServerLoadEvent) {
                                 where: {
                                     status: whereVisibilityPublicOrAuthenticatedOrAll(
                                         session,
-                                        isAuthorizedToModify
+                                        isAuthorizedToModify,
                                     ),
                                 },
                                 include: {
@@ -77,7 +77,7 @@ export async function load(page: ServerLoadEvent) {
                 where: {
                     status: whereVisibilityPublicOrAuthenticatedOrAll(
                         session,
-                        isAuthorizedToModify
+                        isAuthorizedToModify,
                     ),
                 },
                 include: {
@@ -104,7 +104,7 @@ export async function load(page: ServerLoadEvent) {
 
     const books = await loadBooks(
         { accountId: requestedAccount.id },
-        undefined
+        undefined,
     );
 
     return {
@@ -130,12 +130,12 @@ const saveSchema = z.object({
     bookSeriesId: z
         .preprocess(
             (s) => (s != "" ? Number(s) : undefined),
-            z.number().optional()
+            z.number().optional(),
         )
         .optional(),
     apiVolumeId: z.string().optional(),
     wordsPerPage: optionalNumericString(
-        z.coerce.number().nonnegative().optional()
+        z.coerce.number().nonnegative().optional(),
     ).optional(),
 
     description: z.string().trim().optional(),
@@ -147,7 +147,7 @@ async function updateBookSeries(
     bookId: string,
     accountId: string,
     bookSeries: string[],
-    bookSeriesId: number | undefined
+    bookSeriesId: number | undefined,
 ) {
     if (bookSeriesId === undefined && bookSeries.length == 0) {
         return;
@@ -194,7 +194,7 @@ async function updateBookSeries(
         }
 
         const currentBookSeriesIdsArray = currentBookSeries.books.map(
-            (b) => b.id
+            (b) => b.id,
         );
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -209,12 +209,12 @@ async function updateBookSeries(
         // console.log(bookSeriesNames);
 
         const oldSeries = currentBookSeriesIdsArray.filter(
-            (bId) => !bookSeries.includes(bId)
+            (bId) => !bookSeries.includes(bId),
         );
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const oldSeriesIds: { [key in UniqueInput]: string }[] = oldSeries.map(
-            (n) => Object.fromEntries([["id", n]])
+            (n) => Object.fromEntries([["id", n]]),
         );
 
         // console.log("DISconnecting: ");
@@ -351,7 +351,7 @@ export const actions = {
                 "/" +
                     account.username +
                     "/book/" +
-                    encodeURIComponent(book.name)
+                    encodeURIComponent(book.name),
             );
         }
 

@@ -7,11 +7,21 @@
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import InfoIcon from "$lib/icons/InfoIcon.svelte";
 
-    export let book: BookWithOwnership;
-    export let activeEntry: ReviewListItemType;
-    export let readingActivitiesSorted: ReviewListItemType[];
-    export let isAuthorizedToModify: boolean;
-    export let showCreateReadingActivity: boolean;
+    interface Props {
+        book: BookWithOwnership;
+        activeEntry: ReviewListItemType;
+        readingActivitiesSorted: ReviewListItemType[];
+        isAuthorizedToModify: boolean;
+        showCreateReadingActivity: boolean;
+    }
+
+    let {
+        book,
+        activeEntry,
+        readingActivitiesSorted,
+        isAuthorizedToModify,
+        showCreateReadingActivity = $bindable()
+    }: Props = $props();
 </script>
 
 <div class="">
@@ -36,7 +46,7 @@
                 <button
                     type="button"
                     class="ml-auto md:ml-0 btn-generic p-2 px-4 w-16 sm:w-auto flex justify-center"
-                    on:click={() => (showCreateReadingActivity = true)}
+                    onclick={() => (showCreateReadingActivity = true)}
                     title="Create reading activity">
                     <span class="block w-5">
                         <AddIcon />
@@ -46,7 +56,7 @@
         {/if}
     </div>
     <!-- <hr class="border-slate-600 mt-2" /> -->
-    {#each readingActivitiesSorted as readingActivity}
+    {#each readingActivitiesSorted as readingActivity (readingActivity.id)}
         <div class="relative">
             <ReadingActivityItem
                 entry={readingActivity}

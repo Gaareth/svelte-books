@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { untrack } from "svelte";
+
     import clsx from "clsx";
 
     import InputNumber from "../../input/InputNumber.svelte";
@@ -25,22 +27,40 @@
         }>["storyGraphs"];
     };
 
-    export let entry: CurrentlyReadingEntry | undefined = undefined;
-    export let create = false;
+    interface Props {
+        entry?: CurrentlyReadingEntry | undefined;
+        create?: boolean;
+    }
 
-    let stars = entry?.rating?.stars;
+    let { entry = undefined, create = false }: Props = $props();
 
-    let tensionGraph =
-        entry?.storyGraphs && entry?.storyGraphs?.length > 0
-            ? {
-                  labels: JSON.parse(entry.storyGraphs[0].labels),
-                  details: JSON.parse(entry.storyGraphs[0].details),
-                  data: JSON.parse(entry.storyGraphs[0].data),
-                  title: entry.storyGraphs[0].title,
-              }
-            : {
-                  title: "tension", // the rest is default in the component
-              };
+    const toGraph = (e?: CurrentlyReadingEntry) => {
+        const g = e?.storyGraphs?.[0];
+        if (!g) {
+            return {
+                title: "tension",
+                labels: [] as string[],
+                details: [] as string[],
+                data: [] as number[],
+            };
+        }
+        return {
+            title: g.title,
+            labels: JSON.parse(g.labels) as string[],
+            details: JSON.parse(g.details) as string[],
+            data: JSON.parse(g.data) as number[],
+        };
+    };
+
+    // $state, not $derived — these are bound to, and $state is what gives
+    // you a deep proxy so child mutations propagate back up here.
+    // If `entry` can swap without a remount, wrap this component
+    // in {#key entry?.id} where it's used.
+    let tensionGraph = $state(untrack(() => toGraph(entry)));
+    let stars = $state(untrack(() => entry?.rating?.stars));
+
+    let graphDetails: HTMLDetailsElement | undefined = $state();
+    let drawer: ReturnType<typeof LineChartDrawer> | undefined = $state();
 </script>
 
 <div class="my-2">
@@ -75,30 +95,35 @@
         <summary
             class={clsx(
                 "cursor-pointer text-xl",
-                !entry?.rating?.comment && !create && "text-secondary"
+                !entry?.rating?.comment && !create && "text-secondary",
             )}>
             Comment
         </summary>
+     
         <textarea
             class="w-full input dark:bg-slate-600"
             name="comment"
             id="comment"
-            value={entry?.rating?.comment ?? ""}
-            rows="5" />
+            rows="5">{entry?.rating?.comment ?? ""}</textarea>
     </details>
 </section>
 
 <section>
-    <details>
+    <details
+        bind:this={graphDetails}
+        ontoggle={() => {
+            if (graphDetails?.open) drawer?.resize();
+        }}>
         <summary
             class={clsx(
                 "cursor-pointer text-xl",
-                entry?.storyGraphs?.length == 0 && !create && "text-secondary"
+                entry?.storyGraphs?.length == 0 && !create && "text-secondary",
             )}>
             Story graphs
         </summary>
         <div class="default-border p-2 dark:bg-slate-600">
             <LineChartDrawer
+                bind:this={drawer}
                 allowEdits={true}
                 bgColorDark="#64748b"
                 inputClassName="dark:bg-slate-500 dark:border-slate-500"

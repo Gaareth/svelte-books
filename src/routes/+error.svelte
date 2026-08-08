@@ -1,5 +1,5 @@
 <script>
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
 
     const errorMsgs = {
         401: "Looks like you are not allowed to access this content.",
@@ -10,23 +10,23 @@
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const errorMsg = errorMsgs[$page.status];
+    const errorMsg = errorMsgs[page.status];
 </script>
 
 <div class="text-center flex h-screen">
     <div class="m-auto">
         <h1 class="text-5xl">
-            {$page.status}
-            {$page.error?.message}
+            {page.status}
+            {page.error?.message}
         </h1>
         <p>
-            {#if $page.status == 404}
+            {#if page.status == 404}
                 Can't find this resource :(. For all books look <a
                     href="/"
                     class="underline text-[#F2440D]">
                     here
                 </a>
-            {:else if $page.status in errorMsgs}
+            {:else if page.status in errorMsgs}
                 {errorMsg}
                 Please go back
                 <a href="/" class="underline text-[#3DB3FF]">here</a>

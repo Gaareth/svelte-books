@@ -1,11 +1,24 @@
-/** Dispatch event on click outside of node */
-//TODO: update types
-export function clickOutside(node: any) {
-    const handleClick = (event: any) => {
-        if (node && !node.contains(event.target) && !event.defaultPrevented) {
+import type { Action } from "svelte/action";
+
+interface ClickOutsideEvent {
+    onclick_outside: (event: CustomEvent) => void;
+}
+
+export const clickOutside: Action<
+    HTMLDivElement,
+    undefined,
+    ClickOutsideEvent
+> = (node) => {
+    const handleClick = (event: MouseEvent) => {
+        if (
+            node &&
+            !node.contains(event.target as Node) &&
+            !event.defaultPrevented
+        ) {
             node.dispatchEvent(
-                new CustomEvent("click_outside", node),
-                event.target
+                new CustomEvent("click_outside", {
+                    detail: event.target,
+                }),
             );
         }
     };
@@ -17,4 +30,4 @@ export function clickOutside(node: any) {
             document.removeEventListener("click", handleClick, true);
         },
     };
-}
+};

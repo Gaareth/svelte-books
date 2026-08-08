@@ -55,7 +55,7 @@ export async function createLists(accountId: string) {
                     name,
                     accountId,
                 },
-            })
+            }),
         );
     }
 
@@ -64,7 +64,7 @@ export async function createLists(accountId: string) {
 
 export async function createAllReadingActivityStatus(
     accountId: string,
-    checkExists = false
+    checkExists = false,
 ) {
     const lists: ReadingActivityStatus[] = [];
 
@@ -89,7 +89,7 @@ export async function createAllReadingActivityStatus(
                     accountId,
                     visibility: Visibility.PRIVATE,
                 },
-            })
+            }),
         );
     }
 

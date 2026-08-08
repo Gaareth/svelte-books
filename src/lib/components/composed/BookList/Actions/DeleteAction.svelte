@@ -11,7 +11,7 @@
     class="group p-2 btn-delete hidden sm:inline-block !border-0"
     title="Delete book"
     type="button"
-    on:click={() => {
+    onclick={() => {
         dispatch("delete");
     }}>
     <span

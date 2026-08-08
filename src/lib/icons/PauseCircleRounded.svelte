@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...$$props}>
+<script lang="ts">
+    interface Props {
+        [key: string]: any
+    }
+
+    let { ...props }: Props = $props();
+</script>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
     <path
         fill="currentColor"

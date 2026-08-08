@@ -1,7 +1,7 @@
 <script lang="ts">
     import UsersList from "$components/composed/UsersList.svelte";
 
-    export let data;
+    let { data } = $props();
 </script>
 
 <h1 class="text-5xl mt-4">Users ({data.users.length})</h1>

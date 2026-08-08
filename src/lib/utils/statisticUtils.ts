@@ -9,14 +9,14 @@ import type { ReadingActivityList } from "$src/app";
 import type { OptionalDate } from "../components/input/DateSelector.svelte";
 
 export function calc_most_read_categories(
-    entries: ReadingActivityList[]
+    entries: ReadingActivityList[],
 ): [string, number][] {
     const category_count_map = new Map<string, number>();
     entries.forEach((entry) => {
         entry.book.bookApiData?.categories.forEach(({ name }) => {
             category_count_map.set(
                 name,
-                (category_count_map.get(name) || 0) + 1
+                (category_count_map.get(name) || 0) + 1,
             );
         });
     });
@@ -29,8 +29,8 @@ const AVERAGE_NUM_PAGES_PER_BOOK = 350;
 export const count_pages = (entries: ReadingActivityList[]) =>
     sum(
         entries.map(
-            (e) => e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK
-        )
+            (e) => e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK,
+        ),
     );
 
 export const count_words = (entries: ReadingActivityList[]) =>
@@ -38,8 +38,8 @@ export const count_words = (entries: ReadingActivityList[]) =>
         entries.map(
             (e) =>
                 (e.book.bookApiData?.pageCount ?? AVERAGE_NUM_PAGES_PER_BOOK) *
-                (e.book.wordsPerPage ?? AVERAGE_NUM_WORDS_PER_PAGE)
-        )
+                (e.book.wordsPerPage ?? AVERAGE_NUM_WORDS_PER_PAGE),
+        ),
     );
 
 export const calc_most_read_authors = (entries: ReadingActivityList[]) => {
@@ -53,19 +53,19 @@ export const calc_most_read_authors = (entries: ReadingActivityList[]) => {
 
 export const books_read_per_year = (
     year: number,
-    activities: ReadingActivityList[]
+    activities: ReadingActivityList[],
 ) => activities.filter((e) => e.dateFinished?.year === year);
 
 export const books_read_per_month = (
     month: number,
     year: number,
-    activities: ReadingActivityList[]
+    activities: ReadingActivityList[],
 ) =>
     activities.filter(
         (e) =>
             e.dateFinished?.year === year &&
             e.dateFinished?.month !== null &&
-            e.dateFinished.month === (month === 0 ? 12 : month)
+            e.dateFinished.month === (month === 0 ? 12 : month),
     );
 
 // TOOD: return historgram
@@ -95,7 +95,7 @@ export function get_reading_duration(readingActivities: ReadingActivityList[]) {
                 "Found negative duration:",
                 duration,
                 "for activity:",
-                activity
+                activity,
             );
             continue;
         }
@@ -116,7 +116,7 @@ export function get_reading_duration(readingActivities: ReadingActivityList[]) {
 
 function optDateFallback(
     activity: ReadingActivityList,
-    optDate: OptionalDate | null | undefined
+    optDate: OptionalDate | null | undefined,
 ) {
     if (optDate) {
         return optionalToDate(optDate);
@@ -136,7 +136,7 @@ type GetAverageTimeOptions = {
 
 export function get_average_time_til_status(
     readingActivities: ReadingActivityList[],
-    options: GetAverageTimeOptions
+    options: GetAverageTimeOptions,
 ) {
     const {
         startStatus,
@@ -160,19 +160,22 @@ export function get_average_time_til_status(
     const defaultEndDate = (activity: ReadingActivityList) =>
         optDateFallback(
             activity,
-            activity.dateFinished ?? activity.dateStarted
+            activity.dateFinished ?? activity.dateStarted,
         );
     const resolveStartDate = getStartDate ?? defaultStartDate;
     const resolveEndDate = getEndDate ?? defaultEndDate;
 
-    const groupedByBook = readingActivities.reduce((acc, activity) => {
-        const bookId = activity.book.id;
-        if (!acc[bookId]) {
-            acc[bookId] = [];
-        }
-        acc[bookId].push(activity);
-        return acc;
-    }, {} as Record<string, ReadingActivityList[]>);
+    const groupedByBook = readingActivities.reduce(
+        (acc, activity) => {
+            const bookId = activity.book.id;
+            if (!acc[bookId]) {
+                acc[bookId] = [];
+            }
+            acc[bookId].push(activity);
+            return acc;
+        },
+        {} as Record<string, ReadingActivityList[]>,
+    );
 
     let totalDuration = 0;
     let count = 0;
@@ -187,7 +190,7 @@ export function get_average_time_til_status(
             .sort(sortReadingActivityReversed);
 
         const startActivityIndex = activities.findIndex((a) =>
-            startEq(a.status.status)
+            startEq(a.status.status),
         );
         if (startActivityIndex === -1) {
             continue; // no start status, skip
@@ -215,7 +218,7 @@ export function get_average_time_til_status(
                 "Found negative duration:",
                 duration,
                 "for bookId:",
-                bookId
+                bookId,
             );
             continue;
         }
@@ -232,7 +235,7 @@ export function get_average_time_til_status(
 }
 
 export function get_average_acquisition_time(
-    readingActivities: ReadingActivityList[]
+    readingActivities: ReadingActivityList[],
 ) {
     const readingOrFinished = (status: ReadingActivityStatusType) =>
         status === READING_ACTIVITY_TYPES.READING ||
@@ -243,7 +246,7 @@ export function get_average_acquisition_time(
             ? optDateFallback(activity, activity.dateStarted)
             : optDateFallback(
                   activity,
-                  activity.dateStarted ?? activity.dateFinished
+                  activity.dateStarted ?? activity.dateFinished,
               );
 
     const to_read_to_acquired = get_average_time_til_status(readingActivities, {

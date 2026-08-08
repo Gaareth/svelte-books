@@ -1,28 +1,34 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
-    //@ts-ignore
     import IoIosSearch from "svelte-icons/io/IoIosSearch.svelte";
 
     import { goto } from "$app/navigation";
-    import { page } from "$app/stores";
-    export let search_term = "";
+    import { page } from "$app/state";
+    interface Props {
+        search_term?: string;
+    }
+
+    let { search_term = $bindable("") }: Props = $props();
 
     onMount(() => {
-        search_term = $page.url.searchParams.get("q") ?? "";
+        search_term = page.url.searchParams.get("q") ?? "";
     });
 
-    $: search_term = $page.url.searchParams.get("q") ?? "";
+    $effect(() => {
+        search_term = page.url.searchParams.get("q") ?? "";
+    });
 
     const onKeyUp = (e: Event) => {
         if (!e.target) return;
         let query = (e.target as HTMLInputElement).value;
         search_term = query;
 
-        let params = $page.url.searchParams;
+        let params = page.url.searchParams;
         params.set("q", query);
         goto(`?${params}`, {
-            noScroll: true,
+            noScroll: true, 
+            keepFocus: true
         });
         // replaceStateWithQuery({q: query})
     };
@@ -32,7 +38,7 @@
     <label for="searchBooks" class="sr-only">Search</label>
     <input
         value={search_term}
-        on:keyup={onKeyUp}
+        onkeyup={onKeyUp}
         id="searchBooks"
         type="search"
         class="input input-color-1 rounded-md pr-10 shadow-sm sm:text-sm w-full mt-0 dark:border-slate-600"

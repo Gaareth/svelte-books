@@ -3,6 +3,7 @@
 
     //@ts-ignore
     import AutoComplete from "simple-svelte-autocomplete";
+    import { run } from "svelte/legacy";
     import { toast } from "svelte-french-toast";
     import { Moon } from "svelte-loading-spinners";
     import { twMerge } from "tailwind-merge";
@@ -36,8 +37,6 @@
     import Words from "$lib/icons/words.svelte";
     import { capitalize, decapitalize, slideHeight } from "$utils/utils";
 
-    export let endpoint = "/book/create";
-
     const CREATABLE_READING_STATUS_VALUES = [
         TO_READ,
         ACQUIRED,
@@ -45,33 +44,41 @@
         FINISHED,
     ];
 
-    export let readingStatus: ReadingActivityStatusType = FINISHED;
+    interface Props {
+        endpoint?: string;
+        readingStatus?: ReadingActivityStatusType;
+        readingActivities: ReadingActivityList[];
+    }
 
-    export let readingActivities: ReadingActivityList[];
+    let {
+        endpoint = "/book/create",
+        readingStatus = $bindable(FINISHED),
+        readingActivities,
+    }: Props = $props();
 
-    let authors: string[];
-    $: authors = [...new Set(readingActivities.map((e) => e.book.author))];
+    let authors: string[] = $derived([
+        ...new Set(readingActivities.map((e) => e.book.author)),
+    ]);
 
-    let new_book_open = false;
-    let name = "";
-    let author = "";
+    let new_book_open = $state(false);
+    let name = $state("");
+    let author = $state("");
     let read_now = false;
-    let stars: number;
-    let wordsPerPage: number;
-    let dateStarted: OptionalDate;
-    let dateFinished: OptionalDate;
+    let stars: number | undefined = $state();
+    let wordsPerPage: number | undefined = $state();
+    let dateStarted: OptionalDate | undefined = $state();
+    let dateFinished: OptionalDate | undefined = $state();
 
-    let location: string;
-    let bookOwnership: BookOwnership | null;
-    let acquiredAtDate: OptionalDate;
+    let location: string | undefined = $state();
+    let bookOwnership: BookOwnership | undefined = $state();
+    let acquiredAtDate: OptionalDate | undefined = $state();
 
-    let loading = false;
+    let volumeId: string | undefined = $state();
 
-    let api_query = "";
-    let api_open = false;
+    let loading = $state(false);
 
-    $: has_content = name.length > 0 && author.length > 0;
-    let volumeId: string;
+    let api_query = $state("");
+
     // const dispatch = createEventDispatcher();
 
     async function newBook() {
@@ -115,17 +122,15 @@
                         response.status +
                         "]" +
                         " Error creating book: " +
-                        response.statusText
+                        response.statusText,
                 );
             }
         }
     }
 
-    let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
-    $: {
-        getBookPromise;
-        take_over();
-    }
+    let getBookPromise: Promise<queriedBookFull> | undefined =
+        $state(undefined);
+
     async function take_over() {
         if (getBookPromise !== undefined) {
             let data = await getBookPromise;
@@ -133,7 +138,6 @@
 
             author = data?.volumeInfo.authors[0] || "";
         } else {
-            api_open = true;
             api_query = name + " " + author;
         }
     }
@@ -147,10 +151,17 @@
         new_book_open = localStorage.getItem("BookNewCollapseState") == "true";
     });
 
-    let showMore = false;
+    let showMore = $state(false);
 
-    let duplicateEntry: (typeof readingActivities)[0] | undefined;
-    $: duplicateEntry = readingActivities.find((e) => e.book.name === name);
+    let duplicateEntry: (typeof readingActivities)[0] | undefined = $derived(
+        readingActivities.find((e) => e.book.name === name),
+    );
+
+    let has_content = $derived(name.length > 0 && author.length > 0);
+    run(() => {
+        getBookPromise;
+        take_over();
+    });
 </script>
 
 <div
@@ -159,7 +170,7 @@
         <h2
             class={twMerge(
                 "text-2xl flex items-center justify-center ease-in-out duration-500",
-                new_book_open && "-translate-y-[32px] text-xl"
+                new_book_open && "-translate-y-[32px] text-xl",
             )}
             style="transition-property: transform, font-size;">
             Add new book
@@ -167,7 +178,7 @@
         <div>
             <button
                 type="button"
-                on:click={toggleContent}
+                onclick={toggleContent}
                 class="ml-auto rounded-lg border hover:bg-gray-50 px-5 py-2 text-sm font-medium
       dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-500 dark:hover:border-slate-500 min-w-24">
                 {new_book_open ? "Cancel" : "Open"}
@@ -208,7 +219,7 @@
                                 bind:volumeId
                                 bind:getBookPromise
                                 bind:query={api_query}
-                                on:select={() => {
+                                onSelectClicked={() => {
                                     showMore = true;
                                 }} />
                         </TabPanel>
@@ -246,7 +257,7 @@
                                 class="text-warning text-base col-span-2 text-center mb-3">
                                 Warning: A book with this name is already in a
                                 list ({capitalize(
-                                    duplicateEntry.status.status
+                                    duplicateEntry.status.status,
                                 )}).
                                 <br />
                                 Continuing will add a new reading activity to it.
@@ -332,7 +343,7 @@
 
                 <div class="flex justify-end">
                     <button
-                        on:click={newBook}
+                        onclick={newBook}
                         class="btn-primary-black mt-5 mb-1 transition-all"
                         title="Add new book"
                         disabled={!has_content}

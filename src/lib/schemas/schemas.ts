@@ -27,11 +27,11 @@ export const requiredDatetimeSchema = DatetimeSchema.refine(
     {
         message: "Year is required",
         path: ["year"],
-    }
+    },
 );
 
 export const optionalDatetimeSchema = DatetimeSchema.transform((data) =>
-    data.year === null ? null : data
+    data.year === null ? null : data,
 );
 
 // Empty -> null -> gets deleted
@@ -52,7 +52,7 @@ export const ownershipSchema = z.object({
 export const createOwnershipSchema = z.object({
     bookOwnership: z.preprocess(
         emptyStringToNull,
-        z.nativeEnum(BookOwnership).optional().nullable()
+        z.nativeEnum(BookOwnership).optional().nullable(),
     ),
     acquiredAtDate: optionalDatetimeSchema.optional(), // but needed when creating book, as this means multiple reading actvities. cant reused dateStarted
     ...ownershipBase,

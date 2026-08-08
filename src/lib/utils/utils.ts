@@ -106,7 +106,7 @@ export function optionalToDate(o: OptionalDate | null | undefined) {
         (o.month ?? 0) - 1,
         o.day ?? 1,
         o.hour ?? 0,
-        o.minute ?? 0
+        o.minute ?? 0,
     );
 }
 
@@ -126,7 +126,7 @@ export function getReadDate(readingActivity: ReadingActivityWithDates) {
 }
 
 export function getActiveActivies<T extends ReadingActivityWithDates>(
-    readingActivity: T[]
+    readingActivity: T[],
 ): T[] {
     const bookToActiveActivity: Record<string, T> = {};
 
@@ -163,14 +163,14 @@ function toMinutePrecision(date: Date) {
         date.getMonth(),
         date.getDate(),
         date.getHours(),
-        date.getMinutes()
+        date.getMinutes(),
     ).getTime();
 }
 
 // function sortBooksBy
 export function sortReadingActivity(
     a: ReadingActivityWithDates,
-    b: ReadingActivityWithDates
+    b: ReadingActivityWithDates,
 ) {
     const read_date_a = getReadDate(a);
     const read_date_b = getReadDate(b);
@@ -180,10 +180,10 @@ export function sortReadingActivity(
 
     // read_date dont store seconds. so we compare them with minute precision, and if they are the same we sort by createdAt
     const date_a = toMinutePrecision(
-        read_date_a ?? start_date_a ?? a.createdAt
+        read_date_a ?? start_date_a ?? a.createdAt,
     );
     const date_b = toMinutePrecision(
-        read_date_b ?? start_date_b ?? b.createdAt
+        read_date_b ?? start_date_b ?? b.createdAt,
     );
 
     // sort by date added, when the read date is the same
@@ -196,7 +196,7 @@ export function sortReadingActivity(
 
 export function sortReadingActivityReversed(
     a: ReadingActivityWithDates,
-    b: ReadingActivityWithDates
+    b: ReadingActivityWithDates,
 ) {
     return sortReadingActivity(a, b) * -1;
 }
@@ -268,7 +268,7 @@ export function slideHeight(node: Element) {
 
 export function dateDiffFormatted(
     date1: Date | string | null,
-    date2: Date | string | null
+    date2: Date | string | null,
 ): string {
     if (!date1 || !date2) {
         return "N/A";
@@ -312,7 +312,7 @@ export function getMaxResolutionImage(apiData: BookApiData | null) {
     if (!apiData) return null;
 
     const imageLinks = JSON.parse(
-        apiData.imageLinksJSON || "{}"
+        apiData.imageLinksJSON || "{}",
     ) as ImageLinksType;
 
     return (
@@ -321,6 +321,23 @@ export function getMaxResolutionImage(apiData: BookApiData | null) {
         imageLinks?.medium ||
         imageLinks?.thumbnail ||
         imageLinks?.smallThumbnail ||
+        null
+    );
+}
+
+export function getMinResolutionImage(apiData: BookApiData | null) {
+    if (!apiData) return null;
+
+    const imageLinks = JSON.parse(
+        apiData.imageLinksJSON || "{}",
+    ) as ImageLinksType;
+
+    return (
+        imageLinks?.smallThumbnail ||
+        imageLinks?.thumbnail ||
+        imageLinks?.medium ||
+        imageLinks?.large ||
+        imageLinks?.extraLarge ||
         null
     );
 }

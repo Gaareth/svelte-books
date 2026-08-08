@@ -3,24 +3,45 @@
 
     import { twMerge } from "tailwind-merge";
 
-    export let wrapperClass: string | undefined = undefined;
-    export let groupClass: string | undefined = undefined;
-    export let btnClass: string | undefined = undefined;
-    export let btnSelectedClass: string | undefined = undefined;
-    export let startClass: string | undefined = undefined;
-    export let endClass: string | undefined = undefined;
+    interface Props {
+        wrapperClass?: string | undefined;
+        groupClass?: string | undefined;
+        btnClass?: string | undefined;
+        btnSelectedClass?: string | undefined;
+        startClass?: string | undefined;
+        endClass?: string | undefined;
+        options: string[];
+        defaultOption?: number | undefined;
+        deselectable?: boolean;
+        editable?: boolean;
+        selectedOption?: Option | undefined | null;
+        displayFn?: ((option: Option) => string) | undefined;
+        error?: string | undefined;
+        children?: import("svelte").Snippet<[any]>;
+    }
 
-    export let options: string[];
-    export let defaultOption: number | undefined = undefined;
-    export let deselectable = false;
-    export let editable = true;
+    let {
+        wrapperClass = undefined,
+        groupClass = undefined,
+        btnClass = undefined,
+        btnSelectedClass = undefined,
+        startClass = undefined,
+        endClass = undefined,
+        options,
+        defaultOption = undefined,
+        deselectable = false,
+        editable = true,
+        selectedOption = $bindable(),
+        displayFn = undefined,
+        error = undefined,
+        children,
+    }: Props = $props();
 
-    export let selectedOption: Option | undefined | null =
-        defaultOption != null ? options[defaultOption] : undefined;
-
-    export let displayFn: ((option: Option) => string) | undefined = undefined;
-
-    export let error: string | undefined = undefined;
+    $effect(() => {
+        if (selectedOption === undefined && defaultOption != null) {
+            selectedOption = options[defaultOption];
+        }
+    });
 
     type Option = (typeof options)[number];
     const dispatch = createEventDispatcher();
@@ -38,9 +59,9 @@
                     btnClass,
                     i == 0 && startClass,
                     i == options.length - 1 && endClass,
-                    selectedOption == option && btnSelectedClass
+                    selectedOption == option && btnSelectedClass,
                 )}
-                on:click={() => {
+                onclick={() => {
                     if (!editable) return;
 
                     if (selectedOption == option && deselectable) {
@@ -50,9 +71,9 @@
                         dispatch("select", option);
                     }
                 }}>
-                <slot {option} {i}>
+                {#if children}{@render children({ option, i })}{:else}
                     {displayFn ? displayFn(option) : option}
-                </slot>
+                {/if}
             </button>
         {/each}
     </div>
@@ -60,3 +81,5 @@
         <span class="label-text-alt text-error">{error}</span>
     {/if}
 </div>
+
+<!-- TODO: add inputselect when not enough space -->

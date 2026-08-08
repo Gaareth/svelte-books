@@ -4,7 +4,7 @@
     import { Toaster } from "svelte-french-toast";
     import { twMerge } from "tailwind-merge";
 
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import Dropdown from "$components/input/Dropdown.svelte";
     import ThemeSwitcher from "$components/ThemeSwitcher.svelte";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
@@ -12,20 +12,20 @@
 
     // eslint-disable-next-line no-undef
     const version = APP_VERSION;
-    export let data;
+    let { data, children } = $props();
 
-    $: headerConfig = $page.data.headerConfig || {};
+    let headerConfig = $derived(page.data.headerConfig || {});
 </script>
 
 <svelte:head>
-    <title>{$page.data.title || "BookList"}</title>
+    <title>{page.data.title || "BookList"}</title>
 </svelte:head>
 
 <header
     aria-label="Site Header"
     class={clsx(
         !headerConfig.transparent &&
-            "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md"
+            "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md",
     )}>
     {#if import.meta.env.DEV}
         <div
@@ -37,18 +37,17 @@
     <div class="mx-auto max-w-screen-xl p-4">
         <div
             class="flex flex-wrap items-center justify-between gap-4 lg:gap-10 min-[500px]:flex-row flex-col">
-            <div class="flex lg:w-0 lg:flex-1" />
+            <div class="flex lg:w-0 lg:flex-1"></div>
 
             <nav
                 aria-label="Site Nav"
                 class="gap-8 text-md font-medium flex flex-wrap">
                 <a
-                    class="text-gray-500 dark:text-gray-400
-        hover:text-[#F2440D] dark:hover:text-[#f67c56]"
+                    class="text-gray-500 dark:text-gray-400 hover:text-[#F2440D] dark:hover:text-[#f67c56]"
                     href="/">
                     Home
                 </a>
-                {#if $page.data.session}
+                {#if page.data.session}
                     <a
                         class="nav-a"
                         href="/lists/{READING_ACTIVITY_TYPES.TO_READ}">
@@ -64,49 +63,53 @@
             <div class="flex-1 justify-end flex">
                 <div class="flex flex-row-reverse xl:flex-row">
                     <div class="flex gap-4 items-center">
-                        {#if $page.data.session}
+                        {#if page.data.session}
                             <Dropdown contentClass="!py-0" closeOnClick={false}>
-                                <span
-                                    slot="triggerContent"
-                                    aria-label="open account dropdown"
-                                    title="Account"
-                                    class="block w-8 text-secondary hover:text-secondary-hover">
-                                    <IconAccount />
-                                </span>
+                                {#snippet triggerContent()}
+                                    <span
+                                        aria-label="open account dropdown"
+                                        title="Account"
+                                        class="block w-8 text-secondary hover:text-secondary-hover">
+                                        <IconAccount />
+                                    </span>
+                                {/snippet}
 
-                                <div
-                                    slot="dropdown"
-                                    class="w-56 sm:w-36"
-                                    id="dropdown-account">
-                                    <div class="">
-                                        {#if data.isAdmin}
-                                            <div
-                                                class="bg-red-500 w-full h-6 text-center text-sm rounded-t">
-                                                ADMIN
+                                {#snippet dropdown()}
+                                    <div
+                                        class="w-56 sm:w-36"
+                                        id="dropdown-account">
+                                        <div class="">
+                                            {#if data.isAdmin}
+                                                <div
+                                                    class="bg-red-500 w-full h-6 text-center text-sm rounded-t">
+                                                    ADMIN
+                                                </div>
+                                            {/if}
+                                            <div class="p-1">
+                                                <p
+                                                    class="text-center font-bold">
+                                                    {page.data.session?.user
+                                                        ?.name}
+                                                </p>
                                             </div>
-                                        {/if}
-                                        <div class="p-1">
-                                            <p class="text-center font-bold">
-                                                {$page.data.session.user?.name}
-                                            </p>
-                                        </div>
-                                        <hr />
-                                        <div
-                                            class="py-2 flex flex-col gap-1 text-secondary-2">
-                                            <a href="/settings">Settings</a>
-                                            <a href="/users">all users</a>
-                                        </div>
-                                        <hr />
-                                        <div class="py-2">
-                                            <a
-                                                href="/auth/signout"
-                                                class="whitespace-nowrap"
-                                                data-sveltekit-preload-data="off">
-                                                Sign out
-                                            </a>
+                                            <hr />
+                                            <div
+                                                class="py-2 flex flex-col gap-1 text-secondary-2">
+                                                <a href="/settings">Settings</a>
+                                                <a href="/users">all users</a>
+                                            </div>
+                                            <hr />
+                                            <div class="py-2">
+                                                <a
+                                                    href="/auth/signout"
+                                                    class="whitespace-nowrap"
+                                                    data-sveltekit-preload-data="off">
+                                                    Sign out
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                {/snippet}
                             </Dropdown>
                         {:else}
                             <div>
@@ -131,9 +134,9 @@
     <div
         class={twMerge(
             "container max-w-3xl mx-auto",
-            headerConfig.wrapperClass
+            headerConfig.wrapperClass,
         )}>
-        <slot />
+        {@render children?.()}
     </div>
 </main>
 

@@ -10,8 +10,8 @@
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
 
-    let loading = false;
-    let evtSource: EventSource;
+    let loading = $state(false);
+    let evtSource: EventSource | undefined = $state();
     onMount(() => {
         evtSource = new EventSource("/book/api/update_all/");
         evtSource.onmessage = function (event) {
@@ -41,7 +41,11 @@
         }
     });
 
-    export let currentStatus: SSE_EVENT | undefined;
+    interface Props {
+        currentStatus: SSE_EVENT | undefined;
+    }
+
+    let { currentStatus = $bindable() }: Props = $props();
 </script>
 
 <form

@@ -18,44 +18,53 @@
         type ReadingActivityStatusType,
     } from "$lib/constants/enums";
 
-    export let activeEntry: ReviewListItemType;
-    export let readingActivities: ReviewListItemType[];
-    export let className = "";
+    interface Props {
+        activeEntry: ReviewListItemType;
+        readingActivities: ReviewListItemType[];
+        className?: string;
+    }
+
+    let { activeEntry, readingActivities, className = "" }: Props = $props();
 
     // TODO: maybe allow creation here?
-    let activeStatus: ReadingActivityStatusType;
-    $: activeStatus = activeEntry.status.status;
-    $: isAlreadyAcquired = readingActivities.some(
-        (activity) => activity.status.status === READING_ACTIVITY_TYPES.ACQUIRED
+    let activeStatus: ReadingActivityStatusType = $derived(
+        activeEntry.status.status,
     );
 
-    let actions: any[] = [];
+    let isAlreadyAcquired = $derived(
+        readingActivities.some(
+            (activity) =>
+                activity.status.status === READING_ACTIVITY_TYPES.ACQUIRED,
+        ),
+    );
 
-    $: {
-        actions = [];
+    let actions: { Component: any, event?: string }[] = $derived.by(() => {
+        const result = [];
+
         if (activeStatus === READING_ACTIVITY_TYPES.PAUSED) {
-            actions.push({ component: ContinueReadingAction });
-            actions.push({ component: StoppedReadingAction });
+            result.push({ Component: ContinueReadingAction });
+            result.push({ Component: StoppedReadingAction });
         }
 
         if (
             activeStatus !== READING_ACTIVITY_TYPES.READING &&
             activeStatus !== READING_ACTIVITY_TYPES.PAUSED
         ) {
-            actions.push({ component: NowReadingAction });
+            result.push({ Component: NowReadingAction });
         } else if (activeStatus === READING_ACTIVITY_TYPES.READING) {
-            actions.push({ component: DoneReadingAction });
-
-            actions.push({ component: PausedReadingAction });
-            actions.push({ component: StoppedReadingAction });
+            result.push({ Component: DoneReadingAction, event: "ondone" });
+            result.push({ Component: PausedReadingAction });
+            result.push({ Component: StoppedReadingAction });
         }
 
         if (!isAlreadyAcquired) {
-            actions.push({ component: AcquiredAction });
+            result.push({ Component: AcquiredAction });
         }
-    }
 
-    let openModal = false;
+        return result;
+    });
+
+    let openModal = $state(false);
 </script>
 
 <form
@@ -82,14 +91,14 @@
 
     <div class="flex">
         {#each actions as action, i}
-            <svelte:component
-                this={action.component}
-                on:done={() => {
-                    openModal = true;
-                }}
+            <action.Component
+                // ondone={() => {
+                //     openModal = true;
+                // }}
+                 {...(action.event ? { [action.event]: () => (openModal = true) } : {})}
                 className={`group toggle-btn px-3 py-2 
-        ${i === 0 ? "toggle-btn-start" : ""} 
-        ${i === actions.length - 1 ? "toggle-btn-end" : ""}`} />
+                    ${i === 0 ? "toggle-btn-start" : ""} 
+                    ${i === actions.length - 1 ? "toggle-btn-end" : ""}`} />
         {/each}
     </div>
 </form>

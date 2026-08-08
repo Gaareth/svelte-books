@@ -13,7 +13,7 @@ export function whereVisibilityPublicOrAuthenticated(session: Session | null) {
 
 export function whereVisibilityPublicOrAuthenticatedOrAll(
     session: Session | Account | null,
-    returnAll: boolean
+    returnAll: boolean,
 ) {
     const wherePublicOrAuth = {
         OR: [

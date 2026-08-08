@@ -36,7 +36,7 @@ export async function load({ locals }: ServerLoadEvent) {
             username: a.username,
             numBooks: a.books.length,
             readingActivityLists: a.readingActivityStatus.filter((r) =>
-                filterReadingActivityStatus(r.visibility)
+                filterReadingActivityStatus(r.visibility),
             ),
         };
     });

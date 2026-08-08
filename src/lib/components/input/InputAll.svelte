@@ -3,22 +3,43 @@
 
     import InputAny from "./InputAny.svelte";
 
-    export let value: unknown | null = null;
 
-    export let name: string;
-    export let displayName: string | undefined = name;
-    // export let type: string = "text"
-    export let error: string | undefined | null = undefined;
-    export let inputClass = "";
+    
+    interface Props {
+        value?: unknown | null;
+        name: string;
+        displayName?: string | undefined;
+        // export let type: string = "text"
+        error?: string | undefined | null;
+        inputClass?: string;
+        label?: import('svelte').Snippet;
+        [key: string]: any
+    }
+
+    let {
+        value = $bindable(),
+        name,
+        displayName = name,
+        error = undefined,
+        inputClass = "",
+        label,
+        ...rest
+    }: Props = $props();
+
+    const label_render = $derived(label);
 </script>
 
-<InputAny {displayName} {name} {error} {...$$restProps}>
-    <slot name="label" slot="label">{displayName}</slot>
-    <input
-        slot="input"
-        id={name}
-        {name}
-        class={twMerge("input w-full", error ? "input-error" : "", inputClass)}
-        {...$$restProps}
-        bind:value />
+<InputAny {displayName} {name} {error} {...rest}>
+    {#snippet label()}
+        {#if label_render}{@render label_render()}{:else}{displayName}{/if}
+    {/snippet}
+    {#snippet input()}
+        <input
+            
+            id={name}
+            {name}
+            class={twMerge("input w-full", error ? "input-error" : "", inputClass)}
+            {...rest}
+            bind:value />
+    {/snippet}
 </InputAny>

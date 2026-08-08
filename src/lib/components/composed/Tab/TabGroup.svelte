@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
     export const TABS = {};
     export interface TabsContext {
         registerTab: (tab: any) => void;
@@ -8,9 +8,11 @@
         selectedTab: ReturnType<typeof writable>;
         selectedPanel: ReturnType<typeof writable>;
         currentTabIdx: ReturnType<typeof writable<number>>;
-        btnClass: string;
-        btnSelectedClass: string;
-        animate: boolean;
+
+        readonly btnClass: string | undefined;
+        readonly btnSelectedClass: string | undefined;
+        readonly animate: boolean;
+
         offsetLeft: ReturnType<typeof writable<number>>;
         tabWidth: ReturnType<typeof writable<number>>;
     }
@@ -25,6 +27,26 @@
 
     import Tab from "./Tab.svelte";
 
+    interface Props {
+        className?: string | undefined;
+        btnClass?: string | undefined;
+        btnSelectedClass?: string | undefined;
+        sliderClass?: string | undefined;
+        animate?: boolean;
+        tabNames: string[];
+        children?: import("svelte").Snippet;
+    }
+
+    let {
+        className = undefined,
+        btnClass = undefined,
+        btnSelectedClass = undefined,
+        sliderClass = undefined,
+        animate = true,
+        tabNames,
+        children,
+    }: Props = $props();
+
     const tabs: any[] = [];
     const panels: any[] = [];
     const selectedTab = writable(null);
@@ -32,12 +54,6 @@
     const currentTabIdx = writable(0);
 
     const panelRefs = [];
-
-    export let className: string | undefined = undefined;
-    export let btnClass: string | undefined = undefined;
-    export let btnSelectedClass: string | undefined = undefined;
-    export let sliderClass: string | undefined = undefined;
-    export let animate = true;
 
     let offsetLeft = writable(0);
     let tabWidth = writable(0);
@@ -51,7 +67,9 @@
                 const i = tabs.indexOf(tab);
                 tabs.splice(i, 1);
                 selectedTab.update((current) =>
-                    current === tab ? tabs[i] || tabs[tabs.length - 1] : current
+                    current === tab
+                        ? tabs[i] || tabs[tabs.length - 1]
+                        : current,
                 );
             });
         },
@@ -66,7 +84,7 @@
                 selectedPanel.update((current) =>
                     current === panel
                         ? panels[i] || panels[panels.length - 1]
-                        : current
+                        : current,
                 );
             });
             return panels.length - 1;
@@ -91,16 +109,21 @@
         selectedTab,
         selectedPanel,
 
-        btnClass,
-        btnSelectedClass,
+        get btnClass() {
+            return btnClass;
+        },
+
+        get btnSelectedClass() {
+            return btnSelectedClass;
+        },
+
+        get animate() {
+            return animate;
+        },
 
         offsetLeft,
         tabWidth,
-
-        animate,
     });
-
-    export let tabNames: string[];
 </script>
 
 <div class={twMerge(animate && "overflow-x-hidden", className)}>
@@ -113,9 +136,9 @@
             <span
                 class="absolute bottom-0 flex overflow-hidden rounded-3xl transition-all duration-300"
                 style={`left: ${$offsetLeft}px; width: ${$tabWidth}px`}>
-                <span class={twMerge("h-full w-full", sliderClass)} />
+                <span class={twMerge("h-full w-full", sliderClass)}></span>
             </span>
         </div>
     </div>
-    <slot />
+    {@render children?.()}
 </div>

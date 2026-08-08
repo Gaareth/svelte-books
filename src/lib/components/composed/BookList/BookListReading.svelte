@@ -7,11 +7,15 @@
     import { type ReadingListItemType } from "$appTypes";
     import { sortReadingActivity } from "$lib/utils/utils";
 
-    export let readingActivities: ReadingListItemType[];
-    export let isAuthorizedToModify = false;
-    $: readingActivitiesSorted = [...readingActivities].sort((a, b) => {
+    interface Props {
+        readingActivities: ReadingListItemType[];
+        isAuthorizedToModify?: boolean;
+    }
+
+    let { readingActivities, isAuthorizedToModify = false }: Props = $props();
+    let readingActivitiesSorted = $derived([...readingActivities].sort((a, b) => {
         return sortReadingActivity(a, b);
-    });
+    }));
 
     const sentences = [
         "Add a book, mate!",
@@ -25,14 +29,14 @@
         "Hey, your library’s looking lonely. Add a book!",
         "Come on, start reading!",
     ];
-    let randomSentence = "";
+    let randomSentence = $state("");
     onMount(() => {
         randomSentence =
             sentences[Math.floor(Math.random() * sentences.length)];
     });
 
-    let popupEntry: ReadingListItemType | undefined = undefined;
-    let popupOpen = false;
+    let popupEntry: ReadingListItemType | undefined = $state(undefined);
+    let popupOpen = $state(false);
 </script>
 
 <div class="flex justify-between mt-8 mb-2 sm:flex-row flex-col">

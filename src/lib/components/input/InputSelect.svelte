@@ -5,58 +5,72 @@
 
     import InputAny from "./InputAny.svelte";
 
-    export let value: unknown | null;
-    $: {
-        value = value === undefined ? null : value;
+    interface Props {
+        value: unknown | null;
+        name: string;
+        displayName?: string;
+        clearButton?: boolean;
+        selectClassName?: string;
+        // export let type: string = "text"
+        error?: string | undefined;
+        children?: import("svelte").Snippet;
+        [key: string]: any;
     }
 
-    export let name: string;
-    export let displayName: string = name;
-    export let clearButton = true;
-
-    export let selectClassName = "";
-
-    // export let type: string = "text"
-    export let error: string | undefined = undefined;
+    let {
+        value = $bindable(),
+        name,
+        displayName = name,
+        clearButton = true,
+        selectClassName = "",
+        error = undefined,
+        children,
+        ...rest
+    }: Props = $props();
 
     const clearSelection = () => {
         value = null;
     };
 
-    $: hoverCss =
+    let hoverCss = $derived(
         value != null
             ? "group-hover:animate-drop-hover group-active:animate-drop-click"
-            : "text-neutral-500";
+            : "text-neutral-500",
+    );
 </script>
 
-<InputAny {displayName} {name} {error} {...$$restProps}>
-    <label slot="label" for={name} class="capitalize">{displayName}</label>
-    <div class="flex gap-2" slot="input">
-        <select
-            bind:value
-            {name}
-            id={name}
-            class={twMerge(
-                "input w-full {error ? 'input-error' : ''}",
-                selectClassName
-            )}>
-            <slot />
-        </select>
-        {#if clearButton}
-            <button
-                on:click={() => clearSelection()}
-                disabled={value == null}
-                type="button"
-                class="group flex"
-                title="Clear Input">
-                <span
-                    class={twMerge(
-                        "inline-block w-5 group self-center",
-                        hoverCss
-                    )}>
-                    <IoIosRemoveCircle />
-                </span>
-            </button>
-        {/if}
-    </div>
+<InputAny {displayName} {name} {error} {...rest}>
+    {#snippet label()}
+        <label for={name} class="capitalize">{displayName}</label>
+    {/snippet}
+    {#snippet input()}
+        <div class="flex gap-2">
+            <select
+                bind:value
+                {name}
+                id={name}
+                class={twMerge(
+                    "input w-full {error ? 'input-error' : ''}",
+                    selectClassName,
+                )}>
+                {@render children?.()}
+            </select>
+            {#if clearButton}
+                <button
+                    onclick={() => clearSelection()}
+                    disabled={value == null}
+                    type="button"
+                    class="group flex"
+                    title="Clear Input">
+                    <span
+                        class={twMerge(
+                            "inline-block w-5 group self-center",
+                            hoverCss,
+                        )}>
+                        <IoIosRemoveCircle />
+                    </span>
+                </button>
+            {/if}
+        </div>
+    {/snippet}
 </InputAny>

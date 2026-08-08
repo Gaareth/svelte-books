@@ -4,9 +4,13 @@
     //@ts-ignore
     import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
 
-    export let rating: number | undefined | null;
-    export let rating_max: number;
-    export let editable = false;
+    interface Props {
+        rating: number | undefined | null;
+        rating_max: number;
+        editable?: boolean;
+    }
+
+    let { rating = $bindable(), rating_max, editable = false }: Props = $props();
 
     const increaseRating = (i: number) => {
         if (!editable) {
@@ -34,7 +38,7 @@
             <button
                 class="icon"
                 disabled={!editable}
-                on:click={() => decreaseRating(i + 1)}
+                onclick={() => decreaseRating(i + 1)}
                 type="button">
                 <IoIosStar />
             </button>
@@ -42,7 +46,7 @@
             <button
                 class="icon"
                 disabled={!editable}
-                on:click={() => increaseRating(i + 1)}
+                onclick={() => increaseRating(i + 1)}
                 type="button">
                 <IoIosStarOutline />
             </button>

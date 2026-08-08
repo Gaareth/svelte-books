@@ -1,6 +1,5 @@
 <script lang="ts">
-    export let data;
-    let csrfToken = data.csrfToken;
+    let { data } = $props();
 </script>
 
 <svelte:head>
@@ -9,7 +8,7 @@
 
 <div class="mx-auto h-screen flex items-center justify-center">
     <form class="mb-40" method="POST" action="/auth/signout">
-        <input name="csrfToken" type="hidden" value={csrfToken} />
+        <input name="csrfToken" type="hidden" value={data.csrfToken} />
 
         <button
             class="transition-colors uppercase font-bold

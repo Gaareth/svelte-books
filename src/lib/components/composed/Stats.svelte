@@ -12,10 +12,27 @@
     import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
     import { twMerge } from "tailwind-merge";
 
-    export let name: string | undefined = undefined;
-    export let value: number | string | undefined = undefined;
-    export let last_value: typeof value | undefined = undefined;
-    export let showStatsButton = false;
+    interface Props {
+        titleString?: string | undefined;
+        value?: number | string | undefined;
+        last_value?: typeof value | undefined;
+        showStatsButton?: boolean;
+        titleSnippet?: import('svelte').Snippet;
+        statsButton?: import('svelte').Snippet;
+        valueSnippet?: import('svelte').Snippet;
+        [key: string]: any
+    }
+
+    let {
+        titleString = undefined,
+        value = undefined,
+        last_value = undefined,
+        showStatsButton = false,
+        titleSnippet,
+        statsButton,
+        valueSnippet,
+        ...rest
+    }: Props = $props();
 
     const dispatch = createEventDispatcher();
 </script>
@@ -23,27 +40,31 @@
 <div
     class={twMerge(
         "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
-        $$restProps.class
+        rest.class
     )}>
-    <slot name="name">
+    {#if titleSnippet}
+        {@render titleSnippet()}
+    {:else}
         <div class="flex justify-between">
             <p class="text-gray-500 dark:text-gray-400 text-base">
-                {name}
+                {titleString}
             </p>
-            <slot name="statsButton">
+            {#if statsButton}{@render statsButton()}{:else}
                 {#if showStatsButton}
                     <button
                         class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-                        on:click={() => dispatch("statsClick")}>
+                        onclick={() => dispatch("statsClick")}>
                         <span class="w-5 block"><IoIosStats /></span>
                     </button>
                 {/if}
-            </slot>
+            {/if}
         </div>
-    </slot>
+    {/if}
 
     <div class="flex gap-2 min-h-[50px] flex-grow">
-        <slot name="value">
+        {#if valueSnippet}
+            {@render valueSnippet()}
+        {:else}
             <p
                 class={clsx(
                     "font-bold self-center",
@@ -51,7 +72,7 @@
                 )}>
                 {(value ?? NaN).toLocaleString("en-US")}
             </p>
-        </slot>
+        {/if}
         {#if last_value != undefined && value != undefined}
             <div class="flex flex-row">
                 <div

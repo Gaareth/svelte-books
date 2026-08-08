@@ -76,7 +76,7 @@ export const handle = SvelteKitAuth({
 
                 const matching = await verifyPassword(
                     account,
-                    credentials.password.toString()
+                    credentials.password.toString(),
                 );
 
                 if (matching) {

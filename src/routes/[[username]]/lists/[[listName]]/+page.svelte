@@ -10,22 +10,26 @@
     } from "$lib/constants/enums";
     import { capitalize } from "$utils/utils";
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
 
-    const listName = data.listName as ReadingActivityStatusType;
+    let { data }: Props = $props();
 
-    $: listDisplayName = READING_STATUS_VALUES.includes(
+    const listName = $derived(data.listName as ReadingActivityStatusType);
+
+    let listDisplayName = $derived(READING_STATUS_VALUES.includes(
         data.listName as ReadingActivityStatusType
     )
         ? capitalize(data.listName as ReadingActivityStatusType)
-        : data.listName;
+        : data.listName);
 
-    $: readingActivity = data.readingActivity ?? [];
+    let readingActivity = $derived(data.readingActivity ?? []);
 
-    $: ownerName =
-        $page.data.session?.user?.name == data.username || data.username == null
+    let ownerName =
+        $derived($page.data.session?.user?.name == data.username || data.username == null
             ? "MY"
-            : `${data.username}'s`;
+            : `${data.username}'s`);
 </script>
 
 <svelte:head>

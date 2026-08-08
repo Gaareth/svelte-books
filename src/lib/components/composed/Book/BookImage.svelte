@@ -1,7 +1,12 @@
-<script lang="ts">
-    export let bookId: string;
+<!-- <script lang="ts">
 
     import Img from "@zerodevx/svelte-img";
+    interface Props {
+        bookId: string;
+        [key: string]: any
+    }
+
+    let { bookId, ...rest }: Props = $props();
 
     const src = {
         sources: {
@@ -19,4 +24,4 @@
     };
 </script>
 
-<Img {src} {...$$restProps} />
+<Img {src} {...rest} /> -->

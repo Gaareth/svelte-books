@@ -7,20 +7,25 @@
 
     const dispatch = createEventDispatcher();
 
-    // enum MsgType {
-    //   Info,
-    //   Warning,
-    //   Error,
-    // }
     type MsgType = "Info" | "Warning" | "Error";
 
-    export let type: MsgType;
-    export let message: string;
-    export let content: string | undefined = undefined;
-    export let btn1_msg: string;
-    export let btn2_msg: string;
+    interface Props {
+        type: MsgType;
+        message: string;
+        content: import("svelte").Snippet;
+        btn1_msg: string;
+        btn2_msg: string;
+        showModal?: boolean;
+    }
 
-    export let showModal = false;
+    let {
+        type,
+        message,
+        content,
+        btn1_msg,
+        btn2_msg,
+        showModal = $bindable(false),
+    }: Props = $props();
 
     function getColor() {
         if (type == "Info") {
@@ -44,31 +49,33 @@
 </script>
 
 <Modal bind:showModal>
-    <div class="flex items-center gap-4" slot="header">
-        <span class="shrink-0 rounded-full p-2 text-white {getColor()}" />
-        <p class="font-medium sm:text-lg">{message}</p>
-    </div>
+    {#snippet header()}
+        <div class="flex items-center gap-4">
+            <span class="shrink-0 rounded-full p-2 text-white {getColor()}"></span>
+            <p class="font-medium sm:text-lg">{message}</p>
+        </div>
+    {/snippet}
 
-    <p class="mt-4 text-gray-500 dark:text-white">
-        <slot name="content">{content}</slot>
-    </p>
+    <div class="mt-4 text-gray-500 dark:text-white">
+        {@render content()}
+    </div>
 
     <div class="mt-6 sm:flex sm:gap-4">
         <button
             class={clsx(
                 getColor(),
                 getBorderColor(),
-                "border inline-block w-full rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto"
+                "border inline-block w-full rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto",
             )}
             type="button"
-            on:click={() => dispatch("primary")}>
+            onclick={() => dispatch("primary")}>
             {btn1_msg}
         </button>
 
         <button
             class="mt-2 inline-block w-full rounded-md bg-gray-100 px-5 py-2 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300
       dark:bg-slate-600 dark:text-white dark:border-slate-500 dark:hover:bg-slate-500"
-            on:click={() => {
+            onclick={() => {
                 showModal = false;
             }}
             type="button">

@@ -9,11 +9,15 @@
         settingsApiCreateResult,
     } from "../../../../routes/settings/apidata";
 
-    export let currentStatus: any;
-    export let form: any;
+    interface Props {
+        currentStatus: any;
+        form: any;
+    }
 
-    $: formDiffs = form as settingsApiReloadResult;
-    $: formErrors = form as settingsApiCreateResult;
+    let { currentStatus, form }: Props = $props();
+
+    let formDiffs = $derived(form as settingsApiReloadResult);
+    let formErrors = $derived(form as settingsApiCreateResult);
 </script>
 
 {#if form !== undefined && form !== null}
@@ -108,6 +112,6 @@
                 {currentStatus.items}/{currentStatus.max}
             </span>
         </div>
-        <progress max={currentStatus.max} value={currentStatus.items} />
+        <progress max={currentStatus.max} value={currentStatus.items}></progress>
     </div>
 {/if}

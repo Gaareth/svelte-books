@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
     export type ItemDeleteEvent = { entry: ReadingListItemType };
 </script>
 
@@ -22,13 +22,22 @@
     import Pages from "$lib/icons/pages.svelte";
     import { categoriesToColor } from "$src/categoryToColor/colorMap";
 
-    export let entry: ReadingListItemType;
-    export let isAuthorizedToModify = false;
-    $: book = entry.book;
-
     // export let deletionBook: Book | undefined = undefined;
-    // export let openModal: boolean = false;
-    export let allow_deletion: boolean | undefined = true;
+
+    interface Props {
+        entry: ReadingListItemType;
+        isAuthorizedToModify?: boolean;
+        // export let openModal: boolean = false;
+        allow_deletion?: boolean | undefined;
+        actions?: import("svelte").Snippet;
+    }
+
+    let {
+        entry,
+        isAuthorizedToModify = false,
+        allow_deletion = true,
+        actions,
+    }: Props = $props();
 
     const dispatch = createEventDispatcher<{
         delete: ItemDeleteEvent;
@@ -36,7 +45,7 @@
     }>();
     // console.log(book);
 
-    const book_url = encodeURIComponent(entry.book.name);
+    const book_url = $derived(encodeURIComponent(entry.book.name));
 
     // const colors = [
     //   "bg-red-500",
@@ -77,13 +86,11 @@
         return colors[index];
     };
 
-    let accentColor: { h: number; s: number; l: number } = { h: 0, s: 0, l: 0 };
-    $: {
-        const cats = book.bookApiData?.categories.map((cat) => cat.name);
-
-        accentColor =
-            categoriesToColor(cats) ?? getColor(book.name, book.author);
-    }
+    let accentColor: { h: number; s: number; l: number } = $state({
+        h: 0,
+        s: 0,
+        l: 0,
+    });
 
     /**
      * Returns a hash code from a string
@@ -101,6 +108,13 @@
         }
         return hash;
     }
+    let book = $derived(entry.book);
+    $effect(() => {
+        const cats = book.bookApiData?.categories.map((cat) => cat.name);
+
+        accentColor =
+            categoriesToColor(cats) ?? getColor(book.name, book.author);
+    });
 </script>
 
 <!-- barClass={getColor(book.name, book.author)} -->
@@ -112,7 +126,7 @@
     wrapperClass={clsx(
         (entry.status.status === READING_ACTIVITY_TYPES.PAUSED ||
             entry.status.status === READING_ACTIVITY_TYPES.DID_NOT_FINISH) &&
-            "opacity-75"
+            "opacity-75",
     )}>
     <div class="grid grid-cols-8 items-center grid-rows-2 sm:grid-rows-1">
         <div class="col-span-full sm:col-span-3">
@@ -175,14 +189,14 @@
                 </div>
             {/if}
 
-            <slot name="actions">
+            {#if actions}{@render actions()}{:else}
                 <BookActions
                     {isAuthorizedToModify}
                     {allow_deletion}
                     {entry}
                     on:delete={(e) => dispatch("delete", e.detail)}
                     on:done={(e) => dispatch("done", e.detail)} />
-            </slot>
+            {/if}
         </div>
     </div>
 </AccentBarItemCard>

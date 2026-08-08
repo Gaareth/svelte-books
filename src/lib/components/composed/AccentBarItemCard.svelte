@@ -1,13 +1,25 @@
-<script>
+<script lang="ts">
     import clsx from "clsx";
 
-    export let wrapperClass = "";
-    export let barClass = "";
-    export let accentStyle = "";
+    interface Props {
+        wrapperClass?: string;
+        barClass?: string;
+        accentStyle?: string;
+        children?: import('svelte').Snippet;
+        [key: string]: any
+    }
+
+    let {
+        wrapperClass = "",
+        barClass = "",
+        accentStyle = "",
+        children,
+        ...rest
+    }: Props = $props();
 </script>
 
 <div
-    {...$$restProps}
+    {...rest}
     class={clsx(
         "item-border mb-3 p-2 items-center w-full gap-2 grid",
         wrapperClass
@@ -18,7 +30,7 @@
             "min-h-10 min-w-1 w-1 basis-1 flex-shrink-0 rounded-md",
             barClass
         )}
-        style={`height: 98%; ${accentStyle}`} />
+        style={`height: 98%; ${accentStyle}`}></div>
 
-    <slot />
+    {@render children?.()}
 </div>

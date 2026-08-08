@@ -1,18 +1,25 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import BookApi from "./BookApi.svelte";
 
     import type { queriedBookFull } from "$appTypes";
 
-    export let volumeId: string | undefined;
-    export let getBookPromise: Promise<queriedBookFull> | undefined = undefined;
 
-    export let open = true;
-    export let summary_text = "Add API data?";
-    export let query: string | undefined = undefined;
+    interface Props {
+        volumeId: string | undefined;
+        getBookPromise?: Promise<queriedBookFull> | undefined;
+        open?: boolean;
+        summary_text?: string;
+        query?: string | undefined;
+    }
 
-    const dispatch = createEventDispatcher();
+    let {
+        volumeId = $bindable(),
+        getBookPromise = $bindable(),
+        open = true,
+        summary_text = "Add API data?",
+        query = $bindable()
+    }: Props = $props();
+
 </script>
 
 <details {open}>
@@ -22,7 +29,6 @@
             bind:getBookPromise
             bind:volumeId
             bind:query
-            {dispatch}
             label="Add API data" />
     </div>
 </details>

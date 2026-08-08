@@ -26,7 +26,7 @@ type GetAccountParams = GetAccountById | GetAccountByUsername;
 
 export async function loadBooks(
     accountParams: GetAccountParams,
-    listName: string | undefined = undefined
+    listName: string | undefined = undefined,
 ) {
     const { accountId, accountUsername } = accountParams;
 
@@ -69,7 +69,7 @@ export async function getReadingActivity(
     requestedAccountId: string,
     session: Session | Account | null,
     returnAll = false,
-    status: ReadingActivityType | undefined = undefined
+    status: ReadingActivityType | undefined = undefined,
 ) {
     const readingActivity = await prisma.readingActivity.findMany({
         where: {
@@ -78,7 +78,7 @@ export async function getReadingActivity(
                 status: status,
                 ...whereVisibilityPublicOrAuthenticatedOrAll(
                     session,
-                    returnAll
+                    returnAll,
                 ),
             },
         },
@@ -131,7 +131,7 @@ export function extractCategories(apiData: queriedBookFull): string[] {
 }
 
 export function extractBookApiData(
-    apiData: queriedBookFull
+    apiData: queriedBookFull,
 ): Prisma.BookApiDataCreateInput {
     const info = apiData.volumeInfo;
     const { title, subtitle, publishedDate, publisher, pageCount, language } =
@@ -139,10 +139,10 @@ export function extractBookApiData(
     const authors = info.authors.join("|"); //TODO: relation
     const thumbnailUrl = info.imageLinks?.thumbnail.replace(
         "http://",
-        "https://"
+        "https://",
     );
     const isbn_13 = info.industryIdentifiers?.find(
-        (o) => o.type == "ISBN_13"
+        (o) => o.type == "ISBN_13",
     )?.identifier;
 
     const imageLinks = info.imageLinks
@@ -152,7 +152,7 @@ export function extractBookApiData(
                   typeof value === "string"
                       ? value.replace("http://", "https://")
                       : value,
-              ])
+              ]),
           )
         : undefined;
 

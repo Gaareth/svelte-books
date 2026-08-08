@@ -12,7 +12,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
     const { sessionAccount, requestedAccount } = await authorize(
         await locals.auth(),
         params.username,
-        handlePublicOrAuthenticatedAccount
+        handlePublicOrAuthenticatedAccount,
     );
 
     const username = params.username;
@@ -23,14 +23,14 @@ export async function load({ locals, params }: ServerLoadEvent) {
     const readingActivity = await getReadingActivity(
         requestedAccount.id,
         sessionAccount,
-        isAuthorizedToModify
+        isAuthorizedToModify,
     );
 
     const isCurrentlyReadingPublic =
         (await isReadingActivityPublic(
             requestedAccount.id,
             sessionAccount,
-            ReadingActivityType.READING
+            ReadingActivityType.READING,
         )) || isAuthorizedToModify;
 
     return {

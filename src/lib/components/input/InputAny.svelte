@@ -1,15 +1,28 @@
 <script lang="ts">
-    export let name: string;
-    export let displayName: string | undefined = undefined;
-    // export let type: string = "text"
-    export let error: string | undefined | null = undefined;
+    
+    interface Props {
+        name: string;
+        displayName?: string | undefined;
+        // export let type: string = "text"
+        error?: string | undefined | null;
+        label?: import('svelte').Snippet;
+        input?: import('svelte').Snippet;
+    }
+
+    let {
+        name,
+        displayName = undefined,
+        error = undefined,
+        label,
+        input
+    }: Props = $props();
 </script>
 
 <label for={name} class="capitalize">
-    <slot name="label">{displayName}:</slot>
+    {#if label}{@render label()}{:else}{displayName}:{/if}
 </label>
 <div class="flex flex-col mb-3 sm:mb-0">
-    <slot name="input" />
+    {@render input?.()}
 
     {#if error}
         <span class="label-text-alt text-error">{error}</span>

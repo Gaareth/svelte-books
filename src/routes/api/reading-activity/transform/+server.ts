@@ -35,7 +35,7 @@ async function transformAddCurrentDate(
     accountId: string,
     readingActivityId: number,
     targetReadingActivityStatusId: number,
-    optionalRating: z.infer<typeof updateRatingSchema> | undefined = undefined
+    optionalRating: z.infer<typeof updateRatingSchema> | undefined = undefined,
 ) {
     const now = new Date();
     const dateId = (
@@ -76,7 +76,7 @@ async function transformAddCurrentDate(
 async function continueReading(
     accountId: string,
     readingActivityId: number,
-    readingActivityStatusId: number
+    readingActivityStatusId: number,
 ) {
     return await cloneReadingActivity(accountId, readingActivityId, {
         readingActivityStatusId,
@@ -87,7 +87,7 @@ async function continueReading(
 async function createNewFromScratch(
     accountId: string,
     bookId: string,
-    targetStatus: ReadingActivityStatusType
+    targetStatus: ReadingActivityStatusType,
 ) {
     const now = new Date();
     const oDt = {
@@ -104,7 +104,7 @@ async function createNewFromScratch(
         bookId,
         undefined,
         targetStatus,
-        oDt
+        oDt,
     );
 }
 
@@ -147,13 +147,13 @@ export async function POST(req: RequestEvent) {
                 newReadingActivity = await continueReading(
                     accountId,
                     readingActivityId,
-                    targetReadingActivityStatusId
+                    targetReadingActivityStatusId,
                 );
             } else {
                 newReadingActivity = await createNewFromScratch(
                     accountId,
                     readingActivity.bookId,
-                    targetStatus
+                    targetStatus,
                 );
             }
             break;
@@ -167,7 +167,7 @@ export async function POST(req: RequestEvent) {
                 accountId,
                 readingActivityId,
                 targetReadingActivityStatusId,
-                { stars, comment, graphs }
+                { stars, comment, graphs },
             );
             break;
         }
@@ -176,7 +176,7 @@ export async function POST(req: RequestEvent) {
             newReadingActivity = await createNewFromScratch(
                 accountId,
                 readingActivity.bookId,
-                targetStatus
+                targetStatus,
             );
             break;
         }
@@ -185,7 +185,7 @@ export async function POST(req: RequestEvent) {
             newReadingActivity = await createNewFromScratch(
                 accountId,
                 readingActivity.bookId,
-                targetStatus
+                targetStatus,
             );
 
             if (newReadingActivity) {

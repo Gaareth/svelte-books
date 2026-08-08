@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
     import toast from "svelte-french-toast";
     import { twMerge } from "tailwind-merge";
 
@@ -20,8 +21,12 @@
     } from "$lib/constants/enums";
     import { capitalize } from "$lib/utils/utils";
 
-    export let form;
-    export let data: PageData;
+    interface Props {
+        form: any;
+        data: PageData;
+    }
+
+    let { form, data = $bindable() }: Props = $props();
     // let originalData = data;
     // $: dataChanged = originalData != data;
     // $: {
@@ -31,26 +36,18 @@
 
     // }
 
-    let currentStatus: SSE_EVENT | undefined = undefined;
+    let currentStatus: SSE_EVENT | undefined = $state(undefined);
 
     //TODO: toast
     // let globalVisibility = "private";
 
-    let allAsGlobal;
-    $: allAsGlobal = data.readingActivityLists
+    let allAsGlobal = $derived(data.readingActivityLists
         .filter((v) => v.visibility != null)
-        .every((v) => (v.visibility as VisibilityType) == globalVisibility);
+        .every((v) => (v.visibility as VisibilityType) == globalVisibility));
 
-    let globalVisibility = data.globalVisibility;
+    let globalVisibility = $state(data.globalVisibility);
 
-    $: {
-        if (form?.success) {
-            toast.success("Successfully applied changes");
-        }
-    }
 
-    // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC]; //TODO: support unlisted
-    $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, PUBLIC];
 
     function changeAllVisiblities(ev: CustomEvent) {
         const option = ev.detail;
@@ -63,6 +60,14 @@
         await invalidateAll();
         globalVisibility = data.globalVisibility;
     }
+    
+    run(() => {
+        if (form?.success) {
+            toast.success("Successfully applied changes");
+        }
+    });
+    // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC]; //TODO: support unlisted
+    let sortedSupportedVisibilites = $derived([PRIVATE, AUTHENTICATED, PUBLIC]);
 </script>
 
 <h1 class="text-5xl my-4">Settings</h1>
@@ -156,7 +161,7 @@
             {/each}
         </div>
         <div class="mt-3 flex gap-2 justify-end">
-            <button type="button" class="btn-generic" on:click={resetForm}>
+            <button type="button" class="btn-generic" onclick={resetForm}>
                 Cancel
             </button>
             <button

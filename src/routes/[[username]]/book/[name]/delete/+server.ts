@@ -8,7 +8,7 @@ import { prisma } from "$lib/server/prisma";
 export async function POST(req: RequestEvent) {
     const { requestedAccount } = await authorize(
         await req.locals.auth(),
-        req.params.username
+        req.params.username,
     );
 
     const { id } = await req.request.json();

@@ -1,14 +1,20 @@
 <script lang="ts">
-    //@ts-ignore
-
     import BookListItem from "./BookListItem.svelte";
 
-    import type { BookListItemType } from "$appTypes";
+    import type { BookWithApiData } from "$src/app";
+    import type { Book } from "$src/generated/prisma/browser";
 
-    export let books: BookListItemType[];
-    export let on_delete: ((b: BookListItemType) => unknown) | undefined =
-        undefined;
-    export let allow_deletion = false;
+    interface Props {
+        books: BookWithApiData[];
+        on_delete?: ((b: Book) => unknown) | undefined;
+        allow_deletion?: boolean;
+    }
+
+    let {
+        books,
+        on_delete = undefined,
+        allow_deletion = false,
+    }: Props = $props();
 </script>
 
 <div class="grid grid-cols-2 lg:grid-cols-7 gap-2 mb-5 mt-3">

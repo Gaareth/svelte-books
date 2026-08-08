@@ -98,7 +98,7 @@ export const actions = {
 
         const readingActivityVisibility = parseFormArray(
             formDataObject,
-            "readingActivityVisibility"
+            "readingActivityVisibility",
         );
 
         // @ts-ignore
@@ -110,7 +110,7 @@ export const actions = {
                 z.tuple([
                     z.nativeEnum(READING_ACTIVITY_TYPES),
                     z.nativeEnum(VISIBILITY_TYPES),
-                ])
+                ]),
             ),
         });
 

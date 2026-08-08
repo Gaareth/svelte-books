@@ -7,7 +7,11 @@
     import RegistrationSettings from "$components/composed/Admin/RegistrationSettings.svelte";
     import UsersList from "$components/composed/UsersList.svelte";
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <h1 class="text-5xl my-4">Admin Settings</h1>

@@ -40,7 +40,7 @@ export async function POST(req: RequestEvent) {
         console.error("Validation failed:", result.error);
         return json(
             { success: false, error: result.error.flatten().fieldErrors },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -63,7 +63,7 @@ export async function POST(req: RequestEvent) {
             dateStarted,
             dateFinished,
             graphs,
-            comment
+            comment,
         );
 
         if (status === READING_ACTIVITY_TYPES.ACQUIRED) {

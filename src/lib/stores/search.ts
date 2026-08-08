@@ -13,11 +13,12 @@ export interface SearchStoreModel<T extends Record<PropertyKey, any>> {
 }
 
 export const createSearchStore = <T extends Record<PropertyKey, any>>(
-    data: T[]
+    data: T[],
 ) => {
+    const initial = [...data]; // create a copy of the data to avoid mutating the original array
     const { subscribe, set, update } = writable<SearchStoreModel<T>>({
-        data: data,
-        filtered: data,
+        data: initial,
+        filtered: initial,
         search: "",
         // sorting: "date_read",
         filter: () => true,
@@ -32,7 +33,7 @@ export const createSearchStore = <T extends Record<PropertyKey, any>>(
 };
 
 export const searchHandler = <T extends Record<PropertyKey, any>>(
-    store: SearchStoreModel<T>
+    store: SearchStoreModel<T>,
 ) => {
     const searcher = new FuzzySearch(store.data, ["book.name", "book.author"], {
         caseSensitive: false,

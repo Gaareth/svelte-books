@@ -5,18 +5,35 @@
 
     import ClearButton from "$components/input/ClearButton.svelte";
 
-    export let value: unknown | null = null;
-    export let name: string;
-    export let displayName: string = name;
-    export let error: string | undefined = undefined;
-    export let inputClass = "";
-    export let skipLabel = false;
-    export let min: number | string | undefined = undefined;
-    export let max: number | string | undefined = undefined;
+    interface Props {
+        value?: unknown | null;
+        name: string;
+        displayName?: string;
+        error?: string | undefined;
+        inputClass?: string;
+        skipLabel?: boolean;
+        min?: number | string | undefined;
+        max?: number | string | undefined;
+        clearButton?: boolean;
+        buttonWrapperClass?: string;
+        [key: string]: any;
+    }
 
-    export let clearButton = false;
+    let {
+        value = $bindable(),
+        name,
+        displayName = name,
+        error = undefined,
+        inputClass = "",
+        skipLabel = false,
+        min = undefined,
+        max = undefined,
+        clearButton = false,
+        buttonWrapperClass = "",
+        ...rest
+    }: Props = $props();
 
-    export let buttonWrapperClass = "";
+
 
     const increment = () => {
         if (
@@ -37,56 +54,57 @@
     };
 </script>
 
-<InputAny {displayName} {name} {error} {...$$restProps}>
-    <label
-        slot="label"
-        for={name}
-        class={twMerge("capitalize", skipLabel && "hidden")}>
-        {displayName}
-    </label>
-    <div class="flex gap-2" slot="input">
-        <div class={twMerge("flex", buttonWrapperClass)}>
-            <button
-                on:click={decrement}
-                class={twMerge(
-                    "input !px-2 border",
-                    inputClass,
-                    "rounded-e-none border-e-0"
-                )}
-                type="button">
-                -
-            </button>
-            <input
-                id={name}
-                {name}
-                type="number"
-                pattern="[0-9]*"
-                inputmode="numeric"
-                class={twMerge(
-                    "w-full z-10",
-                    error ? "input-error" : "",
-                    "!rounded-s-none !rounded-e-none",
-                    inputClass
-                )}
-                {min}
-                {max}
-                {...$$restProps}
-                bind:value />
-            <button
-                on:click={increment}
-                class={twMerge(
-                    "input !px-2 border",
-                    inputClass,
-                    "rounded-s-none border-s-0"
-                )}
-                type="button">
-                +
-            </button>
+<InputAny {displayName} {name} {error} {...rest}>
+    {#snippet label()}
+        <label for={name} class={twMerge("capitalize", skipLabel && "hidden")}>
+            {displayName}
+        </label>
+    {/snippet}
+    {#snippet input()}
+        <div class="flex gap-2">
+            <div class={twMerge("flex", buttonWrapperClass)}>
+                <button
+                    onclick={decrement}
+                    class={twMerge(
+                        "input !px-2 border",
+                        inputClass,
+                        "rounded-e-none border-e-0",
+                    )}
+                    type="button">
+                    -
+                </button>
+                <input
+                    id={name}
+                    {name}
+                    type="number"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
+                    class={twMerge(
+                        "w-full z-10",
+                        error ? "input-error" : "",
+                        "!rounded-s-none !rounded-e-none",
+                        inputClass,
+                    )}
+                    {min}
+                    {max}
+                    {...rest}
+                    bind:value />
+                <button
+                    onclick={increment}
+                    class={twMerge(
+                        "input !px-2 border",
+                        inputClass,
+                        "rounded-s-none border-s-0",
+                    )}
+                    type="button">
+                    +
+                </button>
+            </div>
+            {#if clearButton}
+                <ClearButton bind:value />
+            {/if}
         </div>
-        {#if clearButton}
-            <ClearButton bind:value />
-        {/if}
-    </div>
+    {/snippet}
 </InputAny>
 
 <style>

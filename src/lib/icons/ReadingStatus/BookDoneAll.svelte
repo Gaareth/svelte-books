@@ -1,9 +1,17 @@
+<script lang="ts">
+    interface Props {
+        [key: string]: any
+    }
+
+    let { ...props }: Props = $props();
+</script>
+
 <svg
     viewBox="0 0 24 24"
     version="1.1"
     id="svg1"
     xmlns="http://www.w3.org/2000/svg"
-    {...$$props}>
+    {...props}>
     <defs id="defs1" />
     <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
     <path

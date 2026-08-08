@@ -4,7 +4,7 @@ import {
 } from "$lib/constants/enums";
 
 export function shouldShowRating(
-    status: ReadingActivityStatusType | undefined
+    status: ReadingActivityStatusType | undefined,
 ) {
     return (
         !!status &&
@@ -14,7 +14,7 @@ export function shouldShowRating(
 }
 
 export function shouldShowFinishedDate(
-    status: ReadingActivityStatusType | undefined
+    status: ReadingActivityStatusType | undefined,
 ) {
     return (
         !!status &&
@@ -25,7 +25,7 @@ export function shouldShowFinishedDate(
 }
 
 export function shouldShowStartedDate(
-    status: ReadingActivityStatusType | undefined
+    status: ReadingActivityStatusType | undefined,
 ) {
     return (
         !!status &&

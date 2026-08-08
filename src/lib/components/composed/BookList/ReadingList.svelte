@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
 
+    import { run } from "svelte/legacy";
     import { fade, scale } from "svelte/transition";
     //@ts-ignore
     import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
@@ -17,54 +18,62 @@
     import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
     import { createSearchStore, searchHandler } from "$lib/stores/search";
 
-    export let entries: (ReadingListItemType & { active?: boolean })[];
-    export let showSearch = true;
-    export let isAuthorizedToModify = false;
+    interface Props {
+        entries: (ReadingListItemType & { active?: boolean })[];
+        showSearch?: boolean;
+        isAuthorizedToModify?: boolean;
+    }
 
+    let {
+        entries,
+        showSearch = true,
+        isAuthorizedToModify = false,
+    }: Props = $props();
+
+    // svelte-ignore state_referenced_locally
     const searchStore = createSearchStore(entries);
-    let added_book = false;
+    let added_book = $state(false);
 
-    let languages_used: string[];
-    let category_names: string[] = [
-        ...new Set(
-            entries
-                .map((b) => b.book.bookApiData?.categories.map((c) => c.name))
-                .flat()
-                .filter((n) => n != null)
-        ),
-    ];
-
-    $: {
-        added_book = true;
-        $searchStore.data = entries;
-        languages_used = entries.reduce((result, b) => {
+    let languages_used: string[] = $derived(entries.reduce((result, b) => {
             let lang = b.book.bookApiData?.language;
             if (lang !== undefined && !result.includes(lang)) {
                 return result.concat(lang);
             }
             return result;
-        }, [] as string[]);
-    }
+        }, [] as string[]))
+    let category_names: string[] = $derived([
+        ...new Set(
+            entries
+                .map((b) => b.book.bookApiData?.categories.map((c) => c.name))
+                .flat()
+                .filter((n) => n != null),
+        ),
+    ]);
 
-    $: books_displayed = $searchStore.filtered;
+    $effect(() => {
+        added_book = true;
+        $searchStore.data = entries;
+    });
+
+    let books_displayed = $derived($searchStore.filtered);
 
     const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
     onDestroy(() => {
         unsubscribe();
     });
 
-    let deletionEntry: ReadingListItemType;
-    let openModal = false;
+    let deletionEntry: ReadingListItemType | undefined = $state();
+    let openModal = $state(false);
 
-    let showOptions = false;
-    $: {
+    let showOptions = $state(false);
+    run(() => {
         let params = $page.url.searchParams;
         showOptions =
             (!!params.get("filter") ||
                 !!params.get("sort") ||
                 !!params.get("order")) ??
             false;
-    }
+    });
 
     const animate = (node: any, args: any) => {
         const animation = added_book
@@ -92,7 +101,7 @@
             <BookSearch bind:search_term={$searchStore.search} />
             <button
                 class="btn-generic-icon ml-auto"
-                on:click={() => (showOptions = !showOptions)}>
+                onclick={() => (showOptions = !showOptions)}>
                 <span class="w-5 block">
                     <MoreIcon />
                 </span>

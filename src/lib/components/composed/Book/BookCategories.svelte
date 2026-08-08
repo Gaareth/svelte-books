@@ -2,7 +2,11 @@
     import Pill from "$components/Pill.svelte";
     import DoubleArrowRounded from "$src/lib/icons/DoubleArrowRounded.svelte";
 
-    export let categories: { name: string }[] | undefined = [];
+    interface Props {
+        categories?: { name: string }[] | undefined;
+    }
+
+    let { categories = [] }: Props = $props();
 </script>
 
 {#if (categories ?? []).length > 0}

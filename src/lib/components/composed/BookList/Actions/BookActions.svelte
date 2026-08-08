@@ -15,11 +15,15 @@
     import { invalidateAll } from "$app/navigation";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 
-    export let isAuthorizedToModify = false;
-    export let allow_deletion: boolean | undefined = false;
-    export let entry: ReadingListItemType;
-    $: book_url = encodeURIComponent(entry.book.name);
-    $: statusType = entry.status.status;
+    interface Props {
+        isAuthorizedToModify?: boolean;
+        allow_deletion?: boolean | undefined;
+        entry: ReadingListItemType;
+    }
+
+    let { isAuthorizedToModify = false, allow_deletion = false, entry }: Props = $props();
+    let book_url = $derived(encodeURIComponent(entry.book.name));
+    let statusType = $derived(entry.status.status);
 
     const dispatch = createEventDispatcher();
 </script>

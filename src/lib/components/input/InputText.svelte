@@ -1,12 +1,27 @@
 <script lang="ts">
     import InputAll from "./InputAll.svelte";
 
-    export let value: unknown | undefined = undefined;
-    export let name: string;
-    export let displayName: string = name;
+    
+  interface Props {
+    value?: unknown | undefined;
+    name: string;
+    displayName?: string;
     // export let type: string = "text"
-    export let error: string | undefined;
-    export let hasIcon = false;
+    error: string | undefined;
+    hasIcon?: boolean;
+    icon?: import('svelte').Snippet;
+    [key: string]: unknown;
+  }
+
+  let {
+    value = $bindable(),
+    name,
+    displayName = name,
+    error,
+    hasIcon = false,
+    icon,
+    ...rest
+  }: Props = $props();
 </script>
 
 <!-- <label for={name} class="capitalize">{displayName}:</label>
@@ -24,15 +39,17 @@
   </label>
 </div> -->
 
-<InputAll {displayName} {name} {error} {...$$restProps} bind:value>
-    <label slot="label" for={name} class="capitalize">
-        {#if hasIcon}
-            <div class="icon-wrapper">
-                <slot name="icon" />
-                {displayName}
-            </div>
-        {:else}
-            {displayName}
-        {/if}
-    </label>
+<InputAll {displayName} {name} {error} {...rest} bind:value>
+    {#snippet label()}
+    <label  for={name} class="capitalize">
+          {#if hasIcon}
+              <div class="icon-wrapper">
+                  {@render icon?.()}
+                  {displayName}
+              </div>
+          {:else}
+              {displayName}
+          {/if}
+      </label>
+  {/snippet}
 </InputAll>

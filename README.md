@@ -8,15 +8,15 @@ A personal book tracking app focused on your reading activity, habits and progre
 
 ## Features
 
--   statistics about books/pages/words per year, month, day, etc
-    -   average reading time, time from to-read to started, etc
-    -   most read authors, categories
--   tracking of reading activity (to-read, reading, finished, did not finish, paused, acquired)
--   sortable and filterable book list, quick actions
--   privacy settings (private, public, authenticated users)
--   open registration and closed with invite links
--   google books api integration for easy adding of books
--   crude account management (no password reset, email verification, etc)
+- statistics about books/pages/words per year, month, day, etc
+    - average reading time, time from to-read to started, etc
+    - most read authors, categories
+- tracking of reading activity (to-read, reading, finished, did not finish, paused, acquired)
+- sortable and filterable book list, quick actions
+- privacy settings (private, public, authenticated users)
+- open registration and closed with invite links
+- google books api integration for easy adding of books
+- crude account management (no password reset, email verification, etc)
 
 ## Installation
 
@@ -24,8 +24,8 @@ You can either use a docker image or build from source.
 However, to configure the app, you first have to create `.env.production` file similar to `env.example`.
 Make sure to:
 
--   follow the format of the example file and fill in the values
--   not use quotes around the values as they are sometimes taken literally.
+- follow the format of the example file and fill in the values
+- not use quotes around the values as they are sometimes taken literally.
 
 This will then initially create your admin account.
 
@@ -33,11 +33,11 @@ This will then initially create your admin account.
 
 Run one of:
 
--   `./run-book-store.sh`
+- `./run-book-store.sh`
 
--   `docker run -it  -d --env-file .env.production -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books`
+- `docker run -it  -d --env-file .env.production -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books`
 
--   `docker compose up -d`
+- `docker compose up -d`
 
 ### Source
 
@@ -58,66 +58,69 @@ Run one of:
 
 If you changed the schema and want to test it:
 
--   `npx prisma db push`: To try out the changes without creating a migration
--   `npx prisma migrate dev --name <migration_name>`: To create a new migration file
+- `npx prisma db push`: To try out the changes without creating a migration
+- `npx prisma migrate dev --name <migration_name>`: To create a new migration file
 
 ## Todos
 
--   upgrade to svelte5, tailwind4, vite8?, etc...
+- dont give each readactivity all books, aka more async
 
--   background show fav books covers sliding like steam loading animation
+- upgrade to svelte5, tailwind4, vite8?, etc...
+    - dateselector
 
--   when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
+- background show fav books covers sliding like steam loading animation
 
--   reading time relative to book length
+- when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
--   shelves
+- reading time relative to book length
 
--   google books api throttling and caching, per user
+- shelves
 
--   color bar, similar color for similar books
+- google books api throttling and caching, per user
 
-    -   revisit some time
+- color bar, similar color for similar books
 
--   more finegrained privacy/visibility settings:
+    - revisit some time
 
-    -   private books
+- more finegrained privacy/visibility settings:
 
--   tension stats draw yourself - check
+    - private books
 
-    -   let user add more graphs
+- tension stats draw yourself - check
 
--   add or remove google api
+    - let user add more graphs
 
--   update googleapi values
+- add or remove google api
 
-    -   especially categories
+- update googleapi values
 
--   crud for lists
+    - especially categories
 
--   statistics page
--   books read over time or github like graph
--   per month, year, day etc
--   min/avg/max time for started reading to finished.
+- crud for lists
 
-    -   similarly for to-read to started! or finished?
-    -   avg time from to-read to acquired
+- statistics page
+- books read over time or github like graph
+- per month, year, day etc
+- min/avg/max time for started reading to finished.
 
--   did i fix them already?
+    - similarly for to-read to started! or finished?
+    - avg time from to-read to acquired
 
-    -   fix last month selector when is january?
-    -   fix optionaldate unique
+- did i fix them already?
 
--   reading activity icons?
--   acquired -> reading, maybe only count if book was wanted (ie. was in to-read)
+    - fix last month selector when is january?
+    - fix optionaldate unique
 
--   rework dark mode colors, more consistent styles
--   violet-400 as accent color
+- reading activity icons?
+- acquired -> reading, maybe only count if book was wanted (ie. was in to-read)
+
+- rework dark mode colors, more consistent styles
+- violet-400 as accent color
 
 # Tech-Stack
 
--   SvelteKit
--   Prisma
--   Docker
--   TypeScript
--   Tailwind
+- SvelteKit
+- Prisma
+- Docker
+- TypeScript
+- Tailwind

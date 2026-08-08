@@ -15,7 +15,7 @@ type ReadingActivityWithDates = Prisma.ReadingActivityGetPayload<{
 }>;
 
 export function generateBookFinishedCongratulations(
-    entry: ReadingActivityWithDates
+    entry: ReadingActivityWithDates,
 ): string {
     const placeholder = [
         "Good job finishing that book!",

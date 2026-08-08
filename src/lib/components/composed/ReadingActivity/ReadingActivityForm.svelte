@@ -8,6 +8,7 @@
         shouldShowFinishedDate,
         shouldShowStartedDate,
     } from "./utils";
+    import ToggleGroup from "../../input/ToggleGroup.svelte";
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
@@ -25,48 +26,53 @@
     import EventDone from "$lib/icons/EventDone.svelte";
     import EventProgress from "$lib/icons/EventProgress.svelte";
 
-    export let book: BookWithOwnership;
-    export let bookId: string | undefined = undefined;
-    export let showModal = false;
-    export let entry: ReviewListItemType | undefined = undefined;
-    $: createNew = entry === undefined;
-
-    let readingStatus = entry?.status.status;
-
-    let prevShowModal = false;
-
-    $: {
-        if (showModal && !prevShowModal) {
-            readingStatus = entry?.status.status;
-        }
-
-        prevShowModal = showModal;
+    interface Props {
+        book: BookWithOwnership;
+        bookId?: string | undefined;
+        showModal?: boolean;
+        entry?: ReviewListItemType | undefined;
     }
 
-    $: showRating = shouldShowRating(readingStatus);
-    $: showFinishedDate = shouldShowFinishedDate(readingStatus);
-    $: showStartedDate = shouldShowStartedDate(readingStatus);
+    let {
+        book,
+        bookId = undefined,
+        showModal = $bindable(false),
+        entry = undefined,
+    }: Props = $props();
+    let createNew = $derived(entry === undefined);
 
-    let error: Record<string, any> | undefined = undefined;
+    let readingStatus = $derived(entry?.status.status);
+
+    let showRating = $derived(shouldShowRating(readingStatus));
+    let showFinishedDate = $derived(shouldShowFinishedDate(readingStatus));
+    let showStartedDate = $derived(shouldShowStartedDate(readingStatus));
+
+    let error: Record<string, any> | undefined = $state(undefined);
 
     // Create separate copies to prevent DateSelector components from sharing the same object reference
-    $: dateStartedValue = entry?.dateStarted
-        ? { ...entry.dateStarted }
-        : { ...DEFAULT_OPTIONAL_DATETIME };
-    $: dateFinishedValue = entry?.dateFinished
-        ? { ...entry.dateFinished }
-        : { ...DEFAULT_OPTIONAL_DATETIME };
+    let dateStartedValue = $derived(
+        entry?.dateStarted
+            ? { ...entry.dateStarted }
+            : { ...DEFAULT_OPTIONAL_DATETIME },
+    );
+    let dateFinishedValue = $derived(
+        entry?.dateFinished
+            ? { ...entry.dateFinished }
+            : { ...DEFAULT_OPTIONAL_DATETIME },
+    );
 
-    $: bookOwnership = book.ownership?.status;
-    $: location = book.ownership?.location;
+    let bookOwnership = $derived(book.ownership?.status);
+    let location = $derived(book.ownership?.location);
 </script>
 
 <Modal bind:showModal divClassName="w-full" className="w-full lg:w-2/5">
-    <div class="flex items-center gap-4 w-full" slot="header">
-        <p class="font-medium">
-            {entry != null ? "Edit" : "Create"} Reading Activity
-        </p>
-    </div>
+    {#snippet header()}
+        <div class="flex items-center gap-4 w-full">
+            <p class="font-medium">
+                {entry != null ? "Edit" : "Create"} Reading Activity
+            </p>
+        </div>
+    {/snippet}
 
     <form
         action={entry != null
@@ -85,7 +91,7 @@
                     toast.success(
                         `Successfully ${
                             createNew ? "created" : "updated"
-                        } reading activity`
+                        } reading activity`,
                     );
                     showModal = false;
                     error = undefined;
@@ -100,7 +106,7 @@
                     toast.error(
                         `Error ${
                             createNew ? "creating" : "updating"
-                        } reading activity: ${msg}`
+                        } reading activity: ${msg}`,
                     );
                 }
             };
@@ -112,53 +118,53 @@
         {/if}
 
         <div class="mt-5 flex flex-col gap-2 sm:gap-4">
-            {#if true}
-                <div>
-                    <InputSelect
-                        bind:value={readingStatus}
-                        displayName="Status:"
-                        name={"status"}
-                        selectClassName="dark:bg-slate-600"
-                        clearButton={false}
-                        error={error?.status}>
-                        {#each READING_STATUS_VALUES as status}
-                            <option value={status}>
-                                {status}
-                            </option>
-                        {/each}
-                    </InputSelect>
-                </div>
-            {/if}
+            <div>
+                <InputSelect
+                    bind:value={readingStatus}
+                    displayName="Status:"
+                    name={"status"}
+                    selectClassName="dark:bg-slate-600"
+                    clearButton={false}
+                    error={error?.status}>
+                    {#each READING_STATUS_VALUES as status}
+                        <option value={status}>
+                            {status}
+                        </option>
+                    {/each}
+                </InputSelect>
+            </div>
 
-            <!-- <div class="flex justify-center sm:mt-5">
-        <ToggleGroup
-          options={READING_STATUS_VALUES}
-          groupClass="mb-2 inline-flex"
-          btnClass="px-2 py-2 sm:py-0 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
-          btnSelectedClass="dark:bg-slate-500 bg-gray-100"
-          startClass="border-s rounded-s-md"
-          endClass="rounded-e-md"
-        />
-      </div> -->
+            <div class="flex justify-center sm:mt-5">
+                <ToggleGroup
+                    options={READING_STATUS_VALUES}
+                    groupClass="mb-2 inline-flex"
+                    btnClass="px-2 py-2 sm:py-0 hover:bg-gray-50 dark:hover:bg-slate-500 border border-s-0 dark:border-slate-500 dark:bg-slate-600"
+                    btnSelectedClass="dark:bg-slate-500 bg-gray-100"
+                    startClass="border-s rounded-s-md"
+                    endClass="rounded-e-md" />
+            </div>
 
             {#if showStartedDate}
                 <div>
                     <InputAny name="dateStarted" error={error?.dateStarted}>
-                        <div class="icon-wrapper" slot="label">
-                            <span class="w-5 block" title="date started">
-                                <EventProgress />
-                            </span>
-                            Date started:
-                        </div>
+                        {#snippet label()}
+                            <div class="icon-wrapper">
+                                <span class="w-5 block" title="date started">
+                                    <EventProgress />
+                                </span>
+                                Date started:
+                            </div>
+                        {/snippet}
 
-                        <DateSelector
-                            slot="input"
-                            id="dateStarted"
-                            name="dateStarted"
-                            inputClassName="!w-full !input dark:bg-slate-600"
-                            className="w-full"
-                            datetime={dateStartedValue}
-                            clearButton={true} />
+                        {#snippet input()}
+                            <DateSelector
+                                id="dateStarted"
+                                name="dateStarted"
+                                inputClassName="!w-full !input dark:bg-slate-600"
+                                className="w-full"
+                                datetime={dateStartedValue}
+                                clearButton={true} />
+                        {/snippet}
                     </InputAny>
                 </div>
             {/if}
@@ -166,21 +172,24 @@
             {#if showFinishedDate}
                 <div>
                     <InputAny name="dateFinished">
-                        <div class="icon-wrapper" slot="label">
-                            <span class="w-5 block" title="date read">
-                                <EventDone />
-                            </span>
-                            Date read:
-                        </div>
+                        {#snippet label()}
+                            <div class="icon-wrapper">
+                                <span class="w-5 block" title="date read">
+                                    <EventDone />
+                                </span>
+                                Date read:
+                            </div>
+                        {/snippet}
 
-                        <DateSelector
-                            id="dateFinished"
-                            name="dateFinished"
-                            inputClassName="!w-full !input dark:bg-slate-600"
-                            className="w-full"
-                            slot="input"
-                            datetime={dateFinishedValue}
-                            clearButton={true} />
+                        {#snippet input()}
+                            <DateSelector
+                                id="dateFinished"
+                                name="dateFinished"
+                                inputClassName="!w-full !input dark:bg-slate-600"
+                                className="w-full"
+                                datetime={dateFinishedValue}
+                                clearButton={true} />
+                        {/snippet}
                     </InputAny>
                 </div>
             {/if}
@@ -204,7 +213,7 @@
             <button
                 class="dark:text-white py-3 px-4 my-4 rounded-md w-full dark:bg-slate-600 dark:hover:bg-gray-500 btn-generic dark:border-none"
                 type="button"
-                on:click={() => (showModal = false)}>
+                onclick={() => (showModal = false)}>
                 Cancel
             </button>
             <button

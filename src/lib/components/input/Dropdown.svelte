@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import { onMount, onDestroy } from "svelte";
 
     import clsx from "clsx";
@@ -8,26 +11,41 @@
     import { clickOutside } from "$components/input/clickOutside";
     import Modal from "$components/Modal.svelte";
 
-    export let className: string | undefined = undefined;
-    export let buttonClass: string | undefined = undefined;
-    export let contentClass: string | undefined = undefined;
-    export let closeOnClick = true;
 
-    export let open = false;
-    let trigger_ref: HTMLElement;
+  interface Props {
+    className?: string | undefined;
+    buttonClass?: string | undefined;
+    contentClass?: string | undefined;
+    closeOnClick?: boolean;
+    open?: boolean;
+    triggerWrapper?: import('svelte').Snippet;
+    triggerContent?: import('svelte').Snippet;
+    dropdown?: import('svelte').Snippet;
+  }
 
-    let showModal = false;
-    let width: number;
+  let {
+    className = undefined,
+    buttonClass = undefined,
+    contentClass = undefined,
+    closeOnClick = true,
+    open = $bindable(false),
+    triggerWrapper,
+    triggerContent,
+    dropdown
+  }: Props = $props();
 
-    let dropdownWrapper: HTMLDivElement;
-    let dropdownContentWrapper: HTMLDivElement;
+    let showModal = $state(false);
+    let width: number | undefined = $state();
 
-    $: {
-        if (browser) {
+    let dropdownWrapper: HTMLDivElement | undefined = $state();
+    let dropdownContentWrapper: HTMLDivElement | undefined = $state();
+
+    $effect(() => {
+        if (browser && width !== undefined) {
             // breakpoint: sm
             showModal = open && width < 640;
         }
-    }
+    });
 
     onMount(() => {
         width = document.documentElement.clientWidth;
@@ -45,7 +63,7 @@
         }
     });
 
-    let openUpwards = false; // track dropdown direction
+    let openUpwards = $state(false); // track dropdown direction
     function checkDropdownPosition() {
         if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
 
@@ -82,17 +100,18 @@
 <div
     class={twMerge("dropdown", className)}
     use:clickOutside
-    on:click_outside={click_outside}
+    onclick_outside={click_outside}
     bind:this={dropdownWrapper}>
-    <slot name="triggerWrapper">
+    {#if triggerWrapper}
+        {@render triggerWrapper()}
+    {:else}
         <button
             class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
-            on:click={toggleOpen}
-            bind:this={trigger_ref}
+            onclick={toggleOpen}
             type="button">
-            <slot name="triggerContent" />
+            {@render triggerContent?.()}
         </button>
-    </slot>
+    {/if}
 
     <div
         class={clsx(
@@ -109,17 +128,17 @@
       bottom: 0;
     `
             : ""}
-        on:click={(e) => {
+        onclick={(e) => {
             // e.preventDefault();
             if (closeOnClick) {
                 click_outside();
             }
         }}
-        on:keydown
+        onkeydown={bubble('keydown')}
         role="button"
         tabindex="0"
         bind:this={dropdownContentWrapper}>
-        <slot name="dropdown" />
+        {@render dropdown?.()}
     </div>
 </div>
 
@@ -129,16 +148,16 @@
     divClassName="!p-0"
     on:closed={() => (open = false)}>
     <div
-        on:keydown
+        onkeydown={bubble('keydown')}
         role="button"
         tabindex="-1"
-        on:click={(e) => {
+        onclick={(e) => {
             //e.preventDefault();
             if (closeOnClick) {
                 open = false;
             }
         }}>
-        <slot name="dropdown" />
+        {@render dropdown?.()}
     </div>
 </Modal>
 
@@ -183,7 +202,7 @@
     transform: translateX(-50%) translateY(10%);
   } */
 
-    :is(.dark .dropdown-content) {
+    :global(.dark) .dropdown-content {
         background-color: #374151;
         border-color: #475569;
     }

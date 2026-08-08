@@ -19,7 +19,7 @@ type bookDiff = {
 /// Updates existing apiData by querying google
 export async function updateData(accountId: string) {
     const existingCategoryNames = (await prisma.bookCategory.findMany()).map(
-        ({ name }) => name
+        ({ name }) => name,
     );
 
     const diffs: bookDiff[] = [];
@@ -62,7 +62,7 @@ export async function updateData(accountId: string) {
                         "Error creating category: " +
                             category_name +
                             ", error: " +
-                            getErrorMessage(e)
+                            getErrorMessage(e),
                     );
                 }
             }
@@ -85,7 +85,7 @@ export async function updateData(accountId: string) {
         // TOOD: zipMap?
         zip(
             Object.keys(extractedData).sort(),
-            Object.keys(book).sort()
+            Object.keys(book).sort(),
         ).forEach((props) => {
             // console.log(props);
 
@@ -127,7 +127,7 @@ type errorBooksType = {
 
 export async function createConnections(
     accountId: string,
-    connect_all: boolean
+    connect_all: boolean,
 ) {
     const scoreMap: Record<string, number> = {
         publishedDate: 1,
@@ -149,7 +149,7 @@ export async function createConnections(
 
     const createConnection = async (
         volumeId: string,
-        bookId: string
+        bookId: string,
     ): Promise<BookApiData> => {
         const dataExists = await prisma.bookApiData.findUnique({
             where: {
@@ -195,7 +195,7 @@ export async function createConnections(
     };
 
     const findVolumeId = async (
-        book: Book
+        book: Book,
     ): Promise<{ volumeId: string; score: number } | undefined> => {
         return queryBooksFull(`${book.name}+inauthor:${book.author}`)
             .then((books: queriedBookFull[]) => {
@@ -210,9 +210,9 @@ export async function createConnections(
                 const scores = books.map((b: queriedBookFull) =>
                     Object.keys(b.volumeInfo)
                         .filter(
-                            (e) => e !== undefined && scoreMap[e] !== undefined
+                            (e) => e !== undefined && scoreMap[e] !== undefined,
                         )
-                        .reduce((acc, key) => acc + scoreMap[key], 0)
+                        .reduce((acc, key) => acc + scoreMap[key], 0),
                 );
                 // works for arrays with few elements. Scores should only contains < 40 elements? (see google books api max results)
                 const max = arrMax(scores);

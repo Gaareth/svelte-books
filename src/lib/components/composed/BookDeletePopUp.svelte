@@ -7,8 +7,12 @@
 
     import Popup from "$components/Popup.svelte";
 
-    export let openModal: boolean;
-    export let deletionBook: Book;
+    interface Props {
+        openModal: boolean;
+        deletionBook: Book;
+    }
+
+    let { openModal = $bindable(), deletionBook }: Props = $props();
     const dispatch = createEventDispatcher();
 
     const deleteBook = (event: any) => {
@@ -51,8 +55,11 @@
 <Popup
     bind:showModal={openModal}
     message={"Delete book: " + deletionBook?.name + "?"}
-    content={"You won't be able to restore this book, unless you create a new one"}
     btn1_msg={"Delete book"}
     btn2_msg={"cancel"}
     type={"Error"}
-    on:primary={deleteBook} />
+    on:primary={deleteBook}>
+    {#snippet content()}
+        You won't be able to restore this book, unless you create a new one
+    {/snippet}
+    </Popup>

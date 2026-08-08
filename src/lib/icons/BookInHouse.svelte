@@ -1,7 +1,15 @@
+<script lang="ts">
+    interface Props {
+        [key: string]: any
+    }
+
+    let { ...rest }: Props = $props();
+</script>
+
 <!-- Merged Material Symbols Icon material-symbols:family-home-rounded and material-symbols:book-2-rounded -->
 
 <svg
-    {...$$restProps}
+    {...rest}
     viewBox="0 0 24 24"
     version="1.1"
     id="svg1"

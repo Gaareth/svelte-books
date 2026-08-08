@@ -1,9 +1,11 @@
 <script lang="ts">
     import type { PageData } from "./$types";
 
-    export let data: PageData;
-    let csrfToken = data.csrfToken;
-    let error = data.error;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <svelte:head>
@@ -19,19 +21,19 @@
                 action="/auth/callback/credentials"
                 class="w-full max-w-sm">
                 <p
-                    class="{error
+                    class="{data.error
                         ? 'block'
                         : 'hidden'} text-error text-center font-bold text-xl my-4">
                     Username or password are not correct
                 </p>
-                <input name="csrfToken" type="hidden" value={csrfToken} />
+                <input name="csrfToken" type="hidden" value={data.csrfToken} />
                 <div>
                     <label for="username">Username</label>
                     <input
                         type="text"
                         name="username"
                         id="username"
-                        class="input w-full {error ? 'input-error' : ''}"
+                        class="input w-full {data.error ? 'input-error' : ''}"
                         autocomplete="username" />
                 </div>
                 <div class="mt-4">
@@ -41,7 +43,7 @@
                         type="password"
                         name="password"
                         id="password"
-                        class="input w-full {!error || 'input-error'}" />
+                        class="input w-full {data.error ? 'input-error' : ''}" />
                 </div>
 
                 <button

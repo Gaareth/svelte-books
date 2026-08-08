@@ -79,6 +79,12 @@ export type BookDate = Prisma.BookGetPayload<{
     };
 }>;
 
+export type BookWithApiData = Prisma.BookGetPayload<{
+    include: {
+        bookApiData: true;
+    };
+}>;
+
 // export type BookFull = BookRating &
 //   Prisma.BookGetPayload<{ include: { bookApiData: true } }>;
 

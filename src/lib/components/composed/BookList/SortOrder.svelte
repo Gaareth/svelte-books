@@ -6,13 +6,17 @@
     //@ts-ignore
     import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
 
-    export let reversed = false;
+    interface Props {
+        reversed?: boolean;
+    }
+
+    let { reversed = $bindable(false) }: Props = $props();
     const dispatch = createEventDispatcher();
 </script>
 
 <button
     class="btn-generic-icon"
-    on:click={() => {
+    onclick={() => {
         reversed = !reversed;
         dispatch("click");
     }}
