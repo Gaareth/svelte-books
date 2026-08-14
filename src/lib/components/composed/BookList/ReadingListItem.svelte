@@ -3,8 +3,6 @@
 </script>
 
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import clsx from "clsx";
     //@ts-ignore
     import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
@@ -30,6 +28,8 @@
         // export let openModal: boolean = false;
         allow_deletion?: boolean | undefined;
         actions?: import("svelte").Snippet;
+        onDelete?: (entry: ReadingListItemType) => void;
+        onDone?: (entry: ReadingListItemType) => void;
     }
 
     let {
@@ -37,13 +37,9 @@
         isAuthorizedToModify = false,
         allow_deletion = true,
         actions,
+        onDelete,
+        onDone,
     }: Props = $props();
-
-    const dispatch = createEventDispatcher<{
-        delete: ItemDeleteEvent;
-        done: { entry: ReadingListItemType };
-    }>();
-    // console.log(book);
 
     const book_url = $derived(encodeURIComponent(entry.book.name));
 
@@ -189,13 +185,15 @@
                 </div>
             {/if}
 
-            {#if actions}{@render actions()}{:else}
+            {#if actions}
+                {@render actions()}
+            {:else}
                 <BookActions
                     {isAuthorizedToModify}
                     {allow_deletion}
                     {entry}
-                    on:delete={(e) => dispatch("delete", e.detail)}
-                    on:done={(e) => dispatch("done", e.detail)} />
+                    {onDelete}
+                    {onDone} />
             {/if}
         </div>
     </div>

@@ -234,7 +234,7 @@
 <BookDeletePopUp
     bind:openModal={open_delete}
     deletionBook={book}
-    on:success={async () => {
+    onSuccess={async () => {
         await invalidateAll();
         goto("/");
     }} />

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import clsx from "clsx";
     //@ts-ignore
     import IoIosArrowDown from "svelte-icons/io/IoIosArrowDown.svelte";
@@ -17,10 +15,11 @@
         value?: number | string | undefined;
         last_value?: typeof value | undefined;
         showStatsButton?: boolean;
-        titleSnippet?: import('svelte').Snippet;
-        statsButton?: import('svelte').Snippet;
-        valueSnippet?: import('svelte').Snippet;
-        [key: string]: any
+        titleSnippet?: import("svelte").Snippet;
+        statsButton?: import("svelte").Snippet;
+        valueSnippet?: import("svelte").Snippet;
+        onShowStats?: () => void;
+        [key: string]: any;
     }
 
     let {
@@ -31,16 +30,15 @@
         titleSnippet,
         statsButton,
         valueSnippet,
+        onShowStats,
         ...rest
     }: Props = $props();
-
-    const dispatch = createEventDispatcher();
 </script>
 
 <div
     class={twMerge(
         "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
-        rest.class
+        rest.class,
     )}>
     {#if titleSnippet}
         {@render titleSnippet()}
@@ -49,14 +47,14 @@
             <p class="text-gray-500 dark:text-gray-400 text-base">
                 {titleString}
             </p>
-            {#if statsButton}{@render statsButton()}{:else}
-                {#if showStatsButton}
-                    <button
-                        class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-                        onclick={() => dispatch("statsClick")}>
-                        <span class="w-5 block"><IoIosStats /></span>
-                    </button>
-                {/if}
+            {#if statsButton}
+                {@render statsButton()}
+            {:else if showStatsButton}
+                <button
+                    class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
+                    onclick={onShowStats}>
+                    <span class="w-5 block"><IoIosStats /></span>
+                </button>
             {/if}
         </div>
     {/if}
@@ -68,7 +66,7 @@
             <p
                 class={clsx(
                     "font-bold self-center",
-                    typeof value === "number" ? "text-5xl" : "text-4xl"
+                    typeof value === "number" ? "text-5xl" : "text-4xl",
                 )}>
                 {(value ?? NaN).toLocaleString("en-US")}
             </p>
@@ -78,7 +76,7 @@
                 <div
                     class={clsx(
                         "w-10 h-10 self-center",
-                        value > last_value ? "text-green-500" : "text-red-500"
+                        value > last_value ? "text-green-500" : "text-red-500",
                     )}>
                     {#if value > last_value}
                         <IoIosArrowUp />

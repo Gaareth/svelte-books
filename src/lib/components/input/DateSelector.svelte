@@ -159,8 +159,12 @@
         }
     };
 
-    const onQuickselect = (option: typeof selectedOption) => {
-        let date = optionToDate(option);
+    const onQuickselect = (option: string) => {
+        if (typeof option != typeof selectedOption) {
+            return;
+        }
+
+        let date = optionToDate(option as typeof selectedOption);
         localDatetime.day = null;
         if (date != null) {
             localDatetime.year = date.year;
@@ -301,9 +305,8 @@
                     startClass="border-s rounded-s-md"
                     endClass="rounded-e-md"
                     bind:selectedOption
-                    on:select={(ev) => {
-                        // console.log(ev.detail);
-                        onQuickselect(ev.detail);
+                    onSelect={(option) => {
+                        onQuickselect(option);
                     }} />
             </div>
 

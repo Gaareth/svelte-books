@@ -29,7 +29,7 @@
 <!-- <BookDeletePopUp
   {deletionBook}
   bind:openModal
-  on:success={() => {
+  onSuccess={() => {
     openModal = false;
     invalidateAll();
   }}

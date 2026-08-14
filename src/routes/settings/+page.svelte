@@ -17,6 +17,7 @@
         UNLISTED,
         PUBLIC,
         type VisibilityType,
+        VISIBILITY_VALUES,
     } from "$lib/constants/enums";
     import { capitalize } from "$lib/utils/utils";
 
@@ -40,18 +41,19 @@
     //TODO: toast
     // let globalVisibility = "private";
 
-    let allAsGlobal = $derived(data.readingActivityLists
-        .filter((v) => v.visibility != null)
-        .every((v) => (v.visibility as VisibilityType) == globalVisibility));
+    let allAsGlobal = $derived(
+        data.readingActivityLists
+            .filter((v) => v.visibility != null)
+            .every((v) => (v.visibility as VisibilityType) == globalVisibility),
+    );
 
     let globalVisibility = $state(data.globalVisibility);
 
-
-
-    function changeAllVisiblities(ev: CustomEvent) {
-        const option = ev.detail;
+    function changeAllVisiblities(option: string) {
         for (let i = 0; i < data.readingActivityLists.length; i++) {
-            data.readingActivityLists[i].visibility = option;
+            if (VISIBILITY_VALUES.includes(option as VisibilityType)) {
+                data.readingActivityLists[i].visibility = option as VisibilityType;
+            }
         }
     }
 
@@ -59,7 +61,7 @@
         await invalidateAll();
         globalVisibility = data.globalVisibility;
     }
-    
+
     $effect(() => {
         if (form?.success) {
             toast.success("Successfully applied changes");
@@ -92,7 +94,7 @@
                     startClass="border-s rounded-s-md"
                     endClass="rounded-e-md"
                     bind:selectedOption={globalVisibility}
-                    on:select={changeAllVisiblities}
+                    onSelect={changeAllVisiblities}
                     defaultOption={globalVisibility == PRIVATE ? 0 : 1} />
                 <!-- <input
           type="hidden"
@@ -138,7 +140,7 @@
                         data.readingActivityLists[i].visibility !=
                             globalVisibility &&
                             data.readingActivityLists[i].visibility &&
-                            "border-warning"
+                            "border-warning",
                     )}>
                     <p>{capitalize(list.status)}</p>
 
@@ -150,8 +152,9 @@
                         startClass="border-s rounded-s-md"
                         endClass="rounded-e-md"
                         deselectable={true}
-                        bind:selectedOption={data.readingActivityLists[i]
-                            .visibility} />
+                        bind:selectedOption={
+                            data.readingActivityLists[i].visibility
+                        } />
                     <input
                         type="hidden"
                         name={`readingActivityVisibility[${list.status}]`}

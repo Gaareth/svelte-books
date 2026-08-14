@@ -1,24 +1,21 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
 
-    //@ts-ignore
     import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
-    //@ts-ignore
     import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
 
     interface Props {
         reversed?: boolean;
+        onClick?: () => void;
     }
 
-    let { reversed = $bindable(false) }: Props = $props();
-    const dispatch = createEventDispatcher();
+    let { reversed = $bindable(false), onClick }: Props = $props();
 </script>
 
 <button
     class="btn-generic-icon"
     onclick={() => {
         reversed = !reversed;
-        dispatch("click");
+        onClick?.();
     }}
     title="Reverse sort order">
     <span class="block w-6 h-6">

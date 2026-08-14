@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import { twMerge } from "tailwind-merge";
 
     interface Props {
@@ -18,6 +16,7 @@
         displayFn?: ((option: Option) => string) | undefined;
         error?: string | undefined;
         children?: import("svelte").Snippet<[any]>;
+        onSelect?: (option: Option) => void;
     }
 
     let {
@@ -35,6 +34,7 @@
         displayFn = undefined,
         error = undefined,
         children,
+        onSelect,
     }: Props = $props();
 
     $effect(() => {
@@ -44,7 +44,6 @@
     });
 
     type Option = (typeof options)[number];
-    const dispatch = createEventDispatcher();
 </script>
 
 <div class={twMerge("flex flex-col", wrapperClass)}>
@@ -68,7 +67,7 @@
                         selectedOption = undefined;
                     } else {
                         selectedOption = option;
-                        dispatch("select", option);
+                        onSelect?.(option);
                     }
                 }}>
                 {#if children}{@render children({ option, i })}{:else}

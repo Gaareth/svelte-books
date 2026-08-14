@@ -316,7 +316,7 @@
 <ReadingActivityDeletePopUp
     deletionEntry={entry}
     bind:openModal={deleteExpanded}
-    on:success={() => {
+    onSuccess={() => {
         deleteExpanded = false;
         invalidateAll();
     }} />

@@ -1,7 +1,4 @@
 <script lang="ts">
-    //@ts-ignore
-    import { createEventDispatcher } from "svelte";
-
     import toast from "svelte-french-toast";
     import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
 
@@ -19,13 +16,19 @@
         isAuthorizedToModify?: boolean;
         allow_deletion?: boolean | undefined;
         entry: ReadingListItemType;
+        onDelete?: (entry: ReadingListItemType) => void;
+        onDone?: (entry: ReadingListItemType) => void;
     }
 
-    let { isAuthorizedToModify = false, allow_deletion = false, entry }: Props = $props();
+    let {
+        isAuthorizedToModify = false,
+        allow_deletion = false,
+        entry,
+        onDelete,
+        onDone,
+    }: Props = $props();
     let book_url = $derived(encodeURIComponent(entry.book.name));
     let statusType = $derived(entry.status.status);
-
-    const dispatch = createEventDispatcher();
 </script>
 
 {#if isAuthorizedToModify}
@@ -70,11 +73,9 @@
                 {:else if statusType == READING_ACTIVITY_TYPES.TO_READ}
                     <NowReadingAction />
                 {:else if statusType == READING_ACTIVITY_TYPES.READING}
-                    <DoneReadingAction
-                        on:done={() => dispatch("done", { entry })} />
+                    <DoneReadingAction onClick={() => onDone?.(entry)} />
                 {:else if allow_deletion}
-                    <DeleteAction
-                        on:delete={() => dispatch("delete", { entry })} />
+                    <DeleteAction onClick={() => onDelete?.(entry)} />
                 {/if}
             </span>
         </form>

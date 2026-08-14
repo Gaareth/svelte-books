@@ -305,7 +305,7 @@
         titleString="average reading time"
         class="!bg-transparent backdrop-blur col-span-full sm:col-span-5"
         showStatsButton={true}
-        on:statsClick={() => (showReadingDurationModal = true)}>
+        onShowStats={() => (showReadingDurationModal = true)}>
         {#snippet valueSnippet()}
             <p class="font-bold self-center text-5xl flex flex-col">
                 {reading_duration_average_days} days
@@ -390,7 +390,7 @@
                 ")"}
             class="!bg-transparent backdrop-blur"
             showStatsButton={true}
-            on:statsClick={() => (showModalAuthors = true)} />
+            onShowStats={() => (showModalAuthors = true)} />
     {/if}
     {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
         <Stats
@@ -400,7 +400,7 @@
                 ")"}
             name="most read genre/category"
             showStatsButton={true}
-            on:statsClick={() => (showModalCats = true)}
+            onShowStats={() => (showModalCats = true)}
             class="!bg-transparent backdrop-blur" />
     {/if}
 </div>

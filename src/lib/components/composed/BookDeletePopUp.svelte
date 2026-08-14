@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import toast from "svelte-french-toast";
 
     import type { Book } from "$prismaBrowser";
@@ -10,12 +8,18 @@
     interface Props {
         openModal: boolean;
         deletionBook: Book;
+        onSuccess: () => void;
+        onError?: () => void;
     }
 
-    let { openModal = $bindable(), deletionBook }: Props = $props();
-    const dispatch = createEventDispatcher();
+    let {
+        openModal = $bindable(),
+        deletionBook,
+        onSuccess,
+        onError,
+    }: Props = $props();
 
-    const deleteBook = (event: any) => {
+    const deleteBook = () => {
         let res = new Promise((resolve, reject) => {
             fetch("delete", {
                 method: "POST",
@@ -24,10 +28,10 @@
                 response.json().then(({ success }) => {
                     if (success) {
                         resolve(true);
-                        dispatch("success");
+                        onSuccess();
                     } else {
                         reject(response);
-                        dispatch("error");
+                        onError?.();
                     }
                 });
             });
@@ -58,8 +62,8 @@
     btn1_msg={"Delete book"}
     btn2_msg={"cancel"}
     type={"Error"}
-    on:primary={deleteBook}>
+    onClick={deleteBook}>
     {#snippet content()}
         You won't be able to restore this book, unless you create a new one
     {/snippet}
-    </Popup>
+</Popup>

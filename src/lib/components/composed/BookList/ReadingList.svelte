@@ -11,7 +11,6 @@
     import ReadingListItem from "./ReadingListItem.svelte";
 
     import type { ReadingListItemType } from "$appTypes";
-    import type { ItemDeleteEvent } from "./ReadingListItem.svelte";
 
     import { invalidateAll } from "$app/navigation";
     import { page } from "$app/stores";
@@ -83,9 +82,9 @@
         return animation;
     };
 
-    const openPopup = (event: CustomEvent<ItemDeleteEvent>) => {
+    const openPopup = (entry: ReadingListItemType) => {
         openModal = true;
-        deletionEntry = event.detail.entry;
+        deletionEntry = entry;
     };
 </script>
 
@@ -151,7 +150,7 @@
         <div>
             <ReadingListItem
                 {entry}
-                on:delete={openPopup}
+                onDelete={openPopup}
                 {isAuthorizedToModify} />
         </div>
     {/each}
@@ -161,7 +160,7 @@
     <ReadingActivityDeletePopUp
         {deletionEntry}
         bind:openModal
-        on:success={() => {
+        onSuccess={() => {
             openModal = false;
             invalidateAll();
         }} />

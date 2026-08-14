@@ -61,7 +61,7 @@
         <ReadingListItem
             {entry}
             {isAuthorizedToModify}
-            on:done={() => {
+            onDone={() => {
                 popupEntry = entry;
                 popupOpen = true;
             }} />

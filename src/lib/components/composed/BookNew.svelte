@@ -3,7 +3,6 @@
 
     //@ts-ignore
     import AutoComplete from "simple-svelte-autocomplete";
-    import { run } from "svelte/legacy";
     import { toast } from "svelte-french-toast";
     import { Moon } from "svelte-loading-spinners";
     import { twMerge } from "tailwind-merge";
@@ -78,8 +77,6 @@
     let loading = $state(false);
 
     let api_query = $state("");
-
-    // const dispatch = createEventDispatcher();
 
     async function newBook() {
         loading = true;
@@ -158,7 +155,7 @@
     );
 
     let has_content = $derived(name.length > 0 && author.length > 0);
-    run(() => {
+    $effect(() => {
         getBookPromise;
         take_over();
     });

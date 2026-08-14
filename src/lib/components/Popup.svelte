@@ -1,11 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import clsx from "clsx";
 
     import Modal from "./Modal.svelte";
-
-    const dispatch = createEventDispatcher();
 
     type MsgType = "Info" | "Warning" | "Error";
 
@@ -16,6 +12,7 @@
         btn1_msg: string;
         btn2_msg: string;
         showModal?: boolean;
+        onClick: () => void;
     }
 
     let {
@@ -25,6 +22,7 @@
         btn1_msg,
         btn2_msg,
         showModal = $bindable(false),
+        onClick,
     }: Props = $props();
 
     function getColor() {
@@ -68,7 +66,7 @@
                 "border inline-block w-full rounded-md px-5 py-2 text-center text-sm font-semibold text-white sm:w-auto",
             )}
             type="button"
-            onclick={() => dispatch("primary")}>
+            onclick={onClick}>
             {btn1_msg}
         </button>
 

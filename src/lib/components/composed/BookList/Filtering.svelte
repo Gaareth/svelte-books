@@ -385,7 +385,7 @@
                 </select>
                 <SortOrder
                     bind:reversed={sortingReversed}
-                    on:click={sortBooks} />
+                    onClick={sortBooks} />
             </div>
         </details>
 

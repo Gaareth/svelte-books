@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import toast from "svelte-french-toast";
 
     import type { Prisma } from "$prismaBrowser";
@@ -11,20 +9,20 @@
     interface Props {
         openModal: boolean;
         deletionEntry: Prisma.ReadingActivityGetPayload<{
-        include: {
-            book: true;
-            dateFinished: true;
-            dateStarted: true;
-            status: true;
-        };
-    }>;
+            include: {
+                book: true;
+                dateFinished: true;
+                dateStarted: true;
+                status: true;
+            };
+        }>;
+        onSuccess?: () => void;
+        onError?: () => void;
     }
 
-    let { openModal = $bindable(), deletionEntry }: Props = $props();
+    let { openModal = $bindable(), deletionEntry, onSuccess, onError }: Props = $props();
 
-    const dispatch = createEventDispatcher();
-
-    const deleteEntry = (event: any) => {
+    const deleteEntry = () => {
         let res = new Promise((resolve, reject) => {
             fetch("/api/reading-activity/delete", {
                 method: "POST",
@@ -33,10 +31,10 @@
                 response.json().then(({ success }) => {
                     if (success) {
                         resolve(true);
-                        dispatch("success");
+                        onSuccess?.();
                     } else {
                         reject(response);
-                        dispatch("error");
+                        onError?.();
                     }
                 });
             });
@@ -76,10 +74,11 @@
     btn1_msg={"Delete entry"}
     btn2_msg={"cancel"}
     type={"Error"}
-    on:primary={deleteEntry}>
+    onClick={deleteEntry}>
     {#snippet content()}
-        <div >
-            You won't be able to restore this entry, unless you create a new one.
+        <div>
+            You won't be able to restore this entry, unless you create a new
+            one.
             <div>
                 Details:
                 <br />
