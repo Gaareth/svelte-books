@@ -1,6 +1,4 @@
 <script lang="ts">
-    // @ts-ignore
-    import AutoComplete from "simple-svelte-autocomplete";
     import toast from "svelte-french-toast";
     import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
 
@@ -201,11 +199,11 @@
                     type="hidden"
                     name="bookSeriesId"
                     value={book.bookSeriesId} />
-                <AutoComplete
+                <!-- <AutoComplete
                     items={books.filter((b) => b.name != book.name)}
                     labelFunction={autoCompleteBookLabel}
                     bind:selectedItem={selectedSeriesBook}
-                    class="input dark:bg-slate-700 dark:border-none w-full" />
+                    class="input dark:bg-slate-700 dark:border-none w-full" /> -->
                 <button
                     title="Add book"
                     aria-label="Add book to book series"

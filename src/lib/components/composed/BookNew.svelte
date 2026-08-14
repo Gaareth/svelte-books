@@ -1,8 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
-    //@ts-ignore
-    import AutoComplete from "simple-svelte-autocomplete";
     import { toast } from "svelte-french-toast";
     import { Moon } from "svelte-loading-spinners";
     import { twMerge } from "tailwind-merge";
@@ -233,13 +231,13 @@
                                     bind:value={name} />
                                 <label for="author">Author:</label>
 
-                                <AutoComplete
+                                <!-- <AutoComplete
                                     items={authors}
                                     bind:text={author}
                                     create={true}
                                     id="author"
                                     name="author"
-                                    class="input btn-generic-color-2 w-full" />
+                                    class="input btn-generic-color-2 w-full" /> -->
                             </div>
                         </TabPanel>
                     </TabPanels>

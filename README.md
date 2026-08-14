@@ -63,6 +63,7 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- this weird dark selector regression, see dropdowns
 - median stats
 - dont give each readactivity all books, aka more async
 

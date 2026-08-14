@@ -1,16 +1,9 @@
 <script lang="ts">
-    // import { onMount } from "svelte";
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
 
-    //@ts-ignore
-    import AutoComplete from "simple-svelte-autocomplete";
-    //@ts-ignore
+
     import FilterIcon from "svelte-icons/fa/FaFilter.svelte";
-    //@ts-ignore
     import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
-    //@ts-ignore
     import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
 
     import EqRelation from "./EqRelation.svelte";
@@ -454,7 +447,7 @@
 
                 <label class="flex flex-col">
                     Categories {category_names.length == 0 ? "(empty)" : ""}
-                    <AutoComplete
+                    <!-- <AutoComplete
                         disabled={category_names.length == 0}
                         items={category_names}
                         selectedItem={inputParams.categories}
@@ -464,7 +457,7 @@
                         id="categories"
                         name="categories"
                         class="input dark:bg-slate-600 dark:border-slate-500 my-2"
-                        className="!h-full" />
+                        className="!h-full" /> -->
                 </label>
 
                 <label class="flex flex-col">
