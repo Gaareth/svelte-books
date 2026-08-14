@@ -251,7 +251,7 @@
 <Modal
     bind:showModal
     className="max-w-96"
-    on:opened={() => eventInputRef?.focus()}>
+    onOpened={() => eventInputRef?.focus()}>
     {#snippet header()}
         <h1 class="text-2xl">
             Additional information ({selectedLabelIndex})

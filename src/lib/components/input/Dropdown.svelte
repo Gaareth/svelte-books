@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     import { onMount, onDestroy } from "svelte";
 
     import clsx from "clsx";
@@ -11,28 +8,27 @@
     import { clickOutside } from "$components/input/clickOutside";
     import Modal from "$components/Modal.svelte";
 
+    interface Props {
+        className?: string | undefined;
+        buttonClass?: string | undefined;
+        contentClass?: string | undefined;
+        closeOnClick?: boolean;
+        open?: boolean;
+        triggerWrapper?: import("svelte").Snippet;
+        triggerContent?: import("svelte").Snippet;
+        dropdown?: import("svelte").Snippet;
+    }
 
-  interface Props {
-    className?: string | undefined;
-    buttonClass?: string | undefined;
-    contentClass?: string | undefined;
-    closeOnClick?: boolean;
-    open?: boolean;
-    triggerWrapper?: import('svelte').Snippet;
-    triggerContent?: import('svelte').Snippet;
-    dropdown?: import('svelte').Snippet;
-  }
-
-  let {
-    className = undefined,
-    buttonClass = undefined,
-    contentClass = undefined,
-    closeOnClick = true,
-    open = $bindable(false),
-    triggerWrapper,
-    triggerContent,
-    dropdown
-  }: Props = $props();
+    let {
+        className = undefined,
+        buttonClass = undefined,
+        contentClass = undefined,
+        closeOnClick = true,
+        open = $bindable(false),
+        triggerWrapper,
+        triggerContent,
+        dropdown,
+    }: Props = $props();
 
     let showModal = $state(false);
     let width: number | undefined = $state();
@@ -78,9 +74,6 @@
     }
 
     const toggleOpen = () => {
-        // trigger_ref.focus();
-        // console.log("open");
-
         open = !open;
         if (open) {
             checkDropdownPosition();
@@ -88,9 +81,6 @@
     };
 
     const click_outside = () => {
-        // console.log("clicked outside");
-        // open = false;
-
         if (!showModal) {
             open = false;
         }
@@ -113,12 +103,13 @@
         </button>
     {/if}
 
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
         class={clsx(
             "dropdown-content",
             open == false ? "hidden-imp" : "",
             "hidden sm:block",
-            contentClass
+            contentClass,
         )}
         style={openUpwards
             ? `
@@ -128,13 +119,11 @@
       bottom: 0;
     `
             : ""}
-        onclick={(e) => {
-            // e.preventDefault();
+        onclick={() => {
             if (closeOnClick) {
                 click_outside();
             }
         }}
-        onkeydown={bubble('keydown')}
         role="button"
         tabindex="0"
         bind:this={dropdownContentWrapper}>
@@ -146,12 +135,12 @@
     bind:showModal
     showDividers={false}
     divClassName="!p-0"
-    on:closed={() => (open = false)}>
+    onClosed={() => (open = false)}>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
-        onkeydown={bubble('keydown')}
         role="button"
         tabindex="-1"
-        onclick={(e) => {
+        onclick={() => {
             //e.preventDefault();
             if (closeOnClick) {
                 open = false;
@@ -166,7 +155,9 @@
         visibility: hidden !important;
         transform: translateX(-50%) translateY(0%) !important;
         opacity: 0;
-        transition: visibility 0s 2s, opacity 2s linear;
+        transition:
+            visibility 0s 2s,
+            opacity 2s linear;
     }
 
     .dropdown {

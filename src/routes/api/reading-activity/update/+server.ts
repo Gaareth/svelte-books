@@ -44,7 +44,11 @@ export async function POST(req: RequestEvent) {
     if (!result.success) {
         console.error("Validation failed:", result.error);
         return json(
-            { success: false, error: result.error.flatten().fieldErrors },
+            {
+                success: false,
+                error: result.error.flatten().fieldErrors,
+                message: "Validation failed",
+            },
             { status: 400 },
         );
     }

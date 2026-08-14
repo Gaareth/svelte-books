@@ -96,7 +96,7 @@ export async function cloneReadingActivity(
         readingActivityOverwrite.dateFinishedId === undefined &&
         readingActivity.dateFinished
     ) {
-        const { id, ...dateFinishedData } = readingActivity.dateFinished;
+        const { ...dateFinishedData } = readingActivity.dateFinished;
 
         dateFinishedId = (
             await prisma.optionalDatetime.create({

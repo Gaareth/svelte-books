@@ -8,7 +8,7 @@
         shouldShowFinishedDate,
         shouldShowStartedDate,
     } from "./utils";
-    import ToggleGroup from "../../input/ToggleGroup.svelte";
+    // import ToggleGroup from "../../input/ToggleGroup.svelte";
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
@@ -84,8 +84,6 @@
             return async ({ update, result }) => {
                 // console.log("result", result);
 
-                await invalidateAll();
-
                 //@ts-ignore
                 if (result.success) {
                     toast.success(
@@ -95,6 +93,7 @@
                     );
                     showModal = false;
                     error = undefined;
+                    await invalidateAll();
                 } else {
                     //@ts-ignore
                     console.log("error", result.error);
@@ -134,7 +133,7 @@
                 </InputSelect>
             </div>
 
-            <div class="flex justify-center sm:mt-5">
+            <!-- <div class="flex justify-center sm:mt-5">
                 <ToggleGroup
                     options={READING_STATUS_VALUES}
                     groupClass="mb-2 inline-flex"
@@ -142,7 +141,7 @@
                     btnSelectedClass="dark:bg-slate-500 bg-gray-100"
                     startClass="border-s rounded-s-md"
                     endClass="rounded-e-md" />
-            </div>
+            </div> -->
 
             {#if showStartedDate}
                 <div>

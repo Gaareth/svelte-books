@@ -63,6 +63,7 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- median stats
 - dont give each readactivity all books, aka more async
 
 - upgrade to svelte5, tailwind4, vite8?, etc...

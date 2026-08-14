@@ -4,6 +4,10 @@
     let { data } = $props();
 </script>
 
+<svelte:head>
+    <title>Users</title>
+</svelte:head>
+
 <h1 class="text-5xl mt-4">Users ({data.users.length})</h1>
 
 <p class="text-secondary">Users are shown here only if they enabled it</p>

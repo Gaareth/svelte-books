@@ -1,9 +1,8 @@
 <script lang="ts">
-    interface Props {
-        [key: string]: any
-    }
+    import type { SVGAttributes } from "svelte/elements";
 
-    let { ...props }: Props = $props();
+    // eslint-disable-next-line svelte/valid-compile
+    let { ...props }: SVGAttributes<SVGSVGElement> = $props();
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>

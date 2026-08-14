@@ -42,7 +42,7 @@ export const handle = SvelteKitAuth({
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 if (!credentials.username || !credentials.password) {
                     if (import.meta.env.DEV) {
                         const account = await prisma.account.findFirst({
@@ -55,9 +55,15 @@ export const handle = SvelteKitAuth({
                                 username: credentials.username ?? undefined,
                             },
                         });
+                        if (!account) {
+                            throw new Error(
+                                "No admin account found. Please create an admin account.",
+                            );
+                        }
+
                         return {
-                            id: account!.id,
-                            name: account!.username,
+                            id: account.id,
+                            name: account.username,
                         };
                     }
 

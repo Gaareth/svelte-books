@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
     import toast from "svelte-french-toast";
     import { twMerge } from "tailwind-merge";
 
@@ -61,7 +60,7 @@
         globalVisibility = data.globalVisibility;
     }
     
-    run(() => {
+    $effect(() => {
         if (form?.success) {
             toast.success("Successfully applied changes");
         }

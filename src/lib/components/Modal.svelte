@@ -1,21 +1,19 @@
 <script lang="ts">
-    import { run, preventDefault, self, createBubbler, stopPropagation } from 'svelte/legacy';
-
-    const bubble = createBubbler();
-    import { createEventDispatcher } from "svelte";
-
     //@ts-ignore
     import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
     import { twMerge } from "tailwind-merge";
 
+    import { preventDefault } from "../utils/event-modifers";
 
     interface Props {
         showModal: boolean;
         className?: string | undefined;
         divClassName?: string | undefined;
         showDividers?: boolean;
-        header?: import('svelte').Snippet;
-        children?: import('svelte').Snippet;
+        header?: import("svelte").Snippet;
+        children?: import("svelte").Snippet;
+        onOpened?: () => void;
+        onClosed?: () => void;
     }
 
     let {
@@ -24,23 +22,23 @@
         divClassName = undefined,
         showDividers = true,
         header,
-        children
+        children,
+        onOpened,
+        onClosed,
     }: Props = $props();
 
     let dialog: HTMLDialogElement | undefined = $state();
 
-    const dispatch = createEventDispatcher();
-
-    run(() => {
+    $effect(() => {
         if (dialog && showModal) {
             dialog.showModal();
-            dispatch("opened");
+            onOpened?.();
         }
     });
-    run(() => {
+    $effect(() => {
         if (!showModal && !!dialog) {
             dialog.close();
-            dispatch("closed");
+            onClosed?.();
         }
     });
 </script>
@@ -53,13 +51,20 @@
     onclose={preventDefault(() => {
         showModal = false;
     })}
-    onclick={self(() => dialog?.close())}
+    onclick={() => {
+        dialog?.close();
+    }}
     class={twMerge(
         "rounded-md border border-blue-100 bg-white dark:border-slate-700 dark:bg-slate-700 dark:text-white shadow-lg p-2 lg:p-4",
-        className
+        className,
     )}
     role="alertdialog">
-    <div onclick={stopPropagation(bubble('click'))} class={divClassName}>
+    <div
+        onclick={(event) => {
+            // prevent modal from closing when clicking inside the modal content
+            event.stopPropagation();
+        }}
+        class={divClassName}>
         <div class="flex justify-between item-center gap-3">
             {@render header?.()}
         </div>

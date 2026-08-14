@@ -7,14 +7,8 @@ import { whereVisibilityPublicOrAuthenticated } from "$src/lib/server/db/prismaU
 
 export async function load({ locals }: ServerLoadEvent) {
     const session = await locals.auth();
-    /*   if (session?.user?.name == null) {
-    error(StatusCodes.UNAUTHORIZED);
-  } */
-
-    // This should be a view of a regular user. Admin view under /admin
-
-    const username = session?.user?.name;
-    // const account = username ? await getAccountByUsername(username) : undefined;
+    // no auth necessary for this page, but if the user is logged in, we also show users that are only visible to authenticated users.
+    // This is view of a regular user. Admin view under /admin of all users
 
     const accounts = await prisma.account.findMany({
         where: whereVisibilityPublicOrAuthenticated(session),
