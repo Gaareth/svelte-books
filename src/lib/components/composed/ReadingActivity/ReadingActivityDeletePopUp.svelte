@@ -71,9 +71,9 @@
     message={"Delete reading activity of book: " +
         deletionEntry?.book.name +
         "?"}
-    btn1_msg={"Delete entry"}
-    btn2_msg={"cancel"}
-    type={"Error"}
+    btn1_msg="Delete entry"
+    btn2_msg="cancel"
+    type="Error"
     onClick={deleteEntry}>
     {#snippet content()}
         <div>

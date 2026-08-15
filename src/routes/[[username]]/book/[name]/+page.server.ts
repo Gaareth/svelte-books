@@ -165,7 +165,6 @@ async function updateBookSeries(
         return book?.accountId == accountId;
     };
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const bookSeriesIds: { [key in UniqueInput]: string }[] = bookSeries
         .filter(filterOwnBooks)
@@ -197,7 +196,6 @@ async function updateBookSeries(
             (b) => b.id,
         );
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // const currentBookSeriesNames: { [key in UniqueInput]: string }[] =
         //   currentBookSeriesNamesArray.map((n) => Object.fromEntries([["name", n]]));
@@ -211,7 +209,7 @@ async function updateBookSeries(
         const oldSeries = currentBookSeriesIdsArray.filter(
             (bId) => !bookSeries.includes(bId),
         );
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         const oldSeriesIds: { [key in UniqueInput]: string }[] = oldSeries.map(
             (n) => Object.fromEntries([["id", n]]),
@@ -246,7 +244,7 @@ export const actions = {
         // console.log("1", formData);
 
         const bookSeries = f.getAll("books[]");
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         formData["bookSeries"] = bookSeries;
 

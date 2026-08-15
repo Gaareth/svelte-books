@@ -1,5 +1,6 @@
-import { signIn } from "$src/lib/auth/auth";
 import type { PageServerLoad } from "./$types.js";
+
+import { signIn } from "$src/lib/auth/auth";
 
 export const load: PageServerLoad = ({ url }) => {
     return {

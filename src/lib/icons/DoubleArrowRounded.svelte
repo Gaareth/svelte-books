@@ -3,7 +3,7 @@
         [key: string]: any
     }
 
-    // eslint-disable-next-line svelte/valid-compile
+     
     let { ...props }: Props = $props();
 </script>
 

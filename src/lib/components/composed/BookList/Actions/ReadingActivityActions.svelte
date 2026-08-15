@@ -69,7 +69,7 @@
 
 <form
     class={className}
-    action={`/api/reading-activity/transform`}
+    action="/api/reading-activity/transform"
     method="POST"
     use:enhance={() => {
         return async ({ result, update }) => {

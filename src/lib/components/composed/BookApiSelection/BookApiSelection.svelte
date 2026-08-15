@@ -44,7 +44,7 @@
         selectedBookId = $bindable(),
         apiBookSelected = $bindable(),
         onSelectClicked,
-        // eslint-disable-next-line svelte/valid-compile
+         
         ...rest
     }: Props = $props();
 

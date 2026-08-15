@@ -10,7 +10,7 @@
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import IconAccount from "$lib/icons/IconAccount.svelte";
 
-    // eslint-disable-next-line no-undef
+     
     const version = APP_VERSION;
     let { data, children } = $props();
 

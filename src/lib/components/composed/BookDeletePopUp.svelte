@@ -59,9 +59,9 @@
 <Popup
     bind:showModal={openModal}
     message={"Delete book: " + deletionBook?.name + "?"}
-    btn1_msg={"Delete book"}
-    btn2_msg={"cancel"}
-    type={"Error"}
+    btn1_msg="Delete book"
+    btn2_msg="cancel"
+    type="Error"
     onClick={deleteBook}>
     {#snippet content()}
         You won't be able to restore this book, unless you create a new one

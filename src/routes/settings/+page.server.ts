@@ -50,7 +50,7 @@ export const actions = {
 
             SSE_DATA[accountId].msg = "done";
             return response;
-        } catch (e: unknown) {
+        } catch (_e: unknown) {
             const response: settingsApiReloadResult = {
                 success: false,
                 diffs: [],

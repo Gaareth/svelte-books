@@ -61,7 +61,7 @@
     {/snippet}
 
     <form
-        action={"/api/reading-activity/transform"}
+        action="/api/reading-activity/transform"
         method="POST"
         class="flex flex-col h-full justify-center"
         use:enhance={rateBook}>

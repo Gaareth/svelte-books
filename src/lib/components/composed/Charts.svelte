@@ -26,7 +26,7 @@
         type = "bar",
         label = "# books read",
         removeOnClick = false,
-        // eslint-disable-next-line svelte/valid-compile
+         
         ...rest
     }: Props = $props();
 

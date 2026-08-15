@@ -114,7 +114,7 @@ export async function POST(req: RequestEvent) {
 
     const f = await req.request.formData();
     const formData = Object.fromEntries(f);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     formData["graphs"] = parseFormObject(formData, "graphs");
 

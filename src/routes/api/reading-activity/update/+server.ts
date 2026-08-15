@@ -21,22 +21,19 @@ export async function POST(req: RequestEvent) {
     const formData = Object.fromEntries(f);
     // console.log("Form data received:", formData);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["dateStarted"] = parseFormObject(formData, "dateStarted");
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["dateFinished"] = parseFormObject(formData, "dateFinished");
 
     // only add graphs if they are present
     // if (f.has("graphs")) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     // formData["graphs"] = parseFormObject(formData, "graphs");
     // }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["graphs"] = parseFormObject(formData, "graphs");
 

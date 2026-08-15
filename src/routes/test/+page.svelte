@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import Img from "@zerodevx/svelte-img";
 
     const src = {
@@ -32,4 +32,4 @@
           https://books.google.com/books/content?id=6P_jN6zUuMcC&printsec=frontcover&img=1&zoom=2 300w,
           https://books.google.com/books/content?id=6P_jN6zUuMcC&printsec=frontcover&img=1&zoom=3 575w,
           https://books.google.com/books/content?id=6P_jN6zUuMcC&printsec=frontcover&img=1&zoom=4 800w,
-          https://books.google.com/books/content?id=6P_jN6zUuMcC&printsec=frontcover&img=1&zoom=6 1200w" /> -->
+          https://books.google.com/books/content?id=6P_jN6zUuMcC&printsec=frontcover&img=1&zoom=6 1200w" /> --> -->

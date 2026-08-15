@@ -133,7 +133,7 @@
             <h3 class="text-2xl font-medium">Reading Activity Lists</h3>
         </div>
         <div class="flex flex-col gap-2">
-            {#each data.readingActivityLists as list, i}
+            {#each data.readingActivityLists as list, i (list.id)}
                 <div
                     class={twMerge(
                         "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",

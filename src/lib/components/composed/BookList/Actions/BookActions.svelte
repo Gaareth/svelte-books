@@ -35,7 +35,7 @@
 {#if isAuthorizedToModify}
     <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
         <form
-            action={`/api/reading-activity/transform`}
+            action="/api/reading-activity/transform"
             method="POST"
             use:enhance={() => {
                 return async ({ result, update }) => {

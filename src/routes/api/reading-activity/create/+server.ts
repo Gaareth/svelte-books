@@ -17,15 +17,11 @@ export async function POST(req: RequestEvent) {
     const f = await req.request.formData();
     const formData = Object.fromEntries(f);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["dateStarted"] = parseFormObject(formData, "dateStarted");
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     formData["dateFinished"] = parseFormObject(formData, "dateFinished");
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 
     // console.log(formData);
 

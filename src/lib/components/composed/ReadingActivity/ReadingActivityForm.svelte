@@ -121,7 +121,7 @@
                 <InputSelect
                     bind:value={readingStatus}
                     displayName="Status:"
-                    name={"status"}
+                    name="status"
                     selectClassName="dark:bg-slate-600"
                     clearButton={false}
                     error={error?.status}>

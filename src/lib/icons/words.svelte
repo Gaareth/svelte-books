@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { SVGAttributes } from "svelte/elements";
 
-    // eslint-disable-next-line svelte/valid-compile
+     
     let { ...props }: SVGAttributes<SVGSVGElement> = $props();
 </script>
 

@@ -1,7 +1,9 @@
-import { signOut } from "$lib/auth/auth";
 import { redirect } from "@sveltejs/kit";
+
 import type { Actions } from "./$types";
 import type { PageServerLoad } from "./$types.js";
+
+import { signOut } from "$lib/auth/auth";
 
 export const load: PageServerLoad = async ({ locals }) => {
     // if you are not logged in, redirect to the login page

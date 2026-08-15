@@ -69,7 +69,7 @@
               {/if} -->
             {:else}
                 <img
-                    src={"/cover.png"}
+                    src="/cover.png"
                     alt="thumbnail fallback"
                     class={imageClass} />
             {/if}

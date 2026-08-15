@@ -91,10 +91,10 @@ export async function updateData(accountId: string) {
 
             const entries = [
                 //TODO: give hints
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
                 // @ts-ignore
                 [props[0], extractedData[props[0]]],
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
                 // @ts-ignore
                 [props[1], extractedData[props[1]]],
             ];

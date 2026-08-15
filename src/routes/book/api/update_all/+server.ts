@@ -12,7 +12,6 @@ export async function GET({ locals }) {
     const accountId = await getAccountIdfromSession(session);
 
     return produce(async ({ emit }) => {
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             const userEventData = SSE_DATA[accountId];
 
