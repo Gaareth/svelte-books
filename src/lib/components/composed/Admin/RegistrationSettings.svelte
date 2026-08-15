@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import type { Prisma } from "$prismaBrowser";
 
     import { enhance } from "$app/forms";
@@ -8,6 +7,7 @@
     import { deepClone } from "$utils/utils";
     import CopyOutlineRounded from "$src/lib/icons/CopyOutlineRounded.svelte";
     import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";
+    import clsx from "clsx";
 
     type ServerSettings = Prisma.ServerSettingsGetPayload<{
         include: { registrationCodes: true };
@@ -17,24 +17,21 @@
     }
 
     let { serverSettings }: Props = $props();
-    // svelte-ignore state_referenced_locally
-    let initialServerSettings: ServerSettings = deepClone(serverSettings);
-
-    let formValues = $derived(deepClone(serverSettings));
+    let formValues = $derived(serverSettings);
 
     let registrationCodes = $derived(formValues.registrationCodes);
     let registrationPossible = $derived(formValues.registrationPossible);
-
-    function resetSettings() {
-        formValues = deepClone(initialServerSettings);
-    }
 </script>
 
-<div class="gap-2 flex justify-between border generic-border p-4 items-center">
+<div class={clsx("gap-2 flex justify-between border generic-border p-4 items-center", registrationPossible && "border-warning" )}>
     <div>
         <label for="registrationOpen">Registration open</label>
         <p class="text-secondary text-base">
-            Registration possible without codes.
+            {#if registrationPossible}
+                <span class="text-warning text-base">Warning: Anyone can register.</span>
+            {:else}
+                 Registration is only possible with a registration code.
+            {/if}
         </p>
     </div>
 
@@ -65,78 +62,58 @@
 
     {#if registrationCodes.length > 0}
         <div class="flex flex-col gap-3 sm:gap-2 mt-3">
-            {#each registrationCodes as code}
-                <form
-                    action="?/deleteRegistrationCode"
-                    method="POST"
-                    use:enhance>
-                    <input type="hidden" name="code" value={code.code} />
-                    <div
-                        class="flex flex-wrap gap-2 items-center justify-between">
-                        <a
-                            href={`/register/${code.code}`}
-                            class="underline-hover"
-                            target="_blank">
-                            {code.code}
-                        </a>
+            {#each registrationCodes as code (code.code)}
+                <div class="flex flex-wrap gap-2 items-center justify-between">
+                    <a
+                        href={`/register/${code.code}`}
+                        class="underline-hover"
+                        target="_blank">
+                        {code.code}
+                    </a>
 
-                        <p
-                            class="ml-5 text-secondary text-base flex items-center gap-1"
-                            title="times used">
-                            {code.timesUsed}
-                            <span class="block w-4"><EyePlus /></span>
-                        </p>
+                    <p
+                        class="ml-5 text-secondary text-base flex items-center gap-1"
+                        title="times used">
+                        {code.timesUsed}
+                        <span class="block w-4"><EyePlus /></span>
+                    </p>
 
-                        <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
-                            <span
-                                class="inline-flex flex-row divide-x overflow-hidden rounded-md bg-white
-                    dark:bg-slate-700">
-                                <button
-                                    class="group inline-block p-2 hover:bg-gray-50 focus:relative
-                      dark:hover:bg-slate-500"
-                                    title="copy"
-                                    type="button"
-                                    onclick={async () =>
-                                        await copyToClipboard(
-                                            code.code,
-                                            "Copied registration code to clipboard"
-                                        )}>
-                                    <span
-                                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <CopyOutlineRounded alt="copy icon" />
-                                    </span>
-                                </button>
+                    <div class="flex justify-end ms-2 sm:ms-0 sm:flex-1">
+                        <span
+                            class="inline-flex flex-row divide-x overflow-hidden rounded-md bg-white dark:bg-slate-700">
+                            <button
+                                class="group inline-block p-2 hover:bg-gray-50 focus:relative dark:hover:bg-slate-500"
+                                title="copy"
+                                type="button"
+                                onclick={async () =>
+                                    await copyToClipboard(
+                                        code.code,
+                                        "Copied registration code to clipboard",
+                                    )}>
+                                <span
+                                    class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
+                                    <CopyOutlineRounded alt="copy icon" />
+                                </span>
+                            </button>
 
-                                <button
-                                    class="group p-2 btn-delete !border-0"
-                                    title="Delete code"
-                                    type="submit">
-                                    <span
-                                        class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <DeleteIcon alt="red trash can" />
-                                    </span>
-                                </button>
-                            </span>
-                        </div>
+                            <button
+                                class="group p-2 btn-delete !border-0"
+                                title="Delete code"
+                                name="code"
+                                value={code.code}
+                                formaction="?/deleteRegistrationCode"
+                                type="submit">
+                                <span
+                                    class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
+                                    <DeleteIcon alt="red trash can" />
+                                </span>
+                            </button>
+                        </span>
                     </div>
-                </form>
+                </div>
             {/each}
         </div>
     {:else}
         <p class="text-secondary text-base">No codes added</p>
     {/if}
-</div>
-
-<div class="flex gap-2 justify-end">
-    <button
-        type="button"
-        class="btn-generic flex-1 sm:flex-initial"
-        onclick={resetSettings}>
-        Cancel
-    </button>
-    <button
-        type="submit"
-        class="btn-primary-black w-36 flex justify-center flex-1 sm:flex-initial">
-        Save
-    </button>
 </div>

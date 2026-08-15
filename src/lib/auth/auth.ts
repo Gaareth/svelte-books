@@ -126,6 +126,7 @@ export async function authorize(
         return { sessionAccount, requestedAccount };
     }
 
+    // TODO: perhabs return 404 to avoid leaking information about the existence of the account
     return error(StatusCodes.FORBIDDEN, "You are not authorized");
 }
 

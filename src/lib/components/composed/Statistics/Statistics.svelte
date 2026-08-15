@@ -4,7 +4,7 @@
     import type { ReadingActivityList } from "$src/app";
 
     import Charts from "$components/composed/Charts.svelte";
-    import Stats from "$components/composed/Stats.svelte";
+    import Stats from "$src/lib/components/Stats.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
     import Modal from "$components/Modal.svelte";
     import {
@@ -28,6 +28,7 @@
         get_average_acquisition_time,
         get_reading_duration,
     } from "$src/lib/utils/statisticUtils";
+    import AcquisitionStat from "./AcquisitionStat.svelte";
 
     type ActivityStatistics = ReadingActivityList;
 
@@ -138,10 +139,6 @@
     );
     let reading_duration_total_days = $derived(
         (reading_duration.totalDuration_ms / (1000 * 60 * 60 * 24)).toFixed(2),
-    );
-
-    let avg_acquisition_time = $derived(
-        get_average_acquisition_time(readingActivities),
     );
 </script>
 
@@ -316,68 +313,7 @@
         {/snippet}
     </Stats>
 
-    <Stats
-        titleString="average acquisition time (days)"
-        class="!bg-transparent backdrop-blur sm:col-span-7">
-        {#snippet valueSnippet()}
-            <div class="flex flex-col w-full gap-1.5">
-                <div class="flex items-end gap-3 justify-between break-keep">
-                    <p>To-Read</p>
-
-                    <div class="flex flex-col text-center">
-                        <p class="-mb-1 font-bold">
-                            {#if avg_acquisition_time.avg_to_read_to_acquired_days.count > 0}
-                                {avg_acquisition_time
-                                    .avg_to_read_to_acquired_days.days}
-                            {:else}
-                                N/A
-                            {/if}
-                        </p>
-                        <div>
-                            <DynamicArrow
-                                minThickness={4}
-                                colorStart={getReadingActivityColor(TO_READ)}
-                                colorEnd={getReadingActivityColor(ACQUIRED)} />
-                        </div>
-                    </div>
-
-                    <p>Acquired</p>
-
-                    <div class="flex flex-col text-center">
-                        <p class="-mb-1 font-bold">
-                            {#if avg_acquisition_time.avg_acquired_to_reading_days.count > 0}
-                                {avg_acquisition_time
-                                    .avg_acquired_to_reading_days.days}
-                            {:else}
-                                N/A
-                            {/if}
-                        </p>
-                        <DynamicArrow
-                            minThickness={4}
-                            colorStart={getReadingActivityColor(ACQUIRED)}
-                            colorEnd={getReadingActivityColor(READING)} />
-                    </div>
-
-                    <p>Reading</p>
-                </div>
-
-                <div class="text-center">
-                    <p class="-mb-1 font-bold">
-                        {#if avg_acquisition_time.avg_to_read_to_reading_days.count > 0}
-                            {avg_acquisition_time.avg_to_read_to_reading_days
-                                .days}
-                        {:else}
-                            N/A
-                        {/if}
-                    </p>
-                    <DynamicArrow
-                        maxThickness={1.5}
-                        colorStart={getReadingActivityColor(TO_READ)}
-                        colorEnd={getReadingActivityColor(READING)} />
-                </div>
-            </div>
-        {/snippet}
-    </Stats>
+    <AcquisitionStat {readingActivities}></AcquisitionStat>
 </div>
 
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">

@@ -6,6 +6,7 @@
     import { enhance } from "$app/forms";
     import RegistrationSettings from "$components/composed/Admin/RegistrationSettings.svelte";
     import UsersList from "$components/composed/UsersList.svelte";
+    import { invalidateAll } from "$app/navigation";
 
     interface Props {
         data: PageData;
@@ -18,6 +19,7 @@
 
 <form
     method="POST"
+    class="flex flex-col gap-6"
     use:enhance={() => {
         return async ({ update, result }) => {
             // @ts-ignore
@@ -28,6 +30,7 @@
             }
 
             await update({ reset: false });
+            await invalidateAll();
         };
     }}
     action="?/save">

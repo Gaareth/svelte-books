@@ -97,6 +97,7 @@ export const actions = {
         await adminAuth(await event.locals.auth());
 
         const formData = Object.fromEntries(await event.request.formData());
+        console.log("deleteRegistrationCode formData:", formData);
 
         const schema = z.object({
             code: z.string(),

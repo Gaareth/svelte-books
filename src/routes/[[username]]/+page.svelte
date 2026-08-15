@@ -7,7 +7,7 @@
     import BookListReading from "$components/composed/BookList/BookListReading.svelte";
     import ReadingList from "$components/composed/BookList/ReadingList.svelte";
     import BookNew from "$components/composed/BookNew.svelte";
-    import Statistics from "$components/composed/Statistics.svelte";
+    import Statistics from "$src/lib/components/composed/Statistics/Statistics.svelte";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import { getActiveActivies } from "$lib/utils/utils";
 
