@@ -3,7 +3,6 @@
     import { Chart, getElementAtEvent } from "svelte-chartjs";
     import "chart.js/auto";
 
-
     import type { Chart as ChartJS } from "chart.js";
 
     import { theme } from "$lib/stores/stores";
@@ -26,7 +25,7 @@
         type = "bar",
         label = "# books read",
         removeOnClick = false,
-         
+
         ...rest
     }: Props = $props();
 
@@ -79,7 +78,8 @@
         data = [...data]; // trigger reactivity
     }
 
-    let isSortedAsc = $state(false);
+    let isSortedAscInitial = false;
+    let isSortedAsc = $state(isSortedAscInitial);
     function sortData() {
         data.sort((a, b) => (isSortedAsc ? b[1] - a[1] : a[1] - b[1]));
         data = [...data]; // trigger reactivity
@@ -89,6 +89,7 @@
     function resetOrder() {
         maxShown = initialMaxShown;
         data = [...initialData];
+        isSortedAsc = isSortedAscInitial;
     }
 </script>
 
@@ -138,7 +139,11 @@
 
 <style lang="postcss">
     .btnClass {
-        @apply px-4 py-1 hover:bg-gray-50 dark:hover:bg-slate-500 dark:bg-slate-600 dark:border-slate-500 border border-s-0;
+        @apply px-4 py-1 hover:bg-gray-50 border border-s-0;
+    }
+
+    :global(.dark) .btnClass {
+        @apply hover:bg-slate-500 bg-slate-600 border-slate-500;
     }
 
     .btnClass:first-child {
