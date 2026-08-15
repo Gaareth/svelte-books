@@ -53,8 +53,7 @@
     },
     "type": "module",
     "dependencies": {
-        "@auth/core": "0.27.0",
-        "@auth/sveltekit": "0.11.0",
+        "@auth/sveltekit": "^1.11.3",
         "@prisma/adapter-better-sqlite3": "^7.4.2",
         "@prisma/client": "^7.4.2",
         "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",

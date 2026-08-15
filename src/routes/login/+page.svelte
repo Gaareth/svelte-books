@@ -20,13 +20,13 @@
                 method="post"
                 action="/auth/callback/credentials"
                 class="w-full max-w-sm">
+                <input type="hidden" name="callbackUrl" value="/" />
                 <p
                     class="{data.error
                         ? 'block'
                         : 'hidden'} text-error text-center font-bold text-xl my-4">
                     Username or password are not correct
                 </p>
-                <input name="csrfToken" type="hidden" value={data.csrfToken} />
                 <div>
                     <label for="username">Username</label>
                     <input

@@ -1,11 +1,6 @@
-import CredentialsProvider from "@auth/core/providers/credentials";
-import { SvelteKitAuth } from "@auth/sveltekit";
-
 import * as seed from "../prisma/seed-initial";
 
 import { building } from "$app/environment";
-import { verifyPassword } from "$lib/auth/auth";
-import { prisma } from "$lib/server/prisma";
 
 if (!building) {
     if (!(await seed.isDBSeeded())) {
@@ -23,78 +18,4 @@ if (!building) {
     await seed.seedInitialAllAccounts();
 }
 
-export const handle = SvelteKitAuth({
-    pages: {
-        signIn: "/login",
-        signOut: "/logout",
-    },
-    providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                username: {
-                    label: "Username",
-                    type: "text",
-                    placeholder: "username",
-                },
-                password: { label: "Password", type: "password" },
-            },
-
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            async authorize(credentials) {
-                if (!credentials.username || !credentials.password) {
-                    if (import.meta.env.DEV) {
-                        const account = await prisma.account.findFirst({
-                            where: {
-                                isAdmin:
-                                    !credentials.username &&
-                                    !credentials.password
-                                        ? true
-                                        : undefined,
-                                username: credentials.username ?? undefined,
-                            },
-                        });
-                        if (!account) {
-                            throw new Error(
-                                "No admin account found. Please create an admin account.",
-                            );
-                        }
-
-                        return {
-                            id: account.id,
-                            name: account.username,
-                        };
-                    }
-
-                    return null;
-                }
-
-                const account = await prisma.account.findFirst({
-                    where: {
-                        username: credentials.username,
-                    },
-                });
-
-                if (!account) {
-                    return null;
-                }
-
-                const matching = await verifyPassword(
-                    account,
-                    credentials.password.toString(),
-                );
-
-                if (matching) {
-                    return {
-                        id: account.id,
-                        name: account.username,
-                    };
-                }
-
-                // Return null if user data could not be retrieved
-                return null;
-            },
-        }),
-    ],
-});
+export { handle } from "$lib/auth/auth";

@@ -1,10 +1,13 @@
-import type { ServerLoadEvent } from "@sveltejs/kit";
+import { signOut } from "$lib/auth/auth";
+import { redirect } from "@sveltejs/kit";
+import type { Actions } from "./$types";
+import type { PageServerLoad } from "./$types.js";
 
-export async function load(page: ServerLoadEvent) {
-    const csrfTokenResponse = await page.fetch("/auth/csrf");
-    const { csrfToken } = await csrfTokenResponse.json();
+export const load: PageServerLoad = async ({ locals }) => {
+    // if you are not logged in, redirect to the login page
+    if (!(await locals.auth())) {
+        throw redirect(302, "/login");
+    }
+};
 
-    return {
-        csrfToken,
-    };
-}
+export const actions = { default: signOut } satisfies Actions;
