@@ -18,6 +18,7 @@
 
     import { enhance, applyAction } from "$app/forms";
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
+    import AutoComplete5 from "../../input/AutoComplete5.svelte";
     type BookFormType = Prisma.BookGetPayload<{
         include: {
             bookSeries: {
@@ -199,11 +200,11 @@
                     type="hidden"
                     name="bookSeriesId"
                     value={book.bookSeriesId} />
-                <!-- <AutoComplete
+                <AutoComplete5
                     items={books.filter((b) => b.name != book.name)}
                     labelFunction={autoCompleteBookLabel}
                     bind:selectedItem={selectedSeriesBook}
-                    class="input dark:bg-slate-700 dark:border-none w-full" /> -->
+                    class="input dark:bg-slate-700 dark:border-none w-full" />
                 <button
                     title="Add book"
                     aria-label="Add book to book series"

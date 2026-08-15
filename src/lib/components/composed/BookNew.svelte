@@ -33,6 +33,7 @@
     import EventProgress from "$lib/icons/EventProgress.svelte";
     import Words from "$lib/icons/words.svelte";
     import { capitalize, decapitalize, slideHeight } from "$utils/utils";
+    import AutoComplete5 from "../input/AutoComplete5.svelte";
 
     const CREATABLE_READING_STATUS_VALUES = [
         TO_READ,
@@ -231,13 +232,13 @@
                                     bind:value={name} />
                                 <label for="author">Author:</label>
 
-                                <!-- <AutoComplete
+                                <AutoComplete5
                                     items={authors}
                                     bind:text={author}
                                     create={true}
                                     id="author"
                                     name="author"
-                                    class="input btn-generic-color-2 w-full" /> -->
+                                    class="input btn-generic-color-2 w-full" />
                             </div>
                         </TabPanel>
                     </TabPanels>

@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import EqRelation from "./EqRelation.svelte";
     import SortOrder from "./SortOrder.svelte";
     import ClearButton from "../../input/ClearButton.svelte";
@@ -19,6 +18,7 @@
     import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
     import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
     import FilterIcon from "$src/lib/icons/FilterIcon.svelte";
+    import AutoComplete5 from "../../input/AutoComplete5.svelte";
 
     type sortOption =
         "date_created" | "date_read" | "author" | "title" | "rating";
@@ -352,12 +352,16 @@
             <summary class="text-2xl">
                 <div class="inline-flex items-center gap-2">
                     Sorting
-                    <span class="inline-block w-5">
+                    <span class="inline-flex gap-1 items-center">
+                        (
                         {#if sortingReversed}
+                            Descending
                             <SortDescendingIcon />
                         {:else}
+                            Ascending
                             <SortAscendingIcon />
                         {/if}
+                        )
                     </span>
                 </div>
             </summary>
@@ -374,7 +378,7 @@
                     <option value="rating">Sort by rating</option>
                 </select>
                 <SortOrder
-                    bind:reversed={sortingReversed}
+                    bind:descending={sortingReversed}
                     onClick={sortBooks} />
             </div>
         </details>
@@ -436,7 +440,7 @@
                         onchange={changeLangFilter}
                         value={inputParams.lang}>
                         <option value="all" selected>all</option>
-                        {#each languages_used as lang}
+                        {#each languages_used as lang (lang)}
                             <option value={lang}>{lang}</option>
                         {/each}
                     </select>
@@ -444,7 +448,7 @@
 
                 <label class="flex flex-col">
                     Categories {category_names.length == 0 ? "(empty)" : ""}
-                    <!-- <AutoComplete
+                    <AutoComplete5
                         disabled={category_names.length == 0}
                         items={category_names}
                         selectedItem={inputParams.categories}
@@ -454,7 +458,7 @@
                         id="categories"
                         name="categories"
                         class="input dark:bg-slate-600 dark:border-slate-500 my-2"
-                        className="!h-full" /> -->
+                        className="!h-full" />
                 </label>
 
                 <label class="flex flex-col">

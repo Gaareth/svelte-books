@@ -1,27 +1,27 @@
 <script lang="ts">
-    import ArrowDropDown from "$src/lib/icons/ArrowDropDown.svelte";
-    import ArrowDropUp from "$src/lib/icons/ArrowDropUp.svelte";
+    import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
+    import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
 
     interface Props {
-        reversed?: boolean;
+        descending?: boolean;
         onClick?: () => void;
     }
 
-    let { reversed = $bindable(false), onClick }: Props = $props();
+    let { descending = $bindable(false), onClick }: Props = $props();
 </script>
 
 <button
     class="btn-generic-icon"
     onclick={() => {
-        reversed = !reversed;
+        descending = !descending;
         onClick?.();
     }}
     title="Reverse sort order">
     <span class="block">
-        {#if reversed}
-            <ArrowDropDown class="w-6 h-6" />
+        {#if descending}
+            <SortDescendingIcon class="w-6 h-6" />
         {:else}
-            <ArrowDropUp class="w-6 h-6" />
+            <SortAscendingIcon class="w-6 h-6" />
         {/if}
     </span>
 </button>

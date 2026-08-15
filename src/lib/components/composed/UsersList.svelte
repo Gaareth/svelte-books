@@ -15,7 +15,7 @@
     let { users }: Props = $props();
 </script>
 
-{#each users as user}
+{#each users as user (user.username)}
     <div
         class="default-border flex flex-col lg:grid grid-cols-[1fr_auto_1fr] items-center p-3 gap-2">
         <a
@@ -25,7 +25,7 @@
         </a>
 
         <div class="flex gap-1 sm:gap-2 flex-wrap justify-center">
-            {#each user.readingActivityLists as list}
+            {#each user.readingActivityLists as list (list.status)}
                 <a
                     href="/{user.username}/lists/{list?.status}"
                     class="hover:underline">

@@ -18,6 +18,11 @@
     @apply dark:bg-slate-700 dark:border-slate-600 rounded-md !important;
 }
 
+.autocomplete,
+.autocomplete > .input-container .tag {
+    @apply dark:bg-slate-600 dark:border-slate-600 rounded-md dark:text-white !important;
+}
+
 .autocomplete-list {
     @apply dark:bg-slate-600 dark:border-slate-600 !important;
 }
