@@ -43,8 +43,8 @@
         class="input input-color-1 rounded-md pr-10 shadow-sm sm:text-sm w-full mt-0 dark:border-slate-600"
         placeholder="Search for books.." />
     <span
-        class="pointer-events-none absolute inset-y-0 right-0 grid w-7 mx-1 mt-1 place-content-center
-  text-svelte dark:text-svelte_dark">
-        <SearchIcon />
+        class="pointer-events-none absolute inset-y-0 right-0 grid mx-1 mt-1 place-content-center
+  text-accent">
+        <SearchIcon class="w-7 h-7"/>
     </span>
 </div>

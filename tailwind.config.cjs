@@ -8,6 +8,7 @@ module.exports = {
             colors: {
                 svelte: "#F2440D",
                 svelte_dark: "#f25929",
+                accent: "#818cf8",
             },
         },
     },
