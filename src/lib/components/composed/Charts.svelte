@@ -2,8 +2,7 @@
     import { type ChartTypeRegistry } from "chart.js/auto";
     import { Chart, getElementAtEvent } from "svelte-chartjs";
     import "chart.js/auto";
-    import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
-    import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
+
 
     import type { Chart as ChartJS } from "chart.js";
 
@@ -11,6 +10,8 @@
     import MoreDots from "$src/lib/icons/MoreDots.svelte";
     import RestartRounded from "$src/lib/icons/RestartRounded.svelte";
     import { defaultBgColor, tupleToDataset } from "$utils/chartUtils";
+    import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
+    import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
 
     interface Props {
         data: [any, number][];
@@ -100,9 +101,9 @@
                 title={isSortedAsc ? "sort descending" : "sort ascending"}>
                 <span class="inline-block w-5">
                     {#if isSortedAsc}
-                        <SortDesc />
+                        <SortDescendingIcon />
                     {:else}
-                        <SortAsc />
+                        <SortAscendingIcon />
                     {/if}
                 </span>
             </button>

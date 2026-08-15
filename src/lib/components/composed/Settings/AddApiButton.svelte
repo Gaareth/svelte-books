@@ -2,13 +2,13 @@
     import { onDestroy, onMount } from "svelte";
 
     import toast from "svelte-french-toast";
-    // @ts-ignore
-    import AddIcon from "svelte-icons/io/IoMdAdd.svelte";
+
 
     import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
+    import AddIcon from "$src/lib/icons/AddIcon.svelte";
 
     let loading = $state(false);
     let evtSource: EventSource | undefined = $state();

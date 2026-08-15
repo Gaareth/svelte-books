@@ -1,11 +1,5 @@
 <script lang="ts">
 
-
-
-    import FilterIcon from "svelte-icons/fa/FaFilter.svelte";
-    import SortDesc from "svelte-icons/fa/FaSortAmountDown.svelte";
-    import SortAsc from "svelte-icons/fa/FaSortAmountUp.svelte";
-
     import EqRelation from "./EqRelation.svelte";
     import SortOrder from "./SortOrder.svelte";
     import ClearButton from "../../input/ClearButton.svelte";
@@ -22,6 +16,9 @@
         optionalToDate,
         sortReadingActivity,
     } from "$lib/utils/utils";
+    import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
+    import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
+    import FilterIcon from "$src/lib/icons/FilterIcon.svelte";
 
     type sortOption =
         "date_created" | "date_read" | "author" | "title" | "rating";
@@ -357,9 +354,9 @@
                     Sorting
                     <span class="inline-block w-5">
                         {#if sortingReversed}
-                            <SortDesc />
+                            <SortDescendingIcon />
                         {:else}
-                            <SortAsc />
+                            <SortAscendingIcon />
                         {/if}
                     </span>
                 </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
-
-    import ArrowDown from "svelte-icons/io/IoMdArrowDropdown.svelte";
-    import ArrowUp from "svelte-icons/io/IoMdArrowDropup.svelte";
+    import ArrowDropDown from "$src/lib/icons/ArrowDropDown.svelte";
+    import ArrowDropUp from "$src/lib/icons/ArrowDropUp.svelte";
 
     interface Props {
         reversed?: boolean;
@@ -18,11 +17,11 @@
         onClick?.();
     }}
     title="Reverse sort order">
-    <span class="block w-6 h-6">
+    <span class="block">
         {#if reversed}
-            <ArrowDown />
+            <ArrowDropDown class="w-6 h-6" />
         {:else}
-            <ArrowUp />
+            <ArrowDropUp class="w-6 h-6" />
         {/if}
     </span>
 </button>

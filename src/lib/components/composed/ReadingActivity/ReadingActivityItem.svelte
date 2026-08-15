@@ -3,13 +3,6 @@
 </script>
 
 <script lang="ts">
-    //@ts-ignore
-    import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-    //@ts-ignore
-    import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
-    //@ts-ignore
-    import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
-
     import { shouldShowRating } from "./utils";
     import OwnershipForm from "../OwnershipForm.svelte";
     import ReadingActivityForm from "../ReadingActivity/ReadingActivityForm.svelte";
@@ -29,9 +22,12 @@
     } from "$lib/constants/constants";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
-    import OpenNew from "$lib/icons/OpenNew.svelte";
     import { capitalize } from "$lib/utils/utils";
     import { type Book } from "$prismaBrowser";
+    import StarIcon from "$src/lib/icons/Star/StarIcon.svelte";
+    import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";
+    import SettingsIcon from "$src/lib/icons/SettingsIcon.svelte";
+    import OpenInNewRounded from "$src/lib/icons/OpenInNewRounded.svelte";
 
     interface Props {
         book: BookWithOwnership;
@@ -105,7 +101,7 @@
                         {entry.rating.stars} / {MAX_RATING}
                     </p>
                     <span class="icon flex-shrink-0" aria-label="stars">
-                        <IoIosStar />
+                        <StarIcon />
                     </span>
                 </div>
             {/if}
@@ -124,7 +120,7 @@
                         }}>
                         <span
                             class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                            <OpenNew />
+                            <OpenInNewRounded />
                         </span>
                     </button>
 
@@ -139,7 +135,7 @@
                             }}>
                             <span
                                 class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                <IoMdSettings />
+                                <SettingsIcon />
                             </span>
                         </button>
 
@@ -156,7 +152,7 @@
                                 }}>
                                 <span
                                     class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                    <IoMdTrash alt="red trash can" />
+                                    <DeleteIcon alt="red trash can" />
                                 </span>
                             </button>
                         {/if}
@@ -187,7 +183,7 @@
                                     type="button">
                                     <span
                                         class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <OpenNew />
+                                        <OpenInNewRounded />
                                     </span>
                                     Open
                                 </button>
@@ -203,7 +199,7 @@
                                         type="button">
                                         <span
                                             class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                            <IoMdSettings />
+                                            <SettingsIcon />
                                         </span>
                                         Settings
                                     </button>
@@ -220,7 +216,7 @@
                                         type="button">
                                         <span
                                             class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
-                                            <IoMdTrash alt="red trash can" />
+                                            <DeleteIcon alt="red trash can" />
                                         </span>
                                         Delete
                                     </button>
@@ -264,7 +260,7 @@
                     <div class="flex gap-1 items-center">
                         <p>{entry.rating.stars} / {MAX_RATING}</p>
                         <span class="icon" aria-label="stars">
-                            <IoIosStar />
+                            <StarIcon />
                         </span>
                     </div>
                 {/if}

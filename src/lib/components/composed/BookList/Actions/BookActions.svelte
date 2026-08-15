@@ -1,6 +1,5 @@
 <script lang="ts">
     import toast from "svelte-french-toast";
-    import IoMdSettings from "svelte-icons/io/IoMdSettings.svelte";
 
     import DeleteAction from "./DeleteAction.svelte";
     import DoneReadingAction from "./DoneReadingAction.svelte";
@@ -11,6 +10,8 @@
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+    import SettingsHeart from "$src/lib/icons/SettingsHeart.svelte";
+    import SettingsIcon from "$src/lib/icons/SettingsIcon.svelte";
 
     interface Props {
         isAuthorizedToModify?: boolean;
@@ -64,7 +65,7 @@
                     href="/book/{book_url}/?edit=true">
                     <span
                         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-                        <IoMdSettings />
+                        <SettingsIcon />
                     </span>
                 </a>
 

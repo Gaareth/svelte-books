@@ -1,15 +1,12 @@
 <script lang="ts">
     import clsx from "clsx";
-    //@ts-ignore
-    import IoIosArrowBack from "svelte-icons/io/IoIosArrowBack.svelte";
-    //@ts-ignore
-    import IoMdOpen from "svelte-icons/io/IoMdOpen.svelte";
-
     import BookApiSkeleton from "./BookApiSkeleton.svelte";
 
     import type { queriedBookFull } from "$appTypes";
 
     import { browser } from "$app/environment";
+    import KeyboardArrowLeft from "$src/lib/icons/KeyboardArrowLeft.svelte";
+    import OpenInNewRounded from "$src/lib/icons/OpenInNewRounded.svelte";
 
     interface Props {
         volumeId: string | undefined;
@@ -52,7 +49,7 @@
         class="mt-5 flex flex-row items-center gap-1"
         type="button">
         <span class="block w-6">
-            <IoIosArrowBack />
+            <KeyboardArrowLeft />
         </span>
         Back
     </button>
@@ -98,7 +95,7 @@
                             href="http://books.google.de/books?id={volumeId}"
                             title="Open on books.google.de">
                             <span class="w-4 h-4 block">
-                                <IoMdOpen />
+                                <OpenInNewRounded />
                             </span>
                         </a>
                     </p>

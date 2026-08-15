@@ -1,8 +1,7 @@
 <script lang="ts">
-    // @ts-ignore
-    import SuccessIcon from "svelte-icons/io/IoIosCheckmarkCircleOutline.svelte";
-    // @ts-ignore
-    import ErrorIcon from "svelte-icons/io/IoIosCloseCircleOutline.svelte";
+    import ErrorIcon from "$src/lib/icons/ErrorIcon.svelte";
+    import SuccessIcon from "$src/lib/icons/SuccessIcon.svelte";
+
 
     import type {
         settingsApiReloadResult,

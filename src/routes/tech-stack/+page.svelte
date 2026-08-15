@@ -19,10 +19,10 @@
 
     <ul class="my-2 list-disc">
         <li>svelte-french-toast</li>
-        <li>svelte-icons</li>
+        <li>Google Material Symbols</li>
+        <li>2 Material Design Icons</li>
         <li>zod</li>
         <li>bcrypt</li>
-        <li>simple-svelte-autocomplete</li>
         <li>svelte-loading-spinners</li>
         <li>language-icons</li>
         <li>fuzzy-search</li>

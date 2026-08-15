@@ -1,5 +1,6 @@
 <script lang="ts">
-    import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
+    import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";
+
     interface Props {
         onClick?: () => void;
     }
@@ -14,6 +15,6 @@
     onclick={onClick}>
     <span
         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-        <IoMdTrash alt="red trash can" />
+        <DeleteIcon alt="red trash can" />
     </span>
 </button>

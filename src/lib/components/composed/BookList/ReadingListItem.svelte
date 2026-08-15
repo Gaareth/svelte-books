@@ -4,9 +4,6 @@
 
 <script lang="ts">
     import clsx from "clsx";
-    //@ts-ignore
-    import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-
     import BookActions from "./Actions/BookActions.svelte";
 
     import { type ReadingListItemType } from "$appTypes";
@@ -19,6 +16,7 @@
     import EventProgress from "$lib/icons/EventProgress.svelte";
     import Pages from "$lib/icons/pages.svelte";
     import { categoriesToColor } from "$src/categoryToColor/colorMap";
+    import StarIcon from "$src/lib/icons/Star/StarIcon.svelte";
 
     // export let deletionBook: Book | undefined = undefined;
 
@@ -171,7 +169,7 @@
                 <div
                     class="flex sm:gap-2 gap-1 items-center justify-end flex-1">
                     <p>{entry.rating.stars} / {MAX_RATING}</p>
-                    <span class="icon" aria-label="stars"><IoIosStar /></span>
+                    <span class="icon" aria-label="stars"><StarIcon /></span>
                 </div>
             {/if}
 

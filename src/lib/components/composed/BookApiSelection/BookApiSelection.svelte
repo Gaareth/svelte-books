@@ -1,6 +1,4 @@
 <script lang="ts">
-    import IoIosArrowForward from "svelte-icons/io/IoIosArrowForward.svelte";
-
     import BookApiSkeleton from "./BookApiSkeleton.svelte";
 
     import type { queriedBook, ReadingActivityList } from "$appTypes";
@@ -8,6 +6,7 @@
     import { getReadingActivityColor } from "$src/lib/constants/constants";
     import { preventDefault } from "$src/lib/utils/event-modifers";
     import { capitalize, sortReadingActivity } from "$src/lib/utils/utils";
+    import KeyboardArrowRight from "$src/lib/icons/KeyboardArrowRight.svelte";
 
     let queriedBooksPromise = $state<Promise<queriedBook[]> | undefined>(
         undefined,
@@ -191,7 +190,7 @@
                                 type="button">
                                 <span class="hidden md:inline">Select</span>
                                 <span class="w-6 block">
-                                    <IoIosArrowForward />
+                                    <KeyboardArrowRight />
                                 </span>
                             </button>
                         </div>

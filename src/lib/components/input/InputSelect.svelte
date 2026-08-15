@@ -1,9 +1,8 @@
 <script lang="ts">
-    //@ts-ignore
-    import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
     import { twMerge } from "tailwind-merge";
 
     import InputAny from "./InputAny.svelte";
+    import RemoveCircleIcon from "$src/lib/icons/RemoveCircleIcon.svelte";
 
     interface Props {
         value: unknown | null;
@@ -67,7 +66,7 @@
                             "inline-block w-5 group self-center",
                             hoverCss,
                         )}>
-                        <IoIosRemoveCircle />
+                        <RemoveCircleIcon />
                     </span>
                 </button>
             {/if}

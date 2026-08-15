@@ -3,8 +3,7 @@
 
     import { run } from "svelte/legacy";
     import { fade, scale } from "svelte/transition";
-    //@ts-ignore
-    import MoreIcon from "svelte-icons/io/IoMdMore.svelte";
+   
 
     import BookSearch from "../BookSearch.svelte";
     import Filtering from "./Filtering.svelte";
@@ -16,6 +15,7 @@
     import { page } from "$app/stores";
     import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
     import { createSearchStore, searchHandler } from "$lib/stores/search";
+    import MoreDots from "$src/lib/icons/MoreDots.svelte";
 
     interface Props {
         entries: (ReadingListItemType & { active?: boolean })[];
@@ -102,7 +102,7 @@
                 class="btn-generic-icon ml-auto"
                 onclick={() => (showOptions = !showOptions)}>
                 <span class="w-5 block">
-                    <MoreIcon />
+                    <MoreDots />
                 </span>
             </button>
         {/if}

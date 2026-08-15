@@ -1,6 +1,5 @@
 <script lang="ts">
     import toast from "svelte-french-toast";
-    import IoIosAdd from "svelte-icons/io/IoIosAdd.svelte";
 
     import BookApiDataEdit from "./BookApiDataEdit.svelte";
     import InputAny from "../../input/InputAny.svelte";
@@ -18,6 +17,7 @@
     import type { ActionData } from "../../../../routes/[[username]]/book/[name]/$types";
 
     import { enhance, applyAction } from "$app/forms";
+    import AddIcon from "$src/lib/icons/AddIcon.svelte";
     type BookFormType = Prisma.BookGetPayload<{
         include: {
             bookSeries: {
@@ -212,7 +212,7 @@
                     onclick={addBookSeries}
                     disabled={!selectedSeriesBook}>
                     <span class="block w-7">
-                        <IoIosAdd />
+                        <AddIcon />
                     </span>
                 </button>
             </div>

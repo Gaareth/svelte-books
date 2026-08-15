@@ -1,6 +1,4 @@
 <script lang="ts">
-    import IoMdCopy from "svelte-icons/io/IoMdCopy.svelte";
-    import IoMdTrash from "svelte-icons/io/IoMdTrash.svelte";
 
     import type { Prisma } from "$prismaBrowser";
 
@@ -8,6 +6,8 @@
     import EyePlus from "$lib/icons/eye-plus.svelte";
     import { copyToClipboard } from "$utils/browserUtils";
     import { deepClone } from "$utils/utils";
+    import CopyOutlineRounded from "$src/lib/icons/CopyOutlineRounded.svelte";
+    import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";
 
     type ServerSettings = Prisma.ServerSettingsGetPayload<{
         include: { registrationCodes: true };
@@ -103,7 +103,7 @@
                                         )}>
                                     <span
                                         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <IoMdCopy alt="copy icon" />
+                                        <CopyOutlineRounded alt="copy icon" />
                                     </span>
                                 </button>
 
@@ -113,7 +113,7 @@
                                     type="submit">
                                     <span
                                         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-                                        <IoMdTrash alt="red trash can" />
+                                        <DeleteIcon alt="red trash can" />
                                     </span>
                                 </button>
                             </span>

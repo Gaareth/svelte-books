@@ -2,15 +2,12 @@
     import { onDestroy, onMount } from "svelte";
 
     import toast from "svelte-french-toast";
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
-    import RefreshIcon from "svelte-icons/io/IoMdRefresh.svelte";
 
     import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
+    import RefreshIcon from "$src/lib/icons/RefreshIcon.svelte";
 
     let loading = $state(false);
     let evtSource: EventSource | undefined = $state();
@@ -77,7 +74,7 @@
 
                 if (success) {
                     toast.success(
-                        `Successfully updated ${booksUpdated} entries`
+                        `Successfully updated ${booksUpdated} entries`,
                     );
                 } else if (booksUpdated == 0) {
                     toast.error("Failed updating books :(");

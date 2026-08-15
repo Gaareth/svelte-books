@@ -1,8 +1,8 @@
 <script lang="ts">
-    import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
 
     import type { BookWithApiData } from "$src/app";
     import type { Book } from "$src/generated/prisma/browser";
+    import RemoveCircleIcon from "$src/lib/icons/RemoveCircleIcon.svelte";
 
     import { getMinResolutionImage } from "$src/lib/utils/utils";
 
@@ -36,7 +36,7 @@
                 hidden={!allow_deletion || !on_delete}
                 onclick={() => on_delete?.(book)}>
                 <span class="block w-[20px] group-active:animate-drop-click">
-                    <IoIosRemoveCircle />
+                    <RemoveCircleIcon />
                 </span>
             </button>
         </div>

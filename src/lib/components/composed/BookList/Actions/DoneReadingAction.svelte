@@ -1,9 +1,9 @@
 <script lang="ts">
 
     import clsx from "clsx";
-    import IoMdDoneAll from "svelte-icons/io/IoMdDoneAll.svelte";
 
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+    import DoneAllRoundedIcon from "$src/lib/icons/DoneAllRoundedIcon.svelte";
 
     interface Props {
         className?: string;
@@ -23,6 +23,6 @@
     onclick={onClick}>
     <span
         class="block w-5 group-hover:animate-drop-hover group-active:animate-drop-click">
-        <IoMdDoneAll alt="check mark" />
+        <DoneAllRoundedIcon alt="check mark" />
     </span>
 </button>

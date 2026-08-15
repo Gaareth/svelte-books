@@ -1,14 +1,14 @@
 <script lang="ts">
     import clsx from "clsx";
     import toast from "svelte-french-toast";
-    import IoIosDesktop from "svelte-icons/io/IoIosDesktop.svelte";
-    import IoIosMoon from "svelte-icons/io/IoIosMoon.svelte";
-    import IoIosSunny from "svelte-icons/io/IoIosSunny.svelte";
 
     import { browser } from "$app/environment";
     import Dropdown from "$components/input/Dropdown.svelte";
     import { theme } from "$lib/stores/stores";
     import { isDarkModeEnabled } from "$utils/utils";
+    import DarkModeIcon from "../icons/DarkModeIcon.svelte";
+    import LightModeIcon from "../icons/LightModeIcon.svelte";
+    import DesktopIcon from "../icons/DesktopIcon.svelte";
 
     const icons = ["🌚", "🌙", "🌑", "🌕", "🌒", "🌖", "✨", "💫", "🌟"];
 
@@ -85,14 +85,14 @@
         <span
             title="Change theme"
             aria-label="open theme changer dropdown"
-            class="w-10 h-10 dark:text-purple-500 text-yellow-400 inline-block
+            class="dark:text-purple-500 text-yellow-400 inline-block
         hover:scale-[1.15] transition-transform ease-out">
             {#if $theme == "dark"}
-                <IoIosMoon />
+                <DarkModeIcon class="w-9 h-9" />
             {:else if $theme == "light"}
-                <IoIosSunny />
+                <LightModeIcon class="w-9 h-9" />
             {:else}
-                <IoIosDesktop />
+                <DesktopIcon class="w-9 h-9" />
             {/if}
         </span>
     {/snippet}
@@ -106,9 +106,7 @@
                         `hover:!text-purple-400 dark:!text-purple-400`,
                         theme_dropdown_button_class,
                     )}>
-                    <span class="w-5">
-                        <IoIosMoon />
-                    </span>
+                    <DarkModeIcon class="w-5 h-5" />
                     Dark
                 </button>
             </li>
@@ -119,9 +117,8 @@
                         `text-yellow-500 dark:text-inherit hover:!text-yellow-500 dark:hover:!text-yellow-200`,
                         theme_dropdown_button_class,
                     )}>
-                    <span class="w-5">
-                        <IoIosSunny />
-                    </span>
+                    <LightModeIcon class="w-5 h-5" />
+
                     Light
                 </button>
             </li>
@@ -134,9 +131,7 @@
                             ? "hover:!text-purple-400"
                             : "hover:!text-yellow-500 dark:hover:!text-yellow-200",
                     )}>
-                    <span class="w-5">
-                        <IoIosDesktop />
-                    </span>
+                    <DesktopIcon class="w-5 h-5" />
                     System
                 </button>
             </li>

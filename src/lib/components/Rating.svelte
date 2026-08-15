@@ -1,8 +1,6 @@
 <script lang="ts">
-    //@ts-ignore
-    import IoIosStar from "svelte-icons/io/IoIosStar.svelte";
-    //@ts-ignore
-    import IoIosStarOutline from "svelte-icons/io/IoIosStarOutline.svelte";
+    import StarIcon from "../icons/Star/StarIcon.svelte";
+    import StarOutlineIcon from "../icons/Star/StarOutlineIcon.svelte";
 
     interface Props {
         rating: number | undefined | null;
@@ -40,7 +38,7 @@
                 disabled={!editable}
                 onclick={() => decreaseRating(i + 1)}
                 type="button">
-                <IoIosStar />
+                <StarIcon />
             </button>
         {:else}
             <button
@@ -48,7 +46,7 @@
                 disabled={!editable}
                 onclick={() => increaseRating(i + 1)}
                 type="button">
-                <IoIosStarOutline />
+                <StarOutlineIcon />
             </button>
         {/if}
     {/each}

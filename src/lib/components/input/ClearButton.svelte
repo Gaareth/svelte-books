@@ -1,6 +1,5 @@
 <script lang="ts">
-    //@ts-ignore
-    import IoIosRemoveCircle from "svelte-icons/io/IoIosRemoveCircle.svelte";
+    import RemoveCircleIcon from "$src/lib/icons/RemoveCircleIcon.svelte";
     import { twMerge } from "tailwind-merge";
 
 
@@ -31,6 +30,6 @@
     class="group flex"
     title="Clear Input">
     <span class={twMerge("inline-block w-5 group self-center", hoverCss)}>
-        <IoIosRemoveCircle />
+        <RemoveCircleIcon />
     </span>
 </button>

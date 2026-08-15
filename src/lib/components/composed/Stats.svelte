@@ -1,13 +1,9 @@
 <script lang="ts">
+    import BarChartIcon from "$src/lib/icons/BarChartIcon.svelte";
+    import HorizontalBarIcon from "$src/lib/icons/HorizontalBarIcon.svelte";
+    import KeyboardArrowDown from "$src/lib/icons/KeyboardArrowDown.svelte";
+    import KeyboardArrowUp from "$src/lib/icons/KeyboardArrowUp.svelte";
     import clsx from "clsx";
-    //@ts-ignore
-    import IoIosArrowDown from "svelte-icons/io/IoIosArrowDown.svelte";
-    //@ts-ignore
-    import IoIosArrowUp from "svelte-icons/io/IoIosArrowUp.svelte";
-    //@ts-ignore
-    import IoIosRemove from "svelte-icons/io/IoIosRemove.svelte";
-    //@ts-ignore
-    import IoIosStats from "svelte-icons/io/IoIosStats.svelte";
     import { twMerge } from "tailwind-merge";
 
     interface Props {
@@ -53,7 +49,7 @@
                 <button
                     class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
                     onclick={onShowStats}>
-                    <span class="w-5 block"><IoIosStats /></span>
+                    <span class="w-5 block"><BarChartIcon /></span>
                 </button>
             {/if}
         </div>
@@ -75,15 +71,15 @@
             <div class="flex flex-row">
                 <div
                     class={clsx(
-                        "w-10 h-10 self-center",
+                        "self-center",
                         value > last_value ? "text-green-500" : "text-red-500",
                     )}>
                     {#if value > last_value}
-                        <IoIosArrowUp />
+                        <KeyboardArrowUp class="w-10 h-10" />
                     {:else if value < last_value}
-                        <IoIosArrowDown />
+                        <KeyboardArrowDown class="w-10 h-10" />
                     {:else}
-                        <IoIosRemove />
+                        <HorizontalBarIcon class="w-10 h-10" />
                     {/if}
                 </div>
                 {#if typeof value == "number" && typeof last_value == "number"}

@@ -1,9 +1,8 @@
 <script lang="ts">
-    //@ts-ignore
-    import IoMdClose from "svelte-icons/io/IoMdClose.svelte";
     import { twMerge } from "tailwind-merge";
 
     import { preventDefault } from "../utils/event-modifers";
+    import CloseIcon from "../icons/CloseIcon.svelte";
 
     interface Props {
         showModal: boolean;
@@ -77,7 +76,7 @@
             title="Close modal"
             class="!flex items-center absolute top-2 right-2">
             <span class="w-[24px] h-[24px] inline-block hover:text-error">
-                <IoMdClose />
+                <CloseIcon />
             </span>
         </button>
 
