@@ -211,7 +211,7 @@
         </div>
     {/snippet}
     <ul class="list-disc p-2 sm:w-[30rem]">
-        {#each selected_option == "pages" ? books_without_pagecount : books_without_words as entry}
+        {#each selected_option == "pages" ? books_without_pagecount : books_without_words as entry (entry.id)}
             <li>
                 <a
                     href={`/book/${entry.book.name}?edit=true`}
@@ -394,11 +394,11 @@
     {/if}
     {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
         <Stats
-            titleString={most_read_categories[0][0] +
+            titleString="most read genre/category"
+            value={most_read_categories[0][0] +
                 " (" +
                 most_read_categories[0][1] +
                 ")"}
-            name="most read genre/category"
             showStatsButton={true}
             onShowStats={() => (showModalCats = true)}
             class="!bg-transparent backdrop-blur" />
