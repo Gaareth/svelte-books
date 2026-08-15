@@ -357,11 +357,15 @@
 </div>
 
 <style lang="postcss">
-    .btn-group-btn {
-        @apply dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700;
+    :global(.dark) .btn-group-btn {
+        @apply bg-slate-800 border-slate-600 hover:bg-slate-700;
     }
 
     .btn-group-selected {
-        @apply dark:bg-slate-700 bg-gray-50;
+        @apply bg-gray-50;
+    }
+
+    :global(.dark) .btn-group-selected {
+        @apply bg-slate-700;
     }
 </style>

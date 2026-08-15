@@ -10,7 +10,8 @@
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import IconAccount from "$lib/icons/IconAccount.svelte";
 
-     
+    import { resolve } from "$app/paths";
+
     const version = APP_VERSION;
     let { data, children } = $props();
 
@@ -44,7 +45,7 @@
                 class="gap-8 text-md font-medium flex flex-wrap">
                 <a
                     class="text-gray-500 dark:text-gray-400 hover:text-[#F2440D] dark:hover:text-[#f67c56]"
-                    href="/">
+                    href={resolve("/")}>
                     Home
                 </a>
                 {#if page.data.session}
@@ -54,10 +55,10 @@
                         To-Read
                     </a>
                     {#if data.isAdmin}
-                        <a class="nav-a" href="/admin">Admin</a>
+                        <a class="nav-a" href={resolve("/admin")}>Admin</a>
                     {/if}
                 {/if}
-                <a class="nav-a" href="/about">About</a>
+                <a class="nav-a" href={resolve("/about")}>About</a>
             </nav>
 
             <div class="flex-1 justify-end flex">
@@ -95,13 +96,17 @@
                                             <hr />
                                             <div
                                                 class="py-2 flex flex-col gap-1 text-secondary-2">
-                                                <a href="/settings">Settings</a>
-                                                <a href="/users">all users</a>
+                                                <a href={resolve("/settings")}>
+                                                    Settings
+                                                </a>
+                                                <a href={resolve("/users")}>
+                                                    all users
+                                                </a>
                                             </div>
                                             <hr />
                                             <div class="py-2">
                                                 <a
-                                                    href="/auth/signout"
+                                                    href={resolve("/logout")}
                                                     class="whitespace-nowrap"
                                                     data-sveltekit-preload-data="off">
                                                     Sign out
@@ -113,7 +118,7 @@
                             </Dropdown>
                         {:else}
                             <div>
-                                <a class="auth-button" href="/auth/signin">
+                                <a class="auth-button" href={resolve("/login")}>
                                     Log in
                                 </a>
                             </div>
@@ -152,7 +157,7 @@
                 Svelte
             </a>
             / - Kit and
-            <a href="/tech-stack" class="hover:underline">more</a>
+            <a href={resolve("/tech-stack")} class="hover:underline">more</a>
         </p>
     </div>
     <p class="absolute top-0 right-0 p-2 text-violet-900">
@@ -171,19 +176,38 @@
 
     .auth-button {
         @apply bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 whitespace-nowrap
-            border border-gray-100 hover:border-gray-200 rounded-lg
-            dark:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-slate-600;
+            border border-gray-100 hover:border-gray-200 rounded-lg;
+    }
+
+    :global(.dark) .auth-button {
+        @apply bg-slate-700 text-white border-slate-700 hover:border-slate-600;
     }
 
     .nav-a {
-        @apply text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300;
+        @apply text-gray-500 hover:text-gray-600;
+    }
+
+    :global(.dark) .nav-a {
+        @apply text-gray-400;
+    }
+
+    :global(.dark) .nav-a:hover {
+        @apply text-gray-300;
     }
 
     #dropdown-account a {
-        @apply px-4 block dark:hover:bg-slate-500 hover:bg-gray-200;
+        @apply px-4 block hover:bg-gray-200;
     }
 
     #dropdown-account hr {
-        @apply dark:border-slate-400 border-gray-300;
+        @apply border-gray-300;
+    }
+
+    :global(.dark) #dropdown-account a {
+        @apply hover:bg-slate-500;
+    }
+
+    :global(.dark) #dropdown-account hr {
+        @apply border-slate-400;
     }
 </style>

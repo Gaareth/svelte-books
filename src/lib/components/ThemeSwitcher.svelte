@@ -139,13 +139,3 @@
     {/snippet}
 </Dropdown>
 
-<style lang="postcss">
-    /* .theme-dropdown-button {
-        @apply w-full flex items-center gap-3 p-4 sm:p-2;
-        @apply hover:bg-gray-200;
-        @apply dark:hover:bg-slate-600;
-        @apply dark:sm:hover:bg-gray-600;
-        @apply dark:hover:text-white;
-        @apply rounded-md;
-    } */
-</style>

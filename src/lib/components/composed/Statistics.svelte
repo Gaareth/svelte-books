@@ -448,6 +448,10 @@
 
 <style lang="postcss">
     .link-all {
-        @apply text-slate-600 dark:text-slate-300 hover:underline;
+        @apply text-slate-600 hover:underline;
+    }
+
+    :global(.dark) .link-all {
+        @apply text-slate-300;
     }
 </style>
