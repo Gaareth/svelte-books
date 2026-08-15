@@ -68,11 +68,12 @@ export const books_read_per_month = (
             e.dateFinished.month === (month === 0 ? 12 : month),
     );
 
-// TOOD: return historgram
 export function get_reading_duration(readingActivities: ReadingActivityList[]) {
     let totalDuration = 0;
     let count = 0;
     const histogram: [string, number][] = [];
+
+    const durations: number[] = [];
 
     for (const activity of readingActivities) {
         if (
@@ -101,14 +102,19 @@ export function get_reading_duration(readingActivities: ReadingActivityList[]) {
         }
 
         histogram.push([activity.book.name, duration]);
+        durations.push(duration);
 
         totalDuration += duration;
         count++;
     }
 
+    // const meanDuration = count > 0 ? totalDuration / count : 0;
+    const medianDuration = get_median(durations);
+
     return {
         count,
-        averageDuration_ms: count > 0 ? totalDuration / count : 0,
+        averageDuration_ms: medianDuration,
+        medianDuration_ms: get_median(durations),
         totalDuration_ms: totalDuration,
         histogram_ms: histogram,
     };
@@ -148,7 +154,9 @@ export function get_average_time_til_status(
     } = options;
 
     if ((!startStatus && !startStatusEqFn) || (!endStatus && !endStatusEqFn)) {
-        ("Either startStatus or startStatusEqFn and endStatus or endStatusEqFn must be provided");
+        throw new Error(
+            "Either startStatus or startStatusEqFn and endStatus or endStatusEqFn must be provided",
+        );
     }
 
     const startEq = startStatusEqFn ?? ((status) => status === startStatus);
@@ -177,6 +185,7 @@ export function get_average_time_til_status(
         {} as Record<string, ReadingActivityList[]>,
     );
 
+    const durations: number[] = [];
     let totalDuration = 0;
     let count = 0;
 
@@ -223,13 +232,17 @@ export function get_average_time_til_status(
             continue;
         }
 
-        totalDuration += endDate.getTime() - startDate.getTime();
+        durations.push(duration);
+        totalDuration += duration;
         count++;
     }
 
+    // const meanDuration = count > 0 ? totalDuration / count : 0;
+    const medianDuration = get_median(durations);
+
     return {
         count,
-        averageDuration_ms: count > 0 ? totalDuration / count : 0,
+        averageDuration_ms: medianDuration,
         totalDuration_ms: totalDuration,
     };
 }
@@ -290,4 +303,19 @@ export function get_average_acquisition_time(
             ).toFixed(0),
         },
     };
+}
+
+export function get_median(list: number[]): number {
+    if (list.length === 0) return 0;
+
+    const sortedList = [...list].sort((a, b) => a - b);
+    const midIndex = Math.floor(sortedList.length / 2);
+
+    if (sortedList.length % 2 === 0) {
+        // Even length: average of the two middle numbers
+        return (sortedList[midIndex - 1] + sortedList[midIndex]) / 2;
+    } else {
+        // Odd length: return the middle number
+        return sortedList[midIndex];
+    }
 }
