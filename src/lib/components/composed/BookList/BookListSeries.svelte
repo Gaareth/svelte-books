@@ -17,7 +17,7 @@
     }: Props = $props();
 </script>
 
-<div class="grid grid-cols-2 lg:grid-cols-7 gap-2 mb-5 mt-3">
+<div class="grid grid-cols-2 lg:grid-cols-7 gap-2 gap-y-5 mb-5 mt-3">
     {#each books as book, i (book.id)}
         <input type="hidden" name="books[]" value={book.id} />
 

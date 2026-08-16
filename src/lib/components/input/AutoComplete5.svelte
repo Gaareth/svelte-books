@@ -206,7 +206,7 @@
 		required = null,
 		debug = false,
 		tabindex = 0,
-		selectedItem = $bindable(multiple ? [] : undefined),
+		selectedItem = $bindable(),
 		value = $bindable(undefined),
 		text = $bindable(undefined),
 		onClear = () => {},
@@ -222,6 +222,12 @@
 
 		...rest
 	} = $props();
+
+	$effect(() => {
+		if (selectedItem == null) {
+			selectedItem = multiple ? [] : undefined
+		}
+	})
 
 	let filteredTextLength = $state(0);
 

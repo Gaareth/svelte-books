@@ -27,7 +27,7 @@
             <img
                 src={bookImage}
                 class="hidden aspect-[390/321] w-screen sm:h-[400px] blur-[28px] h-[230px] rounded object-cover object-center -z-10 dark:lg:hidden dark:block"
-                alt="Flowers for Algernon"
+                alt="book cover blurred"
                 width="246"
                 height="369"
                 fetchpriority="low"
@@ -39,7 +39,8 @@
                 class={clsx(
                     "hidden blur-[20px] h-[330px] rounded object-cover object-center dark:lg:block absolute",
                 )}
-                alt="Flowers for Algernon"
+                alt="book cover blurred"
+                aria-hidden="true"
                 width="206"
                 height="369"
                 fetchpriority="low"
