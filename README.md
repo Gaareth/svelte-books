@@ -63,6 +63,7 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- browser tests
 - just implement auth myself, authjs is a crazy mess
 - median stats
 - dont give each readactivity all books, aka more async

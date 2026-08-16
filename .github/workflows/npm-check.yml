@@ -17,14 +17,17 @@ jobs:
               with:
                   node-version: 24
 
-            - name: Install
-              run: npm install
+            - name: Install pnpm
+              run: npm install -g pnpm@11.22.0
+
+            - name: Install deps
+              run: pnpm install --frozen-lockfile
 
             - name: svelte check
-              run: npm run check-noenv
+              run: pnpm run check-noenv
 
             # - name: eslint
-            #   run: npm run lint
+            #   run: pnpm run lint
 
             - name: vite build
-              run: npm run build-noenv
+              run: pnpm run build-noenv
