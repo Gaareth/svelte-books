@@ -168,6 +168,7 @@ export async function verifyPassword(account: Account, password: string) {
 }
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
+    trustHost: true, // env is not loaded???
     pages: {
         signIn: "/login",
         signOut: "/logout",

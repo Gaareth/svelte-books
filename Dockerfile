@@ -1,5 +1,7 @@
 FROM node:24-alpine AS builder
 WORKDIR /app
+RUN npm install -g pnpm@11.22.0
+
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # RUN npm ci // sometimes fails only when using docker buildx??
 RUN pnpm install --frozen-lockfile
@@ -8,9 +10,9 @@ COPY . .
 ARG DATABASE_URL="file:./test.db"
 ENV DATABASE_URL=$DATABASE_URL
 
-RUN npx prisma generate
-RUN npm run build
-RUN npm prune --production
+RUN pnpm exec prisma generate
+RUN pnpm run build
+RUN pnpm prune --prod
 
 FROM node:24-alpine
 WORKDIR /app

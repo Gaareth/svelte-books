@@ -41,7 +41,9 @@ if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 400 ]; then
     echo "URL returned 200 OK or any 300"
 else
     print_error "URL did not return 200 OK or any 300. Status code: $status_code"
-    exit 1
+    if [ "$DEBUG" != true ]; then
+        exit 1
+    fi
 fi
 
 if [ "$DEBUG" = true ]; then

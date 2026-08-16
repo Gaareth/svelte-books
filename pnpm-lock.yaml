@@ -43,6 +43,9 @@ importers:
             parse-nested-form-data:
                 specifier: ^1.0.1
                 version: 1.0.1(@remix-run/web-file@3.1.0)
+            prisma:
+                specifier: ^7.9.1
+                version: 7.9.1(@types/react@19.2.18)(better-sqlite3@12.11.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
             svelte-chartjs:
                 specifier: ^4.0.1
                 version: 4.0.1(chart.js@4.5.1)(svelte@5.56.9(@typescript-eslint/types@8.67.0))
@@ -131,9 +134,6 @@ importers:
             prettier-plugin-svelte:
                 specifier: ^4.1.1
                 version: 4.1.1(prettier@3.9.6)(svelte@5.56.9(@typescript-eslint/types@8.67.0))
-            prisma:
-                specifier: ^7.9.1
-                version: 7.9.1(@types/react@19.2.18)(better-sqlite3@12.11.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
             svelte:
                 specifier: ^5.56.9
                 version: 5.56.9(@typescript-eslint/types@8.67.0)
