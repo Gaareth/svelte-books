@@ -82,6 +82,8 @@ export async function cloneReadingActivity(
         readingActivityOverwrite.dateStartedId === undefined &&
         readingActivity.dateStarted
     ) {
+        // the id to destructure is very important
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, ...dateStartedData } = readingActivity.dateStarted;
 
         dateStartedId = (
@@ -96,7 +98,9 @@ export async function cloneReadingActivity(
         readingActivityOverwrite.dateFinishedId === undefined &&
         readingActivity.dateFinished
     ) {
-        const { ...dateFinishedData } = readingActivity.dateFinished;
+        // the id to destructure is very important
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...dateFinishedData } = readingActivity.dateFinished;
 
         dateFinishedId = (
             await prisma.optionalDatetime.create({
