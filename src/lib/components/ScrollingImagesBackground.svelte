@@ -22,7 +22,7 @@
         images,
         imageWidth = 145,
         aspectRatio = 1.5,
-        gapPx = 10,
+        gapPx = 5,
         rotationDegree = -15,
         scrollSeconds = 60,
         animate = true,
@@ -90,22 +90,36 @@
         return Math.ceil(numRows);
     });
 
-    const imageRows = $derived.by(() => {
-        const rowsArray: string[][] = new Array(rows)
-            .fill(undefined)
-            .map(() => new Array(columns).fill(undefined));
 
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                // overflow to fill
-                const index = (j * rows + i) % images.length;
-                rowsArray[i][j] = images[index];
-            }
+    // this is to make sure that wenn rows changes, the previous rows stay the same
+    // results in smoother transitions
+    let imageRows = $state<string[][]>([]);
+    $effect(() => {
+        if (columns <= 0 || images.length === 0) return;
+
+        const targetRows = rows;
+
+        // Remove excess rows
+        imageRows.length = targetRows;
+
+        // Create/fix rows
+        for (let i = 0; i < targetRows; i++) {
+            if (imageRows[i]?.length === columns) continue;
+
+            imageRows[i] = new Array(columns).fill(undefined).map((_, j) => {
+                const index = (j * targetRows + i) % images.length;
+                return images[index];
+            });
         }
-        return rowsArray;
     });
 
-    const translationOffsetY = $derived(Math.sin(rotationDegree * Math.PI / 180) * gridWidth);
+    const translationOffsetY = $derived(
+        Math.sin((rotationDegree * Math.PI) / 180) * gridWidth,
+    );
+
+    $effect(() => {
+        console.log(rows);
+    });
 </script>
 
 {#snippet Image(src: string)}
@@ -143,8 +157,17 @@
     </div>
 {/snippet}
 
-<div class={clsx("overflow-hidden absolute w-full h-full grid-container", wrapperClassName)}>
-    <div class={clsx("absolute top-0 !z-10 w-full h-full", overlayBackgroundClassName)}></div>
+<div
+    class={clsx(
+        "overflow-hidden absolute w-full h-full grid-container",
+        wrapperClassName,
+    )}>
+    <div
+        class={clsx(
+            "absolute top-0 !z-10 w-full h-full",
+            overlayBackgroundClassName,
+        )}>
+    </div>
     <div
         class={clsx(
             "flex flex-col w-full h-full blur-[2px]",
@@ -158,7 +181,6 @@
     </div>
 </div>
 
-<!-- {@render Row(displayBooks)} -->
 
 <style>
     .scroll-left {

@@ -168,7 +168,7 @@
         {readingActivities}
         overlayBackgroundClassName={clsx(
             "bg-white dark:bg-slate-700 transition-opacity duration-[800ms] ease-in-out",
-            !new_book_open ? "dark:opacity-[50%]" : showMore ? "dark:opacity-[98%]" : "dark:opacity-[85%]",
+            !new_book_open ? "dark:opacity-[45%]" : showMore ? "dark:opacity-[95%]" : "dark:opacity-[85%]",
         )}
         wrapperClassName="-z-10" />
 
