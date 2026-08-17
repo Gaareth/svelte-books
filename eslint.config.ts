@@ -19,6 +19,7 @@ export default defineConfig([
             ".env.*",
             "!.env.example",
             "seed.js",
+            "src/generated/prisma",
         ],
     },
 
