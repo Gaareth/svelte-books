@@ -1,0 +1,11 @@
+[[repos]]
+repo = "local"
+hooks = [
+    {
+        id = "tidy",
+        name = "pn tidy",
+        entry = "sh -c 'pn tidy || true'",
+        language = "system",
+        pass_filenames = false
+    }
+]

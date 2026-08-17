@@ -19,6 +19,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@j178/prek": "^0.4.13",
         "@sveltejs/adapter-auto": "^7.0.1",
         "@sveltejs/adapter-node": "^5.5.7",
         "@sveltejs/kit": "^2.70.2",
@@ -60,7 +61,6 @@
         "@auth/sveltekit": "^1.11.3",
         "@prisma/adapter-better-sqlite3": "^7.9.1",
         "@prisma/client": "^7.9.1",
-        "prisma": "^7.9.1",
         "@tailwindcss/nesting": "0.0.0-insiders.565cd3e",
         "@types/fuzzy-search": "^2.1.5",
         "argon2": "^0.45.1",
@@ -70,6 +70,7 @@
         "fuzzy-search": "^3.2.1",
         "language-icons": "^0.3.0",
         "parse-nested-form-data": "^1.0.1",
+        "prisma": "^7.9.1",
         "svelte-chartjs": "^4.0.1",
         "svelte-french-toast": "2.0.0-alpha.0",
         "tailwind-merge": "^1.14.0",

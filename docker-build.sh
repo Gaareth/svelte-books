@@ -9,8 +9,6 @@ echo "> Bumping version: $VERSION_TYPE"
 # Prisma generate
 npx prisma generate
 
-npm run tidy
-
 # Run checks
 npm run check
 
