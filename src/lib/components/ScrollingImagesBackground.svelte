@@ -104,6 +104,8 @@
         }
         return rowsArray;
     });
+
+    const translationOffsetY = $derived(Math.sin(rotationDegree * Math.PI / 180) * gridWidth);
 </script>
 
 {#snippet Image(src: string)}
@@ -112,8 +114,8 @@
         class={imageClass}
         alt="book cover"
         style="width: {IMAGE_WIDTH}px; height: {IMAGE_HEIGHT}px;"
-        fetchpriority="low"
-        loading="lazy" />
+        fetchpriority="high"
+        loading="eager" />
 {/snippet}
 
 <!-- skew(-5deg, -15deg) -->
@@ -148,7 +150,7 @@
             "flex flex-col w-full h-full blur-[2px]",
             fillBehaviour == "center" && "justify-center",
         )}
-        style="gap: {gapPx}px; transform: rotate({rotationDegree}deg) translateY(-50%);"
+        style="gap: {gapPx}px; transform: rotate({rotationDegree}deg) translateY({translationOffsetY}px);"
         bind:this={gridWrapper}>
         {#each imageRows as imageRow, i (i)}
             {@render InfiniteRow(imageRow, i % 2 === 0 ? "left" : "right")}
