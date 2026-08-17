@@ -8,16 +8,11 @@
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
     import Modal from "$components/Modal.svelte";
     import {
-        ACQUIRED,
-        READING,
         READING_ACTIVITY_TYPES,
-        TO_READ,
     } from "$lib/constants/enums";
     import Book from "$lib/icons/book.svelte";
     import Pages from "$lib/icons/pages.svelte";
     import Words from "$lib/icons/words.svelte";
-    import { getReadingActivityColor } from "$src/lib/constants/constants";
-    import DynamicArrow from "$src/lib/icons/DynamicArrow.svelte";
     import {
         books_read_per_month,
         books_read_per_year,
@@ -25,7 +20,6 @@
         calc_most_read_categories,
         count_pages,
         count_words,
-        get_average_acquisition_time,
         get_reading_duration,
     } from "$src/lib/utils/statisticUtils";
     import AcquisitionStat from "./AcquisitionStat.svelte";

@@ -1,10 +1,8 @@
 <script lang="ts">
     import type { Prisma } from "$prismaBrowser";
 
-    import { enhance } from "$app/forms";
     import EyePlus from "$lib/icons/eye-plus.svelte";
     import { copyToClipboard } from "$utils/browserUtils";
-    import { deepClone } from "$utils/utils";
     import CopyOutlineRounded from "$src/lib/icons/CopyOutlineRounded.svelte";
     import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";
     import clsx from "clsx";

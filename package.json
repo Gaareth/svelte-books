@@ -13,6 +13,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
+        "tidy": "prettier --write . && eslint . --fix",
         "data-migration:add-optional-date": "node ./prisma/migrations/20241110174304_add_optional_date/data-migration.js",
         "seed-initial": "tsx prisma/seed-initial.ts"
     },
