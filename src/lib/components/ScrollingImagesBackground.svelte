@@ -113,6 +113,7 @@
         }
     });
 
+    // this might only cover the top left corner not sure.
     const translationOffsetY = $derived(
         Math.sin((rotationDegree * Math.PI) / 180) * gridWidth,
     );
