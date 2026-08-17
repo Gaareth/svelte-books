@@ -7,7 +7,7 @@
     import LineChartDrawer from "../../input/LineChartDrawer.svelte";
     import Rating from "../../Rating.svelte";
 
-    import { Prisma } from "$src/generated/prisma/browser";
+    import { Prisma } from "$prismaBrowser";
     import { MAX_RATING } from "$src/lib/constants/constants";
 
     // optional rating and storygraphs

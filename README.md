@@ -63,6 +63,7 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- sse check
 - browser tests
 - just implement auth myself, authjs is a crazy mess
 - median stats

@@ -13,7 +13,7 @@
         BookWithApiData,
         queriedBookFull,
     } from "$src/app";
-    import type { Book, BookList, Prisma } from "$src/generated/prisma/browser";
+    import type { Book, BookList, Prisma } from "$prismaBrowser";
     import type { ActionData } from "../../../../routes/[[username]]/book/[name]/$types";
 
     import { enhance, applyAction } from "$app/forms";

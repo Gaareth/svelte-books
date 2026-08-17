@@ -44,7 +44,7 @@
         selectedBookId = $bindable(),
         apiBookSelected = $bindable(),
         onSelectClicked,
-         
+
         ...rest
     }: Props = $props();
 
@@ -122,7 +122,7 @@
             {#await queriedBooksPromise}
                 <BookApiSkeleton />
             {:then queriedBooks}
-                {#each sortBookResults(queriedBooks) as book}
+                {#each sortBookResults(queriedBooks) as book (book)}
                     <label
                         style={`border-color: ${getColor(book)}`}
                         class="item-border p-2 my-2 grid grid-cols-[1fr_auto] sm:flex justify-between items-center gap-1">
@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="flex gap-1 col-span-2 row-start-2">
-                            {#each findActivities(book) as activity}
+                            {#each findActivities(book) as activity (activity.id)}
                                 <p
                                     style={`background-color: ${getColor(
                                         book,
@@ -189,9 +189,7 @@
                                 title="Select book"
                                 type="button">
                                 <span class="hidden md:inline">Select</span>
-                                <span class="w-6 block">
-                                    <KeyboardArrowRight />
-                                </span>
+                                <KeyboardArrowRight class="w-6 h-6 block" />
                             </button>
                         </div>
                     </label>

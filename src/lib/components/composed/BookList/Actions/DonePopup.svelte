@@ -5,8 +5,8 @@
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
-    import { Prisma } from "$src/generated/prisma/browser";
-    import { ReadingActivityType } from "$src/generated/prisma/enums";
+    import { Prisma } from "$prismaBrowser";
+    import { ReadingActivityType } from "$prismaBrowser";
     import Modal from "$src/lib/components/Modal.svelte";
     import { generateBookFinishedCongratulations } from "$src/lib/utils/userFeedbackGenerator";
 
@@ -78,7 +78,7 @@
             <button
                 class="bg-blue-500 text-white py-3 px-4 my-4 rounded-md w-full dark:hover:bg-blue-600 hover:bg-blue-600"
                 type="submit">
-                Rate and Finish
+                Rate and Finish Now!
             </button>
 
             <button
@@ -88,5 +88,8 @@
                 Cancel
             </button>
         </div>
+        <p class="text-secondary text-base text-center -mb-3 -mt-2">
+            You can always change the exact date or rating later in the book's page.
+        </p>
     </form>
 </Modal>

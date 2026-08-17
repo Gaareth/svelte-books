@@ -23,7 +23,7 @@ export const getReadingActivityColor = (statuss: string): string => {
         case READING_ACTIVITY_TYPES.ACQUIRED:
             return "#A855F7"; // purple
         default: {
-            const exhaustiveCheck: never = status;
+            const _exhaustiveCheck: never = status;
             throw new Error(`Unhandled status: ${status}`);
         }
     }

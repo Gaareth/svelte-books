@@ -2,7 +2,7 @@
     import BookListItem from "./BookListItem.svelte";
 
     import type { BookWithApiData } from "$src/app";
-    import type { Book } from "$src/generated/prisma/browser";
+    import type { Book } from "$prismaBrowser";
 
     interface Props {
         books: BookWithApiData[];

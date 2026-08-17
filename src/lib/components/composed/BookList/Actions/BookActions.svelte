@@ -10,7 +10,7 @@
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import SettingsHeart from "$src/lib/icons/SettingsHeart.svelte";
+    // import SettingsHeart from "$src/lib/icons/SettingsHeart.svelte";
     import SettingsIcon from "$src/lib/icons/SettingsIcon.svelte";
 
     interface Props {

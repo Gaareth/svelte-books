@@ -91,5 +91,11 @@ export default defineConfig([
                 parser: tseslint.parser,
             },
         },
+        plugins: {
+            "unused-imports": unusedImports,
+        },
+        rules: {
+            "unused-imports/no-unused-imports": "error",
+        },
     },
 ]);

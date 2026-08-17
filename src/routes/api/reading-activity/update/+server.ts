@@ -1,9 +1,6 @@
 import { json } from "@sveltejs/kit";
 
-import type {
-    BookOwnership,
-    ReadingActivity,
-} from "$src/generated/prisma/client";
+import type { BookOwnership, ReadingActivity } from "$prismaClient";
 import type { RequestEvent } from "./$types";
 
 import { authorize } from "$lib/auth/auth";

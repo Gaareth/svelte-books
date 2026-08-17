@@ -1,6 +1,6 @@
 import { getRandomIntInclusive, optionalToDate } from "./utils";
 
-import type { Prisma } from "$src/generated/prisma/browser";
+import type { Prisma } from "$prismaClient";
 
 const HOUR_IN_SECONDS = 1000 * 60 * 60;
 const DAY_IN_SECONDS = HOUR_IN_SECONDS * 24;

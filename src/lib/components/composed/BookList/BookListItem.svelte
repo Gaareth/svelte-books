@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import type { BookWithApiData } from "$src/app";
-    import type { Book } from "$src/generated/prisma/browser";
+    import type { Book } from "$prismaBrowser";
     import RemoveCircleIcon from "$src/lib/icons/RemoveCircleIcon.svelte";
 
     import { getMinResolutionImage } from "$src/lib/utils/utils";

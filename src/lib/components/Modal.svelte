@@ -75,9 +75,8 @@
             })}
             title="Close modal"
             class="!flex items-center absolute top-2 right-2">
-            <span class="w-[24px] h-[24px] inline-block hover:text-error">
-                <CloseIcon />
-            </span>
+            <CloseIcon
+                class="w-[24px] h-[24px] inline-block hover:text-error" />
         </button>
 
         <hr class="dark:border-slate-600" hidden={!showDividers} />

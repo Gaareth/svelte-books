@@ -48,9 +48,7 @@
         }}
         class="mt-5 flex flex-row items-center gap-1"
         type="button">
-        <span class="block w-6">
-            <KeyboardArrowLeft />
-        </span>
+        <KeyboardArrowLeft class="block w-6 h-6" />
         Back
     </button>
 {/if}

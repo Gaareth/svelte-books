@@ -260,7 +260,7 @@ export function slideHeight(node: Element) {
     const height = parseFloat(style.height);
 
     return {
-        duration: 500,
+        duration: 550,
         css: (t: number) => `height: ${t * height}px; overflow: hidden;`,
         easing: sineInOut,
     };
@@ -308,38 +308,66 @@ export function dateDiffFormatted(
     return `${years} year${years !== 1 ? "s" : ""}`;
 }
 
-export function getMaxResolutionImage(apiData: BookApiData | null) {
-    if (!apiData) return null;
+export function getNextImageByResolution(
+    bookApiData: BookApiData | null,
+    resolution: keyof ImageLinksType,
+    reverseOrder: boolean = false,
+    overflowToFill: boolean = false,
+) {
+    const defaultOrder: (keyof ImageLinksType)[] = [
+        "extraLarge",
+        "large",
+        "medium",
+        "small",
+        "thumbnail",
+        "smallThumbnail",
+    ];
+
+    if (reverseOrder) {
+        defaultOrder.reverse();
+    }
+
+    const order = defaultOrder.slice(
+        defaultOrder.indexOf(resolution),
+        defaultOrder.length,
+    );
+
+    // add the remaining resolutions to the end of the order if overflowToFill is true
+    if (overflowToFill) {
+        const remainingResolutions = defaultOrder.filter(
+            (res) => !order.includes(res),
+        );
+        order.push(...remainingResolutions);
+    }
+
+    return getImageByResolutionOrder(bookApiData, order);
+}
+
+export function getImageByResolutionOrder(
+    bookApiData: BookApiData | null,
+    order: (keyof ImageLinksType)[],
+) {
+    if (!bookApiData) return null;
 
     const imageLinks = JSON.parse(
-        apiData.imageLinksJSON || "{}",
+        bookApiData?.imageLinksJSON || "{}",
     ) as ImageLinksType;
 
-    return (
-        imageLinks?.extraLarge ||
-        imageLinks?.large ||
-        imageLinks?.medium ||
-        imageLinks?.thumbnail ||
-        imageLinks?.smallThumbnail ||
-        null
-    );
+    for (const res of order) {
+        if (imageLinks?.[res]) {
+            return imageLinks[res];
+        }
+    }
+
+    return null;
+}
+
+export function getMaxResolutionImage(apiData: BookApiData | null) {
+    return getNextImageByResolution(apiData, "extraLarge");
 }
 
 export function getMinResolutionImage(apiData: BookApiData | null) {
-    if (!apiData) return null;
-
-    const imageLinks = JSON.parse(
-        apiData.imageLinksJSON || "{}",
-    ) as ImageLinksType;
-
-    return (
-        imageLinks?.smallThumbnail ||
-        imageLinks?.thumbnail ||
-        imageLinks?.medium ||
-        imageLinks?.large ||
-        imageLinks?.extraLarge ||
-        null
-    );
+    return getNextImageByResolution(apiData, "smallThumbnail", true);
 }
 
 export function deepClone<T>(obj: T): T {

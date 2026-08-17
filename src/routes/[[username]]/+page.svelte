@@ -103,7 +103,7 @@
 
         top: 0px;
         left: 0px;
-        z-index: -2;
+        z-index: -100;
         height: 100%;
         width: 100%;
 

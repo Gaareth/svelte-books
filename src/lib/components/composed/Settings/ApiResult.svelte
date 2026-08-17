@@ -23,7 +23,7 @@
     <div class="default-border p-3 my-2">
         {#if Object.hasOwn(formDiffs, "diffs")}
             <p class="mb-2">Updated {formDiffs.booksUpdated} books</p>
-            {#each formDiffs.diffs as diff}
+            {#each formDiffs.diffs as diff (diff)}
                 <div>
                     <a class="hover:underline" href="/book/{diff.bookName}">
                         {diff.bookName}
@@ -47,7 +47,7 @@
                 </span>
 
                 <div>
-                    {#each formErrors.errorsBooks as errorBook}
+                    {#each formErrors.errorsBooks as errorBook (errorBook)}
                         <div class="flex items-center gap-2">
                             <span class="w-[20px] inline-block text-red-500">
                                 <ErrorIcon />
@@ -87,7 +87,7 @@
                 <details open>
                     <summary>Books updated:</summary>
                     <ul class="list-disc">
-                        {#each formErrors.updatedBookNames as name}
+                        {#each formErrors.updatedBookNames as name (name)}
                             <li class="ml-10">
                                 <a
                                     class="hover:underline text-base"

@@ -339,7 +339,7 @@
                             class="btn-generic-color-2 w-full"
                             name={`${name}[month]`}>
                             <option value={null}>Select Month</option>
-                            {#each months as { value, label }}
+                            {#each months as { value, label } (value)}
                                 <option {value}>{label}</option>
                             {/each}
                         </select>
@@ -354,7 +354,7 @@
                             class="btn-generic-color-2 w-full"
                             name={`${name}[day]`}>
                             <option value={null}>Select Day</option>
-                            {#each days as dayNumber}
+                            {#each days as dayNumber (dayNumber)}
                                 <option value={dayNumber}>{dayNumber}</option>
                             {/each}
                         </select>

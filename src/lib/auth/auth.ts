@@ -43,7 +43,7 @@ export async function adminAuth(session: Session | null) {
 
 export async function userAuth(session: Session | null) {
     if (session?.user?.name == null) {
-        // for user pages if you are not logged in then redirect to login
+        // for private user pages if you are not logged in then redirect to login
         // error(StatusCodes.UNAUTHORIZED);
         redirect(302, "/login"); //TODO: add callbackurl
     }
@@ -127,7 +127,8 @@ export async function authorize(
     }
 
     // TODO: perhabs return 404 to avoid leaking information about the existence of the account
-    return error(StatusCodes.FORBIDDEN, "You are not authorized");
+    // return error(StatusCodes.FORBIDDEN, "You are not authorized");
+    return error(StatusCodes.NOT_FOUND, "Requested account not found");
 }
 
 export async function isReadingActivityPublic(
