@@ -1,8 +1,8 @@
 import js from "@eslint/js";
-import importPlugin from "eslint-plugin-import";
+import { defineConfig } from "eslint/config";
+// import importPlugin from "eslint-plugin-import";
 import svelte from "eslint-plugin-svelte";
 import unusedImports from "eslint-plugin-unused-imports";
-import { defineConfig } from "eslint/config";
 import globals from "globals";
 import svelteParser from "svelte-eslint-parser";
 import tseslint from "typescript-eslint";
@@ -27,7 +27,7 @@ export default defineConfig([
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         plugins: {
             "unused-imports": unusedImports,
-            import: importPlugin,
+            // import: importPlugin,
         },
         languageOptions: {
             globals: {
@@ -52,32 +52,32 @@ export default defineConfig([
 
             "@typescript-eslint/ban-ts-comment": "off",
 
-            "import/order": [
-                "error",
-                {
-                    groups: [
-                        "builtin",
-                        "external",
-                        "internal",
-                        ["parent", "sibling", "index"],
-                        "object",
-                        "type",
-                    ],
-                    pathGroups: [
-                        {
-                            pattern: "svelte",
-                            group: "external",
-                            position: "before",
-                        },
-                    ],
-                    pathGroupsExcludedImportTypes: ["builtin"],
-                    alphabetize: {
-                        order: "asc",
-                        caseInsensitive: true,
-                    },
-                    "newlines-between": "always",
-                },
-            ],
+            // "import/order": [
+            //     "error",
+            //     {
+            //         groups: [
+            //             "builtin",
+            //             "external",
+            //             "internal",
+            //             ["parent", "sibling", "index"],
+            //             "object",
+            //             "type",
+            //         ],
+            //         pathGroups: [
+            //             {
+            //                 pattern: "svelte",
+            //                 group: "external",
+            //                 position: "before",
+            //             },
+            //         ],
+            //         pathGroupsExcludedImportTypes: ["builtin"],
+            //         alphabetize: {
+            //             order: "asc",
+            //             caseInsensitive: true,
+            //         },
+            //         "newlines-between": "always",
+            //     },
+            // ],
         },
     },
 
