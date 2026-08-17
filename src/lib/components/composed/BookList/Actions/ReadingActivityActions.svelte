@@ -52,7 +52,7 @@
         ) {
             result.push({ Component: NowReadingAction });
         } else if (activeStatus === READING_ACTIVITY_TYPES.READING) {
-            result.push({ Component: DoneReadingAction, event: "ondone" });
+            result.push({ Component: DoneReadingAction, event: "onClick" });
             result.push({ Component: PausedReadingAction });
             result.push({ Component: StoppedReadingAction });
         }
@@ -90,7 +90,7 @@
         value={READING_ACTIVITY_TYPES.FINISHED} /> -->
 
     <div class="flex">
-        {#each actions as action, i}
+        {#each actions as action, i (i)}
             <action.Component
                 // ondone={() => {
                 //     openModal = true;
