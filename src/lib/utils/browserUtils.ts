@@ -1,4 +1,5 @@
 import toast from "svelte-french-toast";
+import { publicConfig } from "../config/public";
 
 export async function copyToClipboard(code: string, successMessage?: string) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -11,4 +12,15 @@ export async function copyToClipboard(code: string, successMessage?: string) {
     } else {
         console.warn("Clipboard API not supported.");
     }
+}
+
+export function makeUploadUrl(url: string): string | undefined {
+    if (!publicConfig.uploads.urlPrefix) {
+        return undefined;
+    }
+
+    const prefix = publicConfig.uploads.urlPrefix.replace(/^\/+|\/+$/g, "");
+    const path = url.replace(/^\/+/, "");
+
+    return `/${prefix}/${path}`;
 }

@@ -5,7 +5,11 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
-import { authorize, handlePublicOrAuthenticatedAccount } from "$lib/auth/auth";
+import { env } from "$env/dynamic/public";
+import {
+    authorize,
+    handlePublicOrAuthenticatedAccount,
+} from "$lib/auth/authorization";
 import { optionalNumericString } from "$lib/schemas/utils";
 import {
     extractBookApiData,
@@ -13,7 +17,18 @@ import {
     loadBooks,
 } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
+import { publicConfig } from "$src/lib/config/public";
+import {
+    createImageUploadSchema,
+    type ImageTypes,
+} from "$src/lib/schemas/schemas";
 import { whereVisibilityPublicOrAuthenticatedOrAll } from "$src/lib/server/db/prismaUtils";
+import { cacheGoogleBooksImage } from "$src/lib/server/images/googleBooksImages";
+import {
+    cacheUploadedImage,
+    deleteCachedImage,
+    saveCachesToDB,
+} from "$src/lib/server/images/images";
 
 export async function load(page: ServerLoadEvent) {
     const params = page.params;
@@ -40,10 +55,41 @@ export async function load(page: ServerLoadEvent) {
         include: {
             ownership: true,
             bookList: true,
+            coverImage: {
+                include: {
+                    variants: true,
+                },
+            },
+            bookApiData: {
+                include: {
+                    categories: true,
+                },
+            },
+            readingActivity: {
+                where: {
+                    status: whereVisibilityPublicOrAuthenticatedOrAll(
+                        session,
+                        isAuthorizedToModify,
+                    ),
+                },
+                include: {
+                    dateStarted: true,
+                    dateFinished: true,
+                    rating: true,
+                    storyGraphs: true,
+                    book: true,
+                    status: true,
+                },
+            },
             bookSeries: {
                 include: {
                     books: {
                         include: {
+                            coverImage: {
+                                include: {
+                                    variants: true,
+                                },
+                            },
                             bookApiData: {
                                 include: {
                                     categories: true,
@@ -66,27 +112,6 @@ export async function load(page: ServerLoadEvent) {
                             },
                         },
                     },
-                },
-            },
-            bookApiData: {
-                include: {
-                    categories: true,
-                },
-            },
-            readingActivity: {
-                where: {
-                    status: whereVisibilityPublicOrAuthenticatedOrAll(
-                        session,
-                        isAuthorizedToModify,
-                    ),
-                },
-                include: {
-                    dateStarted: true,
-                    dateFinished: true,
-                    rating: true,
-                    storyGraphs: true,
-                    book: true,
-                    status: true,
                 },
             },
         },
@@ -120,27 +145,53 @@ export async function load(page: ServerLoadEvent) {
     };
 }
 
-//TODO: reuse
-const saveSchema = z.object({
-    id: z.string(),
-    name: z.string().trim().min(1),
-    author: z.string().trim().min(1),
-    listName: z.string().optional(),
-    bookSeries: z.string().array(),
-    bookSeriesId: z
-        .preprocess(
-            (s) => (s != "" ? Number(s) : undefined),
-            z.number().optional(),
-        )
-        .optional(),
-    apiVolumeId: z.string().optional(),
-    wordsPerPage: optionalNumericString(
-        z.coerce.number().nonnegative().optional(),
-    ).optional(),
+const coverSourceSchema = z
+    .object({
+        googleBooksCoverVolumeId: z.string().trim().nullish(),
+        uploadedCoverImage: createImageUploadSchema(
+            publicConfig.uploads.allowedTypes as ImageTypes[],
+            publicConfig.uploads.maxFileSize,
+        ).nullish(),
+    })
+    .refine(
+        ({ googleBooksCoverVolumeId, uploadedCoverImage }) =>
+            !(googleBooksCoverVolumeId && uploadedCoverImage),
+        {
+            message: "Only one cover image source can be provided",
+            path: ["uploadedCoverImage"],
+        },
+    )
+    .refine(
+        ({ uploadedCoverImage }) =>
+            uploadedCoverImage == null || env.PUBLIC_ALLOW_IMAGE_UPLOADS,
+        {
+            message: "Uploaded cover images are disabled",
+            path: ["uploadedCoverImage"],
+        },
+    );
 
-    description: z.string().trim().optional(),
-    coverImage: z.string().trim().nullish(),
-});
+//TODO: reuse
+const saveSchema = z
+    .object({
+        id: z.string(),
+        name: z.string().trim().min(1),
+        author: z.string().trim().min(1),
+        listName: z.string().optional(),
+        bookSeries: z.string().array(),
+        bookSeriesId: z
+            .preprocess(
+                (s) => (s != "" ? Number(s) : undefined),
+                z.number().optional(),
+            )
+            .optional(),
+        apiVolumeId: z.string().optional(),
+        wordsPerPage: optionalNumericString(
+            z.coerce.number().nonnegative().optional(),
+        ).optional(),
+
+        description: z.string().trim().optional(),
+    })
+    .and(coverSourceSchema);
 
 //TODO: check if a book in the new books is already part of a bookseries, then add to it
 async function updateBookSeries(
@@ -238,17 +289,14 @@ export const actions = {
         const accountId = account.id;
 
         const f = await event.request.formData();
-        // console.log(f);
-
         const formData = Object.fromEntries(f);
-        // console.log("1", formData);
 
+        // bookSeries is an array of strings, so we need to handle it separately
         const bookSeries = f.getAll("books[]");
-
         // @ts-ignore
         formData["bookSeries"] = bookSeries;
 
-        const result = saveSchema.safeParse(formData);
+        const result = await saveSchema.safeParseAsync(formData);
 
         if (result.success) {
             // return;
@@ -262,7 +310,6 @@ export const actions = {
                 bookSeriesId,
                 apiVolumeId,
                 wordsPerPage,
-                coverImage,
             } = result.data;
 
             // don't update if only the book itself is in the series
@@ -282,50 +329,14 @@ export const actions = {
                 });
             }
 
-            let apiData;
-            // if apiVolumeId was sent with
-            // refetch the data from google and update (or create) it locally
-            if (apiVolumeId !== undefined) {
-                apiData = await getBookApiData(apiVolumeId);
-                const extractedData = extractBookApiData(apiData);
-                // console.log(extractedData);
+            const apiData = await handleBookApiUpdate(apiVolumeId);
 
-                const categories = extractCategories(apiData);
-
-                // console.log(categories);
-
-                for (const category_str of categories) {
-                    try {
-                        const category = await prisma.bookCategory.create({
-                            data: {
-                                name: category_str,
-                            },
-                        });
-                        // console.log(category);
-                    } catch (e) {
-                        // ignore
-                    }
-                }
-
-                // categories.map((n) => ({ name: n }));
-                await prisma.bookApiData.upsert({
-                    where: { id: apiData.id },
-                    create: {
-                        ...extractedData,
-                        categories: {
-                            connect: categories.map((n) => ({
-                                name: n,
-                            })),
-                        },
-                    },
-                    update: {
-                        ...extractedData,
-                        categories: {
-                            set: categories.map((n) => ({ name: n })),
-                        },
-                    },
-                });
-            }
+            const coverInfo = {
+                googleBooksCoverVolumeId: result.data.googleBooksCoverVolumeId,
+                uploadedCoverImage: result.data.uploadedCoverImage,
+            };
+            console.log("Cover info:", coverInfo);
+            const newCoverImage = await handleCoverUpdate(id, coverInfo);
 
             const book = await prisma.book.update({
                 where: { id, accountId },
@@ -336,13 +347,14 @@ export const actions = {
                     bookApiData:
                         apiData?.id !== undefined
                             ? { connect: { id: apiData.id } }
-                            : {},
+                            : {}, // if not provided, changes nothing
                     wordsPerPage,
-                    coverImage: coverImage,
+                    coverImage:
+                        newCoverImage?.id !== undefined
+                            ? { connect: { id: newCoverImage.id } }
+                            : {}, // if not provided, changes nothing
                 },
             });
-
-            // console.log("nnew book:", book);
 
             redirect(
                 302,
@@ -363,3 +375,93 @@ export const actions = {
         });
     },
 } satisfies Actions;
+
+async function handleCoverUpdate(
+    bookId: string,
+    coverInfo: z.infer<typeof coverSourceSchema>,
+) {
+    if (!coverInfo.googleBooksCoverVolumeId && !coverInfo.uploadedCoverImage) {
+        return;
+    }
+
+    const book = await prisma.book.findUnique({
+        where: { id: bookId },
+        include: {
+            coverImage: {
+                include: {
+                    variants: true,
+                },
+            },
+        },
+    });
+
+    if (book?.coverImage) {
+        await deleteCachedImage(book.coverImage);
+    }
+
+    let cachedImages;
+    if (coverInfo.uploadedCoverImage) {
+        cachedImages = await cacheUploadedImage(
+            coverInfo.uploadedCoverImage.image,
+        );
+    } else if (coverInfo.googleBooksCoverVolumeId) {
+        cachedImages = await cacheGoogleBooksImage(
+            coverInfo.googleBooksCoverVolumeId,
+        );
+    }
+
+    if (cachedImages) {
+        const newImage = await saveCachesToDB(cachedImages);
+        return newImage;
+    }
+
+    if (coverInfo.googleBooksCoverVolumeId && coverInfo.uploadedCoverImage) {
+        // impossible
+        throw new Error(
+            "Either only provided cover image or googleBooksCoverVolumeId must be provided. This should have been validated by the schema.",
+        );
+    }
+}
+
+async function handleBookApiUpdate(apiVolumeId: string | undefined) {
+    let apiData;
+    // if apiVolumeId was sent with
+    // refetch the data from google and update (or create) it locally
+    if (apiVolumeId !== undefined) {
+        console.log("Fetching book API data for volumeId:", apiVolumeId);
+        apiData = await getBookApiData(apiVolumeId);
+        const extractedData = extractBookApiData(apiData);
+        const categories = extractCategories(apiData);
+
+        for (const category_str of categories) {
+            try {
+                const _category = await prisma.bookCategory.create({
+                    data: {
+                        name: category_str,
+                    },
+                });
+            } catch (_e) {
+                // ignore if the category already exists
+            }
+        }
+
+        await prisma.bookApiData.upsert({
+            where: { id: apiData.id },
+            create: {
+                ...extractedData,
+                categories: {
+                    connect: categories.map((n) => ({
+                        name: n,
+                    })),
+                },
+            },
+            update: {
+                ...extractedData,
+                categories: {
+                    set: categories.map((n) => ({ name: n })),
+                },
+            },
+        });
+    }
+    return apiData;
+}

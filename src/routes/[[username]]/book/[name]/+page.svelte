@@ -17,6 +17,7 @@
     import BookCategories from "$src/lib/components/composed/Book/BookCategories.svelte";
     import BookForm from "$src/lib/components/composed/Book/BookForm.svelte";
     import BookImageAndInfo from "$src/lib/components/composed/Book/BookImageAndInfo.svelte";
+    import { resolve } from "$app/paths";
     interface Props {
         data: PageData;
         form: ActionData;
@@ -75,6 +76,40 @@
     <title>{book.name}</title>
 </svelte:head>
 
+{#snippet FormSaveButtons()}
+    <div class="sm:flex sm:flex-col sm:gap-1">
+        <span
+            class={clsx(
+                `btn-group mb-2 dark:bg-slate-600 dark:border-slate-500 grid`,
+                edit ? "grid-cols-3" : "grid-cols-2",
+            )}>
+            <button
+                class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500"
+                type="button"
+                onclick={onEdit}>
+                {edit ? "Cancel" : "Edit"}
+            </button>
+            {#if edit}
+                <button
+                    form="form-book"
+                    class="btn-group-btn text-blue-700 dark:text-blue-500
+                        dark:bg-slate-600 dark:border-slate-500
+                        dark:hover:bg-slate-500">
+                    Save
+                </button>
+            {/if}
+            <button
+                onclick={() => (open_delete = !open_delete)}
+                type="button"
+                class="btn-group-btn text-red-700 dark:text-red-500
+                   dark:bg-slate-600 dark:border-slate-500
+                   dark:hover:bg-slate-500">
+                Delete
+            </button>
+        </span>
+    </div>
+{/snippet}
+
 <div class="mt-5">
     <div>
         <div
@@ -86,41 +121,16 @@
                     class={clsx(
                         "lg:item-border-no-hover p-1 lg:p-4 flex flex-col",
                     )}>
-                    <div class="flex flex-col-reverse lg:flex-row">
+                    <div class="flex flex-wrap-reverse gap-2">
                         <h1
-                            class="text-4xl overflow-hidden text-ellipsis font-bold">
+                            class="text-4xl overflow-hidden text-ellipsis font-bold w-fit">
                             {book.name}
                         </h1>
 
                         {#if data.isAuthorizedToModify}
-                            <div class="flex justify-center lg:ml-auto">
-                                <div class="sm:flex sm:flex-col sm:gap-1">
-                                    <span
-                                        class="btn-group mb-2 dark:bg-slate-600 dark:border-slate-500">
-                                        <button
-                                            class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500"
-                                            type="button"
-                                            onclick={onEdit}>
-                                            {edit ? "Cancel" : "Edit"}
-                                        </button>
-                                        {#if edit}
-                                            <button
-                                                form="form-book"
-                                                class="btn-group-btn text-blue-700
-              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-blue-500">
-                                                Save
-                                            </button>
-                                        {/if}
-                                        <button
-                                            onclick={() =>
-                                                (open_delete = !open_delete)}
-                                            type="button"
-                                            class="text-red-700 btn-group-btn
-              dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 dark:text-red-500">
-                                            Delete
-                                        </button>
-                                    </span>
-                                </div>
+                            <div
+                                class="flex justify-center sm:ml-auto w-full sm:w-fit my-3 sm:my-0">
+                                {@render FormSaveButtons()}
                             </div>
                         {/if}
                     </div>
@@ -236,7 +246,7 @@
     deletionBook={book}
     onSuccess={async () => {
         await invalidateAll();
-        goto("/");
+        goto(resolve("/"));
     }} />
 
 <style>

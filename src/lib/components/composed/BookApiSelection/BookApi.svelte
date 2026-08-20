@@ -2,9 +2,12 @@
     import BookApiConfirm from "./BookApiConfirm.svelte";
     import BookApiSelection from "./BookApiSelection.svelte";
 
-    import type { queriedBookFull, ReadingActivityList } from "$appTypes";
-
-
+    import type {
+        queriedBook,
+        queriedBookFull,
+        ReadingActivityList,
+    } from "$appTypes";
+    import type { Snippet } from "svelte";
 
     interface Props {
         volumeId?: string | undefined;
@@ -15,6 +18,9 @@
         readingActivities?: ReadingActivityList[];
         onBackClicked?: () => void;
         onSelectClicked?: () => void;
+        APIResult?: Snippet<[queriedBookFull]>;
+        ResultEntry?: Snippet<[queriedBook, string | undefined, (id: string) => void]>;
+        searchEntriesWrapperClass?: string | undefined;
     }
 
     let {
@@ -25,9 +31,11 @@
         label,
         readingActivities = [],
         onBackClicked,
-        onSelectClicked
+        onSelectClicked,
+        APIResult,
+        ResultEntry,
+        searchEntriesWrapperClass,
     }: Props = $props();
-
 
     async function getBook(id: string) {
         return (await fetch(`/book/api/get/${id}`)).json();
@@ -44,7 +52,8 @@
         {volumeId}
         bind:apiBookSelected
         {getBookPromise}
-        {onBackClicked} />
+        {onBackClicked}
+        {APIResult} />
 </div>
 
 <div hidden={apiBookSelected}>
@@ -55,5 +64,7 @@
         bind:selectedBookId={volumeId}
         bind:apiBookSelected
         bind:query
-        {onSelectClicked} />
+        {onSelectClicked}
+        {ResultEntry}
+        {searchEntriesWrapperClass} />
 </div>

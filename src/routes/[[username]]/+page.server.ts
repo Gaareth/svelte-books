@@ -1,12 +1,12 @@
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
+import { getReadingActivity } from "$lib/server/db/utils";
+import { ReadingActivityType } from "$prismaClient";
 import {
     authorize,
     handlePublicOrAuthenticatedAccount,
     isReadingActivityPublic,
-} from "$lib/auth/auth";
-import { getReadingActivity } from "$lib/server/db/utils";
-import { ReadingActivityType } from "$prismaClient";
+} from "$src/lib/auth/authorization";
 
 export async function load({ locals, params }: ServerLoadEvent) {
     const { sessionAccount, requestedAccount } = await authorize(

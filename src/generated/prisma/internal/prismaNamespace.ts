@@ -410,7 +410,9 @@ export const ModelName = {
   ReadingActivity: 'ReadingActivity',
   Book: 'Book',
   Ownership: 'Ownership',
-  Rating: 'Rating'
+  Rating: 'Rating',
+  Image: 'Image',
+  ImageVariant: 'ImageVariant'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -426,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "registrationCode" | "serverSettings" | "account" | "bookList" | "bookSeries" | "bookApiData" | "bookCategory" | "optionalDatetime" | "graph" | "readingActivityStatus" | "readingActivity" | "book" | "ownership" | "rating"
+    modelProps: "registrationCode" | "serverSettings" | "account" | "bookList" | "bookSeries" | "bookApiData" | "bookCategory" | "optionalDatetime" | "graph" | "readingActivityStatus" | "readingActivity" | "book" | "ownership" | "rating" | "image" | "imageVariant"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1466,6 +1468,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Image: {
+      payload: Prisma.$ImagePayload<ExtArgs>
+      fields: Prisma.ImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        findMany: {
+          args: Prisma.ImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        create: {
+          args: Prisma.ImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        createMany: {
+          args: Prisma.ImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        update: {
+          args: Prisma.ImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImage>
+        }
+        groupBy: {
+          args: Prisma.ImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImageVariant: {
+      payload: Prisma.$ImageVariantPayload<ExtArgs>
+      fields: Prisma.ImageVariantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImageVariantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImageVariantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        findFirst: {
+          args: Prisma.ImageVariantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImageVariantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        findMany: {
+          args: Prisma.ImageVariantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>[]
+        }
+        create: {
+          args: Prisma.ImageVariantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        createMany: {
+          args: Prisma.ImageVariantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImageVariantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>[]
+        }
+        delete: {
+          args: Prisma.ImageVariantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        update: {
+          args: Prisma.ImageVariantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImageVariantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImageVariantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImageVariantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImageVariantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageVariantPayload>
+        }
+        aggregate: {
+          args: Prisma.ImageVariantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImageVariant>
+        }
+        groupBy: {
+          args: Prisma.ImageVariantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageVariantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImageVariantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageVariantCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1629,7 +1779,7 @@ export const BookScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   author: 'author',
-  coverImage: 'coverImage',
+  coverImageId: 'coverImageId',
   bookListId: 'bookListId',
   bookSeriesId: 'bookSeriesId',
   bookApiDataId: 'bookApiDataId',
@@ -1662,6 +1812,30 @@ export const RatingScalarFieldEnum = {
 } as const
 
 export type RatingScalarFieldEnum = (typeof RatingScalarFieldEnum)[keyof typeof RatingScalarFieldEnum]
+
+
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  path: 'path',
+  sourceUrl: 'sourceUrl',
+  placeholderHash: 'placeholderHash',
+  width: 'width',
+  height: 'height'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
+
+
+export const ImageVariantScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  path: 'path',
+  primaryImageId: 'primaryImageId'
+} as const
+
+export type ImageVariantScalarFieldEnum = (typeof ImageVariantScalarFieldEnum)[keyof typeof ImageVariantScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1906,6 +2080,8 @@ export type GlobalOmitConfig = {
   book?: Prisma.BookOmit
   ownership?: Prisma.OwnershipOmit
   rating?: Prisma.RatingOmit
+  image?: Prisma.ImageOmit
+  imageVariant?: Prisma.ImageVariantOmit
 }
 
 /* Types for Logging */

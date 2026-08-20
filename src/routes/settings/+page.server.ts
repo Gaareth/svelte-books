@@ -9,9 +9,10 @@ import {
     type settingsApiReloadResult,
 } from "./apidata";
 
-import { getAccountIdfromSession, userAuth } from "$lib/auth/auth";
 import { parseFormArray } from "$lib/schemas/utils";
 import { prisma } from "$lib/server/prisma";
+import { getAccountIdfromSession } from "$src/lib/auth/account";
+import { userAuth } from "$src/lib/auth/authorization";
 import {
     READING_ACTIVITY_TYPES,
     VISIBILITY_TYPES,

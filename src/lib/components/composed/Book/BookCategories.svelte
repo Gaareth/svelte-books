@@ -11,9 +11,9 @@
 
 {#if (categories ?? []).length > 0}
     <div class="flex flex-wrap gap-1">
-        {#each categories ?? [] as category}
+        {#each categories ?? [] as category, i (i)}
             <Pill className="dark:bg-slate-600 icon-wrapper !gap-0">
-                {#each category.name.split("/") as part}
+                {#each category.name.split("/") as part, i (i)}
                     {part}
                     {#if part != category.name.split("/").slice(-1)[0]}
                         <span class="w-5 me-0.5">

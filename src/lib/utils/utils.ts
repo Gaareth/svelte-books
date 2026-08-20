@@ -3,7 +3,6 @@ import { sineInOut } from "svelte/easing";
 import type { ImageLinksType, ReadingActivityWithDates } from "$appTypes";
 import type { OptionalDate } from "$components/input/DateSelector.svelte";
 import type { THEME } from "$lib/stores/stores";
-import type { BookApiData } from "$prismaClient";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -309,7 +308,7 @@ export function dateDiffFormatted(
 }
 
 export function getNextImageByResolution(
-    bookApiData: BookApiData | null,
+    imageLinksJSON: string,
     resolution: keyof ImageLinksType,
     reverseOrder: boolean = false,
     overflowToFill: boolean = false,
@@ -340,18 +339,14 @@ export function getNextImageByResolution(
         order.push(...remainingResolutions);
     }
 
-    return getImageByResolutionOrder(bookApiData, order);
+    return getImageByResolutionOrder(imageLinksJSON, order);
 }
 
 export function getImageByResolutionOrder(
-    bookApiData: BookApiData | null,
+    imageLinksJSON: string,
     order: (keyof ImageLinksType)[],
 ) {
-    if (!bookApiData) return null;
-
-    const imageLinks = JSON.parse(
-        bookApiData?.imageLinksJSON || "{}",
-    ) as ImageLinksType;
+    const imageLinks = JSON.parse(imageLinksJSON || "{}") as ImageLinksType;
 
     for (const res of order) {
         if (imageLinks?.[res]) {
@@ -362,12 +357,12 @@ export function getImageByResolutionOrder(
     return null;
 }
 
-export function getMaxResolutionImage(apiData: BookApiData | null) {
-    return getNextImageByResolution(apiData, "extraLarge");
+export function getMaxResolutionImage(imageLinksJSON: string) {
+    return getNextImageByResolution(imageLinksJSON, "extraLarge");
 }
 
-export function getMinResolutionImage(apiData: BookApiData | null) {
-    return getNextImageByResolution(apiData, "smallThumbnail", true);
+export function getMinResolutionImage(imageLinksJSON: string) {
+    return getNextImageByResolution(imageLinksJSON, "smallThumbnail", true);
 }
 
 export function deepClone<T>(obj: T): T {

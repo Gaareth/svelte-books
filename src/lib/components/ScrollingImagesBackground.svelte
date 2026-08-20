@@ -1,6 +1,8 @@
 <script lang="ts">
     import clsx from "clsx";
+    import type { Snippet } from "svelte";
 
+    //TODO: add fill mode (row or col major), and columns longer than width so there is more variety.
     interface Props {
         images: string[];
         imageWidth?: number;
@@ -16,6 +18,7 @@
 
         wrapperClassName?: string;
         overlayBackgroundClassName?: string;
+        ImageSnippet?: Snippet<[string, string, number, number]>;
     }
 
     let {
@@ -31,6 +34,7 @@
 
         wrapperClassName = "",
         overlayBackgroundClassName = "",
+        ImageSnippet,
     }: Props = $props();
 
     let gridWrapper: HTMLDivElement | undefined = $state(undefined);
@@ -90,7 +94,6 @@
         return Math.ceil(numRows);
     });
 
-
     // this is to make sure that wenn rows changes, the previous rows stay the same
     // results in smoother transitions
     let imageRows = $state<string[][]>([]);
@@ -117,13 +120,9 @@
     const translationOffsetY = $derived(
         Math.sin((rotationDegree * Math.PI) / 180) * gridWidth,
     );
-
-    $effect(() => {
-        console.log(rows);
-    });
 </script>
 
-{#snippet Image(src: string)}
+{#snippet DefaultImage(src: string)}
     <img
         {src}
         class={imageClass}
@@ -137,7 +136,16 @@
 {#snippet Row(images: string[], className?: string)}
     <div class={clsx("flex flex-row", className)} style="gap: {gapPx}px;">
         {#each images as src, i (i)}
-            {@render Image(src)}
+            {#if ImageSnippet != null}
+                {@render ImageSnippet(
+                    src,
+                    imageClass,
+                    IMAGE_WIDTH,
+                    IMAGE_HEIGHT,
+                )}
+            {:else}
+                {@render DefaultImage(src)}
+            {/if}
         {/each}
     </div>
 {/snippet}
@@ -181,7 +189,6 @@
         {/each}
     </div>
 </div>
-
 
 <style>
     .scroll-left {

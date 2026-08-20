@@ -7,9 +7,8 @@ import {
     PrismaClient,
     ReadingActivityType,
 } from "../src/generated/prisma/client";
-import { seedInitial } from "./seed-initial";
 
-import { hashPassword } from "$lib/auth/auth";
+import { hashPassword } from "$lib/auth/password";
 import {
     createAllReadingActivityStatus,
     createLists,
@@ -215,11 +214,17 @@ async function createBooks(account: Account) {
 }
 
 async function main() {
-    const { account } = await seedInitial();
+    // seed initial happens on startup already
+    // const { account } = await seedInitial();
     const series = await createSeries();
     // return;
 
-    await createDummyAccounts();
+    // await createDummyAccounts();
+    const account = await prisma.account.findFirst();
+    if (!account) {
+        throw new Error("No account found to create books for");
+    }
+
     await createBooks(account);
 }
 

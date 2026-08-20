@@ -87,3 +87,13 @@ export type Ownership = Prisma.OwnershipModel
  * 
  */
 export type Rating = Prisma.RatingModel
+/**
+ * Model Image
+ * 
+ */
+export type Image = Prisma.ImageModel
+/**
+ * Model ImageVariant
+ * 
+ */
+export type ImageVariant = Prisma.ImageVariantModel

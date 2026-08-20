@@ -1,11 +1,11 @@
 <script lang="ts">
     import BookListItem from "./BookListItem.svelte";
 
-    import type { BookWithApiData } from "$src/app";
+    import type { BookWithImage } from "$src/app";
     import type { Book } from "$prismaBrowser";
 
     interface Props {
-        books: BookWithApiData[];
+        books: BookWithImage[];
         on_delete?: ((b: Book) => unknown) | undefined;
         allow_deletion?: boolean;
     }

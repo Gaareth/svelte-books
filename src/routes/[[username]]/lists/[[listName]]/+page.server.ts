@@ -1,7 +1,7 @@
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 
-import { authorize, isReadingActivityPublic } from "$lib/auth/auth";
+import { authorize, isReadingActivityPublic } from "$lib/auth/authorization";
 import {
     READING_STATUS_VALUES,
     type ReadingActivityStatusType,

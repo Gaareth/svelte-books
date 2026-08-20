@@ -2,7 +2,7 @@ import { produce } from "sveltekit-sse";
 
 import { SSE_DATA } from "./sse";
 
-import { getAccountIdfromSession } from "$lib/auth/auth";
+import { getAccountIdfromSession } from "$lib/auth/account";
 import { delay } from "$lib/utils/utils.js";
 
 const EVENT_NAME = "update_all";

@@ -64,7 +64,9 @@ export const ModelName = {
   ReadingActivity: 'ReadingActivity',
   Book: 'Book',
   Ownership: 'Ownership',
-  Rating: 'Rating'
+  Rating: 'Rating',
+  Image: 'Image',
+  ImageVariant: 'ImageVariant'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -207,7 +209,7 @@ export const BookScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   author: 'author',
-  coverImage: 'coverImage',
+  coverImageId: 'coverImageId',
   bookListId: 'bookListId',
   bookSeriesId: 'bookSeriesId',
   bookApiDataId: 'bookApiDataId',
@@ -240,6 +242,30 @@ export const RatingScalarFieldEnum = {
 } as const
 
 export type RatingScalarFieldEnum = (typeof RatingScalarFieldEnum)[keyof typeof RatingScalarFieldEnum]
+
+
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  path: 'path',
+  sourceUrl: 'sourceUrl',
+  placeholderHash: 'placeholderHash',
+  width: 'width',
+  height: 'height'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
+
+
+export const ImageVariantScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  path: 'path',
+  primaryImageId: 'primaryImageId'
+} as const
+
+export type ImageVariantScalarFieldEnum = (typeof ImageVariantScalarFieldEnum)[keyof typeof ImageVariantScalarFieldEnum]
 
 
 export const SortOrder = {

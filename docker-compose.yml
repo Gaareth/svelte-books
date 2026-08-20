@@ -8,5 +8,6 @@ services:
             - .env.production # see env.example for the required keys
         volumes:
             - book-store:/database
+            - ./${IMAGES_FOLDER}:/app/${IMAGES_FOLDER}
 volumes:
     book-store:

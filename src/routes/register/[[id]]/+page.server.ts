@@ -6,9 +6,9 @@ import {
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
-import { hashPassword } from "$lib/auth/auth";
 import { createAllReadingActivityStatus } from "$lib/server/db/create";
 import { prisma } from "$lib/server/prisma";
+import { hashPassword } from "$src/lib/auth/password";
 
 export async function load({ locals, params }: ServerLoadEvent) {
     if (await locals.auth()) {

@@ -7,6 +7,7 @@
     import { browser } from "$app/environment";
     import KeyboardArrowLeft from "$src/lib/icons/KeyboardArrowLeft.svelte";
     import OpenInNewRounded from "$src/lib/icons/OpenInNewRounded.svelte";
+    import type { Snippet } from "svelte";
 
     interface Props {
         volumeId: string | undefined;
@@ -14,6 +15,7 @@
         back_button?: boolean;
         getBookPromise?: Promise<queriedBookFull> | undefined;
         onBackClicked?: () => void;
+        APIResult?: Snippet<[queriedBookFull]>;
     }
 
     let {
@@ -22,6 +24,7 @@
         back_button = true,
         getBookPromise = undefined,
         onBackClicked = undefined,
+        APIResult = undefined,
     }: Props = $props();
 
     let item_ref: HTMLElement | undefined = $state(undefined);
@@ -40,6 +43,96 @@
     }
 </script>
 
+{#snippet GoogleBooksResult(book: queriedBookFull)}
+    {@const info = book.volumeInfo}
+    {@const isbn_13 = info.industryIdentifiers?.find(
+        (t) => t.type == "ISBN_13",
+    )?.identifier}
+    {@const categories = info.categories
+        ? info.categories?.join(" | ")
+        : "uncategorized"}
+    <div
+        class="item-border p-2 my-2 flex flex-wrap flex-col gap-2 relative"
+        bind:this={item_ref}>
+        <div class="flex items-center gap-4">
+            <div>
+                {#if info.imageLinks?.smallThumbnail}
+                    <img
+                        src={info.imageLinks.smallThumbnail}
+                        alt="book cover"
+                        class="w-10 max-w-[2.5rem]" />
+                {:else}
+                    <img
+                        src="/cover.png"
+                        alt="placeholder book cover"
+                        class="w-10" />
+                {/if}
+            </div>
+
+            <div class="flex flex-col">
+                <p class="text-base flex items-center">
+                    {info.title}
+                    {#if info.subtitle}
+                        ({info.subtitle})
+                    {/if}
+                    <a
+                        class="pl-1"
+                        target="_blank"
+                        href="http://books.google.de/books?id={volumeId}"
+                        title="Open on books.google.de">
+                        <span class="w-4 h-4 block">
+                            <OpenInNewRounded />
+                        </span>
+                    </a>
+                </p>
+                <p class="text-base">
+                    {info.authors?.join(", ") ?? "unknown author"}
+                </p>
+            </div>
+        </div>
+
+        <p
+            class="text-sm text-secondary line-clamp-2 hover:line-clamp-none -mt-1 -mb-1">
+            {info.description ?? "No description available"}
+        </p>
+
+        <!-- <p>{categories?.length}</p> -->
+        <!-- <p>{flexWrapHappened}</p>
+      {#if item_ref}
+        <p>{item_ref.clientHeight}</p>
+      {/if} -->
+        <div
+            class={clsx(
+                "api-stats flex gap-2 items-center flex-grow justify-between",
+                !flexWrapHappened ? "md:justify-end" : "",
+            )}>
+            <div class="api-stats-cols">
+                <span class="self-auto md:self-end">
+                    {info.pageCount} pages
+                </span>
+                <span>{categories}</span>
+            </div>
+
+            <div class="api-stats-cols">
+                <span class="leading-4">{info.publisher}</span>
+                <span class="leading-4">{info.publishedDate}</span>
+            </div>
+
+            <img
+                class="w-5 absolute top-5 right-0 min-[500px]:static"
+                src={`/language-icons/icons/${info.language}.svg`}
+                alt={`${info.language} language icon`} />
+            {#if isbn_13}
+                <span
+                    class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
+                    title="ISBN 13">
+                    {isbn_13}
+                </span>
+            {/if}
+        </div>
+    </div>
+{/snippet}
+
 {#if back_button}
     <button
         onclick={() => {
@@ -56,93 +149,11 @@
     {#await getBookPromise}
         <BookApiSkeleton />
     {:then book}
-        {@const info = book.volumeInfo}
-        {@const isbn_13 = info.industryIdentifiers?.find(
-            (t) => t.type == "ISBN_13",
-        )?.identifier}
-        {@const categories = info.categories
-            ? info.categories?.join(" | ")
-            : "uncategorized"}
-        <div
-            class="item-border p-2 my-2 flex flex-wrap flex-col gap-2 relative"
-            bind:this={item_ref}>
-            <div class="flex items-center gap-4">
-                <div>
-                    {#if info.imageLinks?.smallThumbnail}
-                        <img
-                            src={info.imageLinks.smallThumbnail}
-                            alt="book cover"
-                            class="w-10 max-w-[2.5rem]" />
-                    {:else}
-                        <img
-                            src="/cover.png"
-                            alt="placeholder book cover"
-                            class="w-10" />
-                    {/if}
-                </div>
-
-                <div class="flex flex-col">
-                    <p class="text-base flex items-center">
-                        {info.title}
-                        {#if info.subtitle}
-                            ({info.subtitle})
-                        {/if}
-                        <a
-                            class="pl-1"
-                            target="_blank"
-                            href="http://books.google.de/books?id={volumeId}"
-                            title="Open on books.google.de">
-                            <span class="w-4 h-4 block">
-                                <OpenInNewRounded />
-                            </span>
-                        </a>
-                    </p>
-                    <p class="text-base">
-                        {info.authors?.join(", ") ?? "unknown author"}
-                    </p>
-                </div>
-            </div>
-
-            <p
-                class="text-sm text-secondary line-clamp-2 hover:line-clamp-none -mt-1 -mb-1">
-                {info.description ?? "No description available"}
-            </p>
-
-            <!-- <p>{categories?.length}</p> -->
-            <!-- <p>{flexWrapHappened}</p>
-      {#if item_ref}
-        <p>{item_ref.clientHeight}</p>
-      {/if} -->
-            <div
-                class={clsx(
-                    "api-stats flex gap-2 items-center flex-grow justify-between",
-                    !flexWrapHappened ? "md:justify-end" : "",
-                )}>
-                <div class="api-stats-cols">
-                    <span class="self-auto md:self-end">
-                        {info.pageCount} pages
-                    </span>
-                    <span>{categories}</span>
-                </div>
-
-                <div class="api-stats-cols">
-                    <span class="leading-4">{info.publisher}</span>
-                    <span class="leading-4">{info.publishedDate}</span>
-                </div>
-
-                <img
-                    class="w-5 absolute top-5 right-0 min-[500px]:static"
-                    src={`/language-icons/icons/${info.language}.svg`}
-                    alt={`${info.language} language icon`} />
-                {#if isbn_13}
-                    <span
-                        class="flex gap-1 items-center absolute top-0 right-0 !text-sm pr-1"
-                        title="ISBN 13">
-                        {isbn_13}
-                    </span>
-                {/if}
-            </div>
-        </div>
+        {#if APIResult !== undefined}
+            {@render APIResult(book)}
+        {:else}
+            {@render GoogleBooksResult(book)}
+        {/if}
     {:catch error}
         <span>System error: {error.message}.</span>
     {/await}

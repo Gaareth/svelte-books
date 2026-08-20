@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/auth";
+import { authorize } from "$lib/auth/authorization";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { prisma } from "$lib/server/prisma";
 import { Prisma } from "$prismaClient";

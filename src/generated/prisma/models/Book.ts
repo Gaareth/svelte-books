@@ -27,12 +27,14 @@ export type AggregateBook = {
 }
 
 export type BookAvgAggregateOutputType = {
+  coverImageId: number | null
   bookListId: number | null
   bookSeriesId: number | null
   wordsPerPage: number | null
 }
 
 export type BookSumAggregateOutputType = {
+  coverImageId: number | null
   bookListId: number | null
   bookSeriesId: number | null
   wordsPerPage: number | null
@@ -44,7 +46,7 @@ export type BookMinAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   author: string | null
-  coverImage: string | null
+  coverImageId: number | null
   bookListId: number | null
   bookSeriesId: number | null
   bookApiDataId: string | null
@@ -60,7 +62,7 @@ export type BookMaxAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   author: string | null
-  coverImage: string | null
+  coverImageId: number | null
   bookListId: number | null
   bookSeriesId: number | null
   bookApiDataId: string | null
@@ -76,7 +78,7 @@ export type BookCountAggregateOutputType = {
   updatedAt: number
   name: number
   author: number
-  coverImage: number
+  coverImageId: number
   bookListId: number
   bookSeriesId: number
   bookApiDataId: number
@@ -89,12 +91,14 @@ export type BookCountAggregateOutputType = {
 
 
 export type BookAvgAggregateInputType = {
+  coverImageId?: true
   bookListId?: true
   bookSeriesId?: true
   wordsPerPage?: true
 }
 
 export type BookSumAggregateInputType = {
+  coverImageId?: true
   bookListId?: true
   bookSeriesId?: true
   wordsPerPage?: true
@@ -106,7 +110,7 @@ export type BookMinAggregateInputType = {
   updatedAt?: true
   name?: true
   author?: true
-  coverImage?: true
+  coverImageId?: true
   bookListId?: true
   bookSeriesId?: true
   bookApiDataId?: true
@@ -122,7 +126,7 @@ export type BookMaxAggregateInputType = {
   updatedAt?: true
   name?: true
   author?: true
-  coverImage?: true
+  coverImageId?: true
   bookListId?: true
   bookSeriesId?: true
   bookApiDataId?: true
@@ -138,7 +142,7 @@ export type BookCountAggregateInputType = {
   updatedAt?: true
   name?: true
   author?: true
-  coverImage?: true
+  coverImageId?: true
   bookListId?: true
   bookSeriesId?: true
   bookApiDataId?: true
@@ -241,7 +245,7 @@ export type BookGroupByOutputType = {
   updatedAt: Date
   name: string
   author: string
-  coverImage: string | null
+  coverImageId: number | null
   bookListId: number | null
   bookSeriesId: number | null
   bookApiDataId: string | null
@@ -280,7 +284,7 @@ export type BookWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Book"> | Date | string
   name?: Prisma.StringFilter<"Book"> | string
   author?: Prisma.StringFilter<"Book"> | string
-  coverImage?: Prisma.StringNullableFilter<"Book"> | string | null
+  coverImageId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookListId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookSeriesId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null
@@ -288,6 +292,7 @@ export type BookWhereInput = {
   accountId?: Prisma.StringFilter<"Book"> | string
   recommendedBy?: Prisma.StringNullableFilter<"Book"> | string | null
   description?: Prisma.StringNullableFilter<"Book"> | string | null
+  coverImage?: Prisma.XOR<Prisma.ImageNullableScalarRelationFilter, Prisma.ImageWhereInput> | null
   bookList?: Prisma.XOR<Prisma.BookListNullableScalarRelationFilter, Prisma.BookListWhereInput> | null
   bookSeries?: Prisma.XOR<Prisma.BookSeriesNullableScalarRelationFilter, Prisma.BookSeriesWhereInput> | null
   bookApiData?: Prisma.XOR<Prisma.BookApiDataNullableScalarRelationFilter, Prisma.BookApiDataWhereInput> | null
@@ -302,7 +307,7 @@ export type BookOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookListId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookApiDataId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -310,6 +315,7 @@ export type BookOrderByWithRelationInput = {
   accountId?: Prisma.SortOrder
   recommendedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImage?: Prisma.ImageOrderByWithRelationInput
   bookList?: Prisma.BookListOrderByWithRelationInput
   bookSeries?: Prisma.BookSeriesOrderByWithRelationInput
   bookApiData?: Prisma.BookApiDataOrderByWithRelationInput
@@ -327,7 +333,7 @@ export type BookWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Book"> | Date | string
   name?: Prisma.StringFilter<"Book"> | string
   author?: Prisma.StringFilter<"Book"> | string
-  coverImage?: Prisma.StringNullableFilter<"Book"> | string | null
+  coverImageId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookListId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookSeriesId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null
@@ -335,6 +341,7 @@ export type BookWhereUniqueInput = Prisma.AtLeast<{
   accountId?: Prisma.StringFilter<"Book"> | string
   recommendedBy?: Prisma.StringNullableFilter<"Book"> | string | null
   description?: Prisma.StringNullableFilter<"Book"> | string | null
+  coverImage?: Prisma.XOR<Prisma.ImageNullableScalarRelationFilter, Prisma.ImageWhereInput> | null
   bookList?: Prisma.XOR<Prisma.BookListNullableScalarRelationFilter, Prisma.BookListWhereInput> | null
   bookSeries?: Prisma.XOR<Prisma.BookSeriesNullableScalarRelationFilter, Prisma.BookSeriesWhereInput> | null
   bookApiData?: Prisma.XOR<Prisma.BookApiDataNullableScalarRelationFilter, Prisma.BookApiDataWhereInput> | null
@@ -349,7 +356,7 @@ export type BookOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookListId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookApiDataId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,7 +380,7 @@ export type BookScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Book"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"Book"> | string
   author?: Prisma.StringWithAggregatesFilter<"Book"> | string
-  coverImage?: Prisma.StringNullableWithAggregatesFilter<"Book"> | string | null
+  coverImageId?: Prisma.IntNullableWithAggregatesFilter<"Book"> | number | null
   bookListId?: Prisma.IntNullableWithAggregatesFilter<"Book"> | number | null
   bookSeriesId?: Prisma.IntNullableWithAggregatesFilter<"Book"> | number | null
   bookApiDataId?: Prisma.StringNullableWithAggregatesFilter<"Book"> | string | null
@@ -389,10 +396,10 @@ export type BookCreateInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
@@ -407,7 +414,7 @@ export type BookUncheckedCreateInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -425,10 +432,10 @@ export type BookUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
@@ -443,7 +450,7 @@ export type BookUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,7 +468,7 @@ export type BookCreateManyInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -477,7 +484,6 @@ export type BookUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -489,7 +495,7 @@ export type BookUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -520,7 +526,7 @@ export type BookCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  coverImage?: Prisma.SortOrder
+  coverImageId?: Prisma.SortOrder
   bookListId?: Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrder
   bookApiDataId?: Prisma.SortOrder
@@ -531,6 +537,7 @@ export type BookCountOrderByAggregateInput = {
 }
 
 export type BookAvgOrderByAggregateInput = {
+  coverImageId?: Prisma.SortOrder
   bookListId?: Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrder
   wordsPerPage?: Prisma.SortOrder
@@ -542,7 +549,7 @@ export type BookMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  coverImage?: Prisma.SortOrder
+  coverImageId?: Prisma.SortOrder
   bookListId?: Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrder
   bookApiDataId?: Prisma.SortOrder
@@ -558,7 +565,7 @@ export type BookMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  coverImage?: Prisma.SortOrder
+  coverImageId?: Prisma.SortOrder
   bookListId?: Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrder
   bookApiDataId?: Prisma.SortOrder
@@ -569,6 +576,7 @@ export type BookMinOrderByAggregateInput = {
 }
 
 export type BookSumOrderByAggregateInput = {
+  coverImageId?: Prisma.SortOrder
   bookListId?: Prisma.SortOrder
   bookSeriesId?: Prisma.SortOrder
   wordsPerPage?: Prisma.SortOrder
@@ -770,16 +778,58 @@ export type BookUpdateOneRequiredWithoutOwnershipNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutOwnershipInput, Prisma.BookUpdateWithoutOwnershipInput>, Prisma.BookUncheckedUpdateWithoutOwnershipInput>
 }
 
+export type BookCreateNestedManyWithoutCoverImageInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput> | Prisma.BookCreateWithoutCoverImageInput[] | Prisma.BookUncheckedCreateWithoutCoverImageInput[]
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCoverImageInput | Prisma.BookCreateOrConnectWithoutCoverImageInput[]
+  createMany?: Prisma.BookCreateManyCoverImageInputEnvelope
+  connect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+}
+
+export type BookUncheckedCreateNestedManyWithoutCoverImageInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput> | Prisma.BookCreateWithoutCoverImageInput[] | Prisma.BookUncheckedCreateWithoutCoverImageInput[]
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCoverImageInput | Prisma.BookCreateOrConnectWithoutCoverImageInput[]
+  createMany?: Prisma.BookCreateManyCoverImageInputEnvelope
+  connect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+}
+
+export type BookUpdateManyWithoutCoverImageNestedInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput> | Prisma.BookCreateWithoutCoverImageInput[] | Prisma.BookUncheckedCreateWithoutCoverImageInput[]
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCoverImageInput | Prisma.BookCreateOrConnectWithoutCoverImageInput[]
+  upsert?: Prisma.BookUpsertWithWhereUniqueWithoutCoverImageInput | Prisma.BookUpsertWithWhereUniqueWithoutCoverImageInput[]
+  createMany?: Prisma.BookCreateManyCoverImageInputEnvelope
+  set?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  disconnect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  delete?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  connect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  update?: Prisma.BookUpdateWithWhereUniqueWithoutCoverImageInput | Prisma.BookUpdateWithWhereUniqueWithoutCoverImageInput[]
+  updateMany?: Prisma.BookUpdateManyWithWhereWithoutCoverImageInput | Prisma.BookUpdateManyWithWhereWithoutCoverImageInput[]
+  deleteMany?: Prisma.BookScalarWhereInput | Prisma.BookScalarWhereInput[]
+}
+
+export type BookUncheckedUpdateManyWithoutCoverImageNestedInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput> | Prisma.BookCreateWithoutCoverImageInput[] | Prisma.BookUncheckedCreateWithoutCoverImageInput[]
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCoverImageInput | Prisma.BookCreateOrConnectWithoutCoverImageInput[]
+  upsert?: Prisma.BookUpsertWithWhereUniqueWithoutCoverImageInput | Prisma.BookUpsertWithWhereUniqueWithoutCoverImageInput[]
+  createMany?: Prisma.BookCreateManyCoverImageInputEnvelope
+  set?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  disconnect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  delete?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  connect?: Prisma.BookWhereUniqueInput | Prisma.BookWhereUniqueInput[]
+  update?: Prisma.BookUpdateWithWhereUniqueWithoutCoverImageInput | Prisma.BookUpdateWithWhereUniqueWithoutCoverImageInput[]
+  updateMany?: Prisma.BookUpdateManyWithWhereWithoutCoverImageInput | Prisma.BookUpdateManyWithWhereWithoutCoverImageInput[]
+  deleteMany?: Prisma.BookScalarWhereInput | Prisma.BookScalarWhereInput[]
+}
+
 export type BookCreateWithoutAccountInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
@@ -793,7 +843,7 @@ export type BookUncheckedCreateWithoutAccountInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -838,7 +888,7 @@ export type BookScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Book"> | Date | string
   name?: Prisma.StringFilter<"Book"> | string
   author?: Prisma.StringFilter<"Book"> | string
-  coverImage?: Prisma.StringNullableFilter<"Book"> | string | null
+  coverImageId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookListId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookSeriesId?: Prisma.IntNullableFilter<"Book"> | number | null
   bookApiDataId?: Prisma.StringNullableFilter<"Book"> | string | null
@@ -854,10 +904,10 @@ export type BookCreateWithoutBookListInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
   account: Prisma.AccountCreateNestedOneWithoutBooksInput
@@ -871,7 +921,7 @@ export type BookUncheckedCreateWithoutBookListInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
   wordsPerPage?: number | null
@@ -913,10 +963,10 @@ export type BookCreateWithoutBookSeriesInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
   account: Prisma.AccountCreateNestedOneWithoutBooksInput
@@ -930,7 +980,7 @@ export type BookUncheckedCreateWithoutBookSeriesInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookApiDataId?: string | null
   wordsPerPage?: number | null
@@ -972,10 +1022,10 @@ export type BookCreateWithoutBookApiDataInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   account: Prisma.AccountCreateNestedOneWithoutBooksInput
@@ -989,7 +1039,7 @@ export type BookUncheckedCreateWithoutBookApiDataInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   wordsPerPage?: number | null
@@ -1031,10 +1081,10 @@ export type BookCreateWithoutReadingActivityInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
@@ -1048,7 +1098,7 @@ export type BookUncheckedCreateWithoutReadingActivityInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -1081,10 +1131,10 @@ export type BookUpdateWithoutReadingActivityInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
@@ -1098,7 +1148,7 @@ export type BookUncheckedUpdateWithoutReadingActivityInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1115,10 +1165,10 @@ export type BookCreateWithoutOwnershipInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
   wordsPerPage?: number | null
   recommendedBy?: string | null
   description?: string | null
+  coverImage?: Prisma.ImageCreateNestedOneWithoutBooksInput
   bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
   bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
   bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
@@ -1132,7 +1182,7 @@ export type BookUncheckedCreateWithoutOwnershipInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -1165,10 +1215,10 @@ export type BookUpdateWithoutOwnershipInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
@@ -1182,7 +1232,7 @@ export type BookUncheckedUpdateWithoutOwnershipInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1193,13 +1243,72 @@ export type BookUncheckedUpdateWithoutOwnershipInput = {
   readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput
 }
 
+export type BookCreateWithoutCoverImageInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  author: string
+  wordsPerPage?: number | null
+  recommendedBy?: string | null
+  description?: string | null
+  bookList?: Prisma.BookListCreateNestedOneWithoutBooksInput
+  bookSeries?: Prisma.BookSeriesCreateNestedOneWithoutBooksInput
+  bookApiData?: Prisma.BookApiDataCreateNestedOneWithoutBookInput
+  account: Prisma.AccountCreateNestedOneWithoutBooksInput
+  readingActivity?: Prisma.ReadingActivityCreateNestedManyWithoutBookInput
+  ownership?: Prisma.OwnershipCreateNestedOneWithoutBookInput
+}
+
+export type BookUncheckedCreateWithoutCoverImageInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  author: string
+  bookListId?: number | null
+  bookSeriesId?: number | null
+  bookApiDataId?: string | null
+  wordsPerPage?: number | null
+  accountId: string
+  recommendedBy?: string | null
+  description?: string | null
+  readingActivity?: Prisma.ReadingActivityUncheckedCreateNestedManyWithoutBookInput
+  ownership?: Prisma.OwnershipUncheckedCreateNestedOneWithoutBookInput
+}
+
+export type BookCreateOrConnectWithoutCoverImageInput = {
+  where: Prisma.BookWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput>
+}
+
+export type BookCreateManyCoverImageInputEnvelope = {
+  data: Prisma.BookCreateManyCoverImageInput | Prisma.BookCreateManyCoverImageInput[]
+}
+
+export type BookUpsertWithWhereUniqueWithoutCoverImageInput = {
+  where: Prisma.BookWhereUniqueInput
+  update: Prisma.XOR<Prisma.BookUpdateWithoutCoverImageInput, Prisma.BookUncheckedUpdateWithoutCoverImageInput>
+  create: Prisma.XOR<Prisma.BookCreateWithoutCoverImageInput, Prisma.BookUncheckedCreateWithoutCoverImageInput>
+}
+
+export type BookUpdateWithWhereUniqueWithoutCoverImageInput = {
+  where: Prisma.BookWhereUniqueInput
+  data: Prisma.XOR<Prisma.BookUpdateWithoutCoverImageInput, Prisma.BookUncheckedUpdateWithoutCoverImageInput>
+}
+
+export type BookUpdateManyWithWhereWithoutCoverImageInput = {
+  where: Prisma.BookScalarWhereInput
+  data: Prisma.XOR<Prisma.BookUpdateManyMutationInput, Prisma.BookUncheckedUpdateManyWithoutCoverImageInput>
+}
+
 export type BookCreateManyAccountInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
@@ -1214,10 +1323,10 @@ export type BookUpdateWithoutAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
@@ -1231,7 +1340,7 @@ export type BookUncheckedUpdateWithoutAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1248,7 +1357,7 @@ export type BookUncheckedUpdateManyWithoutAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1263,7 +1372,7 @@ export type BookCreateManyBookListInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookSeriesId?: number | null
   bookApiDataId?: string | null
   wordsPerPage?: number | null
@@ -1278,10 +1387,10 @@ export type BookUpdateWithoutBookListInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput
@@ -1295,7 +1404,7 @@ export type BookUncheckedUpdateWithoutBookListInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1312,7 +1421,7 @@ export type BookUncheckedUpdateManyWithoutBookListInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1327,7 +1436,7 @@ export type BookCreateManyBookSeriesInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookApiDataId?: string | null
   wordsPerPage?: number | null
@@ -1342,10 +1451,10 @@ export type BookUpdateWithoutBookSeriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput
@@ -1359,7 +1468,7 @@ export type BookUncheckedUpdateWithoutBookSeriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1376,7 +1485,7 @@ export type BookUncheckedUpdateManyWithoutBookSeriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1391,7 +1500,7 @@ export type BookCreateManyBookApiDataInput = {
   updatedAt?: Date | string
   name: string
   author: string
-  coverImage?: string | null
+  coverImageId?: number | null
   bookListId?: number | null
   bookSeriesId?: number | null
   wordsPerPage?: number | null
@@ -1406,10 +1515,10 @@ export type BookUpdateWithoutBookApiDataInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.ImageUpdateOneWithoutBooksNestedInput
   bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
   bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
   account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput
@@ -1423,7 +1532,7 @@ export type BookUncheckedUpdateWithoutBookApiDataInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1440,9 +1549,73 @@ export type BookUncheckedUpdateManyWithoutBookApiDataInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.StringFieldUpdateOperationsInput | string
-  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type BookCreateManyCoverImageInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  author: string
+  bookListId?: number | null
+  bookSeriesId?: number | null
+  bookApiDataId?: string | null
+  wordsPerPage?: number | null
+  accountId: string
+  recommendedBy?: string | null
+  description?: string | null
+}
+
+export type BookUpdateWithoutCoverImageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.StringFieldUpdateOperationsInput | string
+  wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookList?: Prisma.BookListUpdateOneWithoutBooksNestedInput
+  bookSeries?: Prisma.BookSeriesUpdateOneWithoutBooksNestedInput
+  bookApiData?: Prisma.BookApiDataUpdateOneWithoutBookNestedInput
+  account?: Prisma.AccountUpdateOneRequiredWithoutBooksNestedInput
+  readingActivity?: Prisma.ReadingActivityUpdateManyWithoutBookNestedInput
+  ownership?: Prisma.OwnershipUpdateOneWithoutBookNestedInput
+}
+
+export type BookUncheckedUpdateWithoutCoverImageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.StringFieldUpdateOperationsInput | string
+  bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readingActivity?: Prisma.ReadingActivityUncheckedUpdateManyWithoutBookNestedInput
+  ownership?: Prisma.OwnershipUncheckedUpdateOneWithoutBookNestedInput
+}
+
+export type BookUncheckedUpdateManyWithoutCoverImageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.StringFieldUpdateOperationsInput | string
+  bookListId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bookSeriesId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bookApiDataId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wordsPerPage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   recommendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1486,7 +1659,7 @@ export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   name?: boolean
   author?: boolean
-  coverImage?: boolean
+  coverImageId?: boolean
   bookListId?: boolean
   bookSeriesId?: boolean
   bookApiDataId?: boolean
@@ -1494,6 +1667,7 @@ export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accountId?: boolean
   recommendedBy?: boolean
   description?: boolean
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
@@ -1509,7 +1683,7 @@ export type BookSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   name?: boolean
   author?: boolean
-  coverImage?: boolean
+  coverImageId?: boolean
   bookListId?: boolean
   bookSeriesId?: boolean
   bookApiDataId?: boolean
@@ -1517,6 +1691,7 @@ export type BookSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   accountId?: boolean
   recommendedBy?: boolean
   description?: boolean
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
@@ -1529,7 +1704,7 @@ export type BookSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   name?: boolean
   author?: boolean
-  coverImage?: boolean
+  coverImageId?: boolean
   bookListId?: boolean
   bookSeriesId?: boolean
   bookApiDataId?: boolean
@@ -1537,6 +1712,7 @@ export type BookSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   accountId?: boolean
   recommendedBy?: boolean
   description?: boolean
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
@@ -1549,7 +1725,7 @@ export type BookSelectScalar = {
   updatedAt?: boolean
   name?: boolean
   author?: boolean
-  coverImage?: boolean
+  coverImageId?: boolean
   bookListId?: boolean
   bookSeriesId?: boolean
   bookApiDataId?: boolean
@@ -1559,8 +1735,9 @@ export type BookSelectScalar = {
   description?: boolean
 }
 
-export type BookOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "author" | "coverImage" | "bookListId" | "bookSeriesId" | "bookApiDataId" | "wordsPerPage" | "accountId" | "recommendedBy" | "description", ExtArgs["result"]["book"]>
+export type BookOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "author" | "coverImageId" | "bookListId" | "bookSeriesId" | "bookApiDataId" | "wordsPerPage" | "accountId" | "recommendedBy" | "description", ExtArgs["result"]["book"]>
 export type BookInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
@@ -1570,12 +1747,14 @@ export type BookInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BookIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
   account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
 }
 export type BookIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  coverImage?: boolean | Prisma.Book$coverImageArgs<ExtArgs>
   bookList?: boolean | Prisma.Book$bookListArgs<ExtArgs>
   bookSeries?: boolean | Prisma.Book$bookSeriesArgs<ExtArgs>
   bookApiData?: boolean | Prisma.Book$bookApiDataArgs<ExtArgs>
@@ -1585,6 +1764,7 @@ export type BookIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $BookPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Book"
   objects: {
+    coverImage: Prisma.$ImagePayload<ExtArgs> | null
     bookList: Prisma.$BookListPayload<ExtArgs> | null
     bookSeries: Prisma.$BookSeriesPayload<ExtArgs> | null
     bookApiData: Prisma.$BookApiDataPayload<ExtArgs> | null
@@ -1598,7 +1778,7 @@ export type $BookPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     updatedAt: Date
     name: string
     author: string
-    coverImage: string | null
+    coverImageId: number | null
     bookListId: number | null
     bookSeriesId: number | null
     bookApiDataId: string | null
@@ -2000,6 +2180,7 @@ readonly fields: BookFieldRefs;
  */
 export interface Prisma__BookClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  coverImage<T extends Prisma.Book$coverImageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$coverImageArgs<ExtArgs>>): Prisma.Prisma__ImageClient<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bookList<T extends Prisma.Book$bookListArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$bookListArgs<ExtArgs>>): Prisma.Prisma__BookListClient<runtime.Types.Result.GetResult<Prisma.$BookListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bookSeries<T extends Prisma.Book$bookSeriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$bookSeriesArgs<ExtArgs>>): Prisma.Prisma__BookSeriesClient<runtime.Types.Result.GetResult<Prisma.$BookSeriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bookApiData<T extends Prisma.Book$bookApiDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$bookApiDataArgs<ExtArgs>>): Prisma.Prisma__BookApiDataClient<runtime.Types.Result.GetResult<Prisma.$BookApiDataPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2040,7 +2221,7 @@ export interface BookFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Book", 'DateTime'>
   readonly name: Prisma.FieldRef<"Book", 'String'>
   readonly author: Prisma.FieldRef<"Book", 'String'>
-  readonly coverImage: Prisma.FieldRef<"Book", 'String'>
+  readonly coverImageId: Prisma.FieldRef<"Book", 'Int'>
   readonly bookListId: Prisma.FieldRef<"Book", 'Int'>
   readonly bookSeriesId: Prisma.FieldRef<"Book", 'Int'>
   readonly bookApiDataId: Prisma.FieldRef<"Book", 'String'>
@@ -2444,6 +2625,25 @@ export type BookDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Books to delete.
    */
   limit?: number
+}
+
+/**
+ * Book.coverImage
+ */
+export type Book$coverImageArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Image
+   */
+  select?: Prisma.ImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Image
+   */
+  omit?: Prisma.ImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImageInclude<ExtArgs> | null
+  where?: Prisma.ImageWhereInput
 }
 
 /**

@@ -7,7 +7,7 @@ import {
     getOrCreateReadingActivityStatus,
 } from "../api.server";
 
-import { authorize } from "$lib/auth/auth";
+import { authorize } from "$lib/auth/authorization";
 import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,

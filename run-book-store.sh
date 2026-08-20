@@ -1,1 +1,2 @@
 docker run -it  -d --env-file .env.production -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books
+docker compose --env-file .env.production up

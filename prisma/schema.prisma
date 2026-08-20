@@ -31,8 +31,8 @@ model Account {
   password_hash String
   password_salt String @default("")
 
-  isAdmin        Boolean    @default(false)
-  visibility     Visibility @default(PRIVATE)
+  isAdmin    Boolean    @default(false)
+  visibility Visibility @default(PRIVATE)
 
   books Book[]
 
@@ -168,9 +168,10 @@ model Book {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name       String
-  author     String
-  coverImage String?
+  name         String
+  author       String
+  coverImage   Image? @relation(fields: [coverImageId], references: [id])
+  coverImageId Int?
 
   // monthRead Int?
   // yearRead  Int?
@@ -226,4 +227,33 @@ model Rating {
   comment           String?
   readingActivity   ReadingActivity @relation(fields: [readingActivityId], references: [id], onDelete: Cascade)
   readingActivityId Int             @unique
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  path      String  @unique
+  // the url this image is cached from
+  sourceUrl String? @unique
+
+  placeholderHash String
+  width           Int
+  height          Int
+
+  variants ImageVariant[]
+
+  books Book[]
+}
+
+model ImageVariant {
+  id      Int    @id @default(autoincrement())
+  width   Int
+  path    String
+
+  image Image @relation(fields: [primaryImageId], references: [id], onDelete: Cascade)
+  primaryImageId Int
+
+  @@unique([primaryImageId, width])
 }

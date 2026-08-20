@@ -2,7 +2,7 @@ import { delay } from "./utils";
 
 export async function fetchRetry(
     fetchFn: () => Promise<Response>,
-    retries = 3,
+    retries = 5,
     delayMs = 1000,
 ): Promise<Response> {
     let lastError: unknown;
@@ -20,7 +20,9 @@ export async function fetchRetry(
                 return response;
             }
 
-            lastError = new Error(`HTTP ${response.status}`);
+            lastError = new Error(
+                `HTTP ${response.status}. ${response.statusText}`,
+            );
         } catch (error) {
             lastError = error;
         }

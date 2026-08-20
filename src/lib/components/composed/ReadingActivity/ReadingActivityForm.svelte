@@ -125,7 +125,7 @@
                     selectClassName="dark:bg-slate-600"
                     clearButton={false}
                     error={error?.status}>
-                    {#each READING_STATUS_VALUES as status}
+                    {#each READING_STATUS_VALUES as status (status)}
                         <option value={status}>
                             {status}
                         </option>

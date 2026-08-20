@@ -1,5 +1,4 @@
 import { DEFAULT_LISTS } from "$appTypes";
-import { hashPassword } from "$lib/auth/auth";
 import { prisma } from "$lib/server/prisma";
 import {
     type BookList,
@@ -7,6 +6,7 @@ import {
     ReadingActivityType,
     Visibility,
 } from "$prismaClient";
+import { hashPassword } from "$src/lib/auth/password";
 
 export async function createAccount(admin = false) {
     const username = process.env.username;

@@ -96,7 +96,7 @@
                     <span class="w-4 h-4">
                         <!-- refresh icon -->
                     </span>
-                    reload
+                    Reload
                 </button>
 
                 <button type="button" class="btn-generic" onclick={takeOver}>

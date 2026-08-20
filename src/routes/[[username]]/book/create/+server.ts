@@ -9,7 +9,7 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/auth";
+import { authorize } from "$lib/auth/authorization";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import {
     createOwnershipSchema,

@@ -10,7 +10,7 @@
     import type {
         BookFullType,
         BookRating,
-        BookWithApiData,
+        BookWithImage,
         queriedBookFull,
     } from "$src/app";
     import type { Book, BookList, Prisma } from "$prismaBrowser";
@@ -26,6 +26,11 @@
                     books: {
                         include: {
                             bookApiData: true;
+                            coverImage: {
+                                include: {
+                                    variants: true;
+                                };
+                            };
                         };
                     };
                 };
@@ -41,7 +46,7 @@
 
     interface Props {
         book: BookFormType;
-        books: BookWithApiData[];
+        books: BookWithImage[];
         bookLists: BookList[];
         form?: ActionData;
     }
@@ -53,7 +58,7 @@
     }
 
     const authorError = getFormError("author");
-    const listNameError = getFormError("listName");
+    // const listNameError = getFormError("listName");
     const wordsPerPageError = getFormError("wordsPerPage");
 
     function handleTakeOver(e: {
@@ -68,13 +73,6 @@
         book.description = e.queriedBook.volumeInfo.description ?? null;
         book.name = e.queriedBook.volumeInfo.title;
         book.author = e.queriedBook.volumeInfo.authors[0];
-        book.coverImage =
-            e.queriedBook.volumeInfo.imageLinks?.extraLarge ||
-            e.queriedBook.volumeInfo.imageLinks?.large ||
-            e.queriedBook.volumeInfo.imageLinks?.medium ||
-            e.queriedBook.volumeInfo.imageLinks?.thumbnail ||
-            e.queriedBook.volumeInfo.imageLinks?.smallThumbnail ||
-            null;
     }
 
     const autoCompleteBookLabel = (b: BookFullType) => {
@@ -131,6 +129,7 @@
     action="?/save"
     method="POST"
     id="form-book"
+    enctype="multipart/form-data"
     use:enhance={() => {
         return async ({ result }) => {
             if (result.type != "failure") {

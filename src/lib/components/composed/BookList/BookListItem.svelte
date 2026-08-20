@@ -1,14 +1,11 @@
 <script lang="ts">
-
-    import type { BookWithApiData } from "$src/app";
+    import type { BookWithImage } from "$src/app";
     import type { Book } from "$prismaBrowser";
     import RemoveCircleIcon from "$src/lib/icons/RemoveCircleIcon.svelte";
-
-    import { getMinResolutionImage } from "$src/lib/utils/utils";
+    import CoverImage from "../Book/CoverImage.svelte";
 
     interface Props {
-        //@ts-ignore
-        book: BookWithApiData;
+        book: BookWithImage;
         allow_deletion?: boolean;
         on_delete?: ((b: Book) => unknown) | undefined;
     }
@@ -20,11 +17,11 @@
     }: Props = $props();
 </script>
 
-<div class="flex flex-col items-center lg:items-start group" >
+<div class="flex flex-col items-center lg:items-start group">
     <div class="relative">
-        <img
-            src={book.coverImage ?? getMinResolutionImage(book.bookApiData) ?? "/cover.png"}
-            alt={book.name}
+        <CoverImage
+            {book}
+            alt={`${book.name} cover`}
             class="rounded w-32 h-40 object-cover group-hover:opacity-50" />
 
         <div
@@ -41,7 +38,9 @@
             </button>
         </div>
     </div>
-    <a class="flex flex-col text-start mt-0.5" href={`../${encodeURIComponent(book.name)}`}>
+    <a
+        class="flex flex-col text-start mt-0.5"
+        href={`../${encodeURIComponent(book.name)}`}>
         <p class="text-base">{book.name}</p>
         <p class="text-secondary text-base leading-tight">{book.author}</p>
     </a>

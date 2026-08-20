@@ -68,6 +68,11 @@ export type ReadingActivityList = Prisma.ReadingActivityGetPayload<{
                         categories: true;
                     };
                 };
+                coverImage: {
+                    include: {
+                        variants: true;
+                    };
+                };
             };
         };
     };
@@ -81,6 +86,17 @@ export type BookDate = Prisma.BookGetPayload<{
 
 export type BookWithApiData = Prisma.BookGetPayload<{
     include: {
+        bookApiData: true;
+    };
+}>;
+
+export type BookWithImage = Prisma.BookGetPayload<{
+    include: {
+        coverImage: {
+            include: {
+                variants: true;
+            };
+        };
         bookApiData: true;
     };
 }>;

@@ -13,7 +13,11 @@ export const GET: RequestHandler = async ({ url, locals }) => {
         error(400);
     }
 
-    const data = await queryBooks(query);
-
-    return json(data);
+    try {
+        const data = await queryBooks(query);
+        return json(data);
+    } catch (err) {
+        console.error("A Error fetching book API data:", err);
+        error(500, "Error fetching book API data");
+    }
 };

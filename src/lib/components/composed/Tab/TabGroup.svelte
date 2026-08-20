@@ -29,6 +29,7 @@
 
     interface Props {
         className?: string | undefined;
+        tabTriggerWrapperClass?: string | undefined;
         btnClass?: string | undefined;
         btnSelectedClass?: string | undefined;
         sliderClass?: string | undefined;
@@ -39,6 +40,7 @@
 
     let {
         className = undefined,
+        tabTriggerWrapperClass = undefined,
         btnClass = undefined,
         btnSelectedClass = undefined,
         sliderClass = undefined,
@@ -128,7 +130,7 @@
 
 <div class={twMerge(animate && "overflow-x-hidden", className)}>
     <div class="flex justify-center my-2">
-        <div class="relative">
+        <div class={twMerge("relative", tabTriggerWrapperClass)}>
             {#each tabNames as tab, i (tab)}
                 <Tab>{tab}</Tab>
             {/each}

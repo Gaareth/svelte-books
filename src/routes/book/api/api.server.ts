@@ -15,6 +15,11 @@ export async function queryBooksFull(
     if (json.error !== undefined) {
         throw Error(`Error fetching book API data: ${json.error.message}`);
     }
+
+    if (json.items == null) {
+        return [];
+    }
+
     return json.items;
 }
 
@@ -30,6 +35,11 @@ export async function queryBooks(query: string): Promise<queriedBook[]> {
     if (json.error !== undefined) {
         throw Error(`Error fetching book API data: ${json.error.message}`);
     }
+
+    if (json.items == null) {
+        return [];
+    }
+
     return json.items;
 }
 

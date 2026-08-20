@@ -45,6 +45,11 @@ export async function loadBooks(
         },
         include: {
             bookList: true,
+            coverImage: {
+                include: {
+                    variants: true,
+                },
+            },
             bookApiData: {
                 include: {
                     categories: true,
@@ -99,6 +104,11 @@ export async function getReadingActivity(
                     bookApiData: {
                         include: {
                             categories: true,
+                        },
+                    },
+                    coverImage: {
+                        include: {
+                            variants: true,
                         },
                     },
                 },

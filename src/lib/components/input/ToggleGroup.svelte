@@ -48,7 +48,7 @@
 
 <div class={twMerge("flex flex-col", wrapperClass)}>
     <div class={twMerge("flex", groupClass)}>
-        {#each options as option, i}
+        {#each options as option, i (i)}
             <button
                 type="button"
                 disabled={(selectedOption == option && !deselectable) ||
@@ -70,7 +70,9 @@
                         onSelect?.(option);
                     }
                 }}>
-                {#if children}{@render children({ option, i })}{:else}
+                {#if children}
+                    {@render children({ option, i })}
+                {:else}
                     {displayFn ? displayFn(option) : option}
                 {/if}
             </button>

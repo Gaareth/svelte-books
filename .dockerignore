@@ -30,3 +30,4 @@ gitleaks-report.json
 *.sh
 !docker-entrypoint.sh
 vite.config.ts.timestamp-*.mjs
+uploads/

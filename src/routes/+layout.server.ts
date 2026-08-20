@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from "./$types";
 
-import { getAccountByUsername } from "$lib/auth/auth";
+import { getAccountByUsername } from "$lib/auth/account";
 
 export const trailingSlash = "always";
 
