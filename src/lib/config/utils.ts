@@ -61,7 +61,7 @@ export function readEnv<T>(
     {
         fallback,
         warn = false,
-        required = fallback === undefined,
+        required,
     }: {
         fallback?: T;
         warn?: boolean;
