@@ -14,7 +14,7 @@ const cachingEnabled = envReader.value("IMAGE_CACHING_ENABLED", parseBool, {
 });
 
 export const privateConfig = {
-    booksApiKey: envReader.required("BOOKS_API_KEY", nonEmpty),
+    booksApiKey: envReader.value("BOOKS_API_KEY", nonEmpty, { warn: true }),
     cachingEnabled,
     imagesFolder: publicEnvReader.requiredWhen(
         "PUBLIC_IMAGES_FOLDER",
