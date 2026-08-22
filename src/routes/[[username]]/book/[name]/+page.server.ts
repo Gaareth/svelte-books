@@ -149,8 +149,8 @@ const coverSourceSchema = z
     .object({
         googleBooksCoverVolumeId: z.string().trim().nullish(),
         uploadedCoverImage: createImageUploadSchema(
-            publicConfig.uploads.allowedTypes as ImageTypes[],
-            publicConfig.uploads.maxFileSize,
+            publicConfig.imageUploads.allowedTypes as ImageTypes[],
+            publicConfig.imageUploads.maxFileSize,
         ).nullish(),
     })
     .refine(

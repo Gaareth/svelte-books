@@ -1,17 +1,13 @@
 // src/lib/config/public.ts
 import { env } from "$env/dynamic/public";
-import {
-    createEnvReader,
-    nonEmpty,
-    parseBool,
-    parseCommaSeparatedList,
-} from "./utils";
+import { createEnvReader, parseBool, parseCommaSeparatedList } from "./utils";
 
 const envReader = createEnvReader(env);
+export const UPLOADS = "uploads";
 
 export const publicConfig = {
-    uploads: {
-        urlPrefix: envReader.value("PUBLIC_IMAGES_FOLDER", nonEmpty),
+    imageUploads: {
+        urlPrefix: `${UPLOADS}/images/`,
         enabled: envReader.value("PUBLIC_ALLOW_UPLOADS", parseBool, {
             fallback: false,
         }),

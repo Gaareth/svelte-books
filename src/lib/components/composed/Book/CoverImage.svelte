@@ -10,7 +10,7 @@
             imageLinks: string,
         ) => string | null = getMaxResolutionImage,
     ): string | undefined {
-        if (book.coverImage && publicConfig.uploads.urlPrefix) {
+        if (book.coverImage && publicConfig.imageUploads.urlPrefix) {
             return makeUploadUrl(book.coverImage.path);
         }
 

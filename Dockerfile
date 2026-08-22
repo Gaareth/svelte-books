@@ -9,6 +9,7 @@ COPY . .
 
 ARG DATABASE_URL="file:./test.db"
 ENV DATABASE_URL=$DATABASE_URL
+ENV INSIDE_DOCKER=true
 
 RUN pnpm exec prisma generate
 RUN pnpm run build

@@ -13,6 +13,7 @@ import {
     createAllReadingActivityStatus,
     createLists,
 } from "$lib/server/db/create";
+import { seedInitial } from "./seed-initial";
 
 // Load environment variables
 // dotenv.config();
@@ -215,12 +216,16 @@ async function createBooks(account: Account) {
 
 async function main() {
     // seed initial happens on startup already
-    // const { account } = await seedInitial();
-    const series = await createSeries();
+    let account = await prisma.account.findFirst();
+    if (!account) {
+        const result = await seedInitial();
+        account = result.account;
+    }
+
+    const _series = await createSeries();
     // return;
 
     // await createDummyAccounts();
-    const account = await prisma.account.findFirst();
     if (!account) {
         throw new Error("No account found to create books for");
     }

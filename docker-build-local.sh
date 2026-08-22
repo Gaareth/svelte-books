@@ -1,6 +1,12 @@
 #!/bin/bash
 
-DEBUG=false
+# Accept a debug argument, default to false
+# If debug is true, the started container will not be stopped automatically, allowing for manual inspection.
+DEBUG=${1:-false}  # Usage: ./docker-build-local.sh true
+
+if [ "$DEBUG" = true ]; then
+    echo "> Debug mode is ON. The container will not be stopped automatically."
+fi
 
 print_error() {
     echo -e "\033[31m$1\033[0m"
@@ -27,7 +33,9 @@ cleanup
 
 echo "> Starting container"
 # Run the Docker container in detached mode
-docker run --env-file .env.production -v book-store:/database --name book-store -p 3000:3000 -d book-store
+
+docker run --env-file .env.production -v book-store:/database -v book-store:/uploads --name book-store -p 3000:3000 -d book-store
+echo "> Access the application at http://localhost:3000"
 
 # Wait a moment for the server to start
 sleep 3

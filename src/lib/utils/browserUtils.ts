@@ -15,11 +15,14 @@ export async function copyToClipboard(code: string, successMessage?: string) {
 }
 
 export function makeUploadUrl(url: string): string | undefined {
-    if (!publicConfig.uploads.urlPrefix) {
+    if (!publicConfig.imageUploads.urlPrefix) {
         return undefined;
     }
 
-    const prefix = publicConfig.uploads.urlPrefix.replace(/^\/+|\/+$/g, "");
+    const prefix = publicConfig.imageUploads.urlPrefix.replace(
+        /^\/+|\/+$/g,
+        "",
+    );
     const path = url.replace(/^\/+/, "");
 
     return `/${prefix}/${path}`;

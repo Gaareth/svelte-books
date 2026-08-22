@@ -202,16 +202,16 @@
                         id="coverImageUpload"
                         name="coverImageUpload"
                         class="input btn-generic-color-2"
-                        accept={publicConfig.uploads.allowedTypes
+                        accept={publicConfig.imageUploads.allowedTypes
                             .map((t) => `image/${t}`)
                             .join(", ")} />
 
                     <p
                         class="mt-1 text-sm text-gray-500 dark:text-gray-300"
                         id="file_input_help">
-                        {publicConfig.uploads.allowedTypes
+                        {publicConfig.imageUploads.allowedTypes
                             .map((t) => t.toUpperCase())
-                            .join(", ")} (MAX. {publicConfig.uploads
+                            .join(", ")} (MAX. {publicConfig.imageUploads
                             .maxFileSize /
                             1024 /
                             1024} MB).

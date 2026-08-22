@@ -4,7 +4,6 @@ set -e
 # Accept a version type argument, default to "patch"
 VERSION_TYPE=${1:-patch}  # Usage: ./deploy.sh minor
 
-echo "> Bumping version: $VERSION_TYPE"
 
 # Prisma generate
 npx prisma generate
@@ -17,6 +16,7 @@ npm run build && ./docker-build-local.sh && docker buildx build --platform=linux
 
 # Bump version
 npm version "$VERSION_TYPE"
+echo "> Bumped new version: $VERSION_TYPE"
 
 # Push commits/tags
 git push --follow-tags

@@ -1,6 +1,7 @@
 import { Prisma } from "$prismaClient";
 import { prisma } from "$src/lib/server/prisma";
-import { unlink } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import fs, { unlink } from "node:fs/promises";
 import path from "node:path";
 import sharp, { type Sharp } from "sharp";
 import { rgbaToThumbHash } from "thumbhash";
@@ -14,7 +15,7 @@ export type ImageWithVariants = Prisma.ImageGetPayload<{
 }>;
 
 const IMAGE_VARIANTS_WIDTHS = [128, 192, 256, 320, 480, 640, 768, 1024];
-const OUTPUT_DIR = privateConfig.imagesFolder;
+const OUTPUT_PATH = privateConfig.imagesPath;
 
 export async function fetchImage(url: string): Promise<Sharp> {
     const response = await fetch(url);
@@ -63,19 +64,38 @@ export async function cacheUploadedImage(
     return await cacheImage(image, id);
 }
 
+// to provide cache busting filenames
+async function saveImageWithHash(
+    image: Sharp,
+    filename: string,
+    extension: string = "webp",
+): Promise<string> {
+    const buffer = await image.toBuffer();
+    const imageHash = createHash("sha256")
+        .update(buffer)
+        .digest("hex")
+        .slice(0, 16);
+
+    const { dir, name } = path.parse(filename);
+    const hashedFilename = path.join(
+        dir,
+        `${name}-${imageHash}sha256.${extension}`,
+    );
+
+    // await image.toFile(hashedFilename);
+    await fs.mkdir(path.dirname(hashedFilename), { recursive: true });
+    await fs.writeFile(hashedFilename, buffer);
+    return hashedFilename;
+}
+
 export async function cacheImage(
     image: Sharp,
     id: string,
 ): Promise<ImgVariantCaches> {
     const t1 = Date.now();
 
-    const outputDir = OUTPUT_DIR;
-    if (!outputDir) {
-        throw new Error("IMAGES_FOLDER environment variable is not set");
-    }
+    const outputDir = OUTPUT_PATH;
 
-    const primaryImgOutputPath = path.join(outputDir, `${id}-primary.webp`);
-    await image.toFormat("webp").toFile(primaryImgOutputPath);
     const primaryImgMetadata = await image.metadata();
 
     const widths = IMAGE_VARIANTS_WIDTHS.filter(
@@ -83,16 +103,17 @@ export async function cacheImage(
     );
 
     const variantPromises = widths.map(async (width) => {
-        const imgPath = path.join(outputDir, `${id}-${width}w.webp`);
-
-        await image
+        const imageVariant = image
             .clone()
             .resize({
                 width,
                 withoutEnlargement: true,
             })
-            .webp()
-            .toFile(imgPath);
+            .webp();
+        const imgPath = await saveImageWithHash(
+            imageVariant,
+            path.join(outputDir, `${id}-${width}w`),
+        );
 
         return {
             path: imgPath,
@@ -100,11 +121,15 @@ export async function cacheImage(
         };
     });
 
-    const [_, imageVariants, placeholderHash] = await Promise.all([
-        image.clone().webp().toFile(primaryImgOutputPath),
-        Promise.all(variantPromises),
-        thumbhashImage(image.clone()),
-    ]);
+    const [primaryImgOutputPath, imageVariants, placeholderHash] =
+        await Promise.all([
+            saveImageWithHash(
+                image.webp(),
+                path.join(outputDir, `${id}-primary`),
+            ),
+            Promise.all(variantPromises),
+            thumbhashImage(image.clone()),
+        ]);
 
     console.log(`Cached image ${id} in ${Date.now() - t1}ms`);
 
@@ -123,26 +148,21 @@ export async function saveCachesToDB(
     caches: ImgVariantCaches,
     sourceUrl?: string,
 ) {
-    if (!privateConfig.imagesFolder) {
+    if (!OUTPUT_PATH) {
         throw new Error("IMAGES_FOLDER environment variable is not set");
     }
-
-    // to not depend on the path of the images folder, we store the relative path in the database
-    // static/uploads/primary.webp -> primary.webp
-    const makeRelativePath = (inpath: string) =>
-        path.relative(privateConfig.imagesFolder!, inpath);
 
     const { primaryImg, imageVariants, placeholderHash } = caches;
     const primaryImage = await prisma.image.create({
         data: {
-            path: makeRelativePath(primaryImg.path),
+            path: fromFSPathToDBPath(primaryImg.path),
             width: primaryImg.width,
             height: primaryImg.height,
             sourceUrl,
             placeholderHash,
             variants: {
                 create: imageVariants.map((variant) => ({
-                    path: makeRelativePath(variant.path),
+                    path: fromFSPathToDBPath(variant.path),
                     width: variant.width,
                 })),
             },
@@ -153,17 +173,24 @@ export async function saveCachesToDB(
 }
 
 export async function deleteCachedImage(image: ImageWithVariants) {
-    const makeFullPath = (inpath: string) =>
-        path.join(privateConfig.imagesFolder!, inpath);
-
-    await unlink(makeFullPath(image.path));
+    await unlink(fromDBPathToFSPath(image.path));
     for (const variant of image.variants) {
-        await unlink(makeFullPath(variant.path));
+        await unlink(fromDBPathToFSPath(variant.path));
     }
 
     await prisma.image.delete({
         where: { id: image.id },
     });
+}
+
+export function fromFSPathToDBPath(fspath: string): string {
+    // to not depend on the path of the images folder, we store the relative path in the database
+    // static/uploads/primary.webp -> primary.webp
+    return path.relative(OUTPUT_PATH, fspath);
+}
+
+export function fromDBPathToFSPath(dbpath: string): string {
+    return path.join(OUTPUT_PATH, dbpath);
 }
 
 export function generateSrcSet(
