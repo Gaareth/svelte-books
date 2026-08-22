@@ -7,9 +7,7 @@
     import Stats from "$src/lib/components/Stats.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
     import Modal from "$components/Modal.svelte";
-    import {
-        READING_ACTIVITY_TYPES,
-    } from "$lib/constants/enums";
+    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import Book from "$lib/icons/book.svelte";
     import Pages from "$lib/icons/pages.svelte";
     import Words from "$lib/icons/words.svelte";
@@ -71,11 +69,6 @@
             ? 0
             : 1 - books_without_words.length / readingActivitiesFinished.length,
     );
-
-    let showModal = $state(false);
-    let showModalCats = $state(false);
-    let showModalAuthors = $state(false);
-    let showReadingDurationModal = $state(false);
 
     let selected_option: "books" | "pages" | "words" = $state("books");
 
@@ -169,7 +162,9 @@
                 {books_without_pagecount.length} books without pagecount. See
                 <button
                     class="!text-base link-all"
-                    onclick={() => (showModal = true)}>
+                    commandFor="books-without-pagecounts-modal"
+                    command="show-modal"
+                    type="button">
                     all
                 </button>
             </div>
@@ -181,7 +176,9 @@
                 {books_without_words.length} books without words per page info. See
                 <button
                     class="!text-base link-all"
-                    onclick={() => (showModal = true)}>
+                    commandFor="books-without-pagecounts-modal"
+                    command="show-modal"
+                    type="button">
                     all
                 </button>
             </div>
@@ -189,7 +186,7 @@
     </div>
 </div>
 
-<Modal bind:showModal>
+<Modal id="books-without-pagecounts-modal">
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">
@@ -296,7 +293,7 @@
         titleString="average reading time"
         class="!bg-transparent backdrop-blur col-span-full sm:col-span-5"
         showStatsButton={true}
-        onShowStats={() => (showReadingDurationModal = true)}>
+        statsModalId="modalReadingDuration">
         {#snippet valueSnippet()}
             <p class="font-bold self-center text-5xl flex flex-col">
                 {reading_duration_average_days} days
@@ -320,7 +317,7 @@
                 ")"}
             class="!bg-transparent backdrop-blur"
             showStatsButton={true}
-            onShowStats={() => (showModalAuthors = true)} />
+            statsModalId="modalAuthors" />
     {/if}
     {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
         <Stats
@@ -330,12 +327,12 @@
                 most_read_categories[0][1] +
                 ")"}
             showStatsButton={true}
-            onShowStats={() => (showModalCats = true)}
+            statsModalId="modalCategories" 
             class="!bg-transparent backdrop-blur" />
     {/if}
 </div>
 
-<Modal bind:showModal={showModalCats} className="w-[900px]">
+<Modal id="modalCategories" className="w-[900px]">
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Most read categories</p>
@@ -345,7 +342,7 @@
     <Charts data={most_read_categories} />
 </Modal>
 
-<Modal bind:showModal={showModalAuthors} className="w-[900px]">
+<Modal id="modalAuthors" className="w-[900px]">
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Most read authors</p>
@@ -355,7 +352,7 @@
     <Charts data={most_read_authors} />
 </Modal>
 
-<Modal bind:showModal={showReadingDurationModal} className="w-[900px]">
+<Modal id="modalReadingDuration" className="w-[900px]">
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Reading Duration</p>

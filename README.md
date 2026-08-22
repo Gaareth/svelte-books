@@ -71,6 +71,7 @@ If you changed the schema and want to test it:
 
 - sse check
 - browser tests
+- more no-javascript friendly
 - just implement auth myself, authjs is a crazy mess
 - median stats
 - dont give each readactivity all books, aka more async

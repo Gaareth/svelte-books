@@ -15,6 +15,7 @@
         statsButton?: import("svelte").Snippet;
         valueSnippet?: import("svelte").Snippet;
         onShowStats?: () => void;
+        statsModalId?: string;
         [key: string]: any;
     }
 
@@ -27,6 +28,7 @@
         statsButton,
         valueSnippet,
         onShowStats,
+        statsModalId,
         ...rest
     }: Props = $props();
 </script>
@@ -48,7 +50,10 @@
             {:else if showStatsButton}
                 <button
                     class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-                    onclick={onShowStats}>
+                    onclick={onShowStats}
+                    commandFor={statsModalId}
+                    command="show-modal"
+                    type="button">
                     <span class="w-5 block"><BarChartIcon /></span>
                 </button>
             {/if}

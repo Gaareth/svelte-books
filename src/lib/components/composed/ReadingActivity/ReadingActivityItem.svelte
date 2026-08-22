@@ -48,8 +48,6 @@
     // export let deletionBook: Book | undefined = undefined;
     // export let openModal: boolean = false;
 
-    let expanded = $state(false);
-    let editExpanded = $state(false);
     let deleteExpanded = $state(false);
 
     let tensionGraph = $derived(
@@ -112,12 +110,11 @@
             dark:bg-slate-600 dark:border-slate-700">
                     <button
                         class="group inline-block p-2 hover:bg-gray-50 focus:relative
-              dark:hover:bg-slate-500"
+                        dark:hover:bg-slate-500"
                         title="View"
                         type="button"
-                        onclick={() => {
-                            expanded = !expanded;
-                        }}>
+                        commandFor="readingActivityModal"
+                        command="show-modal">
                         <span
                             class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                             <OpenInNewRounded />
@@ -127,12 +124,11 @@
                     {#if isAuthorizedToModify}
                         <button
                             class="group inline-block p-2 hover:bg-gray-50 focus:relative
-              dark:hover:bg-slate-500 border-none"
+                            dark:hover:bg-slate-500 border-none"
                             title="Edit book"
                             type="button"
-                            onclick={() => {
-                                editExpanded = true;
-                            }}>
+                            commandFor="readingActivityForm"
+                            command="show-modal">
                             <span
                                 class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                                 <SettingsIcon />
@@ -146,10 +142,8 @@
                                 class="group p-2 btn-delete hidden sm:inline-block !border-none"
                                 title="Delete book"
                                 type="button"
-                                onclick={() => {
-                                    // dispatch("delete", { book });
-                                    deleteExpanded = true;
-                                }}>
+                                commandFor="readingActivityDeletePopUp"
+                                command="show-modal">
                                 <span
                                     class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
                                     <DeleteIcon alt="red trash can" />
@@ -176,9 +170,8 @@
                             class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <button
-                                    onclick={() => {
-                                        expanded = !expanded;
-                                    }}
+                                    commandFor="readingActivityModal"
+                                    command="show-modal"
                                     class="dropdown-item-button"
                                     type="button">
                                     <span
@@ -192,9 +185,8 @@
                             {#if isAuthorizedToModify}
                                 <li>
                                     <button
-                                        onclick={() => {
-                                            editExpanded = !editExpanded;
-                                        }}
+                                        commandFor="readingActivityForm"
+                                        command="show-modal"
                                         class="dropdown-item-button"
                                         type="button">
                                         <span
@@ -209,9 +201,8 @@
                             {#if allow_deletion}
                                 <li>
                                     <button
-                                        onclick={() => {
-                                            deleteExpanded = !deleteExpanded;
-                                        }}
+                                        commandFor="readingActivityDeletePopUp"
+                                        command="show-modal"
                                         class="dropdown-item-button text-error"
                                         type="button">
                                         <span
@@ -231,7 +222,7 @@
 </AccentBarItemCard>
 
 <Modal
-    bind:showModal={expanded}
+    id="readingActivityModal"
     divClassName="w-full"
     className="w-[95%] lg:w-2/5">
     {#snippet header()}
@@ -307,13 +298,12 @@
     </p>
 </Modal>
 
-<ReadingActivityForm bind:showModal={editExpanded} {entry} {book} />
+<ReadingActivityForm id="readingActivityForm" {entry} {book} />
 
 <ReadingActivityDeletePopUp
+    id="readingActivityDeletePopUp"
     deletionEntry={entry}
-    bind:openModal={deleteExpanded}
     onSuccess={() => {
-        deleteExpanded = false;
         invalidateAll();
     }} />
 

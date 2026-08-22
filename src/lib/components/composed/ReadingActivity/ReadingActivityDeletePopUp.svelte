@@ -7,7 +7,8 @@
     import Popup from "$components/Popup.svelte";
 
     interface Props {
-        openModal: boolean;
+        id?: string | undefined;
+        openModal?: boolean;
         deletionEntry: Prisma.ReadingActivityGetPayload<{
             include: {
                 book: true;
@@ -20,7 +21,7 @@
         onError?: () => void;
     }
 
-    let { openModal = $bindable(), deletionEntry, onSuccess, onError }: Props = $props();
+    let { id, openModal = $bindable(), deletionEntry, onSuccess, onError }: Props = $props();
 
     const deleteEntry = () => {
         let res = new Promise((resolve, reject) => {
@@ -67,7 +68,7 @@
 </script>
 
 <Popup
-    bind:showModal={openModal}
+    {id}
     message={"Delete reading activity of book: " +
         deletionEntry?.book.name +
         "?"}

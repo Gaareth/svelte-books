@@ -46,6 +46,7 @@ export async function load(page: ServerLoadEvent) {
         false;
 
     const edit = page.url.searchParams.get("edit");
+    const showForms = edit !== "false" && edit !== null && isAuthorizedToModify;
 
     const book = await prisma.book.findFirst({
         where: {
@@ -137,6 +138,7 @@ export async function load(page: ServerLoadEvent) {
         books,
         bookLists,
         edit,
+        showForms,
         headerConfig: {
             transparent: true,
             wrapperClass: "lg:max-w-6xl",

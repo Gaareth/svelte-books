@@ -69,5 +69,5 @@
 </div>
 
 {#if popupEntry}
-    <DonePopup entry={popupEntry} bind:openModal={popupOpen} />
+    <DonePopup id="done-popup" entry={popupEntry} bind:openModal={popupOpen} />
 {/if}

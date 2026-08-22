@@ -27,6 +27,7 @@
     import EventProgress from "$lib/icons/EventProgress.svelte";
 
     interface Props {
+        id?: string | undefined;
         book: BookWithOwnership;
         bookId?: string | undefined;
         showModal?: boolean;
@@ -34,6 +35,7 @@
     }
 
     let {
+        id,
         book,
         bookId = undefined,
         showModal = $bindable(false),
@@ -65,7 +67,7 @@
     let location = $derived(book.ownership?.location);
 </script>
 
-<Modal bind:showModal divClassName="w-full" className="w-full lg:w-2/5">
+<Modal bind:showModal {id} divClassName="w-full" className="w-full lg:w-2/5">
     {#snippet header()}
         <div class="flex items-center gap-4 w-full">
             <p class="font-medium">
@@ -212,7 +214,11 @@
             <button
                 class="dark:text-white py-3 px-4 my-4 rounded-md w-full dark:bg-slate-600 dark:hover:bg-gray-500 btn-generic dark:border-none"
                 type="button"
-                onclick={() => (showModal = false)}>
+                commandFor={id}
+                command="close"
+                onclick={() => {
+                    showModal = false;
+                }}>
                 Cancel
             </button>
             <button

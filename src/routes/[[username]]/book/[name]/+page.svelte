@@ -4,7 +4,6 @@
     import type { ActionData, PageData } from "./$types";
 
     import { goto, invalidateAll } from "$app/navigation";
-    import { page } from "$app/stores";
     import BookFullReadingActivity from "$components/composed/Book/BookFullReadingActivity.svelte";
     import BookDeletePopUp from "$components/composed/BookDeletePopUp.svelte";
     import BookListSeries from "$components/composed/BookList/BookListSeries.svelte";
@@ -25,44 +24,19 @@
 
     let { data, form }: Props = $props();
 
+    // not to sure if this or derived is better, but this works for now
     // svelte-ignore state_referenced_locally
     let book = $state(data.book);
-
     $effect(() => {
         book = data.book;
     });
 
-    let open_delete = $state(false);
-    let edit: boolean | undefined = $state();
-    function onEdit() {
-        edit = !edit;
-        let query = new URLSearchParams($page.url.searchParams.toString());
-        query.set("edit", edit.toString());
-        goto(`?${query.toString()}`);
-    }
+    let showForms: boolean | undefined = $derived(
+        data.showForms || !!form?.errors,
+    );
 
-    // import { onNavigate } from "$app/navigation";
-
-    // onNavigate((navigation) => {
-    //   if (!document.startViewTransition) return;
-
-    //   return new Promise((resolve) => {
-    //     document.startViewTransition(async () => {
-    //       resolve();
-    //       await navigation.complete;
-    //     });
-    //   });
-    // });
-
-    //TODO: cleanup
-
-    let showCreateReadingActivity = $state(false);
-
-    $effect(() => {
-        edit =
-            ((data.edit !== "false" && data.edit !== null) || !!form?.errors) &&
-            data.isAuthorizedToModify;
-    });
+    const createReadingActivityModalId = "createReadingActivityModal";
+    const deleteBookModalId = "deleteBookModal";
 
     let readingActivitiesSorted = $derived(
         [...book.readingActivity].sort((a, b) => {
@@ -81,15 +55,15 @@
         <span
             class={clsx(
                 `btn-group mb-2 dark:bg-slate-600 dark:border-slate-500 grid`,
-                edit ? "grid-cols-3" : "grid-cols-2",
+                showForms ? "grid-cols-3" : "grid-cols-2",
             )}>
-            <button
-                class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500"
+            <a
+                class="btn-group-btn dark:bg-slate-600 dark:border-slate-500 dark:hover:bg-slate-500 text-[1.2rem]"
                 type="button"
-                onclick={onEdit}>
-                {edit ? "Cancel" : "Edit"}
-            </button>
-            {#if edit}
+                href="?edit={showForms ? 'false' : 'true'}">
+                {showForms ? "Cancel" : "Edit"}
+            </a>
+            {#if showForms}
                 <button
                     form="form-book"
                     class="btn-group-btn text-blue-700 dark:text-blue-500
@@ -99,7 +73,8 @@
                 </button>
             {/if}
             <button
-                onclick={() => (open_delete = !open_delete)}
+                commandFor={deleteBookModalId}
+                command="show-modal"
                 type="button"
                 class="btn-group-btn text-red-700 dark:text-red-500
                    dark:bg-slate-600 dark:border-slate-500
@@ -114,7 +89,7 @@
     <div>
         <div
             class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
-            <BookImageAndInfo {edit} {book} />
+            <BookImageAndInfo edit={showForms} {book} />
 
             <div class={clsx("flex flex-col gap-7")}>
                 <div
@@ -201,12 +176,12 @@
                     {book}
                     {activeEntry}
                     isAuthorizedToModify={data.isAuthorizedToModify}
-                    bind:showCreateReadingActivity
+                    {createReadingActivityModalId}
                     {readingActivitiesSorted} />
             </div>
         </div>
 
-        {#if !edit}
+        {#if !showForms}
             <div>
                 {#if book.bookSeries !== undefined && book.bookSeries !== null && book.bookSeries.books.length > 0}
                     <section>
@@ -237,12 +212,12 @@
 </div>
 
 <ReadingActivityForm
-    bind:showModal={showCreateReadingActivity}
+    id={createReadingActivityModalId}
     {book}
     bookId={book.id} />
 
 <BookDeletePopUp
-    bind:openModal={open_delete}
+    id={deleteBookModalId}
     deletionBook={book}
     onSuccess={async () => {
         await invalidateAll();

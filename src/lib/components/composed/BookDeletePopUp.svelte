@@ -6,13 +6,15 @@
     import Popup from "$components/Popup.svelte";
 
     interface Props {
-        openModal: boolean;
+        id?: string | undefined;
+        openModal?: boolean;
         deletionBook: Book;
         onSuccess: () => void;
         onError?: () => void;
     }
 
     let {
+        id,
         openModal = $bindable(),
         deletionBook,
         onSuccess,
@@ -57,6 +59,7 @@
 </script>
 
 <Popup
+    {id}
     bind:showModal={openModal}
     message={"Delete book: " + deletionBook?.name + "?"}
     btn1_msg="Delete book"

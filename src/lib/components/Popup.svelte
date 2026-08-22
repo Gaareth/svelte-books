@@ -6,6 +6,7 @@
     type MsgType = "Info" | "Warning" | "Error";
 
     interface Props {
+        id?: string | undefined;
         type: MsgType;
         message: string;
         content: import("svelte").Snippet;
@@ -16,12 +17,13 @@
     }
 
     let {
+        id,
         type,
         message,
         content,
         btn1_msg,
         btn2_msg,
-        showModal = $bindable(false),
+        showModal = $bindable(),
         onClick,
     }: Props = $props();
 
@@ -46,10 +48,11 @@
     }
 </script>
 
-<Modal bind:showModal>
+<Modal bind:showModal {id}>
     {#snippet header()}
         <div class="flex items-center gap-4">
-            <span class="shrink-0 rounded-full p-2 text-white {getColor()}"></span>
+            <span class="shrink-0 rounded-full p-2 text-white {getColor()}">
+            </span>
             <p class="font-medium sm:text-lg">{message}</p>
         </div>
     {/snippet}
@@ -73,6 +76,8 @@
         <button
             class="mt-2 inline-block w-full rounded-md bg-gray-100 px-5 py-2 text-center text-sm text-gray-500 sm:mt-0 sm:w-auto border border-gray-200 hover:border-gray-300
       dark:bg-slate-600 dark:text-white dark:border-slate-500 dark:hover:bg-slate-500"
+            commandFor={id}
+            command="close"
             onclick={() => {
                 showModal = false;
             }}

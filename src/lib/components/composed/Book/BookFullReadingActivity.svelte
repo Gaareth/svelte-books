@@ -12,7 +12,7 @@
         activeEntry: ReviewListItemType;
         readingActivitiesSorted: ReviewListItemType[];
         isAuthorizedToModify: boolean;
-        showCreateReadingActivity: boolean;
+        createReadingActivityModalId: string;
     }
 
     let {
@@ -20,7 +20,7 @@
         activeEntry,
         readingActivitiesSorted,
         isAuthorizedToModify,
-        showCreateReadingActivity = $bindable()
+        createReadingActivityModalId
     }: Props = $props();
 </script>
 
@@ -46,7 +46,8 @@
                 <button
                     type="button"
                     class="ml-auto md:ml-0 btn-generic p-2 px-4 w-16 sm:w-auto flex justify-center"
-                    onclick={() => (showCreateReadingActivity = true)}
+                    commandFor={createReadingActivityModalId}
+                    command="show-modal"
                     title="Create reading activity">
                     <span class="block w-5">
                         <AddIcon />

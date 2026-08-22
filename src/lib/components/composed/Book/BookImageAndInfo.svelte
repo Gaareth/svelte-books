@@ -38,7 +38,7 @@
     <div class="flex flex-col justify-center relative">
         {#if hasImage}
             <div
-                class="h-[300px] sm:h-[400px] w-full mb-10 dark:lg:hidden dark:block">
+                class="h-[300px] sm:h-[400px] w-full mb-10 hidden dark:block dark:lg:hidden ">
             </div>
 
             <div class=" absolute inset-0 w-full">
@@ -78,7 +78,7 @@
             <div
                 class="block lg:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <button
-                    onclick={() => (showChooseCoverImageModal = true)}
+                    commandFor="coverSelectionModal" command="show-modal"
                     type="button"
                     class="btn-generic btn-generic-color-2 flex items-center gap-1">
                     Change <AddImageIcon />
@@ -90,7 +90,7 @@
     {#if edit}
         <div class="hidden lg:flex justify-center my-4">
             <button
-                onclick={() => (showChooseCoverImageModal = true)}
+                commandFor="coverSelectionModal" command="show-modal"
                 type="button"
                 class="btn-generic btn-generic-color-2 w-full flex items-center gap-1">
                 Choose or upload
@@ -112,7 +112,10 @@
     </div>
 </div>
 
+
+
 <Modal
+    id="coverSelectionModal"
     bind:showModal={showChooseCoverImageModal}
     divClassName="w-full"
     className="w-[95%] lg:w-2/5">

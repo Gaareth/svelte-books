@@ -5,7 +5,8 @@
     import CloseIcon from "../icons/CloseIcon.svelte";
 
     interface Props {
-        showModal: boolean;
+        id?: string | undefined;
+        showModal?: boolean;
         className?: string | undefined;
         divClassName?: string | undefined;
         showDividers?: boolean;
@@ -13,9 +14,11 @@
         children?: import("svelte").Snippet;
         onOpened?: () => void;
         onClosed?: () => void;
+        [key: string]: unknown;
     }
 
     let {
+        id,
         showModal = $bindable(),
         className = undefined,
         divClassName = undefined,
@@ -24,18 +27,20 @@
         children,
         onOpened,
         onClosed,
+        ...rest
     }: Props = $props();
 
     let dialog: HTMLDialogElement | undefined = $state();
 
     $effect(() => {
-        if (dialog && showModal) {
+        if (dialog && showModal && !dialog.open) {
             dialog.showModal();
             onOpened?.();
         }
     });
+
     $effect(() => {
-        if (!showModal && !!dialog) {
+        if (dialog && !showModal && dialog.open) {
             dialog.close();
             onClosed?.();
         }
@@ -46,6 +51,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- eslint-disable-next-line svelte/valid-compile -->
 <dialog
+    {id}
     bind:this={dialog}
     onclose={preventDefault(() => {
         showModal = false;
@@ -53,11 +59,15 @@
     onclick={() => {
         dialog?.close();
     }}
+    ontoggle={() => {
+        showModal = dialog?.open ?? false;
+    }}
     class={twMerge(
         "rounded-md border border-blue-100 bg-white dark:border-slate-700 dark:bg-slate-700 dark:text-white shadow-lg p-2 lg:p-4",
         className,
     )}
-    role="alertdialog">
+    role="alertdialog"
+    {...rest}>
     <div
         onclick={(event) => {
             // prevent modal from closing when clicking inside the modal content
@@ -69,6 +79,8 @@
         </div>
         <!-- svelte-ignore a11y_autofocus -->
         <button
+            commandFor={id}
+            command="close"
             autofocus
             onclick={preventDefault(() => {
                 dialog?.close();

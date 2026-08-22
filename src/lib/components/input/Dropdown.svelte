@@ -7,8 +7,10 @@
     import { browser } from "$app/environment";
     import { clickOutside } from "$components/input/clickOutside";
     import Modal from "$components/Modal.svelte";
+    import { v4 as uuidv4 } from "uuid";
 
     interface Props {
+        id?: string | undefined;
         className?: string | undefined;
         buttonClass?: string | undefined;
         contentClass?: string | undefined;
@@ -20,6 +22,7 @@
     }
 
     let {
+        id = `dropdown-${uuidv4()}`,
         className = undefined,
         buttonClass = undefined,
         contentClass = undefined,
@@ -98,6 +101,8 @@
         <button
             class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
             onclick={toggleOpen}
+            commandFor={id}
+            command="show-modal"
             type="button">
             {@render triggerContent?.()}
         </button>
@@ -132,6 +137,7 @@
 </div>
 
 <Modal
+    {id}
     bind:showModal
     showDividers={false}
     divClassName="!p-0"

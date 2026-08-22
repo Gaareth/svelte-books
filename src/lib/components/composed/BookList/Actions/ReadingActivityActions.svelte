@@ -104,5 +104,5 @@
 </form>
 
 {#if activeEntry}
-    <DonePopup entry={activeEntry} bind:openModal />
+    <DonePopup id={`done-popup-${activeEntry.id}`} entry={activeEntry} bind:openModal />
 {/if}

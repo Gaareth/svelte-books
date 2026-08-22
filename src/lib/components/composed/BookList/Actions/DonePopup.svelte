@@ -20,11 +20,12 @@
     }>;
 
     interface Props {
+        id?: string | undefined;
         openModal: boolean;
         entry: CurrentlyReadingEntry;
     }
 
-    let { openModal = $bindable(), entry }: Props = $props();
+    let { id, openModal = $bindable(), entry }: Props = $props();
 
     function rateBook() {
         return async ({ result }: { result: any }) => {
@@ -49,6 +50,7 @@
 </script>
 
 <Modal
+    {id}
     bind:showModal={openModal}
     divClassName="w-full"
     className="w-full lg:w-2/6">
@@ -84,6 +86,8 @@
             <button
                 class="dark:text-white py-3 px-4 my-4 rounded-md w-full dark:bg-slate-600 dark:hover:bg-gray-500 btn-generic dark:border-none"
                 type="button"
+                commandFor={id}
+                command="close"
                 onclick={() => (openModal = false)}>
                 Cancel
             </button>
