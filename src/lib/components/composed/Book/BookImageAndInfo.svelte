@@ -7,7 +7,8 @@
     import CoverImage, { hasCoverImage } from "./CoverImage.svelte";
     import type { BookWithImage } from "$src/app";
     import CoverSelection from "./CoverSelection.svelte";
-    import type { ActionData } from "$routes/[[username]]/book/[name]/$types";
+    // import type { ActionData } from "$routes/[[username]]/book/[name]/$types";
+    import type { ActionData } from "../../../../routes/[[username]]/book/[name]/$types";
 
     interface Props {
         edit: boolean | undefined;
