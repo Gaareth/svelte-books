@@ -3,7 +3,7 @@
     import ScrollingImagesBackground from "$src/lib/components/ScrollingImagesBackground.svelte";
     import { getImageByResolutionOrder } from "$src/lib/utils/utils.js";
     import { Prisma } from "$prismaBrowser";
-    import Image from "./Book/Image.svelte";
+    import Image from "../Image.svelte";
     import {
         createBookImageSrcset,
         getBookImage,

@@ -38,6 +38,7 @@
 
     let dropdownWrapper: HTMLDivElement | undefined = $state();
     let dropdownContentWrapper: HTMLDivElement | undefined = $state();
+    let triggerButton: HTMLButtonElement | undefined = $state();
 
     $effect(() => {
         if (browser && width !== undefined) {
@@ -53,6 +54,9 @@
             checkDropdownPosition();
         });
         window.addEventListener("scroll", checkDropdownPosition);
+        // commandFor is the noscript altenative and opens the modal here.
+        // With javascript, we first show the dropdown. So this is disabled, to not show modal and dropdown when js is available.
+        triggerButton?.removeAttribute("commandFor");
     });
 
     onDestroy(() => {
@@ -99,6 +103,7 @@
         {@render triggerWrapper()}
     {:else}
         <button
+            bind:this={triggerButton}
             class={twMerge("dropdown-btn flex focus:ring-2", buttonClass)}
             onclick={toggleOpen}
             commandFor={id}

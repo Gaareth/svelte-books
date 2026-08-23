@@ -368,8 +368,8 @@ export const actions = {
         }
 
         const { fieldErrors: errors } = result.error.flatten();
-        // console.log("Errors:", errors);
-        // console.log("Issues:", result.error.issues);
+        console.log("Errors:", errors);
+        console.log("Issues:", result.error.issues);
 
         return fail(400, {
             data: formData,

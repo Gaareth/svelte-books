@@ -49,7 +49,7 @@
     import { makeUploadUrl } from "$src/lib/utils/browserUtils";
     import { getMaxResolutionImage } from "$src/lib/utils/utils";
 
-    import Image, { type ImageProps } from "./Image.svelte";
+    import Image, { type ImageProps } from "../../Image.svelte";
 
     type BookWithCoverImage = Prisma.BookGetPayload<{
         include: {

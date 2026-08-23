@@ -30,7 +30,7 @@
         return data;
     };
 
-    const handleClick = async () => {
+    const handleSearch = async () => {
         queriedBooksPromise = queryBooks();
     };
 
@@ -184,20 +184,27 @@
     <label for="bookApiQuery" class="w-full text-lg">
         {label}
     </label>
-    <form class="flex gap-2" onsubmit={preventDefault(handleClick)}>
+    <div class="flex gap-2" >
         <input
             class="input btn-generic-color-2"
             type="text"
             id="bookApiQuery"
+            onkeydown={(event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    handleSearch();
+                }
+            }}
             bind:value={query} />
 
         <button
-            type="submit"
+            type="button"
+            onclick={() => handleSearch()}
             class="btn-primary-black"
             disabled={!query || query?.length === 0}>
             Search
         </button>
-    </form>
+    </div>
     <div>
         {#if queriedBooksPromise !== undefined}
             {#await queriedBooksPromise}
