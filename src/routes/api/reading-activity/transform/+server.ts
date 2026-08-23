@@ -15,7 +15,8 @@ import {
 import { prisma } from "$lib/server/prisma";
 import { BookOwnership } from "$prismaClient";
 import { storyGraphSchema } from "$src/lib/schemas/schemas";
-import { optionalNumericString, parseFormObject } from "$src/lib/schemas/utils";
+import { optionalNumericString } from "$src/lib/schemas/utils";
+import { parseFormObject } from "$src/lib/utils/formUtils";
 import { undefinedToNull } from "$src/lib/utils/utils";
 
 const updateRatingSchema = z.object({

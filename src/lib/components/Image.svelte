@@ -4,6 +4,7 @@
         wrapperClass?: string;
         backgroundClass?: string;
         onloadClass?: string;
+        onload?: (event: Event) => void;
     }
 </script>
 
@@ -20,6 +21,7 @@
         backgroundClass,
         onloadClass,
         class: _class,
+        onload,
         ...rest
     }: ImageProps = $props();
 
@@ -53,7 +55,10 @@
     <img
         {src}
         {alt}
-        onload={() => (loaded = true)}
+        onload={(event) => {
+            loaded = true;
+            onload?.(event);
+        }}
         class={clsx(loaded && onloadClass, _class)}
         {...rest} />
 </div>

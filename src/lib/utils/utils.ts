@@ -38,7 +38,7 @@ export function getErrorMessage(error: unknown) {
     return String(error);
 }
 
-export const sum = (list: any[]) => list.reduce((a, b) => a + b, 0);
+export const sum = (list: number[]) => list.reduce((a, b) => a + b, 0);
 export const zip = (a: unknown[], b: unknown[]) => a.map((k, i) => [k, b[i]]);
 
 export function undefinedToNull<Type>(any: Type | undefined): Type | null {

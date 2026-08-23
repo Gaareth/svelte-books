@@ -23,12 +23,12 @@ import {
     type ImageTypes,
 } from "$src/lib/schemas/schemas";
 import { whereVisibilityPublicOrAuthenticatedOrAll } from "$src/lib/server/db/prismaUtils";
-import { cacheGoogleBooksImage } from "$src/lib/server/images/googleBooksImages";
 import {
     cacheUploadedImage,
     deleteCachedImage,
     saveCachesToDB,
 } from "$src/lib/server/images/images";
+import { removeFilesFromFormData } from "$src/lib/utils/formUtils";
 
 export async function load(page: ServerLoadEvent) {
     const params = page.params;
@@ -149,20 +149,12 @@ export async function load(page: ServerLoadEvent) {
 
 const coverSourceSchema = z
     .object({
-        googleBooksCoverVolumeId: z.string().trim().nullish(),
+        // googleBooksCoverVolumeId: z.string().trim().nullish(),
         uploadedCoverImage: createImageUploadSchema(
             publicConfig.imageUploads.allowedTypes as ImageTypes[],
             publicConfig.imageUploads.maxFileSize,
         ).nullish(),
     })
-    .refine(
-        ({ googleBooksCoverVolumeId, uploadedCoverImage }) =>
-            !(googleBooksCoverVolumeId && uploadedCoverImage),
-        {
-            message: "Only one cover image source can be provided",
-            path: ["uploadedCoverImage"],
-        },
-    )
     .refine(
         ({ uploadedCoverImage }) =>
             uploadedCoverImage == null || env.PUBLIC_ALLOW_IMAGE_UPLOADS,
@@ -334,7 +326,6 @@ export const actions = {
             const apiData = await handleBookApiUpdate(apiVolumeId);
 
             const coverInfo = {
-                googleBooksCoverVolumeId: result.data.googleBooksCoverVolumeId,
                 uploadedCoverImage: result.data.uploadedCoverImage,
             };
             console.log("Cover info:", coverInfo);
@@ -371,8 +362,10 @@ export const actions = {
         console.log("Errors:", errors);
         console.log("Issues:", result.error.issues);
 
+        const formDataWithoutFiles = removeFilesFromFormData(formData);
+
         return fail(400, {
-            data: formData,
+            data: formDataWithoutFiles,
             errors,
         });
     },
@@ -382,7 +375,7 @@ async function handleCoverUpdate(
     bookId: string,
     coverInfo: z.infer<typeof coverSourceSchema>,
 ) {
-    if (!coverInfo.googleBooksCoverVolumeId && !coverInfo.uploadedCoverImage) {
+    if (!coverInfo.uploadedCoverImage) {
         return;
     }
 
@@ -406,22 +399,16 @@ async function handleCoverUpdate(
         cachedImages = await cacheUploadedImage(
             coverInfo.uploadedCoverImage.image,
         );
-    } else if (coverInfo.googleBooksCoverVolumeId) {
-        cachedImages = await cacheGoogleBooksImage(
-            coverInfo.googleBooksCoverVolumeId,
-        );
     }
+    // else if (coverInfo.googleBooksCoverVolumeId) {
+    //     cachedImages = await cacheGoogleBooksImage(
+    //         coverInfo.googleBooksCoverVolumeId,
+    //     );
+    // }
 
     if (cachedImages) {
         const newImage = await saveCachesToDB(cachedImages);
         return newImage;
-    }
-
-    if (coverInfo.googleBooksCoverVolumeId && coverInfo.uploadedCoverImage) {
-        // impossible
-        throw new Error(
-            "Either only provided cover image or googleBooksCoverVolumeId must be provided. This should have been validated by the schema.",
-        );
     }
 }
 

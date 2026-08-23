@@ -17,6 +17,7 @@ const config = {
             $src: "src",
             $utils: "src/lib/utils",
             $components: "src/lib/components",
+            $routes: "src/routes",
             $appTypes: "src/app.d.ts",
             $prismaClient: "src/generated/prisma/client",
             $prismaBrowser: "src/generated/prisma/browser",

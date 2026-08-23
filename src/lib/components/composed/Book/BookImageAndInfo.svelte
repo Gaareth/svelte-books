@@ -7,13 +7,16 @@
     import CoverImage, { hasCoverImage } from "./CoverImage.svelte";
     import type { BookWithImage } from "$src/app";
     import CoverSelection from "./CoverSelection.svelte";
+    import type { ActionData } from "$routes/[[username]]/book/[name]/$types";
 
     interface Props {
         edit: boolean | undefined;
         book: BookWithImage;
+        formId: string;
+        form?: ActionData;
     }
 
-    let { edit, book }: Props = $props();
+    let { edit, book, formId, form }: Props = $props();
 
     //lg:group-hover:opacity-50
     const imageSizeClass =
@@ -24,7 +27,6 @@
       ${imageSizeClass} object-cover object-center rounded`);
 
     let showChooseCoverImageModal = $state(false);
-    let selectedVolumeId: string | undefined = $state();
 
     let hasImage: boolean | undefined = $derived(hasCoverImage(book));
 </script>
@@ -83,7 +85,7 @@
     </div>
 
     {#if edit}
-        <div class="hidden lg:flex justify-center my-4">
+        <div class="hidden lg:flex justify-center mt-2 mb-4">
             <button
                 commandFor="coverSelectionModal"
                 command="show-modal"
@@ -119,5 +121,5 @@
         </div>
     {/snippet}
 
-    <CoverSelection {selectedVolumeId} />
+    <CoverSelection {formId} />
 </Modal>

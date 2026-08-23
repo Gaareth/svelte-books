@@ -7,8 +7,8 @@ import type { RequestEvent } from "./$types";
 import { authorize } from "$lib/auth/authorization";
 import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
 import { createSchema } from "$lib/schemas/readingActivity";
-import { parseFormObject } from "$lib/schemas/utils";
 import { prisma } from "$lib/server/prisma";
+import { parseFormObject } from "$src/lib/utils/formUtils";
 
 export async function POST(req: RequestEvent) {
     const accountId = (await authorize(await req.locals.auth()))

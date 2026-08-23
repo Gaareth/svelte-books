@@ -7,7 +7,9 @@ import { createEnvReader, nonEmpty, parseBool } from "../config/utils";
 
 const envReader = createEnvReader(env);
 
-const insideDocker = envReader.required("INSIDE_DOCKER", parseBool);
+const insideDocker = envReader.value("INSIDE_DOCKER", parseBool, {
+    fallback: false,
+});
 
 const UPLOADS_PATH = insideDocker ? `/${UPLOADS}` : `static/${UPLOADS}/`;
 const UPLOADS_IMAGES_PATH = path.join(UPLOADS_PATH, "images/");

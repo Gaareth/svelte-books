@@ -30,6 +30,7 @@
     $effect(() => {
         book = data.book;
     });
+    const formId = "form-book";
 
     let showForms: boolean | undefined = $derived(
         data.showForms || !!form?.errors,
@@ -65,7 +66,7 @@
             </a>
             {#if showForms}
                 <button
-                    form="form-book"
+                    form={formId}
                     class="btn-group-btn text-blue-700 dark:text-blue-500
                         dark:bg-slate-600 dark:border-slate-500
                         dark:hover:bg-slate-500">
@@ -89,7 +90,7 @@
     <div>
         <div
             class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
-            <BookImageAndInfo edit={showForms} {book} />
+            <BookImageAndInfo edit={showForms} {book} {form} {formId} />
 
             <div class={clsx("flex flex-col gap-7")}>
                 <div
@@ -203,6 +204,7 @@
                 <!-- <h2 class="text-3xl">Edit</h2> -->
                 <BookForm
                     {form}
+                    {formId}
                     bind:book
                     bookLists={data.bookLists}
                     books={data.books} />

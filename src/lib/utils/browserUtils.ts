@@ -1,3 +1,4 @@
+import { resolve } from "$app/paths";
 import toast from "svelte-french-toast";
 import { publicConfig } from "../config/public";
 
@@ -26,4 +27,8 @@ export function makeUploadUrl(url: string): string | undefined {
     const path = url.replace(/^\/+/, "");
 
     return `/${prefix}/${path}`;
+}
+
+export function resolveAPIImageUrl(url: string): string {
+    return resolve(`/api/book-covers?url=${encodeURIComponent(url)}`);
 }

@@ -26,9 +26,7 @@
             return;
         }
 
-        const proxiedUrl = resolve(
-            `/api/book-covers?url=${encodeURIComponent(googleImageUrl)}`,
-        );
+        const proxiedUrl = resolveAPIImageUrl(googleImageUrl);
 
         return proxiedUrl;
     }
@@ -43,10 +41,9 @@
 </script>
 
 <script lang="ts">
-    import { resolve } from "$app/paths";
     import type { Prisma } from "$prismaBrowser";
     import { publicConfig } from "$src/lib/config/public";
-    import { makeUploadUrl } from "$src/lib/utils/browserUtils";
+    import { makeUploadUrl, resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
     import { getMaxResolutionImage } from "$src/lib/utils/utils";
 
     import Image, { type ImageProps } from "../../Image.svelte";

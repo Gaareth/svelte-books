@@ -19,6 +19,7 @@
     import { enhance, applyAction } from "$app/forms";
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
+    import { resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
     type BookFormType = Prisma.BookGetPayload<{
         include: {
             bookSeries: {
@@ -49,9 +50,10 @@
         books: BookWithImage[];
         bookLists: BookList[];
         form?: ActionData;
+        formId: string;
     }
 
-    let { book = $bindable(), books, bookLists, form }: Props = $props();
+    let { book = $bindable(), books, bookLists, form, formId }: Props = $props();
 
     function getFormError(field: string) {
         return form?.errors?.[field as keyof typeof form.errors]?.[0];
@@ -128,9 +130,29 @@
 <form
     action="?/save"
     method="POST"
-    id="form-book"
+    id={formId}
     enctype="multipart/form-data"
-    use:enhance={() => {
+    use:enhance={async ({ formData }) => {
+        const selectedGoogleBooksUrl = formData.get("selectedGoogleBooksUrl");
+        console.log(formData)
+        if (selectedGoogleBooksUrl) {
+            const resp = await fetch(
+                resolveAPIImageUrl(String(selectedGoogleBooksUrl)),
+            );
+            if (!resp.ok) {
+                toast.error("Failed to fetch image from Google Books");
+                return;
+            }
+
+            const blob = await resp.blob();
+            formData.set(
+                "uploadedCoverImage",
+                new File([blob], String(selectedGoogleBooksUrl), {
+                    type: blob.type,
+                }),
+            );
+        }
+
         return async ({ result }) => {
             if (result.type != "failure") {
                 toast.success("Successfully edited book");

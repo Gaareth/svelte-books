@@ -9,7 +9,6 @@ import {
     type settingsApiReloadResult,
 } from "./apidata";
 
-import { parseFormArray } from "$lib/schemas/utils";
 import { prisma } from "$lib/server/prisma";
 import { getAccountIdfromSession } from "$src/lib/auth/account";
 import { userAuth } from "$src/lib/auth/authorization";
@@ -17,6 +16,7 @@ import {
     READING_ACTIVITY_TYPES,
     VISIBILITY_TYPES,
 } from "$src/lib/constants/enums";
+import { parseFormArray } from "$src/lib/utils/formUtils";
 
 export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
 

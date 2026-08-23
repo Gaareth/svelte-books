@@ -1,8 +1,10 @@
 <script lang="ts">
     import { v4 as uuidv4 } from "uuid";
-    import Image from "./Image.svelte";
+    import ImageWithMetadata from "./ImageWithMetadata.svelte";
 
     interface Props {
+        uploadedFile?: File | undefined;
+        previewImage?: string | undefined;
         allowedTypes: string[];
         maxFileSize: number;
         label: string;
@@ -12,6 +14,8 @@
     }
 
     let {
+        previewImage = $bindable(),
+        uploadedFile = $bindable(),
         allowedTypes,
         maxFileSize,
         label,
@@ -19,9 +23,6 @@
         form,
         id = `ImageUpload-${uuidv4()}`,
     }: Props = $props();
-
-    let previewImage = $state<string | undefined>();
-    let uploadedFile: File | undefined = $state();
 
     function handleChange(event: Event) {
         const input = event.currentTarget as HTMLInputElement;
@@ -31,28 +32,6 @@
             previewImage = URL.createObjectURL(file);
             uploadedFile = file;
         }
-    }
-
-    let imageData:
-        | {
-              width: number;
-              height: number;
-              type?: string;
-              sizeMB?: string | undefined;
-          }
-        | undefined = $state();
-
-    function imageLoaded(event: Event) {
-        const img = event.currentTarget as HTMLImageElement;
-
-        imageData = {
-            width: img.naturalWidth,
-            height: img.naturalHeight,
-            type: uploadedFile?.type,
-            sizeMB: uploadedFile?.size
-                ? (uploadedFile.size / 1024 / 1024).toFixed(2)
-                : undefined,
-        };
     }
 </script>
 
@@ -75,17 +54,11 @@
 
 {#if previewImage}
     <div class="w-full flex items-center justify-center mt-5">
-        <Image
+        <ImageWithMetadata
             src={previewImage}
-            onload={imageLoaded}
+            {uploadedFile}
             alt="Preview of the uploaded image"
             backgroundClass="rounded"
             class="max-h-64 object-contain rounded" />
     </div>
-    {#if imageData}
-        <p class="ml-auto">
-            {imageData.sizeMB}MB {imageData.type}
-            {imageData.width} x {imageData.height}
-        </p>
-    {/if}
 {/if}
