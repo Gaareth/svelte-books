@@ -63,18 +63,20 @@ If you changed the schema and want to test it:
 
 ## Todos
 
-- better cover selection, from multiple book entries and even custom
-    - auto takeover the cover image from the apidata
-    - simple? cache for showing google book images
+- auto takeover the cover image from the apidata
+- simple? cache for showing google book images
+- better google books search
+    - a default search result of both title and author and just title combined
+    - a custom seach bar with intitle, inauthor etc as styled tags (ideally not editable)
 
 - sse check
 - browser tests
 - more no-javascript friendly
 - just implement auth myself, authjs is a crazy mess
-- median stats
+- configurable? median stats
 - dont give each readactivity all books, aka more async
 
-- upgrade to svelte5, tailwind4, vite8?, etc...
+- upgrade tailwind, zod
     - dateselector
 
 - background show fav books covers sliding like steam loading animation

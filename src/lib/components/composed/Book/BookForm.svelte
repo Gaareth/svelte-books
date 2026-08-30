@@ -54,7 +54,13 @@
         formId: string;
     }
 
-    let { book = $bindable(), books, bookLists, form, formId }: Props = $props();
+    let {
+        book = $bindable(),
+        books,
+        bookLists,
+        form,
+        formId,
+    }: Props = $props();
 
     function getFormError(field: string) {
         return form?.errors?.[field as keyof typeof form.errors]?.[0];
@@ -65,7 +71,6 @@
     const wordsPerPageError = getFormError("wordsPerPage");
 
     function handleTakeOver(e: {
-        volumeId: string | undefined;
         queriedBook: queriedBookFull | undefined;
     }): void {
         console.log(e);
@@ -76,6 +81,15 @@
         book.description = e.queriedBook.volumeInfo.description ?? null;
         book.name = e.queriedBook.volumeInfo.title;
         book.author = e.queriedBook.volumeInfo.authors[0];
+
+        if (formElement) {
+            formElement.setAttribute(
+                "selectedGoogleBooksUrl",
+                e.queriedBook.id,
+            );
+        }
+
+        console.log(formElement?.getAttribute("selectedGoogleBooksUrl"));
     }
 
     const autoCompleteBookLabel = (b: BookFullType) => {
@@ -137,10 +151,9 @@
     enctype="multipart/form-data"
     bind:this={formElement}
     use:enhance={async ({ formData }) => {
-        console.log("Form data before processing:", formData);        
 
-        const selectedGoogleBooksUrl = formData.get("selectedGoogleBooksUrl");
         // upload the selected google books image to the server
+        const selectedGoogleBooksUrl = formData.get("selectedGoogleBooksUrl");
         if (selectedGoogleBooksUrl) {
             console.log("Selected Google Books URL:", selectedGoogleBooksUrl);
             const resp = await fetch(

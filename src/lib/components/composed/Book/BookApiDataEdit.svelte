@@ -3,20 +3,19 @@
 
     import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
     import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
+    import Alert from "../../Alert.svelte";
 
     interface Props {
         query?: string | undefined;
         data: BookApiDataCategories | null;
         onTakeOver?: (event: {
-            volumeId: string | undefined;
             queriedBook: queriedBookFull | undefined;
         }) => void;
     }
-
-    let { query = undefined, data, onTakeOver }: Props = $props();
+    let { query, data, onTakeOver }: Props = $props();
 
     let newVolumeId: string | undefined = $state();
-    let bookSelected: boolean = $state(false);
+    let bookSelected = $state(false);
 
     let queriedBook: queriedBookFull | undefined = $derived(
         data
@@ -50,9 +49,9 @@
             : undefined,
     );
 
-    let currentBookData = $state<Promise<queriedBookFull>>(
-        Promise.resolve(null as unknown as queriedBookFull),
-    );
+    let currentBookData: Promise<queriedBookFull> | undefined = $state();
+
+    let newBookData: Promise<queriedBookFull> | undefined = $state();
 
     $effect(() => {
         if (queriedBook) {
@@ -60,35 +59,42 @@
         }
     });
 
-    let newBookData = $state<Promise<queriedBookFull>>(
-        Promise.resolve(null as unknown as queriedBookFull),
-    );
-
     const reloadData = async () => {
-        if (data === null) return;
+        if (!data) return;
 
-        currentBookData = (await fetch(`/book/api/get/${data.id}`)).json();
+        currentBookData = fetch(`/book/api/get/${data.id}`).then((res) =>
+            res.json(),
+        );
+
         bookSelected = true;
         newVolumeId = data.id;
     };
 
-    const takeOver = () => {
-        newBookData.then((book) => {
-            console.log("takeOver", book);
-            onTakeOver?.({
-                volumeId: newVolumeId,
-                queriedBook: book,
-            });
+    const takeOver = async () => {
+        const book = await (newBookData ?? currentBookData);
+
+        if (!book) return;
+
+        console.log("takeOver", book);
+
+        onTakeOver?.({
+            queriedBook: book,
         });
     };
 </script>
 
 <section class="my-10">
-    <h2 class="text-xl flex items-center gap-1">
-        API Data
-        <a href="https://books.google.com/books" class="text-sm underline">
-            (Google Books)
-        </a>
+    <div class="text-xl flex items-center gap-1 mb-2">
+        <h2>
+            API Data
+            <a href="https://books.google.com/books" class="text-sm underline">
+                (Google Books)
+            </a>
+            <p class="text-base text-secondary -mt-1">
+                You can reload/refresh the data from google or take it over and
+                overwrite title, cover, etc.
+            </p>
+        </h2>
 
         {#if data !== null}
             <div class="ml-auto">
@@ -104,7 +110,7 @@
                 </button>
             </div>
         {/if}
-    </h2>
+    </div>
 
     {#if data !== null}
         <p class="text-sm text-secondary -mb-2">Current data:</p>
@@ -118,14 +124,12 @@
     {#if bookSelected}
         <input type="hidden" name="apiVolumeId" value={newVolumeId} />
 
-        <p class="text-base text-slate-500 text-center mt-3">
+        <Alert type="info" className="text-center mt-3">
             <span class="text-base text-stone-950 dark:text-gray-200">
-                Potentially unsaved changes!
+                Potentially unsaved changes.
             </span>
-            Don't forget to press the big
-            <span class="text-blue-700 text-base">blue</span>
-            save button
-        </p>
+            Don't forget to press the "Save" button
+        </Alert>
     {/if}
 
     <BookApi

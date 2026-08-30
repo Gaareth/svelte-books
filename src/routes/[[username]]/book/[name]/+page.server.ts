@@ -287,7 +287,7 @@ export const actions = {
             ...Object.fromEntries(f),
             bookSeries: f.getAll("books[]"),
         };
-        console.log("Form data:", formData);
+        // console.log("Form data:", formData);
 
         const result = await saveSchema.safeParseAsync(formData);
 
@@ -328,7 +328,7 @@ export const actions = {
             const coverInfo = {
                 uploadedCoverImage: result.data.uploadedCoverImage,
             };
-            console.log("Cover info:", coverInfo);
+            // console.log("Cover info:", coverInfo);
             const newCoverImage = await handleCoverUpdate(id, coverInfo);
 
             const book = await prisma.book.update({
@@ -359,8 +359,8 @@ export const actions = {
         }
 
         const { fieldErrors: errors } = result.error.flatten();
-        console.log("Errors:", errors);
-        console.log("Issues:", result.error.issues);
+        // console.log("Errors:", errors);
+        // console.log("Issues:", result.error.issues);
 
         const formDataWithoutFiles = removeFilesFromFormData(f);
 

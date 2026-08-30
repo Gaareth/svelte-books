@@ -145,18 +145,22 @@
         Back
     </button>
 {/if}
-{#if volumeId !== undefined && apiBookSelected && getBookPromise}
-    {#await getBookPromise}
+{#if volumeId !== undefined && apiBookSelected}
+    {#if getBookPromise}
+        {#await getBookPromise}
+            <BookApiSkeleton />
+        {:then book}
+            {#if APIResult !== undefined}
+                {@render APIResult(book)}
+            {:else}
+                {@render GoogleBooksResult(book)}
+            {/if}
+        {:catch error}
+            <span>System error: {error.message}.</span>
+        {/await}
+    {:else}
         <BookApiSkeleton />
-    {:then book}
-        {#if APIResult !== undefined}
-            {@render APIResult(book)}
-        {:else}
-            {@render GoogleBooksResult(book)}
-        {/if}
-    {:catch error}
-        <span>System error: {error.message}.</span>
-    {/await}
+    {/if}
 {/if}
 
 <style>
