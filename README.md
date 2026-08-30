@@ -64,8 +64,6 @@ If you changed the schema and want to test it:
 ## Todos
 
 - better cover selection, from multiple book entries and even custom
-    - improve ui
-    - upload highest quality image and not check on server
     - auto takeover the cover image from the apidata
     - simple? cache for showing google book images
 
