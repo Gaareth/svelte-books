@@ -46,7 +46,9 @@
     let buttonElement: HTMLButtonElement | undefined = $state();
     onMount(() => {
         const observer = new ResizeObserver(([entry]) => {
-            updateSlider(entry.target as HTMLButtonElement);
+            if ($selectedTab === thisTab) {
+                updateSlider(entry.target as HTMLButtonElement);
+            }
         });
 
         if (buttonElement) {
