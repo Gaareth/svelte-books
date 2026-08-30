@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
 
     import { twMerge } from "tailwind-merge";
 
@@ -41,9 +41,28 @@
             $tabWidth = clientWidth;
         }
     });
+
+    // update pos of slider, if the page is resized
+    let buttonElement: HTMLButtonElement | undefined = $state();
+    onMount(() => {
+        const observer = new ResizeObserver(([entry]) => {
+            updateSlider(entry.target as HTMLButtonElement);
+        });
+
+        if (buttonElement) {
+            observer.observe(buttonElement);
+        }
+
+        return () => {
+            if (buttonElement) {
+                observer.unobserve(buttonElement);
+            }
+        };
+    });
 </script>
 
 <button
+    bind:this={buttonElement}
     class={twMerge(btnClass, $selectedTab === thisTab && btnSelectedClass)}
     onclick={select}
     type="button"
