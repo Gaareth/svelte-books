@@ -27,7 +27,20 @@
         clsx(`transition-all duration-300 relative text-transparent
       ${imageSizeClass} object-cover object-center rounded`);
 
+    let coverSelection: CoverSelection | undefined = $state();
+
     let showChooseCoverImageModal = $state(false);
+    $effect(() => {
+        if (form?.errors?.uploadedCoverImage) {
+            showChooseCoverImageModal = true;
+        }
+
+        // reset on successful form submission
+        if (!edit) {
+            showChooseCoverImageModal = false;
+            coverSelection?.discardChanges();
+        }
+    });
 
     let hasImage: boolean | undefined = $derived(hasCoverImage(book));
 </script>
@@ -122,5 +135,9 @@
         </div>
     {/snippet}
 
-    <CoverSelection {formId} />
+    <CoverSelection
+        {formId}
+        errorMsgs={form?.errors?.uploadedCoverImage}
+        {book}
+        bind:this={coverSelection} />
 </Modal>

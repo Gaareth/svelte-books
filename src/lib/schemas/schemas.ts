@@ -10,18 +10,24 @@ export function createFileUploadSchema(
     allowedTypes: string[],
     maxFileSize: number,
 ) {
-    return z
-        .instanceof(File)
-        .refine((file) => file.size <= 0, "File is empty")
+    return z.preprocess(
+        // treat empty files as undefined, so that they can be optional
+        (value) =>
+            value instanceof File && value.size === 0 ? undefined : value,
 
-        .refine(
-            (file) => file.size <= maxFileSize,
-            `File is too large. Maximum size is ${maxFileSize} bytes.`,
-        )
-        .refine(
-            (file) => allowedTypes.includes(file.type),
-            `Unsupported file type. Allowed types: ${allowedTypes.join(", ")}`,
-        );
+        z
+            .instanceof(File)
+            .refine((file) => file.size > 0, "File is empty")
+            .refine(
+                (file) => file.size <= maxFileSize,
+                `File is too large. Maximum size is ${maxFileSize} bytes.`,
+            )
+            .refine(
+                (file) => allowedTypes.includes(file.type),
+                `Unsupported file type. Allowed types: ${allowedTypes.join(", ")}`,
+            )
+            .optional(),
+    );
 }
 
 export type ImageTypes =
@@ -47,10 +53,18 @@ export function createImageUploadSchema(
         maxFileSize,
     )
         .transform(async (file) => {
+            if (!file) {
+                return;
+            }
+
             const image = sharp(await file.arrayBuffer());
             return { file, image };
         })
         .superRefine(async (data, ctx) => {
+            if (!data) {
+                return;
+            }
+
             let metadata: Metadata;
             try {
                 metadata = await data.image.metadata();

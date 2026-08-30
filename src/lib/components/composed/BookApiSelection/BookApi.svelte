@@ -2,26 +2,21 @@
     import BookApiConfirm from "./BookApiConfirm.svelte";
     import BookApiSelection from "./BookApiSelection.svelte";
 
-    import type {
-        queriedBook,
-        queriedBookFull,
-        ReadingActivityList,
-    } from "$appTypes";
-    import type { Snippet } from "svelte";
+    import type { Props as BookApiSelectionProps } from "./BookApiSelection.svelte";
+    import type { Props as BookApiConfirmProps } from "./BookApiConfirm.svelte";
 
-    interface Props {
-        volumeId?: string | undefined;
-        query?: string | undefined;
-        apiBookSelected?: boolean;
-        getBookPromise?: Promise<queriedBookFull> | undefined;
-        label: string;
-        readingActivities?: ReadingActivityList[];
-        onBackClicked?: () => void;
-        onSelectClicked?: () => void;
-        APIResult?: Snippet<[queriedBookFull]>;
-        ResultEntry?: Snippet<[queriedBook, string | undefined, (id: string) => void]>;
-        searchEntriesWrapperClass?: string | undefined;
-    }
+    // to remove the rest prop type
+    type RemoveIndexSignature<T> = {
+        [K in keyof T as string extends K ? never : K]: T[K];
+    };
+    type SelectionProps = RemoveIndexSignature<BookApiSelectionProps>;
+
+    type Props = Omit<BookApiConfirmProps, "volumeId" | "apiBookSelected"> &
+        Omit<SelectionProps, "selectedBookId" | "apiBookSelected"> & {
+            volumeId?: string;
+            apiBookSelected?: boolean;
+        };
+
 
     let {
         volumeId = $bindable(),
@@ -35,6 +30,7 @@
         APIResult,
         ResultEntry,
         searchEntriesWrapperClass,
+        filterFn,
     }: Props = $props();
 
     async function getBook(id: string) {
@@ -46,6 +42,7 @@
         }
     });
 </script>
+
 
 <div hidden={!apiBookSelected || volumeId === undefined}>
     <BookApiConfirm
@@ -66,5 +63,6 @@
         bind:query
         {onSelectClicked}
         {ResultEntry}
+        {filterFn}
         {searchEntriesWrapperClass} />
 </div>

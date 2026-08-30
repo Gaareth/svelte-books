@@ -9,7 +9,7 @@
         maxFileSize: number;
         label: string;
         name: string;
-        form?: string;
+        formId?: string;
         id?: string;
     }
 
@@ -20,9 +20,20 @@
         maxFileSize,
         label,
         name,
-        form,
+        formId,
         id = `ImageUpload-${uuidv4()}`,
     }: Props = $props();
+
+    let inputElement: HTMLInputElement | undefined = $state();
+
+    $effect(() => {
+        if (!uploadedFile) {
+            previewImage = undefined;
+            if (inputElement) {
+                inputElement.value = "";
+            }
+        }
+    });
 
     function handleChange(event: Event) {
         const input = event.currentTarget as HTMLInputElement;
@@ -38,7 +49,8 @@
 <label for={id}>{label}:</label>
 
 <input
-    {form}
+    bind:this={inputElement}
+    form={formId}
     type="file"
     {id}
     {name}

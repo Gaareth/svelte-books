@@ -9,7 +9,7 @@
     import OpenInNewRounded from "$src/lib/icons/OpenInNewRounded.svelte";
     import type { Snippet } from "svelte";
 
-    interface Props {
+    export interface Props {
         volumeId: string | undefined;
         apiBookSelected?: boolean;
         back_button?: boolean;

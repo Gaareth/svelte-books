@@ -319,3 +319,20 @@ export function get_median(list: number[]): number {
         return sortedList[midIndex];
     }
 }
+/** Count the number of times a substring appears in a string.
+ * @param haystack The string to search in.
+ * @param needle The substring to search for.
+ * @returns The number of times the substring appears in the string.  
+ */
+export function countSubstringMatches(haystack: string, needle: string) {
+    /// aa
+    let count = 0;
+
+    for (const word of needle.split(" ")) {
+        if (haystack.toLowerCase().includes(word.toLowerCase())) {
+            count++;
+        }
+    }
+
+    return count;
+}

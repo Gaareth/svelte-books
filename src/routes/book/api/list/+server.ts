@@ -17,7 +17,6 @@ export const GET: RequestHandler = async ({ url, locals }) => {
         const data = await queryBooks(query);
         return json(data);
     } catch (err) {
-        console.error("A Error fetching book API data:", err);
-        error(500, "Error fetching book API data");
+        error(500, "Error fetching book API data: " + (err as Error).message);
     }
 };

@@ -7,6 +7,8 @@
     import { capitalize, sortReadingActivity } from "$src/lib/utils/utils";
     import KeyboardArrowRight from "$src/lib/icons/KeyboardArrowRight.svelte";
     import type { Snippet } from "svelte";
+    import Alert from "../../Alert.svelte";
+    import { countSubstringMatches } from "$src/lib/utils/statisticUtils";
 
     let queriedBooksPromise = $state<Promise<queriedBook[]> | undefined>(
         undefined,
@@ -15,6 +17,12 @@
     const queryBooks = async (): Promise<queriedBook[]> => {
         const response = await fetch(`/book/api/list/?query=${query}`);
         const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ?? "Unknown Error fetching book API data",
+            );
+        }
 
         if (data.error !== undefined) {
             throw new Error(data.error);
@@ -33,7 +41,7 @@
         queriedBooksPromise = queryBooks();
     };
 
-    interface Props {
+    export interface Props {
         readingActivities?: ReadingActivityList[];
         label: string;
         query?: string | undefined;
@@ -42,8 +50,11 @@
         onSelectClicked?: () => void;
 
         searchEntriesWrapperClass?: string | undefined;
-        ResultEntry?: Snippet<[queriedBook, string | undefined, (id: string) => void]>;
-        [key: string]: any;
+        ResultEntry?: Snippet<
+            [queriedBook, string | undefined, (id: string) => void]
+        >;
+        filterFn?: (book: queriedBook) => boolean;
+        [key: string]: unknown;
     }
 
     let {
@@ -55,6 +66,7 @@
         onSelectClicked,
         ResultEntry,
         searchEntriesWrapperClass,
+        filterFn,
 
         ...rest
     }: Props = $props();
@@ -77,18 +89,6 @@
         }
     }
 
-    function countMatches(haystack: string, needle: string) {
-        let count = 0;
-
-        for (let word of needle.split(" ")) {
-            if (haystack.toLowerCase().includes(word.toLowerCase())) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     function sortBookResults(books: queriedBook[]) {
         if (query == undefined) {
             return books;
@@ -100,13 +100,25 @@
                 (b.volumeInfo.subtitle ?? "") +
                 (b.volumeInfo.authors?.join(",") ?? "");
             return (
-                countMatches(name, query!) + (b.volumeInfo.imageLinks ? 1 : 0)
+                countSubstringMatches(name, query!) +
+                (b.volumeInfo.imageLinks ? 1 : 0)
             );
         };
+
+        if (filterFn != null) {
+            books = books.filter(filterFn);
+        }
 
         return books.sort((a, b) => {
             return scoreResult(b) - scoreResult(a); // sort descending
         });
+    }
+
+    function onkeydown(e: KeyboardEvent) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+        }
     }
 </script>
 
@@ -183,18 +195,14 @@
     <label for="bookApiQuery" class="w-full text-lg">
         {label}
     </label>
-    <div class="flex gap-2" >
+    <div class="flex gap-2">
         <input
             class="input btn-generic-color-2"
             type="text"
             id="bookApiQuery"
-            onkeydown={(event) => {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    handleSearch();
-                }
-            }}
-            bind:value={query} />
+            {onkeydown}
+            value={query}
+            oninput={(e) => (query = e.currentTarget.value)} />
 
         <button
             type="button"
@@ -218,24 +226,20 @@
 
                     {#each sortBookResults(queriedBooks) as book (book)}
                         {#if ResultEntry !== undefined}
-                            {@render ResultEntry(
-                                book,
-                                selectedBookId,
-                                (id) => {
-                                    selectedBookId = id
-                                    apiBookSelected = true;
-                                    onSelectClicked?.();
-                                },
-                            )}
+                            {@render ResultEntry(book, selectedBookId, (id) => {
+                                selectedBookId = id;
+                                apiBookSelected = true;
+                                onSelectClicked?.();
+                            })}
                         {:else}
                             {@render GoogleBooksEntry(book)}
                         {/if}
                     {/each}
                 </div>
             {:catch error}
-                <p class="text-red-500 pt-1 text-sm">
+                <Alert type="error">
                     System error: {error.message}.
-                </p>
+                </Alert>
             {/await}
         {/if}
     </div>

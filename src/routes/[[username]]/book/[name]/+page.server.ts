@@ -5,7 +5,6 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { Actions, RequestEvent } from "./$types";
 
-import { env } from "$env/dynamic/public";
 import {
     authorize,
     handlePublicOrAuthenticatedAccount,
@@ -157,7 +156,7 @@ const coverSourceSchema = z
     })
     .refine(
         ({ uploadedCoverImage }) =>
-            uploadedCoverImage == null || env.PUBLIC_ALLOW_IMAGE_UPLOADS,
+            uploadedCoverImage == null || publicConfig.imageUploads.enabled,
         {
             message: "Uploaded cover images are disabled",
             path: ["uploadedCoverImage"],
@@ -275,6 +274,7 @@ async function updateBookSeries(
     }
 }
 
+type SaveErrors = z.inferFlattenedErrors<typeof saveSchema>["fieldErrors"];
 export const actions = {
     save: async (event: RequestEvent) => {
         const account = (
@@ -283,12 +283,11 @@ export const actions = {
         const accountId = account.id;
 
         const f = await event.request.formData();
-        const formData = Object.fromEntries(f);
-
-        // bookSeries is an array of strings, so we need to handle it separately
-        const bookSeries = f.getAll("books[]");
-        // @ts-ignore
-        formData["bookSeries"] = bookSeries;
+        const formData = {
+            ...Object.fromEntries(f),
+            bookSeries: f.getAll("books[]"),
+        };
+        console.log("Form data:", formData);
 
         const result = await saveSchema.safeParseAsync(formData);
 
@@ -315,11 +314,12 @@ export const actions = {
             if (
                 allBooks.find((b) => b.name == name && b.id != id) !== undefined
             ) {
+                const errors: SaveErrors = {
+                    name: ["Book names have to be unique"],
+                };
                 return fail(400, {
                     data: formData,
-                    errors: {
-                        name: ["Book names have to be unique"],
-                    },
+                    errors,
                 });
             }
 
@@ -362,7 +362,7 @@ export const actions = {
         console.log("Errors:", errors);
         console.log("Issues:", result.error.issues);
 
-        const formDataWithoutFiles = removeFilesFromFormData(formData);
+        const formDataWithoutFiles = removeFilesFromFormData(f);
 
         return fail(400, {
             data: formDataWithoutFiles,

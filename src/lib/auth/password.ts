@@ -1,4 +1,4 @@
-import type { Account } from "$src/generated/prisma/client";
+import type { Account } from "$prismaClient";
 import * as argon2 from "argon2";
 
 const { randomBytes } = await import("node:crypto");

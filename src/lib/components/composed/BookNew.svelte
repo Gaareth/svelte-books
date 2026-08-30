@@ -13,9 +13,9 @@
     import { invalidateAll } from "$app/navigation";
     import { type queriedBookFull, type ReadingActivityList } from "$appTypes";
     import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
-    import TabGroup from "$components/composed/Tab/TabGroup.svelte";
-    import TabPanel from "$components/composed/Tab/TabPanel.svelte";
-    import TabPanels from "$components/composed/Tab/TabPanels.svelte";
+    import TabGroup from "$src/lib/components/Tab/TabGroup.svelte";
+    import TabPanel from "$src/lib/components/Tab/TabPanel.svelte";
+    import TabPanels from "$src/lib/components/Tab/TabPanels.svelte";
     import DateSelector, {
         type OptionalDate,
     } from "$components/input/DateSelector.svelte";

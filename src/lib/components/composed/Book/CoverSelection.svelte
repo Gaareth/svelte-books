@@ -2,34 +2,46 @@
     import { publicConfig } from "$src/lib/config/public";
     import { getMaxResolutionImage } from "$src/lib/utils/utils";
     import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
-    import TabGroup from "$components/composed/Tab/TabGroup.svelte";
-    import TabPanel from "$components/composed/Tab/TabPanel.svelte";
-    import TabPanels from "$components/composed/Tab/TabPanels.svelte";
+    import TabGroup from "$src/lib/components/Tab/TabGroup.svelte";
+    import TabPanel from "$src/lib/components/Tab/TabPanel.svelte";
+    import TabPanels from "$src/lib/components/Tab/TabPanels.svelte";
     import ImageUpload from "../../ImageUpload.svelte";
     import type { ImageLinksType } from "$src/app";
     import ImageWithMetadata from "../../ImageWithMetadata.svelte";
     import { resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
     import clsx from "clsx";
+    import Alert from "../../Alert.svelte";
+    import Image from "../../Image.svelte";
+    import type { Book } from "$prismaBrowser";
 
     interface Props {
+        book: Book;
         formId: string;
-        selectedGoogleBooksUrl?: string | undefined;
-        coverWasSelected?: boolean | undefined;
+        errorMsgs?: string[];
+        selectedGoogleBooksUrl?: string;
+        coverWasSelected?: boolean;
     }
 
     let {
+        book,
         formId,
+        errorMsgs,
         selectedGoogleBooksUrl = $bindable(),
         coverWasSelected = $bindable(),
     }: Props = $props();
     let uploadedFile: File | undefined = $state();
+    let formButtonsWrapper: HTMLDivElement | undefined = $state();
 
     $effect(() => {
         coverWasSelected =
             selectedGoogleBooksUrl != null || uploadedFile != null;
+
+        if (coverWasSelected && formButtonsWrapper) {
+            formButtonsWrapper.scrollIntoView({ behavior: "smooth" });
+        }
     });
 
-    function discardChanges() {
+    export function discardChanges() {
         selectedGoogleBooksUrl = undefined;
         uploadedFile = undefined;
     }
@@ -64,6 +76,14 @@
     Make sure to choose a high-quality image for the best results.
 </p>
 
+{#if errorMsgs}
+    <Alert type="error" className="flex flex-col gap-1">
+        {#each errorMsgs as errorMsg, i (i)}
+            <p class="text-lg sm:text-xl">{errorMsg}</p>
+        {/each}
+    </Alert>
+{/if}
+
 <TabGroup
     className="my-5"
     tabTriggerWrapperClass="grid grid-cols-2 gap-1 w-full"
@@ -78,9 +98,11 @@
             <!-- TODO: only show results where image exists -->
             <div class="my-5">
                 <BookApi
+                    query={`intitle:${book.name} inauthor:${book.author}`}
+                    filterFn={(book) => book.volumeInfo.imageLinks != null}
                     label="Search using google books"
                     onBackClicked={() => (selectedGoogleBooksUrl = undefined)}
-                    searchEntriesWrapperClass="flex flex-wrap mt-5 gap-1">
+                    searchEntriesWrapperClass="grid w-full grid-cols-2 sm:grid-cols-[repeat(auto-fit,7rem)] justify-center mt-5 gap-3">
                     {#snippet APIResult(book)}
                         {@const imageLinks = getAllImages(
                             book.volumeInfo?.imageLinks,
@@ -116,7 +138,7 @@
                                                 imageData,
                                             )}
                                                 <p
-                                                    class="text-sm flex flex-wrap items-center gap-1.5 mt-0.5">
+                                                    class="text-sm flex flex-wrap items-center gap-1.5 mt-1">
                                                     <input
                                                         form={formId}
                                                         type="radio"
@@ -145,18 +167,20 @@
                         {@const coverImage = getMaxResolutionImage(
                             JSON.stringify(book.volumeInfo?.imageLinks),
                         )}
-                        <button
-                            type="button"
-                            class="hover:opacity-70"
-                            class:ring-2={selectedBookId === book.id}
-                            onclick={() => onSelect(book.id)}>
-                            <img
-                                src={coverImage
-                                    ? resolveAPIImageUrl(coverImage)
-                                    : "/cover.png"}
-                                alt={`${!coverImage ? "Placeholder " : ""}cover`}
-                                class="w-32 aspect-[1/1.5] rounded-md" />
-                        </button>
+                        <div class="flex justify-center">
+                            <button
+                                type="button"
+                                class="hover:opacity-70"
+                                class:ring-2={selectedBookId === book.id}
+                                onclick={() => onSelect(book.id)}>
+                                <Image
+                                    src={coverImage
+                                        ? resolveAPIImageUrl(coverImage)
+                                        : "/cover.png"}
+                                    alt={`${!coverImage ? "Placeholder " : ""}cover`}
+                                    class="w-28 aspect-[1/1.5] rounded-md" />
+                            </button>
+                        </div>
                     {/snippet}
                 </BookApi>
             </div>
@@ -170,15 +194,18 @@
                     maxFileSize={publicConfig.imageUploads.maxFileSize}
                     label="Choose a cover image"
                     name="uploadedCoverImage"
-                    form={formId} />
+                    {formId} />
             </div>
         </TabPanel>
     </TabPanels>
 </TabGroup>
 
 {#if coverWasSelected}
-    <div class="grid grid-cols-2 gap-1">
-        <button form={formId} type="submit" class="btn-submit capitalize font-medium dark:border-blue-500">
+    <div class="grid grid-cols-2 gap-1" bind:this={formButtonsWrapper}>
+        <button
+            form={formId}
+            type="submit"
+            class="btn-submit capitalize font-medium dark:border-blue-500">
             Save Form
         </button>
 

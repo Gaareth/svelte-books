@@ -20,6 +20,7 @@
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
     import { resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
+
     type BookFormType = Prisma.BookGetPayload<{
         include: {
             bookSeries: {
@@ -125,6 +126,8 @@
         book = book;
         series_error = undefined;
     };
+
+    let formElement: HTMLFormElement | undefined = $state();
 </script>
 
 <form
@@ -132,10 +135,14 @@
     method="POST"
     id={formId}
     enctype="multipart/form-data"
+    bind:this={formElement}
     use:enhance={async ({ formData }) => {
+        console.log("Form data before processing:", formData);        
+
         const selectedGoogleBooksUrl = formData.get("selectedGoogleBooksUrl");
-        console.log(formData)
+        // upload the selected google books image to the server
         if (selectedGoogleBooksUrl) {
+            console.log("Selected Google Books URL:", selectedGoogleBooksUrl);
             const resp = await fetch(
                 resolveAPIImageUrl(String(selectedGoogleBooksUrl)),
             );
@@ -155,6 +162,7 @@
 
         return async ({ result }) => {
             if (result.type != "failure") {
+                // formElement?.r
                 toast.success("Successfully edited book");
             } else {
                 toast.error("Failed editing book");

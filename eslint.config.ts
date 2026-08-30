@@ -52,6 +52,18 @@ export default defineConfig([
             ],
 
             "@typescript-eslint/ban-ts-comment": "off",
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: [
+                        {
+                            group: ["$src/generated/prisma/**"],
+                            message:
+                                "Import Prisma through $prismaClient or $prismaBrowser instead.",
+                        },
+                    ],
+                },
+            ],
 
             // "import/order": [
             //     "error",
@@ -97,6 +109,18 @@ export default defineConfig([
         },
         rules: {
             "unused-imports/no-unused-imports": "error",
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: [
+                        {
+                            group: ["$src/generated/prisma/**"],
+                            message:
+                                "Import Prisma through $prismaClient or $prismaBrowser instead.",
+                        },
+                    ],
+                },
+            ],
         },
     },
 ]);

@@ -16,6 +16,7 @@
         sizeMB?: string | undefined;
     };
     let imageData: ImageData | undefined = $state();
+    let error: string | undefined = $state();
 
     function imageLoaded(event: Event) {
         const img = event.currentTarget as HTMLImageElement;
@@ -28,11 +29,15 @@
                 ? (uploadedFile.size / 1024 / 1024).toFixed(2)
                 : undefined,
         };
+        error = undefined;
     }
 </script>
 
 <div>
-    <Image {...rest} onload={imageLoaded} />
+    <Image {...rest} onload={imageLoaded} onerror={() => (error = "Failed to load image")} />
+    {#if error}
+        <p class="text-error">{error}</p>
+    {/if}
     {#if imageData}
         {#if ImageDataSnippet}
             {@render ImageDataSnippet(imageData)}

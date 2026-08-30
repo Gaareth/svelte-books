@@ -60,6 +60,7 @@
     [type="tel"],
     [type="time"],
     [type="week"],
+    [type="file"],
     [multiple],
     textarea,
     select {
@@ -75,7 +76,10 @@
     }
 
     input::file-selector-button {
-        @apply border-0 dark:bg-slate-600 dark:text-white;
+        @apply border-0 dark:bg-slate-600 dark:text-white h-full;
+    }
+    input[type="file"] {
+        @apply dark:outline-slate-500 outline-gray-300 border;
     }
 
     /* select {

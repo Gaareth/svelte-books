@@ -110,12 +110,10 @@ export function parseFormArray(
     return values;
 }
 
-export function removeFilesFromFormData(data: {
-    [k: string]: FormDataEntryValue;
-}) {
+export function removeFilesFromFormData(formdata: FormData) {
     const entries: [string, FormDataEntryValue][] = [];
 
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(formdata.entries())) {
         if (!(value instanceof File)) {
             entries.push([key, value]);
         }
