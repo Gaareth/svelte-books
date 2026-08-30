@@ -8,3 +8,4 @@ export type SSE_EVENT = {
 };
 
 export const SSE_DATA: { [accountId: string]: SSE_EVENT } = {};
+export const SSE_EVENT_NAME = "update_all";

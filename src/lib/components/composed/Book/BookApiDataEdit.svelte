@@ -85,11 +85,13 @@
 
 <section class="my-10">
     <div class="text-xl flex items-center gap-1 mb-2">
-        <h2>
+        <h2 class="text-xl">
             API Data
             <a href="https://books.google.com/books" class="text-sm underline">
                 (Google Books)
             </a>
+            <p class="text-lg mt-1">Add an API entry for a cover and metadata such as number of pages, categories, language, etc.</p>
+
             <p class="text-base text-secondary -mt-1">
                 You can reload/refresh the data from google or take it over and
                 overwrite title, cover, etc.

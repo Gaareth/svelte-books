@@ -82,14 +82,13 @@
         book.name = e.queriedBook.volumeInfo.title;
         book.author = e.queriedBook.volumeInfo.authors[0];
 
+        // add the selected google books url to the form data so that it can be uploaded to the server
         if (formElement) {
             formElement.setAttribute(
                 "selectedGoogleBooksUrl",
                 e.queriedBook.id,
             );
         }
-
-        console.log(formElement?.getAttribute("selectedGoogleBooksUrl"));
     }
 
     const autoCompleteBookLabel = (b: BookFullType) => {

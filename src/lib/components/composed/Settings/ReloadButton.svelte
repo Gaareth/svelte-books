@@ -3,7 +3,10 @@
 
     import toast from "svelte-french-toast";
 
-    import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
+    import {
+        SSE_EVENT_NAME,
+        type SSE_EVENT,
+    } from "$src/routes/book/api/update_all/sse";
 
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
@@ -18,9 +21,10 @@
     let { currentStatus = $bindable() }: Props = $props();
 
     onMount(() => {
+        console.log("onMount");
         evtSource = new EventSource("/book/api/update_all/");
-        evtSource.onmessage = function (event) {
-            // console.log(event.data);
+        evtSource.addEventListener(SSE_EVENT_NAME, (event) => {
+            console.log(event);
 
             if (event.data === "undefined") {
                 loading = false;
@@ -33,7 +37,7 @@
             if (currentStatus!.id == "reload") {
                 loading = currentStatus!.msg != "done";
             }
-        };
+        });
     });
 
     onDestroy(() => {
@@ -57,7 +61,6 @@
             loading = true;
 
             return async ({ result, update }) => {
-                update();
                 loading = false;
                 if (evtSource) {
                     evtSource.close();
@@ -79,6 +82,10 @@
                 } else if (booksUpdated == 0) {
                     toast.error("Failed updating books :(");
                 }
+                if (currentStatus) {
+                    currentStatus.msg = "done";
+                }
+                await update();
 
                 // `result` is an `ActionResult` object
                 // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
