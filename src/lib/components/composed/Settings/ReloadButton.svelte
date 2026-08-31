@@ -1,48 +1,32 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-
     import toast from "svelte-french-toast";
 
-    import {
-        SSE_EVENT_NAME,
-        type SSE_EVENT,
-    } from "$src/routes/book/api/update_all/sse";
+    import { type SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
     import RefreshIcon from "$src/lib/icons/RefreshIcon.svelte";
+    import type { settingsApiReloadResult } from "$src/routes/settings/apidata";
 
-    let loading = $state(false);
-    let evtSource: EventSource | undefined = $state();
     interface Props {
         currentStatus: SSE_EVENT | undefined;
+        evtSource: EventSource | undefined;
+        form?: settingsApiReloadResult;
+        disabled?: boolean;
+        loading?: boolean;
     }
 
-    let { currentStatus = $bindable() }: Props = $props();
+    let {
+        currentStatus = $bindable(),
+        evtSource = $bindable(),
+        form,
+        disabled = false,
+        loading = $bindable(false),
+    }: Props = $props();
 
-    onMount(() => {
-        console.log("onMount");
-        evtSource = new EventSource("/book/api/update_all/");
-        evtSource.addEventListener(SSE_EVENT_NAME, (event) => {
-            console.log(event);
-
-            if (event.data === "undefined") {
-                loading = false;
-                return;
-            }
-
-            currentStatus = JSON.parse(decodeURIComponent(event.data));
-            console.log(currentStatus);
-
-            if (currentStatus!.id == "reload") {
-                loading = currentStatus!.msg != "done";
-            }
-        });
-    });
-
-    onDestroy(() => {
-        if (evtSource) {
-            evtSource.close();
+    $effect(() => {
+        if (currentStatus?.id == "reload") {
+            loading = currentStatus!.msg != "done";
         }
     });
 </script>
@@ -52,25 +36,17 @@
         action="?/reload"
         method="POST"
         class="flex flex-col sm:flex-row justify-between gap-2 items-start"
-        use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-            // `formElement` is this `<form>` element
-            // `formData` is its `FormData` object that's about to be submitted
-            // `action` is the URL to which the form is posted
-            // calling `cancel()` will prevent the submission
-            // `submitter` is the `HTMLElement` that caused the form to be submitted
+        use:enhance={() => {
             loading = true;
 
             return async ({ result, update }) => {
+                await update();
                 loading = false;
-                if (evtSource) {
-                    evtSource.close();
-                }
 
                 // @ts-ignore
-                if (result?.data == null) {
-                    toast.error("Failed to reload API data :(");
+                if (result === undefined || result?.data! == null) {
                     return;
-                }
+                }            
 
                 // @ts-ignore
                 const { success, booksUpdated } = result.data;
@@ -85,17 +61,13 @@
                 if (currentStatus) {
                     currentStatus.msg = "done";
                 }
-                await update();
-
-                // `result` is an `ActionResult` object
-                // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
             };
         }}>
-        <p>Updates api data for all existing entries</p>
+        <p>Update api data for all existing entries</p>
         <button
             type="submit"
             class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit"
-            disabled={loading}>
+            disabled={loading || disabled}>
             {#if loading}
                 <LoadingSpinner />
                 loading..
@@ -108,3 +80,20 @@
         </button>
     </form>
 </div>
+
+{#if form != null}
+    <div class="default-border p-3 my-2">
+        <p class="mb-2">Updated {form.booksUpdated} books</p>
+        {#each form.diffs as diff (diff)}
+            <div>
+                <a class="hover:underline" href="/book/{diff.bookName}">
+                    {diff.bookName}
+                </a>
+                -
+                {diff.propName}: {diff.oldValue} --> {diff.newValue}
+            </div>
+        {:else}
+            No changes found
+        {/each}
+    </div>
+{/if}

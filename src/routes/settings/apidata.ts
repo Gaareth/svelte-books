@@ -38,11 +38,10 @@ export async function updateData(accountId: string) {
     SSE_DATA[accountId].max = bookDataList.length;
 
     for (const book of bookDataList) {
-        await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
-
         const { id, title } = book;
         SSE_DATA[accountId].msg = "Updating: " + title;
         SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
+
         const apiData = await getBookApiData(id);
         const extractedData = extractBookApiData(apiData);
         const categories = extractCategories(apiData);
@@ -114,6 +113,9 @@ export async function updateData(accountId: string) {
         });
 
         booksUpdated += 1;
+        if (booksUpdated < bookDataList.length) {
+            await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
+        }
     }
 
     return { booksUpdated, diffs };
@@ -144,7 +146,6 @@ export async function createConnections(
             accountId,
         },
     });
-    console.log("num books to connect", unconnectedBooks.length);
     SSE_DATA[accountId].max = unconnectedBooks.length;
 
     const createConnection = async (
@@ -216,7 +217,7 @@ export async function createConnections(
                 );
                 // works for arrays with few elements. Scores should only contains < 40 elements? (see google books api max results)
                 const max = arrMax(scores);
-                console.log(max);
+                // console.log(max);
 
                 if (max === undefined || max?.maxValue == 0) {
                     return undefined;
@@ -237,11 +238,11 @@ export async function createConnections(
     const updatedBookNames = [];
     const errorsBooks: errorBooksType = [];
 
+    let itemsProcessed = 0;
     for (const book of unconnectedBooks) {
         SSE_DATA[accountId].msg = "Adding: " + book.name;
         SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
 
-        await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
         const res = await findVolumeId(book);
 
         if (res === undefined) {
@@ -255,17 +256,18 @@ export async function createConnections(
 
             try {
                 await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
-                createConnection(volumeId, book.id);
+                await createConnection(volumeId, book.id);
                 // booksUpdated += 1;
             } catch (e) {
                 errorsBooks.push({ book, error: getErrorMessage(e), volumeId });
                 console.log(e);
             }
         }
-
+        itemsProcessed++;
         updatedBookNames.push(book.name);
-        // await delay(200);
-        // break;
+        if (itemsProcessed < unconnectedBooks.length) {
+            await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
+        }
     }
 
     return { updatedBookNames, errorsBooks };

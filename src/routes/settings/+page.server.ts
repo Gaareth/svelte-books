@@ -38,11 +38,15 @@ export const actions = {
         const session = await locals.auth();
         const accountId = await getAccountIdfromSession(session);
 
-        SSE_DATA[accountId] = { items: 0, msg: "", max: 0, id: "reload" };
+        SSE_DATA[accountId] = {
+            items: 0,
+            msg: "Initializing...",
+            max: 0,
+            id: "reload",
+        };
 
         try {
             const diffs = await updateData(accountId);
-            // console.log(SSE_DATA[accountId]);
 
             const response: settingsApiReloadResult = {
                 success: true,
@@ -70,7 +74,12 @@ export const actions = {
         const formData = await request.formData();
         const connect_all = formData.get("connect-all") == "on";
 
-        SSE_DATA[accountId] = { items: 0, msg: "", max: 0, id: "try_add" };
+        SSE_DATA[accountId] = {
+            items: 0,
+            msg: "Initializing...",
+            max: 0,
+            id: "try_add",
+        };
 
         const result = await createConnections(accountId, connect_all);
         const response: settingsApiCreateResult = {

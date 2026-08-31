@@ -1,116 +1,17 @@
 <script lang="ts">
-    import ErrorIcon from "$src/lib/icons/ErrorIcon.svelte";
-    import SuccessIcon from "$src/lib/icons/SuccessIcon.svelte";
-
-
-    import type {
-        settingsApiReloadResult,
-        settingsApiCreateResult,
-    } from "../../../../routes/settings/apidata";
+    import ProgressBar from "../../ProgressBar.svelte";
+    import { type SSE_EVENT } from "$src/routes/book/api/update_all/sse";
 
     interface Props {
-        currentStatus: any;
-        form: any;
+        currentStatus: SSE_EVENT | undefined;
     }
 
-    let { currentStatus, form }: Props = $props();
-
-    let formDiffs = $derived(form as settingsApiReloadResult);
-    let formErrors = $derived(form as settingsApiCreateResult);
+    let { currentStatus }: Props = $props();
 </script>
 
-{#if form !== undefined && form !== null}
-    <div class="default-border p-3 my-2">
-        {#if Object.hasOwn(formDiffs, "diffs")}
-            <p class="mb-2">Updated {formDiffs.booksUpdated} books</p>
-            {#each formDiffs.diffs as diff (diff)}
-                <div>
-                    <a class="hover:underline" href="/book/{diff.bookName}">
-                        {diff.bookName}
-                    </a>
-                    -
-                    {diff.propName}: {diff.oldValue} --> {diff.newValue}
-                </div>
-            {:else}
-                No changes found
-            {/each}
-        {:else if formErrors.errorsBooks !== undefined}
-            {#if formErrors.errorsBooks.length > 0}
-                <span class="inline-flex gap-1 mb-2">
-                    Finished updating all {formErrors.updatedBookNames.length} entries.
-                    <span class="text-red-500 inline-flex items-center gap-1">
-                        <span class="w-[20px] inline-block">
-                            <ErrorIcon />
-                        </span>
-                        Failed in {formErrors.errorsBooks.length} entries
-                    </span>
-                </span>
-
-                <div>
-                    {#each formErrors.errorsBooks as errorBook (errorBook)}
-                        <div class="flex items-center gap-2">
-                            <span class="w-[20px] inline-block text-red-500">
-                                <ErrorIcon />
-                            </span>
-                            <a
-                                class="hover:underline"
-                                href="/book/{errorBook.book.name}">
-                                {errorBook.book.name}
-                            </a>
-                            -
-                            {#if errorBook.volumeId !== undefined}
-                                <a
-                                    class="hover:underline"
-                                    href="http://books.google.de/books?id={errorBook.volumeId}">
-                                    volumeId: {errorBook.volumeId}
-                                </a>
-                            {/if}
-                            -
-                            <span class="text-red-500 font-bold">
-                                Error: {errorBook.error}
-                            </span>
-                        </div>
-                    {/each}
-                </div>
-            {:else}
-                <span class="inline-flex gap-1 flex-wrap">
-                    <span
-                        class="text-green-500 dark:text-green-400 inline-flex items-center gap-1">
-                        <span class="w-[22px] inline-block">
-                            <SuccessIcon />
-                        </span>
-                        Successfully
-                    </span>
-                    updated all {formErrors.updatedBookNames.length}
-                    entries
-                </span>
-                <details open>
-                    <summary>Books updated:</summary>
-                    <ul class="list-disc">
-                        {#each formErrors.updatedBookNames as name (name)}
-                            <li class="ml-10">
-                                <a
-                                    class="hover:underline text-base"
-                                    href="/book/{name}">
-                                    {name}
-                                </a>
-                            </li>
-                        {/each}
-                    </ul>
-                </details>
-            {/if}
-        {/if}
-    </div>
-{/if}
-
 {#if currentStatus !== undefined && currentStatus.msg != "done"}
-    <div class="flex flex-col">
-        <div class="flex gap-1">
-            <span>{currentStatus.msg}</span>
-            <span class="ml-auto">
-                {currentStatus.items}/{currentStatus.max}
-            </span>
-        </div>
-        <progress max={currentStatus.max} value={currentStatus.items}></progress>
-    </div>
+    <ProgressBar
+        msg={currentStatus.msg}
+        value={currentStatus.items}
+        max={currentStatus.max} />
 {/if}

@@ -20,6 +20,7 @@
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
     import { resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
+    import { getMaxResolutionImage } from "$src/lib/utils/utils";
 
     type BookFormType = Prisma.BookGetPayload<{
         include: {
@@ -43,6 +44,7 @@
                 };
             };
             bookList: true;
+            coverImage: true;
         };
     }>;
 
@@ -67,8 +69,9 @@
     }
 
     const authorError = getFormError("author");
-    // const listNameError = getFormError("listName");
     const wordsPerPageError = getFormError("wordsPerPage");
+
+    let tookOverGoogleBooksUrl: string | undefined | null = $state();
 
     function handleTakeOver(e: {
         queriedBook: queriedBookFull | undefined;
@@ -83,12 +86,10 @@
         book.author = e.queriedBook.volumeInfo.authors[0];
 
         // add the selected google books url to the form data so that it can be uploaded to the server
-        if (formElement) {
-            formElement.setAttribute(
-                "selectedGoogleBooksUrl",
-                e.queriedBook.id,
-            );
-        }
+        console.log("Selected Google Books URL:", e.queriedBook.volumeInfo.imageLinks);
+        tookOverGoogleBooksUrl = getMaxResolutionImage(JSON.stringify(e.queriedBook.volumeInfo.imageLinks));
+        // set to null so that coverimage takes the api image instead as a kind of preview
+        book.coverImage = null;
     }
 
     const autoCompleteBookLabel = (b: BookFullType) => {
@@ -150,7 +151,10 @@
     enctype="multipart/form-data"
     bind:this={formElement}
     use:enhance={async ({ formData }) => {
-
+        if (tookOverGoogleBooksUrl != null) {
+            formData.set("selectedGoogleBooksUrl", tookOverGoogleBooksUrl);
+        }
+        console.log("Form data before submission:", formData);
         // upload the selected google books image to the server
         const selectedGoogleBooksUrl = formData.get("selectedGoogleBooksUrl");
         if (selectedGoogleBooksUrl) {

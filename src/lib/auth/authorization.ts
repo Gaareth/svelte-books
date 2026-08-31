@@ -52,6 +52,10 @@ export function visibilityIsPublicOrAuthenticated(
     );
 }
 
+function returnAccountNotFound() {
+    return error(StatusCodes.NOT_FOUND, "Requested account not found");
+}
+
 export async function authorize(
     session: Session | null,
     requestedAccountUsername?: string,
@@ -88,7 +92,7 @@ export async function authorize(
         requestedAccountUsername,
     );
     if (requestedAccount == null) {
-        return error(StatusCodes.NOT_FOUND, "Requested account not found");
+        return returnAccountNotFound();
     }
 
     const allow =
@@ -102,7 +106,7 @@ export async function authorize(
 
     // TODO: perhabs return 404 to avoid leaking information about the existence of the account
     // return error(StatusCodes.FORBIDDEN, "You are not authorized");
-    return error(StatusCodes.NOT_FOUND, "Requested account not found");
+    return returnAccountNotFound();
 }
 
 export async function isReadingActivityPublic(

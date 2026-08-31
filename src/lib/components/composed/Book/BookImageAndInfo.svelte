@@ -91,7 +91,7 @@
                     commandFor="coverSelectionModal"
                     command="show-modal"
                     type="button"
-                    class="btn-generic btn-generic-color-2 flex items-center gap-1">
+                    class="btn-generic btn-generic-color-2 flex items-center gap-1 opacity-95 !backdrop-blur-xl">
                     Change <AddImageIcon />
                 </button>
             </div>

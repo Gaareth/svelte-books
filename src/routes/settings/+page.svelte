@@ -2,8 +2,11 @@
     import toast from "svelte-french-toast";
     import { twMerge } from "tailwind-merge";
 
-    import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
-    import type { PageData } from "./$types.js";
+    import {
+        SSE_EVENT_NAME,
+        type SSE_EVENT,
+    } from "$src/routes/book/api/update_all/sse";
+    import type { ActionData, PageData } from "./$types.js";
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
@@ -20,46 +23,42 @@
         VISIBILITY_VALUES,
     } from "$lib/constants/enums";
     import { capitalize } from "$lib/utils/utils";
+    import { resolve } from "$app/paths";
+    import { onDestroy, onMount } from "svelte";
 
     interface Props {
-        form: any;
+        form: ActionData;
         data: PageData;
     }
 
     let { form, data = $bindable() }: Props = $props();
-    // let originalData = data;
-    // $: dataChanged = originalData != data;
-    // $: {
-    //   console.log("same", originalData == data);
-    //   console.log(data);
-    //   console.log(originalData);
-
-    // }
 
     let currentStatus: SSE_EVENT | undefined = $state(undefined);
+    let globalVisibility = $state(data.globalVisibility);
+    let readingActivityLists = $state(data.readingActivityLists);
 
     //TODO: toast
-    // let globalVisibility = "private";
 
     let allAsGlobal = $derived(
-        data.readingActivityLists
-            .filter((v) => v.visibility != null)
-            .every((v) => (v.visibility as VisibilityType) == globalVisibility),
+        readingActivityLists
+            .map((v) => v.visibility)
+            .filter((v) => v != null)
+            .every((v) => v === globalVisibility),
     );
 
-    let globalVisibility = $state(data.globalVisibility);
-
     function changeAllVisiblities(option: string) {
-        for (let i = 0; i < data.readingActivityLists.length; i++) {
+        for (let i = 0; i < readingActivityLists.length; i++) {
             if (VISIBILITY_VALUES.includes(option as VisibilityType)) {
-                data.readingActivityLists[i].visibility = option as VisibilityType;
+                readingActivityLists[i].visibility = option as VisibilityType;
             }
         }
+        readingActivityLists = [...readingActivityLists];
     }
 
     async function resetForm() {
         await invalidateAll();
         globalVisibility = data.globalVisibility;
+        readingActivityLists = data.readingActivityLists;
     }
 
     $effect(() => {
@@ -68,7 +67,33 @@
         }
     });
     // $: sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, UNLISTED, PUBLIC]; //TODO: support unlisted
-    let sortedSupportedVisibilites = $derived([PRIVATE, AUTHENTICATED, PUBLIC]);
+    let sortedSupportedVisibilites = [PRIVATE, AUTHENTICATED, PUBLIC];
+
+    let evtSource: EventSource | undefined = $state();
+    let reloadLoading: boolean = $state(false);
+    let addLoading: boolean = $state(false);
+
+    onMount(() => {
+        console.log("onMount");
+        evtSource = new EventSource("/book/api/update_all/");
+        evtSource.addEventListener(SSE_EVENT_NAME, (event) => {
+            // console.log(event);
+
+            if (event.data === "undefined") {
+                currentStatus = undefined;
+                return;
+            }
+
+            currentStatus = JSON.parse(decodeURIComponent(event.data));
+            // console.log(currentStatus);
+        });
+    });
+
+    onDestroy(() => {
+        if (evtSource) {
+            evtSource.close();
+        }
+    });
 </script>
 
 <h1 class="text-5xl my-4">Settings</h1>
@@ -79,10 +104,17 @@
     <form method="POST" action="?/editVisibility" use:enhance>
         <div
             class="gap-2 flex flex-wrap justify-between border generic-border p-4 items-center">
-            <div class="max-w-52">
+            <div class="max-w-72">
                 <p>Global visibilty</p>
                 <p class="text-secondary text-base break-words">
-                    Applies to all lists as a fallback value.
+                    Define whether your <a
+                        class="text-base underline"
+                        href={resolve("/[[username]]", {
+                            username: data.session?.user?.name!,
+                        })}>
+                        account page
+                    </a>
+                    is visible. Currently also applies to book pages.
                 </p>
             </div>
             <div>
@@ -131,15 +163,19 @@
 
         <div class="mt-4 mb-2">
             <h3 class="text-2xl font-medium">Reading Activity Lists</h3>
+            <p class="text-base text-secondary -mt-0.5">
+                Define which reading activities are visible to others. Applies
+                to complete lists and entries on book pages.
+            </p>
         </div>
         <div class="flex flex-col gap-2">
-            {#each data.readingActivityLists as list, i (list.id)}
+            {#each readingActivityLists as list, i (list.id)}
                 <div
                     class={twMerge(
                         "gap-2 flex flex-wrap justify-between border generic-border p-4 items-center",
-                        data.readingActivityLists[i].visibility !=
+                        readingActivityLists[i].visibility !=
                             globalVisibility &&
-                            data.readingActivityLists[i].visibility &&
+                            readingActivityLists[i].visibility &&
                             "border-warning",
                     )}>
                     <p>{capitalize(list.status)}</p>
@@ -152,13 +188,16 @@
                         startClass="border-s rounded-s-md"
                         endClass="rounded-e-md"
                         deselectable={true}
-                        bind:selectedOption={
-                            data.readingActivityLists[i].visibility
-                        } />
+                        selectedOption={readingActivityLists[i].visibility}
+                        onSelect={(value) => {
+                            readingActivityLists[i].visibility =
+                                value as VisibilityType;
+                            readingActivityLists = [...readingActivityLists];
+                        }} />
                     <input
                         type="hidden"
                         name={`readingActivityVisibility[${list.status}]`}
-                        value={data.readingActivityLists[i].visibility} />
+                        value={readingActivityLists[i].visibility} />
                 </div>
             {/each}
         </div>
@@ -176,12 +215,28 @@
 </section>
 
 <section>
-    <h2>Datasource</h2>
-    <div class="flex flex-col gap-6 sm:gap-8">
-        <ReloadButton bind:currentStatus />
-        <AddApiButton bind:currentStatus />
+    <h2>
+        Datasource
+        <p class="text-base text-secondary -mt-0.5">
+            Manage the api connections of all books.
+        </p>
+    </h2>
 
-        <ApiResult {form} {currentStatus} />
+    <div class="flex flex-col gap-6 sm:gap-8">
+        <ReloadButton
+            bind:loading={reloadLoading}
+            bind:currentStatus
+            {evtSource}
+            form={form?.diffs !== undefined ? form : undefined}
+            disabled={addLoading} />
+        <AddApiButton
+            bind:loading={addLoading}
+            bind:currentStatus
+            {evtSource}
+            form={form?.errorsBooks !== undefined ? form : undefined}
+            disabled={reloadLoading} />
+
+        <ApiResult {currentStatus} />
     </div>
     <!-- SOON -->
 </section>

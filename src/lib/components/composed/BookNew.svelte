@@ -36,6 +36,7 @@
     import AutoComplete5 from "../input/AutoComplete5.svelte";
     import ScrollingBooksBackground from "./ScrollingBooksBackground.svelte";
     import clsx from "clsx";
+    import Alert from "../Alert.svelte";
 
     const CREATABLE_READING_STATUS_VALUES = [
         TO_READ,
@@ -262,8 +263,8 @@
 
                         <div class="grid grid-cols-2 gap-y-2.5">
                             {#if duplicateEntry}
-                                <p
-                                    class="text-warning text-base col-span-2 text-center mb-3">
+                                <Alert type="warning"
+                                    className="text-base col-span-2 text-center mb-3">
                                     Warning: A book with this name is already in
                                     a list ({capitalize(
                                         duplicateEntry.status.status,
@@ -271,7 +272,7 @@
                                     <br />
                                     Continuing will add a new reading activity to
                                     it.
-                                </p>
+                                </Alert>
                             {/if}
                             {#if readingStatus == READING || readingStatus == FINISHED}
                                 <label

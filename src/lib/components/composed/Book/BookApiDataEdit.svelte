@@ -3,6 +3,7 @@
 
     import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
     import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
+    import toast from "svelte-french-toast";
     import Alert from "../../Alert.svelte";
 
     interface Props {
@@ -35,11 +36,8 @@
                           },
                       ],
                       imageLinks:
-                          data.thumbnailUrl !== null
-                              ? {
-                                    smallThumbnail: data.thumbnailUrl,
-                                    thumbnail: data.thumbnailUrl,
-                                }
+                          data.imageLinksJSON !== null
+                              ? JSON.parse(data.imageLinksJSON)
                               : undefined,
                       printedPageCount: undefined,
                       pageCount: data.pageCount || undefined,
@@ -75,11 +73,11 @@
 
         if (!book) return;
 
-        console.log("takeOver", book);
-
         onTakeOver?.({
             queriedBook: book,
         });
+
+        toast.success(`Successfully took over API data`);
     };
 </script>
 
@@ -90,7 +88,10 @@
             <a href="https://books.google.com/books" class="text-sm underline">
                 (Google Books)
             </a>
-            <p class="text-lg mt-1">Add an API entry for a cover and metadata such as number of pages, categories, language, etc.</p>
+            <p class="text-lg mt-1">
+                Add an API entry for a cover and metadata such as number of
+                pages, categories, language, etc.
+            </p>
 
             <p class="text-base text-secondary -mt-1">
                 You can reload/refresh the data from google or take it over and
@@ -99,7 +100,7 @@
         </h2>
 
         {#if data !== null}
-            <div class="ml-auto">
+            <div class="ml-auto flex flex-wrap gap-1 justify-end">
                 <button type="button" class="btn-generic" onclick={reloadData}>
                     <span class="w-4 h-4">
                         <!-- refresh icon -->

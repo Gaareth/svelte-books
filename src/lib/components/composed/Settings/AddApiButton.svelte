@@ -1,84 +1,59 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-
-    import toast from "svelte-french-toast";
-
-
+    import toast, { ErrorIcon } from "svelte-french-toast";
     import type { SSE_EVENT } from "$src/routes/book/api/update_all/sse";
-
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
-
-    let loading = $state(false);
-    let evtSource: EventSource | undefined = $state();
-    onMount(() => {
-        evtSource = new EventSource("/book/api/update_all/");
-        evtSource.onmessage = function (event) {
-            if (event.data === "undefined") {
-                loading = false;
-                return;
-            }
-            // console.log(event);
-            // console.log(decodeURIComponent(event.data));
-
-            currentStatus = JSON.parse(decodeURIComponent(event.data));
-            console.log(currentStatus);
-
-            if (currentStatus!.id == "try_add") {
-                loading = currentStatus!.msg != "done";
-            }
-
-            // if (currentStatus.msg == "done") {
-            //   evtSource.close();
-            // }
-        };
-    });
-
-    onDestroy(() => {
-        if (evtSource) {
-            evtSource.close();
-        }
-    });
+    import type { settingsApiCreateResult } from "$src/routes/settings/apidata";
+    import SuccessIcon from "$src/lib/icons/SuccessIcon.svelte";
 
     interface Props {
         currentStatus: SSE_EVENT | undefined;
+        evtSource: EventSource | undefined;
+        form?: settingsApiCreateResult;
+        disabled?: boolean;
+        loading?: boolean;
     }
 
-    let { currentStatus = $bindable() }: Props = $props();
+    let {
+        currentStatus = $bindable(),
+        evtSource = $bindable(),
+        form,
+        disabled = false,
+        loading = $bindable(false),
+    }: Props = $props();
+
+    $effect(() => {
+        if (currentStatus?.id == "try_add") {
+            loading = currentStatus!.msg != "done";
+        }
+    });
 </script>
 
 <form
     class="flex flex-col sm:flex-row justify-between gap-2 items-start"
     action="?/try_add"
     method="POST"
-    use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-        // `formElement` is this `<form>` element
-        // `formData` is its `FormData` object that's about to be submitted
-        // `action` is the URL to which the form is posted
-        // calling `cancel()` will prevent the submission
-        // `submitter` is the `HTMLElement` that caused the form to be submitted
+    use:enhance={() => {
         loading = true;
 
         return async ({ result, update }) => {
-            update();
+            // i need update to get the form data,
+            // this results in a network error? for a second
+            await update();
             loading = false;
-            if (evtSource) {
-                evtSource.close();
-            }
 
-            // console.log(result);
-            if (result === undefined) {
+            // @ts-ignore
+            if (result === undefined || result?.data! == null) {
                 return;
             }
 
             // @ts-ignore
             const { success, updatedBookNames, errorsBooks } = result.data;
-            //console.log(result.data);
 
             if (success) {
                 toast.success(
-                    `Successfully added ${updatedBookNames.length} new entries`
+                    `Successfully added ${updatedBookNames.length} new entries`,
                 );
             } else if (updatedBookNames.length == 0) {
                 toast.error("Failed updating any book :(");
@@ -87,31 +62,108 @@
                     `Updated ${updatedBookNames.length} books and failed in ${errorsBooks.length}`,
                     {
                         icon: "⚠️",
-                    }
+                    },
                 );
             }
-
-            // `result` is an `ActionResult` object
-            // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+            if (currentStatus) {
+                currentStatus.msg = "done";
+            }
         };
     }}>
-    <div>
-        <label class="flex items-center gap-2">
-            Connect all (also books with already an connection):
-            <input type="checkbox" name="connect-all" class="" />
-        </label>
-        <p>Tries to connect all books with a matching google books api entry</p>
+    <div class="flex flex-wrap items-center w-full gap-1">
+        <div>
+            <p>Try add api info to all books</p>
+            <label class="flex flex-col">
+                <div class="flex items-center gap-3">
+                    <p class="text-lg">Reconnect:</p>
+                    <input type="checkbox" name="connect-all" class="" />
+                </div>
+                <p class="text-secondary text-base -mt-0.5">
+                    (might change api entry if it already has an connection)
+                </p>
+            </label>
+        </div>
+
+        <button
+            type="submit"
+            class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit ml-auto"
+            disabled={loading || disabled}>
+            {#if loading}
+                <LoadingSpinner />
+                loading..
+            {:else}
+                <span class="w-[20px]"><AddIcon /></span>
+                Add API connections
+            {/if}
+        </button>
     </div>
-    <button
-        type="submit"
-        class="btn-generic flex items-center justify-center gap-2 flex-none w-full sm:w-fit"
-        disabled={loading}>
-        {#if loading}
-            <LoadingSpinner />
-            loading..
-        {:else}
-            <span class="w-[20px]"><AddIcon /></span>
-            Add API connections
-        {/if}
-    </button>
 </form>
+
+{#if form != null && form.errorsBooks !== undefined}
+    <div class="default-border p-3 my-2">
+        {#if form.errorsBooks.length > 0}
+            <span class="inline-flex gap-1 mb-2">
+                Finished updating all {form.updatedBookNames.length} entries.
+                <span class="text-red-500 inline-flex items-center gap-1">
+                    <span class="w-[20px] inline-block">
+                        <ErrorIcon />
+                    </span>
+                    Failed in {form.errorsBooks.length} entries
+                </span>
+            </span>
+
+            <div>
+                {#each form.errorsBooks as errorBook (errorBook)}
+                    <div class="flex items-center gap-2">
+                        <span class="w-[20px] inline-block text-red-500">
+                            <ErrorIcon />
+                        </span>
+                        <a
+                            class="hover:underline"
+                            href="/book/{errorBook.book.name}">
+                            {errorBook.book.name}
+                        </a>
+                        -
+                        {#if errorBook.volumeId !== undefined}
+                            <a
+                                class="hover:underline"
+                                href="http://books.google.de/books?id={errorBook.volumeId}">
+                                volumeId: {errorBook.volumeId}
+                            </a>
+                        {/if}
+                        -
+                        <span class="text-red-500 font-bold">
+                            Error: {errorBook.error}
+                        </span>
+                    </div>
+                {/each}
+            </div>
+        {:else}
+            <span class="inline-flex gap-1 flex-wrap">
+                <span
+                    class="text-green-500 dark:text-green-400 inline-flex items-center gap-1">
+                    <span class="w-[22px] inline-block">
+                        <SuccessIcon />
+                    </span>
+                    Successfully
+                </span>
+                updated all {form.updatedBookNames.length}
+                entries
+            </span>
+            <details open>
+                <summary>Books updated:</summary>
+                <ul class="list-disc">
+                    {#each form.updatedBookNames as name (name)}
+                        <li class="ml-10">
+                            <a
+                                class="hover:underline text-base"
+                                href="/book/{name}">
+                                {name}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            </details>
+        {/if}
+    </div>
+{/if}

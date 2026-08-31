@@ -63,7 +63,7 @@ If you changed the schema and want to test it:
 
 ## Todos
 
-- auto takeover the cover image from the apidata
+- SUB
 - simple? cache for showing google book images
 - better google books search
     - a default search result of both title and author and just title combined
@@ -73,6 +73,7 @@ If you changed the schema and want to test it:
 - browser tests
 - more no-javascript friendly
 - just implement auth myself, authjs is a crazy mess
+    - OIDC
 - configurable? median stats
 - dont give each readactivity all books, aka more async
 
