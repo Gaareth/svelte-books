@@ -3,8 +3,10 @@ import z from "zod";
 
 import { SSE_DATA } from "../book/api/update_all/sse";
 import {
+    addCovers,
     createConnections,
     updateData,
+    type settingsApiAddCoverResult,
     type settingsApiCreateResult,
     type settingsApiReloadResult,
 } from "./apidata";
@@ -18,7 +20,7 @@ import {
 } from "$src/lib/constants/enums";
 import { parseFormArray } from "$src/lib/utils/formUtils";
 
-export type SETTINGS_SSE_ACTIONS = "try_add" | "reload";
+export type SETTINGS_SSE_ACTIONS = "try_add" | "reload" | "add_cover";
 
 export async function load({ locals }: ServerLoadEvent) {
     const account = await userAuth(await locals.auth());
@@ -84,11 +86,32 @@ export const actions = {
         const result = await createConnections(accountId, connect_all);
         const response: settingsApiCreateResult = {
             success: result.errorsBooks.length == 0 ? true : false,
+            type: "try_add",
             ...result,
         };
 
-        // console.log(response);
-        // console.log(JSON.stringify(response));
+        SSE_DATA[accountId].msg = "done";
+        return response;
+    },
+
+    add_cover: async ({ locals }) => {
+        const session = await locals.auth();
+        const accountId = await getAccountIdfromSession(session);
+
+        SSE_DATA[accountId] = {
+            items: 0,
+            msg: "Initializing...",
+            max: 0,
+            id: "add_cover",
+        };
+
+        const result = await addCovers(accountId);
+        const response: settingsApiAddCoverResult = {
+            success: result.errorsBooks.length == 0 ? true : false,
+            type: "add_cover",
+            ...result,
+        };
+
         SSE_DATA[accountId].msg = "done";
         return response;
     },

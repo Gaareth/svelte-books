@@ -25,6 +25,7 @@
     import { capitalize } from "$lib/utils/utils";
     import { resolve } from "$app/paths";
     import { onDestroy, onMount } from "svelte";
+    import AddApiCover from "$src/lib/components/composed/Settings/AddApiCover.svelte";
 
     interface Props {
         form: ActionData;
@@ -72,6 +73,9 @@
     let evtSource: EventSource | undefined = $state();
     let reloadLoading: boolean = $state(false);
     let addLoading: boolean = $state(false);
+    let addCoverLoading: boolean = $state(false);
+
+    let anyLoading = $derived(reloadLoading || addLoading || addCoverLoading);
 
     onMount(() => {
         console.log("onMount");
@@ -228,13 +232,20 @@
             bind:currentStatus
             {evtSource}
             form={form?.diffs !== undefined ? form : undefined}
-            disabled={addLoading} />
+            disabled={anyLoading} />
         <AddApiButton
             bind:loading={addLoading}
             bind:currentStatus
             {evtSource}
-            form={form?.errorsBooks !== undefined ? form : undefined}
-            disabled={reloadLoading} />
+            form={form?.type === "try_add" ? form : undefined}
+            disabled={anyLoading} />
+
+        <AddApiCover
+            bind:loading={addCoverLoading}
+            bind:currentStatus
+            {evtSource}
+            form={form?.type === "add_cover" ? form : undefined}
+            disabled={anyLoading} />
 
         <ApiResult {currentStatus} />
     </div>

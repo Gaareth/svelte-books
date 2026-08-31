@@ -86,12 +86,17 @@
                                                     ADMIN
                                                 </div>
                                             {/if}
-                                            <div class="p-1">
-                                                <p
-                                                    class="text-center font-bold">
+                                            <div>
+                                                <a
+                                                    href={resolve("/[[username]]", {
+                                                        username:
+                                                            page.data.session
+                                                                ?.user?.name!,
+                                                    })}
+                                                    class="text-center font-bold py-1">
                                                     {page.data.session?.user
                                                         ?.name}
-                                                </p>
+                                                </a>
                                             </div>
                                             <hr />
                                             <div
@@ -100,7 +105,7 @@
                                                     Settings
                                                 </a>
                                                 <a href={resolve("/users")}>
-                                                    all users
+                                                    All Users
                                                 </a>
                                             </div>
                                             <hr />
@@ -109,7 +114,7 @@
                                                     href={resolve("/logout")}
                                                     class="whitespace-nowrap"
                                                     data-sveltekit-preload-data="off">
-                                                    Sign out
+                                                    Sign Out
                                                 </a>
                                             </div>
                                         </div>

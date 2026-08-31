@@ -6,8 +6,16 @@ import type { Book, BookApiData } from "$prismaClient";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import { arrMax, delay, getErrorMessage, zip } from "$lib/utils/utils";
+import {
+    arrMax,
+    delay,
+    getErrorMessage,
+    getMaxResolutionImage,
+    zip,
+} from "$lib/utils/utils";
 import { GOOGLE_BOOKS_API_REQUEST_DELAY_MS } from "$src/lib/constants/constants";
+import { cacheGoogleBooksImageURL } from "$src/lib/server/images/googleBooksImages";
+import { saveCachesToDB } from "$src/lib/server/images/images";
 
 type bookDiff = {
     bookName: string;
@@ -273,13 +281,101 @@ export async function createConnections(
     return { updatedBookNames, errorsBooks };
 }
 
+export async function addCovers(accountId: string) {
+    const booksWithoutCovers = await prisma.book.findMany({
+        where: {
+            accountId,
+            coverImageId: null,
+            bookApiDataId: {
+                not: null,
+            },
+        },
+        include: {
+            bookApiData: true,
+        },
+    });
+
+    SSE_DATA[accountId].max = booksWithoutCovers.length;
+
+    const updatedBookNames = [];
+    const errorsBooks: errorBooksType = [];
+    let itemsProcessed = 0;
+
+    for (const book of booksWithoutCovers) {
+        SSE_DATA[accountId].msg = "Adding cover for: " + book.name;
+        SSE_DATA[accountId].items = SSE_DATA[accountId].items + 1;
+        if (!book.bookApiData?.imageLinksJSON) {
+            errorsBooks.push({
+                book,
+                error: "No imageLinks found in bookApiData",
+                volumeId: book.bookApiDataId ?? undefined,
+            });
+            continue;
+        }
+
+        const maxResImgUrl = getMaxResolutionImage(
+            book.bookApiData.imageLinksJSON,
+        );
+
+        if (!maxResImgUrl) {
+            errorsBooks.push({
+                book,
+                error: "No max resolution image found",
+                volumeId: book.bookApiDataId ?? undefined,
+            });
+            continue;
+        }
+
+        try {
+            const cachedImage = await cacheGoogleBooksImageURL(maxResImgUrl);
+            const savedImage = await saveCachesToDB(cachedImage, maxResImgUrl);
+            await prisma.book.update({
+                where: {
+                    id: book.id,
+                },
+                data: {
+                    coverImageId: savedImage.id,
+                },
+            });
+        } catch (e) {
+            errorsBooks.push({
+                book,
+                error: getErrorMessage(e),
+                volumeId: book.bookApiDataId ?? undefined,
+            });
+        }
+
+        itemsProcessed++;
+        updatedBookNames.push(book.name);
+        if (itemsProcessed < booksWithoutCovers.length) {
+            await delay(GOOGLE_BOOKS_API_REQUEST_DELAY_MS);
+        }
+    }
+
+    return { updatedBookNames, errorsBooks };
+}
+
 export type settingsApiResult<T> = {
     success: boolean;
     booksUpdated: number;
     items: T;
 };
 
+export type settingsApiAddCoverResult = {
+    success: boolean;
+    updatedBookNames: string[];
+    errorsBooks: errorBooksType;
+    type: "add_cover";
+};
+
 export type settingsApiCreateResult = {
+    success: boolean;
+    updatedBookNames: string[];
+    errorsBooks: errorBooksType;
+    type: "try_add";
+};
+
+export type settingsApiWithErrorsResult = {
     success: boolean;
     updatedBookNames: string[];
     errorsBooks: errorBooksType;

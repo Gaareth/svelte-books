@@ -6,12 +6,15 @@
     import { enhance } from "$app/forms";
     import LoadingSpinner from "$components/LoadingSpinner.svelte";
     import RefreshIcon from "$src/lib/icons/RefreshIcon.svelte";
-    import type { settingsApiReloadResult } from "$src/routes/settings/apidata";
+    import type {
+        settingsApiAddCoverResult,
+    } from "$src/routes/settings/apidata";
+    import ApiResultWithErrors from "./ApiResultWithErrors.svelte";
 
     interface Props {
         currentStatus: SSE_EVENT | undefined;
         evtSource: EventSource | undefined;
-        form?: settingsApiReloadResult;
+        form?: settingsApiAddCoverResult;
         disabled?: boolean;
         loading?: boolean;
     }
@@ -25,7 +28,7 @@
     }: Props = $props();
 
     $effect(() => {
-        if (currentStatus?.id == "reload") {
+        if (currentStatus?.id == "add_cover") {
             loading = currentStatus!.msg != "done";
         }
     });
@@ -33,7 +36,7 @@
 
 <div>
     <form
-        action="?/reload"
+        action="?/add_cover"
         method="POST"
         class="flex flex-col sm:flex-row justify-between gap-2 items-start"
         use:enhance={() => {
@@ -53,7 +56,7 @@
 
                 if (success) {
                     toast.success(
-                        `Successfully updated ${booksUpdated} entries`,
+                        `Successfully added cover for ${booksUpdated} books`,
                     );
                 } else if (booksUpdated == 0) {
                     toast.error("Failed updating books :(");
@@ -64,9 +67,10 @@
             };
         }}>
         <div>
-            <p>Update api data for all existing entries</p>
+            <p>Add cover images to books with missing covers</p>
             <p class="text-base text-secondary -mt-0.5">
-                Refetches all entries from the Google Books API and shows the changes
+                Takes the highest quality image from the connected google books
+                api entry.
             </p>
         </div>
         <button
@@ -75,30 +79,15 @@
             disabled={loading || disabled}>
             {#if loading}
                 <LoadingSpinner />
-                reloading..
+                adding covers..
             {:else}
                 <span class="w-[20px]">
                     <RefreshIcon />
                 </span>
-                Reload all
+                Add covers
             {/if}
         </button>
     </form>
 </div>
 
-{#if form != null}
-    <div class="default-border p-3 my-2">
-        <p class="mb-2">Updated {form.booksUpdated} books</p>
-        {#each form.diffs as diff (diff)}
-            <div>
-                <a class="hover:underline" href="/book/{diff.bookName}">
-                    {diff.bookName}
-                </a>
-                -
-                {diff.propName}: {diff.oldValue} --> {diff.newValue}
-            </div>
-        {:else}
-            No changes found
-        {/each}
-    </div>
-{/if}
+<ApiResultWithErrors {form} />

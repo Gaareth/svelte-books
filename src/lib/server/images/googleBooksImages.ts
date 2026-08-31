@@ -22,9 +22,29 @@ export function normalizeGoogleBooksUrl(id: string, zoom: number = 1): string {
     return `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=${zoom}&source=gbs_api`;
 }
 
-export async function cacheGoogleBooksImage(
+export async function cacheGoogleBooksImageID(
     id: string,
 ): Promise<ImgVariantCaches> {
     const { bestImage } = await findGoogleBookImageVariants(id);
     return await cacheImage(bestImage, id);
+}
+
+function extractIdFromGoogleBooksUrl(url: string): string | null {
+    try {
+        const urlObject = new URL(url);
+        if (urlObject.hostname !== "books.google.com") {
+            return null;
+        }
+        return urlObject.searchParams.get("id");
+    } catch (_e: unknown) {
+        return null;
+    }
+}
+
+export async function cacheGoogleBooksImageURL(
+    url: string,
+): Promise<ImgVariantCaches> {
+    const image = await fetchImage(url);
+    const id = extractIdFromGoogleBooksUrl(url) ?? "unknown-google-book-id";
+    return await cacheImage(image, id);
 }
