@@ -54,6 +54,7 @@
         bookLists: BookList[];
         form?: ActionData;
         formId: string;
+        formIsSubmitting?: boolean;
     }
 
     let {
@@ -62,6 +63,7 @@
         bookLists,
         form,
         formId,
+        formIsSubmitting = $bindable(false),
     }: Props = $props();
 
     function getFormError(field: string) {
@@ -86,8 +88,13 @@
         book.author = e.queriedBook.volumeInfo.authors[0];
 
         // add the selected google books url to the form data so that it can be uploaded to the server
-        console.log("Selected Google Books URL:", e.queriedBook.volumeInfo.imageLinks);
-        tookOverGoogleBooksUrl = getMaxResolutionImage(JSON.stringify(e.queriedBook.volumeInfo.imageLinks));
+        console.log(
+            "Selected Google Books URL:",
+            e.queriedBook.volumeInfo.imageLinks,
+        );
+        tookOverGoogleBooksUrl = getMaxResolutionImage(
+            JSON.stringify(e.queriedBook.volumeInfo.imageLinks),
+        );
         // set to null so that coverimage takes the api image instead as a kind of preview
         book.coverImage = null;
     }
@@ -151,6 +158,8 @@
     enctype="multipart/form-data"
     bind:this={formElement}
     use:enhance={async ({ formData }) => {
+        formIsSubmitting = true;
+
         if (tookOverGoogleBooksUrl != null) {
             formData.set("selectedGoogleBooksUrl", tookOverGoogleBooksUrl);
         }
@@ -185,6 +194,7 @@
             }
 
             await applyAction(result);
+            formIsSubmitting = false;
         };
     }}>
     <input type="hidden" name="id" value={book.id} />

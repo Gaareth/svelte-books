@@ -159,7 +159,7 @@ export async function saveCachesToDB(
         width: variant.width,
     }));
 
-    const data = {
+    const imageData = {
         path: fromFSPathToDBPath(primaryImg.path),
         width: primaryImg.width,
         height: primaryImg.height,
@@ -168,13 +168,21 @@ export async function saveCachesToDB(
     };
 
     // if the image already exists in the database (based on sourceUrl), update it; otherwise, create a new record
-    const primaryImage = await prisma.image.upsert({
-        where: {
-            sourceUrl: sourceUrl,
-        },
-        create: data,
-        update: data,
-    });
+    let primaryImage;
+
+    if (sourceUrl) {
+        primaryImage = await prisma.image.upsert({
+            where: {
+                sourceUrl: sourceUrl,
+            },
+            create: imageData,
+            update: imageData,
+        });
+    } else {
+        primaryImage = await prisma.image.create({
+            data: imageData,
+        });
+    }
 
     // nested upsert is not supported in Prisma, so we have to do this in a separate loop
     for (const variant of variantData) {

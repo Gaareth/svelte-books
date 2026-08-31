@@ -218,7 +218,7 @@
                 <BookApiSkeleton />
             {:then queriedBooks}
                 <div class={searchEntriesWrapperClass}>
-                    {#if queriedBooks.length === 0}
+                    {#if sortBookResults(queriedBooks).length === 0}
                         <p class="text-secondary pt-3 text-center">
                             No results found.
                         </p>

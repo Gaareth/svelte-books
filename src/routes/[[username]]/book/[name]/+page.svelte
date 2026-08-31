@@ -36,6 +36,8 @@
         data.showForms || !!form?.errors,
     );
 
+    let formIsSubmitting: boolean = $state(false);
+
     const createReadingActivityModalId = "createReadingActivityModal";
     const deleteBookModalId = "deleteBookModal";
 
@@ -90,7 +92,7 @@
     <div>
         <div
             class="lg:grid lg:grid-cols-[20%_1fr] items-start mx-auto gap-x-5 lg:px-0">
-            <BookImageAndInfo edit={showForms} {book} {form} {formId} />
+            <BookImageAndInfo edit={showForms} {book} {form} {formId} {formIsSubmitting} />
 
             <div class={clsx("flex flex-col gap-7")}>
                 <div
@@ -207,7 +209,9 @@
                     {formId}
                     bind:book
                     bookLists={data.bookLists}
-                    books={data.books} />
+                    books={data.books}
+                    bind:formIsSubmitting
+                     />
             </section>
         {/if}
     </div>

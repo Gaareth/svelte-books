@@ -400,11 +400,6 @@ async function handleCoverUpdate(
             coverInfo.uploadedCoverImage.image,
         );
     }
-    // else if (coverInfo.googleBooksCoverVolumeId) {
-    //     cachedImages = await cacheGoogleBooksImage(
-    //         coverInfo.googleBooksCoverVolumeId,
-    //     );
-    // }
 
     if (cachedImages) {
         const newImage = await saveCachesToDB(cachedImages);

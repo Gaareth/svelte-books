@@ -86,9 +86,13 @@ If you changed the schema and want to test it:
 
 - reading time relative to book length
 
+- takeover: choose what to takeover (pages, title, cover, isbn, ...)
+
 - shelves
 
 - google books api throttling and caching, per user
+    - dont use backend to query google books api? optionally
+    - custom api key
 
 - color bar, similar color for similar books
 

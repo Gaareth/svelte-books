@@ -13,10 +13,12 @@
     import Alert from "../../Alert.svelte";
     import Image from "../../Image.svelte";
     import type { Book } from "$prismaBrowser";
+    import LoadingSpinner from "../../LoadingSpinner.svelte";
 
     interface Props {
         book: Book;
         formId: string;
+        formIsSubmitting?: boolean;
         errorMsgs?: string[];
         selectedGoogleBooksUrl?: string;
         coverWasSelected?: boolean;
@@ -25,13 +27,15 @@
     let {
         book,
         formId,
+        formIsSubmitting = false,
         errorMsgs,
         selectedGoogleBooksUrl = $bindable(),
         coverWasSelected = $bindable(),
     }: Props = $props();
     let uploadedFile: File | undefined = $state();
     let formButtonsWrapper: HTMLDivElement | undefined = $state();
-
+    let loading = $derived(formIsSubmitting);
+ 
     $effect(() => {
         coverWasSelected =
             selectedGoogleBooksUrl != null || uploadedFile != null;
@@ -40,7 +44,7 @@
             formButtonsWrapper.scrollIntoView({ behavior: "smooth" });
         }
     });
-
+    
     export function discardChanges() {
         selectedGoogleBooksUrl = undefined;
         uploadedFile = undefined;
@@ -100,7 +104,7 @@
                 <BookApi
                     query={`intitle:${book.name} inauthor:${book.author}`}
                     filterFn={(book) => book.volumeInfo.imageLinks != null}
-                    label="Search using google books"
+                    label="Find cover using google books"
                     onBackClicked={() => (selectedGoogleBooksUrl = undefined)}
                     searchEntriesWrapperClass="grid w-full grid-cols-2 sm:grid-cols-[repeat(auto-fit,7rem)] justify-center mt-5 gap-3">
                     {#snippet APIResult(book)}
@@ -205,8 +209,13 @@
         <button
             form={formId}
             type="submit"
-            class="btn-submit capitalize font-medium dark:border-blue-500">
-            Save Form
+            class="btn-submit capitalize font-medium dark:border-blue-500 flex items-center justify-center gap-1">
+            {#if loading}
+                <LoadingSpinner />
+                processing..
+            {:else}
+                Change Cover
+            {/if}
         </button>
 
         <button

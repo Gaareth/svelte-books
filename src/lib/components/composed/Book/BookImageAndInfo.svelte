@@ -15,9 +15,16 @@
         book: BookWithImage;
         formId: string;
         form?: ActionData;
+        formIsSubmitting?: boolean;
     }
 
-    let { edit, book, formId, form }: Props = $props();
+    let {
+        edit,
+        book,
+        formId,
+        form,
+        formIsSubmitting = false,
+    }: Props = $props();
 
     //lg:group-hover:opacity-50
     const imageSizeClass =
@@ -136,8 +143,9 @@
     {/snippet}
 
     <CoverSelection
-        {formId}
+        bind:this={coverSelection}
         errorMsgs={form?.errors?.uploadedCoverImage}
         {book}
-        bind:this={coverSelection} />
+        {formId}
+        {formIsSubmitting} />
 </Modal>

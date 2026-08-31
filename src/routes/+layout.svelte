@@ -44,7 +44,7 @@
                 aria-label="Site Nav"
                 class="gap-8 text-md font-medium flex flex-wrap">
                 <a
-                    class="text-gray-500 dark:text-gray-400 hover:text-[#F2440D] dark:hover:text-[#f67c56]"
+                    class="text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-300"
                     href={resolve("/")}>
                     Home
                 </a>
