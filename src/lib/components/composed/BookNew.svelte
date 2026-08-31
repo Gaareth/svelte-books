@@ -57,9 +57,21 @@
         readingActivities,
     }: Props = $props();
 
-    let authors: string[] = $derived([
-        ...new Set(readingActivities.map((e) => e.book.author)),
-    ]);
+    let authors: string[] | undefined = $state();
+    async function getAuthors() {
+        if (authors) {
+            return authors;
+        }
+
+        const allBooks = await fetch("/api/books").then((res) =>
+            res.json().then((data) => data.books),
+        );
+        const duplicateAuthors: string[] = allBooks.map(
+            (b: { author: string }) => b.author,
+        );
+        authors = [...new Set(duplicateAuthors)];
+        return authors;
+    }
 
     let new_book_open = $state(false);
     let name = $state("");
@@ -169,7 +181,11 @@
         {readingActivities}
         overlayBackgroundClassName={clsx(
             "bg-white dark:bg-slate-700 transition-opacity duration-[800ms] ease-in-out",
-            !new_book_open ? "dark:opacity-[45%]" : showMore ? "dark:opacity-[95%]" : "dark:opacity-[85%]",
+            !new_book_open
+                ? "dark:opacity-[45%]"
+                : showMore
+                  ? "dark:opacity-[95%]"
+                  : "dark:opacity-[85%]",
         )}
         wrapperClassName="-z-10" />
 
@@ -189,7 +205,7 @@
                     onclick={toggleContent}
                     class="ml-auto rounded-lg border min-w-24 px-5 py-2 text-sm font-medium
                     hover:bg-gray-50 !bg-opacity-60
-                    dark:bg-slate-600 dark:border-slate-600 
+                    dark:bg-slate-600 dark:border-slate-600
                     dark:hover:bg-slate-500 dark:hover:border-slate-500">
                     {new_book_open ? "Cancel" : "Open"}
                 </button>
@@ -247,7 +263,8 @@
                                     <label for="author">Author:</label>
 
                                     <AutoComplete5
-                                        items={authors}
+                                        showLoadingIndicator={true}
+                                        searchFunction={getAuthors}
                                         bind:text={author}
                                         create={true}
                                         id="author"
@@ -263,7 +280,8 @@
 
                         <div class="grid grid-cols-2 gap-y-2.5">
                             {#if duplicateEntry}
-                                <Alert type="warning"
+                                <Alert
+                                    type="warning"
                                     className="text-base col-span-2 text-center mb-3">
                                     Warning: A book with this name is already in
                                     a list ({capitalize(
