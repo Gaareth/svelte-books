@@ -234,7 +234,7 @@ async function addApiData(volumeId: string | undefined, bookId: string) {
         // console.log(categories);
 
         for (const category_str of categories) {
-            const category = await prisma.bookCategory.upsert({
+            const _category = await prisma.bookCategory.upsert({
                 where: { name: category_str },
                 update: {
                     name: category_str,

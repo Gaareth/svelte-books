@@ -209,7 +209,6 @@
                     {formId}
                     bind:book
                     bookLists={data.bookLists}
-                    books={data.books}
                     bind:formIsSubmitting
                      />
             </section>

@@ -10,11 +10,7 @@ import {
     handlePublicOrAuthenticatedAccount,
 } from "$lib/auth/authorization";
 import { optionalNumericString } from "$lib/schemas/utils";
-import {
-    extractBookApiData,
-    extractCategories,
-    loadBooks,
-} from "$lib/server/db/utils";
+import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
 import { publicConfig } from "$src/lib/config/public";
 import {
@@ -127,14 +123,8 @@ export async function load(page: ServerLoadEvent) {
         error(404, { message: "Not found" });
     }
 
-    const books = await loadBooks(
-        { accountId: requestedAccount.id },
-        undefined,
-    );
-
     return {
         book,
-        books,
         bookLists,
         edit,
         showForms,

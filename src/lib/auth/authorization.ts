@@ -6,6 +6,9 @@ import { error, redirect } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 import { getAccountByUsername } from "./account";
 
+/**
+ * Authorize the admin
+ */
 export async function adminAuth(session: Session | null) {
     const account = await userAuth(session);
     if (!account?.isAdmin) {
@@ -15,6 +18,9 @@ export async function adminAuth(session: Session | null) {
     return account;
 }
 
+/**
+ * Authenticate the user
+ */
 export async function userAuth(session: Session | null) {
     if (session?.user?.name == null) {
         // for private user pages if you are not logged in then redirect to login
@@ -104,7 +110,7 @@ export async function authorize(
         return { sessionAccount, requestedAccount };
     }
 
-    // TODO: perhabs return 404 to avoid leaking information about the existence of the account
+    // return 404 to avoid leaking information about the existence of the account
     // return error(StatusCodes.FORBIDDEN, "You are not authorized");
     return returnAccountNotFound();
 }

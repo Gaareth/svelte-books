@@ -50,7 +50,6 @@
 
     interface Props {
         book: BookFormType;
-        books: BookWithImage[];
         bookLists: BookList[];
         form?: ActionData;
         formId: string;
@@ -59,7 +58,6 @@
 
     let {
         book = $bindable(),
-        books,
         bookLists,
         form,
         formId,
@@ -74,6 +72,18 @@
     const wordsPerPageError = getFormError("wordsPerPage");
 
     let tookOverGoogleBooksUrl: string | undefined | null = $state();
+    let books: BookWithImage[] | undefined = $state();
+    // async loading of all books for the autocomplete, so that we don't have to load all books on page load
+    async function getBooks() {
+        if (books) {
+            return books;
+        }
+
+        books = await fetch("/api/books").then((res) =>
+            res.json().then((data) => data.books),
+        );
+        return books;
+    }
 
     function handleTakeOver(e: {
         queriedBook: queriedBookFull | undefined;
@@ -104,7 +114,14 @@
     };
 
     let selectedSeriesBook: BookRating | undefined = $state();
-    const addBookSeries = () => {
+    const addBookSeries = async () => {
+        getBooks();
+
+        if (books == null) {
+            series_error = "No books found";
+            books = [];
+        }
+
         // copy to please the typechecker
         const seriesBook = selectedSeriesBook;
 
@@ -256,7 +273,9 @@
                     name="bookSeriesId"
                     value={book.bookSeriesId} />
                 <AutoComplete5
-                    items={books.filter((b) => b.name != book.name)}
+                    // items={books.filter((b) => b.name != book.name)}
+                    showLoadingIndicator={true}
+                    searchFunction={getBooks}
                     labelFunction={autoCompleteBookLabel}
                     bind:selectedItem={selectedSeriesBook}
                     class="input dark:bg-slate-700 dark:border-none w-full" />
