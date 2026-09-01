@@ -1,10 +1,16 @@
 FROM node:24-alpine AS builder
 WORKDIR /app
 RUN npm install -g pnpm@11.22.0
+RUN pnpm config set store-dir /pnpm/store
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-# RUN npm ci // sometimes fails only when using docker buildx??
-RUN pnpm install --frozen-lockfile
+
+# RUN pnpm install --frozen-lockfile
+
+# cached pnpm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile
+
 COPY . .
 
 ARG DATABASE_URL="file:./test.db"

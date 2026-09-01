@@ -34,3 +34,7 @@ docker buildx build \
   -t ghcr.io/gaareth/svelte-books:$VERSION \
   -t ghcr.io/gaareth/svelte-books:latest \
   --push .
+
+# not sure if needed and secure
+# --cache-from=type=registry,ref=ghcr.io/gaareth/svelte-books:buildcache \
+# --cache-to=type=registry,ref=ghcr.io/gaareth/svelte-books:buildcache,mode=max \

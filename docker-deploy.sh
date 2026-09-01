@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 # Accept a version type argument, default to "patch"

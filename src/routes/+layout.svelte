@@ -185,7 +185,7 @@
     }
 
     :global(.dark) .auth-button {
-        @apply bg-slate-700 text-white border-slate-700 hover:border-slate-600;
+        @apply bg-slate-700 text-white border-slate-600 hover:bg-slate-600;
     }
 
     .nav-a {
