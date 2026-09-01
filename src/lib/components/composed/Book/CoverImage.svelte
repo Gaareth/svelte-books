@@ -44,7 +44,7 @@
     import type { Prisma } from "$prismaBrowser";
     import { publicConfig } from "$src/lib/config/public";
     import { makeUploadUrl, resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
-    import { getMaxResolutionImage } from "$src/lib/utils/utils";
+    import { getMaxResolutionImage } from "$src/lib/utils/googleApiUtils";
 
     import Image, { type ImageProps } from "../../Image.svelte";
 

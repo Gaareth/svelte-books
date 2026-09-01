@@ -1,5 +1,6 @@
 import { privateConfig } from "$lib/server/config";
 import { prisma } from "$lib/server/prisma";
+import { formatBytes } from "$src/lib/utils/utils";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -34,7 +35,7 @@ async function cleanupCachedImages() {
     }
 
     console.log(
-        `Cleanup complete. Total cache size: ${runningTotalSize} bytes.`,
+        `Cleanup complete. Total cache size: ${formatBytes(runningTotalSize)}.`,
     );
 }
 

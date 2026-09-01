@@ -57,3 +57,17 @@ export function getMaxResolutionImage(imageLinksJSON: string) {
 export function getMinResolutionImage(imageLinksJSON: string) {
     return getNextImageByResolution(imageLinksJSON, "smallThumbnail", true);
 }
+export function normalizeGoogleBooksUrl(id: string, zoom: number = 1): string {
+    return `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=${zoom}&source=gbs_api`;
+}
+export function extractIdFromGoogleBooksUrl(url: string): string | null {
+    try {
+        const urlObject = new URL(url);
+        if (urlObject.hostname !== "books.google.com") {
+            return null;
+        }
+        return urlObject.searchParams.get("id");
+    } catch (_e: unknown) {
+        return null;
+    }
+}

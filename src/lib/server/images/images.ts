@@ -1,5 +1,6 @@
 import { Prisma } from "$prismaClient";
 import { prisma } from "$src/lib/server/prisma";
+import { extractIdFromGoogleBooksUrl } from "$src/lib/utils/googleApiUtils";
 import { createHash } from "node:crypto";
 import fs, { unlink } from "node:fs/promises";
 import path from "node:path";
@@ -7,7 +8,6 @@ import sharp, { type Sharp } from "sharp";
 import { rgbaToThumbHash } from "thumbhash";
 import { v4 as uuidv4 } from "uuid";
 import { privateConfig } from "../config";
-import { extractIdFromGoogleBooksUrl } from "./googleBooksImages";
 
 export type ImageWithVariants = Prisma.ImageGetPayload<{
     include: {
