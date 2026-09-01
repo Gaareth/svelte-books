@@ -4,7 +4,8 @@
     import type { queriedBook, ReadingActivityList } from "$appTypes";
 
     import { getReadingActivityColor } from "$src/lib/constants/constants";
-    import { capitalize, sortReadingActivity } from "$src/lib/utils/utils";
+    import { capitalize } from "$src/lib/utils/utils";
+    import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
     import KeyboardArrowRight from "$src/lib/icons/KeyboardArrowRight.svelte";
     import type { Snippet } from "svelte";
     import Alert from "../../Alert.svelte";

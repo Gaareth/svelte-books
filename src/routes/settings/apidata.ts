@@ -6,16 +6,11 @@ import type { Book, BookApiData } from "$prismaClient";
 
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import {
-    arrMax,
-    delay,
-    getErrorMessage,
-    getMaxResolutionImage,
-    zip,
-} from "$lib/utils/utils";
+import { arrMax, delay, getErrorMessage, zip } from "$lib/utils/utils";
 import { GOOGLE_BOOKS_API_REQUEST_DELAY_MS } from "$src/lib/constants/constants";
 import { cacheGoogleBooksImageURL } from "$src/lib/server/images/googleBooksImages";
 import { saveCachesToDB } from "$src/lib/server/images/images";
+import { getMaxResolutionImage } from "$src/lib/utils/googleApiUtils";
 
 type bookDiff = {
     bookName: string;

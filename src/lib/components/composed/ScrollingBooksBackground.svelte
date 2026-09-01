@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { ImageLinksType } from "$src/app.js";
     import ScrollingImagesBackground from "$src/lib/components/ScrollingImagesBackground.svelte";
-    import { getImageByResolutionOrder } from "$src/lib/utils/utils.js";
+        import { getImageByResolutionOrder } from "$src/lib/utils/googleApiUtils";
     import { Prisma } from "$prismaBrowser";
     import Image from "../Image.svelte";
     import {

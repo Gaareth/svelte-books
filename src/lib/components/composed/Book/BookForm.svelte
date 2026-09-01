@@ -20,7 +20,7 @@
     import AddIcon from "$src/lib/icons/AddIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
     import { resolveAPIImageUrl } from "$src/lib/utils/browserUtils";
-    import { getMaxResolutionImage } from "$src/lib/utils/utils";
+        import { getMaxResolutionImage } from "$src/lib/utils/googleApiUtils";
 
     type BookFormType = Prisma.BookGetPayload<{
         include: {

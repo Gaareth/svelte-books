@@ -7,7 +7,7 @@ import {
     type ReadingActivityStatusType,
 } from "$lib/constants/enums";
 import { getReadingActivity } from "$lib/server/db/utils";
-import { getActiveActivies } from "$src/lib/utils/utils";
+import { getActiveActivies } from "$src/lib/utils/readingActivityUtils";
 
 export async function load({ locals, params }: ServerLoadEvent) {
     if (

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { publicConfig } from "$src/lib/config/public";
-    import { getMaxResolutionImage } from "$src/lib/utils/utils";
+        import { getMaxResolutionImage } from "$src/lib/utils/googleApiUtils";
     import BookApi from "$components/composed/BookApiSelection/BookApi.svelte";
     import TabGroup from "$src/lib/components/Tab/TabGroup.svelte";
     import TabPanel from "$src/lib/components/Tab/TabPanel.svelte";

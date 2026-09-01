@@ -17,12 +17,9 @@ import {
 } from "$lib/schemas/schemas";
 import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
 import { prisma } from "$lib/server/prisma";
-import {
-    dateToOptional,
-    nullToUndefined,
-    optionalToDate,
-} from "$lib/utils/utils";
+import { nullToUndefined } from "$lib/utils/utils";
 import { BookOwnership } from "$prismaBrowser";
+import { dateToOptional, optionalToDate } from "$src/lib/utils/dateUtils";
 
 const createSchema = z
     .object({

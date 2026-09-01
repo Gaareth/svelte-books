@@ -1,4 +1,5 @@
-import { getRandomIntInclusive, optionalToDate } from "./utils";
+import { optionalToDate } from "./dateUtils";
+import { getRandomIntInclusive } from "./utils";
 
 import type { Prisma } from "$prismaClient";
 

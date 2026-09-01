@@ -80,7 +80,7 @@
     import ClearButton from "$components/input/ClearButton.svelte";
     import Dropdown from "$components/input/Dropdown.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
-    import { isValidDate } from "$utils/utils";
+        import { isValidDate } from "$src/lib/utils/dateUtils";
 
     interface Props {
         id?: string | undefined;

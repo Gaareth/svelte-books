@@ -3,7 +3,9 @@ import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,
 } from "../constants/enums";
-import { optionalToDate, sortReadingActivityReversed, sum } from "./utils";
+import { optionalToDate } from "./dateUtils";
+import { sortReadingActivityReversed } from "./readingActivityUtils";
+import { sum } from "./utils";
 
 import type { ReadingActivityList } from "$src/app";
 import type { OptionalDate } from "../components/input/DateSelector.svelte";

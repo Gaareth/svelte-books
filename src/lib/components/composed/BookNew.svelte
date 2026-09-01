@@ -32,7 +32,8 @@
     import EventDone from "$lib/icons/EventDone.svelte";
     import EventProgress from "$lib/icons/EventProgress.svelte";
     import Words from "$lib/icons/words.svelte";
-    import { capitalize, decapitalize, slideHeight } from "$utils/utils";
+    import { capitalize, decapitalize } from "$utils/utils";
+    import { slideHeight } from "$src/lib/utils/browserUtils";
     import AutoComplete5 from "../input/AutoComplete5.svelte";
     import ScrollingBooksBackground from "./ScrollingBooksBackground.svelte";
     import clsx from "clsx";

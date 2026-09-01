@@ -5,7 +5,7 @@
     import { browser } from "$app/environment";
     import Dropdown from "$components/input/Dropdown.svelte";
     import { theme } from "$lib/stores/stores";
-    import { isDarkModeEnabled } from "$utils/utils";
+        import { isDarkModeEnabled } from "../utils/browserUtils";
     import DarkModeIcon from "../icons/DarkModeIcon.svelte";
     import LightModeIcon from "../icons/LightModeIcon.svelte";
     import DesktopIcon from "../icons/DesktopIcon.svelte";

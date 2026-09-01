@@ -10,11 +10,9 @@
     import { page } from "$app/state";
     import { MAX_RATING } from "$lib/constants/constants";
     import { createSearchStore } from "$lib/stores/search";
-    import {
-        dateToYYYY_MM_DD,
-        optionalToDate,
-        sortReadingActivity,
-    } from "$lib/utils/utils";
+        import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
+    import { dateToYYYY_MM_DD } from "$src/lib/utils/dateUtils";
+    import { optionalToDate } from "$src/lib/utils/dateUtils";
     import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
     import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
     import FilterIcon from "$src/lib/icons/FilterIcon.svelte";

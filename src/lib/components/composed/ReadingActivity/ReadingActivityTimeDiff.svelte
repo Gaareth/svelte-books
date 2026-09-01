@@ -6,11 +6,9 @@
     import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
     import EventDone from "$lib/icons/EventDone.svelte";
     import EventProgress from "$lib/icons/EventProgress.svelte";
-    import {
-        dateToYYYY_MM_DD,
-        dateDiffFormatted,
-        optionalToDate,
-    } from "$lib/utils/utils";
+        import { dateToYYYY_MM_DD } from "$src/lib/utils/dateUtils";
+    import { optionalToDate } from "$src/lib/utils/dateUtils";
+    import { dateDiffFormatted } from "$src/lib/utils/dateUtils";
 
     interface Props {
         entry: ReviewListItemType;

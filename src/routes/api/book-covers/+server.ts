@@ -33,8 +33,12 @@ export const GET: RequestHandler = async ({ url }) => {
                 sourceUrl: normalizedUrl,
             },
         });
+        const isExpired =
+            cachedImage &&
+            Date.now() - cachedImage.updatedAt.getTime() >
+                privateConfig.imageCaching.maxAgeMs;
 
-        if (cachedImage) {
+        if (cachedImage && !isExpired) {
             const stream = createReadStream(cachedImage.path);
 
             try {
@@ -50,7 +54,7 @@ export const GET: RequestHandler = async ({ url }) => {
                 });
             } catch {
                 stream.destroy();
-                // Cached file is missing → continue and fetch the original
+                // Cached file is missing?, continue, fetch the original and recache
             }
         }
     }

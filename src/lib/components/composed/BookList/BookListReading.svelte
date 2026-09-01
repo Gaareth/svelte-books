@@ -5,7 +5,7 @@
     import ReadingListItem from "./ReadingListItem.svelte";
 
     import { type ReadingListItemType } from "$appTypes";
-    import { sortReadingActivity } from "$lib/utils/utils";
+        import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
 
     interface Props {
         readingActivities: ReadingListItemType[];
