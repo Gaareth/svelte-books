@@ -38,6 +38,8 @@
 
     let formIsSubmitting: boolean = $state(false);
 
+    let showDeleteBookModal: boolean = $state(false);
+    let showCreateReadingActivity: boolean = $state(false);
     const createReadingActivityModalId = "createReadingActivityModal";
     const deleteBookModalId = "deleteBookModal";
 
@@ -76,6 +78,7 @@
                 </button>
             {/if}
             <button
+                onclick={() => (showDeleteBookModal = true)}
                 commandFor={deleteBookModalId}
                 command="show-modal"
                 type="button"
@@ -180,6 +183,7 @@
                     {activeEntry}
                     isAuthorizedToModify={data.isAuthorizedToModify}
                     {createReadingActivityModalId}
+                    bind:showCreateReadingActivity={showCreateReadingActivity}
                     {readingActivitiesSorted} />
             </div>
         </div>
@@ -217,11 +221,13 @@
 </div>
 
 <ReadingActivityForm
+    bind:showModal={showCreateReadingActivity}
     id={createReadingActivityModalId}
     {book}
     bookId={book.id} />
 
 <BookDeletePopUp
+    bind:openModal={showDeleteBookModal}
     id={deleteBookModalId}
     deletionBook={book}
     onSuccess={async () => {

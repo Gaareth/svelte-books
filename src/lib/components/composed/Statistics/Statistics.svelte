@@ -127,6 +127,11 @@
     let reading_duration_total_days = $derived(
         (reading_duration.totalDuration_ms / (1000 * 60 * 60 * 24)).toFixed(2),
     );
+
+    let showBooksWithoutPagecountsModal = $state(false);
+    let showCategoriesModal = $state(false);
+    let showAuthorsModal = $state(false);
+    let showReadingDurationModal = $state(false);
 </script>
 
 <div
@@ -162,6 +167,7 @@
                 {books_without_pagecount.length} books without pagecount. See
                 <button
                     class="!text-base link-all"
+                    onclick={() => (showBooksWithoutPagecountsModal = true)}
                     commandFor="books-without-pagecounts-modal"
                     command="show-modal"
                     type="button">
@@ -176,6 +182,7 @@
                 {books_without_words.length} books without words per page info. See
                 <button
                     class="!text-base link-all"
+                    onclick={() => (showBooksWithoutPagecountsModal = true)}
                     commandFor="books-without-pagecounts-modal"
                     command="show-modal"
                     type="button">
@@ -186,7 +193,7 @@
     </div>
 </div>
 
-<Modal id="books-without-pagecounts-modal">
+<Modal id="books-without-pagecounts-modal" bind:showModal={showBooksWithoutPagecountsModal}>
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">
@@ -217,11 +224,11 @@
         <Stats
             titleString="total books read"
             value={readingActivitiesFinished.length}
-            class="!bg-transparent backdrop-blur" />
+            className="!bg-transparent backdrop-blur" />
     {:else if selected_option == "pages"}
         <Stats
             titleString="total pages read"
-            class="!bg-transparent backdrop-blur">
+            className="!bg-transparent backdrop-blur">
             {#snippet valueSnippet()}
                 <div class="flex gap-1 items-center">
                     <p class="text-4xl font-bold self-center">
@@ -233,7 +240,7 @@
     {:else}
         <Stats
             titleString="total words read"
-            class="!bg-transparent backdrop-blur">
+            className="!bg-transparent backdrop-blur">
             {#snippet valueSnippet()}
                 <div class="flex flex-wrap gap-1 items-center">
                     <p class="text-3xl font-bold self-center break-all">
@@ -249,19 +256,19 @@
             titleString="books read this month"
             value={books_this_month.length}
             last_value={books_last_month.length}
-            class="!bg-transparent backdrop-blur" />
+            className="!bg-transparent backdrop-blur" />
     {:else if selected_option == "pages"}
         <Stats
             titleString="pages read this month"
             value={pages_this_month}
             last_value={pages_last_month}
-            class="!bg-transparent backdrop-blur" />
+            className="!bg-transparent backdrop-blur" />
     {:else}
         <Stats
             titleString="words read this month"
             value={words_this_month}
             last_value={words_last_month}
-            class="!bg-transparent backdrop-blur" />
+            className="!bg-transparent backdrop-blur" />
     {/if}
 
     {#if books_last_year.length > 0 || true}
@@ -270,19 +277,19 @@
                 titleString="books read this year"
                 value={books_this_year.length}
                 last_value={books_last_year.length}
-                class="!bg-transparent backdrop-blur" />
+                className="!bg-transparent backdrop-blur" />
         {:else if selected_option == "pages"}
             <Stats
                 titleString="pages read this year"
                 value={pages_this_year}
                 last_value={pages_last_year}
-                class="!bg-transparent backdrop-blur" />
+                className="!bg-transparent backdrop-blur" />
         {:else}
             <Stats
                 titleString="words read this year"
                 value={words_this_year}
                 last_value={words_last_year}
-                class="!bg-transparent backdrop-blur" />
+                className="!bg-transparent backdrop-blur" />
         {/if}
     {/if}
 </div>
@@ -291,8 +298,9 @@
     class="grid grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-12 gap-2 mb-2">
     <Stats
         titleString="average reading time"
-        class="!bg-transparent backdrop-blur col-span-full sm:col-span-5"
+        className="!bg-transparent backdrop-blur col-span-full sm:col-span-5"
         showStatsButton={true}
+        onShowStats={() => (showReadingDurationModal = true)}
         statsModalId="modalReadingDuration">
         {#snippet valueSnippet()}
             <p class="font-bold self-center text-5xl flex flex-col">
@@ -315,8 +323,9 @@
                 " (" +
                 most_read_authors[0][1] +
                 ")"}
-            class="!bg-transparent backdrop-blur"
+            className="!bg-transparent backdrop-blur"
             showStatsButton={true}
+            onShowStats={() => (showAuthorsModal = true)}
             statsModalId="modalAuthors" />
     {/if}
     {#if readingActivitiesFinished.length > 0 && most_read_categories[0] !== undefined}
@@ -327,12 +336,13 @@
                 most_read_categories[0][1] +
                 ")"}
             showStatsButton={true}
+            onShowStats={() => (showCategoriesModal = true)}
             statsModalId="modalCategories" 
-            class="!bg-transparent backdrop-blur" />
+            className="!bg-transparent backdrop-blur" />
     {/if}
 </div>
 
-<Modal id="modalCategories" className="w-[900px]">
+<Modal id="modalCategories" className="w-[900px]" bind:showModal={showCategoriesModal}>
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Most read categories</p>
@@ -342,7 +352,7 @@
     <Charts data={most_read_categories} />
 </Modal>
 
-<Modal id="modalAuthors" className="w-[900px]">
+<Modal id="modalAuthors" className="w-[900px]" bind:showModal={showAuthorsModal}>
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Most read authors</p>
@@ -352,7 +362,7 @@
     <Charts data={most_read_authors} />
 </Modal>
 
-<Modal id="modalReadingDuration" className="w-[900px]">
+<Modal id="modalReadingDuration" className="w-[900px]" bind:showModal={showReadingDurationModal}>
     {#snippet header()}
         <div>
             <p class="font-medium sm:text-lg">Reading Duration</p>

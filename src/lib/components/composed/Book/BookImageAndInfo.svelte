@@ -97,6 +97,7 @@
                 <button
                     commandFor="coverSelectionModal"
                     command="show-modal"
+                    onclick={() => (showChooseCoverImageModal = true)}
                     type="button"
                     class="btn-generic btn-generic-color-2 flex items-center gap-1 opacity-95 !backdrop-blur-xl">
                     Change <AddImageIcon />
@@ -110,6 +111,7 @@
             <button
                 commandFor="coverSelectionModal"
                 command="show-modal"
+                onclick={() => (showChooseCoverImageModal = true)}
                 type="button"
                 class="btn-generic btn-generic-color-2 w-full flex items-center gap-1">
                 Choose or upload

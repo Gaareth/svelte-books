@@ -16,7 +16,7 @@
         valueSnippet?: import("svelte").Snippet;
         onShowStats?: () => void;
         statsModalId?: string;
-        [key: string]: any;
+        className?: string | undefined;
     }
 
     let {
@@ -29,14 +29,14 @@
         valueSnippet,
         onShowStats,
         statsModalId,
-        ...rest
+        className,
     }: Props = $props();
 </script>
 
 <div
     class={twMerge(
         "border p-3 px-4 rounded-md dark:border-slate-700 flex flex-col dark:bg-slate-800 bg-white",
-        rest.class,
+        className,
     )}>
     {#if titleSnippet}
         {@render titleSnippet()}
@@ -50,7 +50,9 @@
             {:else if showStatsButton}
                 <button
                     class="border rounded p-1 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
-                    onclick={onShowStats}
+                    onclick={() => {
+                        onShowStats?.();
+                    }}
                     commandFor={statsModalId}
                     command="show-modal"
                     type="button">

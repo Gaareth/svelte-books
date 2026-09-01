@@ -73,6 +73,10 @@
             ? { ...entry.dateStarted }
             : { ...DEFAULT_OPTIONAL_DATETIME },
     );
+
+    let showInfoModal = $state(false);
+    let showFormModal = $state(false);
+    let showDeletePopUp = $state(false);
 </script>
 
 <AccentBarItemCard
@@ -113,6 +117,7 @@
                         dark:hover:bg-slate-500"
                         title="View"
                         type="button"
+                        onclick={() => (showInfoModal = true)}
                         commandFor="readingActivityModal"
                         command="show-modal">
                         <span
@@ -142,6 +147,7 @@
                                 class="group p-2 btn-delete hidden sm:inline-block !border-none"
                                 title="Delete book"
                                 type="button"
+                                onclick={() => (showDeletePopUp = true)}
                                 commandFor="readingActivityDeletePopUp"
                                 command="show-modal">
                                 <span
@@ -170,6 +176,7 @@
                             class="flex flex-col gap-1 p-4 sm:px-1 sm:py-1 w-56 sm:w-36 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <button
+                                    onclick={() => (showInfoModal = true)}
                                     commandFor="readingActivityModal"
                                     command="show-modal"
                                     class="dropdown-item-button"
@@ -185,6 +192,7 @@
                             {#if isAuthorizedToModify}
                                 <li>
                                     <button
+                                        onclick={() => (showFormModal = true)}
                                         commandFor="readingActivityForm"
                                         command="show-modal"
                                         class="dropdown-item-button"
@@ -201,6 +209,7 @@
                             {#if allow_deletion}
                                 <li>
                                     <button
+                                        onclick={() => (showDeletePopUp = true)}
                                         commandFor="readingActivityDeletePopUp"
                                         command="show-modal"
                                         class="dropdown-item-button text-error"
@@ -222,13 +231,13 @@
 </AccentBarItemCard>
 
 <Modal
+    bind:showModal={showInfoModal}
     id="readingActivityModal"
     divClassName="w-full"
     className="w-[95%] lg:w-2/5">
     {#snippet header()}
         <div class="flex items-center gap-4 w-full">
             <p class="font-medium">Reading Activity</p>
-
             <ReadingActivityTimeDiff {entry} />
         </div>
     {/snippet}
@@ -298,9 +307,10 @@
     </p>
 </Modal>
 
-<ReadingActivityForm id="readingActivityForm" {entry} {book} />
+<ReadingActivityForm id="readingActivityForm" {entry} {book} bind:showModal={showFormModal} />
 
 <ReadingActivityDeletePopUp
+    bind:openModal={showDeletePopUp}
     id="readingActivityDeletePopUp"
     deletionEntry={entry}
     onSuccess={() => {
