@@ -273,13 +273,19 @@ export async function cacheSingleImageFromStream(
         const filename = await saveImageWithHash(image, output);
         console.log(`Cached image from stream to ${filename}`);
 
-        await prisma.image.create({
-            data: {
+        const imageData = {
+            sourceUrl: url,
+            path: filename,
+            width: metadata.width,
+            height: metadata.height,
+        };
+
+        await prisma.image.upsert({
+            where: {
                 sourceUrl: url,
-                path: filename,
-                width: metadata.width,
-                height: metadata.height,
             },
+            create: imageData,
+            update: imageData,
         });
     } catch (error) {
         console.error(`Error caching image from stream: ${error}`);

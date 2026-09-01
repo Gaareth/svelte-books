@@ -3,6 +3,7 @@ import * as seed from "../prisma/seed-initial";
 import { building } from "$app/environment";
 import type { ServerInit } from "@sveltejs/kit";
 import { validatePrivateConfig } from "./lib/server/config";
+import { runCacheCleanupScheduler } from "./lib/server/images/cleanup";
 
 async function initDB() {
     if (!building) {
@@ -25,6 +26,7 @@ async function initDB() {
 export const init: ServerInit = async () => {
     validatePrivateConfig();
     await initDB();
+    await runCacheCleanupScheduler();
 };
 
 export { handle } from "$lib/auth/auth";

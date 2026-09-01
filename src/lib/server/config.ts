@@ -30,15 +30,23 @@ export const privateConfig = {
             fallback: false,
             warn: true,
         }),
-        maxAge: envReader.value("IMAGE_CACHING_MAX_AGE", parseDuration, {
+        maxAgeMs: envReader.value("IMAGE_CACHING_MAX_AGE", parseDuration, {
             fallback: 60 * 60 * 1000, // 1 hour in milliseconds
             warn: true,
         }),
-        maxCacheSize: envReader.value(
+        maxCacheSizeBytes: envReader.value(
             "IMAGE_CACHING_MAX_CACHE_SIZE",
             parseSize,
             {
                 fallback: 500 * 1024 * 1024, // 500 MB in bytes
+                warn: true,
+            },
+        ),
+        cleanupIntervalMs: envReader.value(
+            "IMAGE_CACHING_CLEANUP_INTERVAL",
+            parseDuration,
+            {
+                fallback: 60 * 60 * 1000, // 1 hour in milliseconds
                 warn: true,
             },
         ),
