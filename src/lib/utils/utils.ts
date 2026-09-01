@@ -117,3 +117,12 @@ export function formatBytes(bytes: number, decimals = 2): string {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
+
+export function parseJSONSafe<T>(jsonString: string): T | null {
+    try {
+        return JSON.parse(jsonString) as T;
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
+        return null;
+    }
+}

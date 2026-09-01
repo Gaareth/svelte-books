@@ -149,6 +149,7 @@ export async function cacheImage(
     };
 }
 
+// save a cached and written image to the database
 export async function saveCachesToDB(
     caches: ImgVariantCaches,
     sourceUrl?: string,
@@ -172,21 +173,31 @@ export async function saveCachesToDB(
         placeholderHash,
     };
 
-    // if the image already exists in the database (based on sourceUrl), update it; otherwise, create a new record
+    // if the image already exists in the database (based on sourceUrl if fails based on path), update it;
+    // otherwise, create a new record
     let primaryImage;
 
-    if (sourceUrl) {
-        primaryImage = await prisma.image.upsert({
-            where: {
-                sourceUrl: sourceUrl,
-            },
+    const upsertImage = (where: Prisma.ImageWhereUniqueInput) =>
+        prisma.image.upsert({
+            where,
             create: imageData,
             update: imageData,
         });
-    } else {
-        primaryImage = await prisma.image.create({
-            data: imageData,
-        });
+
+    try {
+        primaryImage = await upsertImage(
+            sourceUrl ? { sourceUrl } : { path: imageData.path },
+        );
+    } catch (error) {
+        if (
+            sourceUrl &&
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
+            primaryImage = await upsertImage({ path: imageData.path });
+        } else {
+            throw error;
+        }
     }
 
     // nested upsert is not supported in Prisma, so we have to do this in a separate loop
@@ -271,7 +282,7 @@ export async function cacheSingleImageFromStream(
         );
 
         const filename = await saveImageWithHash(image, output);
-        console.log(`Cached image from stream to ${filename}`);
+        // console.log(`Cached image from stream to ${filename}`);
 
         const imageData = {
             sourceUrl: url,

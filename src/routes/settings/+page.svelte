@@ -88,7 +88,11 @@
                 return;
             }
 
-            currentStatus = JSON.parse(decodeURIComponent(event.data));
+            try {
+                currentStatus = JSON.parse(decodeURIComponent(event.data));
+            } catch (error) {
+                console.error("Error parsing SSE event data:", error);
+            }
             // console.log(currentStatus);
         });
     });

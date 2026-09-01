@@ -10,7 +10,10 @@ import { arrMax, delay, getErrorMessage, zip } from "$lib/utils/utils";
 import { GOOGLE_BOOKS_API_REQUEST_DELAY_MS } from "$src/lib/constants/constants";
 import { cacheGoogleBooksImageURL } from "$src/lib/server/images/googleBooksImages";
 import { saveCachesToDB } from "$src/lib/server/images/images";
-import { getMaxResolutionImage } from "$src/lib/utils/googleApiUtils";
+import {
+    getMaxResolutionImage,
+    removeTrackingParamsFromGoogleBooksUrl,
+} from "$src/lib/utils/googleApiUtils";
 
 type bookDiff = {
     bookName: string;
@@ -323,7 +326,11 @@ export async function addCovers(accountId: string) {
 
         try {
             const cachedImage = await cacheGoogleBooksImageURL(maxResImgUrl);
-            const savedImage = await saveCachesToDB(cachedImage, maxResImgUrl);
+
+            const normalizedUrl =
+                removeTrackingParamsFromGoogleBooksUrl(maxResImgUrl);
+            console.log(cachedImage, normalizedUrl);
+            const savedImage = await saveCachesToDB(cachedImage, normalizedUrl);
             await prisma.book.update({
                 where: {
                     id: book.id,

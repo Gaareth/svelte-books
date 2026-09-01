@@ -39,12 +39,17 @@ export function getImageByResolutionOrder(
     imageLinksJSON: string,
     order: (keyof ImageLinksType)[],
 ) {
-    const imageLinks = JSON.parse(imageLinksJSON || "{}") as ImageLinksType;
+    try {
+        const imageLinks = JSON.parse(imageLinksJSON || "{}") as ImageLinksType;
 
-    for (const res of order) {
-        if (imageLinks?.[res]) {
-            return imageLinks[res];
+        for (const res of order) {
+            if (imageLinks?.[res]) {
+                return imageLinks[res];
+            }
         }
+    } catch (_e: unknown) {
+        console.error("Error parsing imageLinksJSON:", _e);
+        return null;
     }
 
     return null;
@@ -57,9 +62,22 @@ export function getMaxResolutionImage(imageLinksJSON: string) {
 export function getMinResolutionImage(imageLinksJSON: string) {
     return getNextImageByResolution(imageLinksJSON, "smallThumbnail", true);
 }
+
 export function normalizeGoogleBooksUrl(id: string, zoom: number = 1): string {
     return `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=${zoom}&source=gbs_api`;
 }
+
+export function removeTrackingParamsFromGoogleBooksUrl(url: string): string {
+    const urlObject = new URL(url);
+    if (urlObject.hostname !== "books.google.com") {
+        return url;
+    }
+    urlObject.searchParams.delete("source");
+    urlObject.searchParams.delete("imgtk");
+
+    return urlObject.toString();
+}
+
 export function extractIdFromGoogleBooksUrl(url: string): string | null {
     try {
         const urlObject = new URL(url);

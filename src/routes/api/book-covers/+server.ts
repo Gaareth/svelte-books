@@ -1,6 +1,7 @@
 import { privateConfig } from "$src/lib/server/config";
 import { cacheSingleImageFromStream } from "$src/lib/server/images/images";
 import { prisma } from "$src/lib/server/prisma";
+import { removeTrackingParamsFromGoogleBooksUrl } from "$src/lib/utils/googleApiUtils";
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { createReadStream } from "node:fs";
 import { Readable } from "node:stream";
@@ -21,11 +22,9 @@ export const GET: RequestHandler = async ({ url }) => {
         );
     }
 
-    // delete tracking param
-    const normalizedUrlObject = new URL(urlObject);
-    normalizedUrlObject.searchParams.delete("imgtk");
-
-    const normalizedUrl = normalizedUrlObject.toString();
+    const normalizedUrl = removeTrackingParamsFromGoogleBooksUrl(
+        urlObject.toString(),
+    );
 
     if (privateConfig.imageCaching.enabled) {
         const cachedImage = await prisma.image.findUnique({

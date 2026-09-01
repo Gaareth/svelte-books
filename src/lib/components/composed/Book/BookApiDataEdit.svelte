@@ -5,6 +5,7 @@
     import BookApiConfirm from "$components/composed/BookApiSelection/BookApiConfirm.svelte";
     import toast from "svelte-french-toast";
     import Alert from "../../Alert.svelte";
+    import { parseJSONSafe } from "$src/lib/utils/utils";
 
     interface Props {
         query?: string | undefined;
@@ -37,7 +38,8 @@
                       ],
                       imageLinks:
                           data.imageLinksJSON !== null
-                              ? JSON.parse(data.imageLinksJSON)
+                              ? (parseJSONSafe(data.imageLinksJSON) ??
+                                undefined)
                               : undefined,
                       printedPageCount: undefined,
                       pageCount: data.pageCount || undefined,

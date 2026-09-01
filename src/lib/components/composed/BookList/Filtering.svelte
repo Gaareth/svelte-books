@@ -18,6 +18,7 @@
     import FilterIcon from "$src/lib/icons/FilterIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
     import type { ActiveReadingListItemType } from "./ReadingList.svelte";
+    import { parseJSONSafe } from "$src/lib/utils/utils";
 
     type sortOption =
         "date_created" | "date_read" | "author" | "title" | "rating";
@@ -71,7 +72,8 @@
                     : undefined,
                 parseFilterDate(params.get("start_date")),
                 parseFilterDate(params.get("end_date")),
-                JSON.parse(params.get("categories") ?? "[]") as string[],
+                (parseJSONSafe<string[]>(params.get("categories") ?? "[]") ??
+                    []) as string[],
                 params.get("active") === "all" ? "all" : "only active",
             );
         }
