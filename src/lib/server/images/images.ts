@@ -202,9 +202,17 @@ export async function saveCachesToDB(
 }
 
 export async function deleteCachedImage(image: ImageWithVariants) {
-    await unlink(fromDBPathToFSPath(image.path));
+    try {
+        await unlink(fromDBPathToFSPath(image.path));
+    } catch (error) {
+        console.error(`Error deleting cached image: ${error}`);
+    }
     for (const variant of image.variants) {
-        await unlink(fromDBPathToFSPath(variant.path));
+        try {
+            await unlink(fromDBPathToFSPath(variant.path));
+        } catch (error) {
+            console.error(`Error deleting cached image variant: ${error}`);
+        }
     }
 
     await prisma.image.delete({
