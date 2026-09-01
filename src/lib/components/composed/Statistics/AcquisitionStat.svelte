@@ -41,7 +41,7 @@
 
 <Stats
     titleString="average acquisition time (days)"
-    class="!bg-transparent backdrop-blur sm:col-span-7">
+    className="!bg-transparent backdrop-blur sm:col-span-7">
     {#snippet valueSnippet()}
         <div class="flex flex-col w-full gap-1.5 relative">
             {#if !has_any_stat}
