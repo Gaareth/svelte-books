@@ -117,7 +117,9 @@ export const DatetimeSchema = z.object({
     hour: numericString(z.number().int().min(0).max(23).nullish()),
     minute: numericString(z.number().int().min(0).max(59).nullish()),
 
-    timezoneOffset: numericString(z.number().int().min(0).max(31).nullish()), // Optional timezoneoffset in minutes
+    timezoneOffset: numericString(
+        z.number().int().min(-840).max(720).nullish(),
+    ), // Optional timezoneoffset in minutes
 });
 
 export const requiredDatetimeSchema = DatetimeSchema.refine(

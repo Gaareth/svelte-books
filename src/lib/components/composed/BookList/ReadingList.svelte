@@ -1,9 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
 
-    import { run } from "svelte/legacy";
     import { fade, scale } from "svelte/transition";
-   
 
     import BookSearch from "../BookSearch.svelte";
     import Filtering from "./Filtering.svelte";
@@ -33,13 +31,15 @@
     const searchStore = createSearchStore(entries);
     let added_book = $state(false);
 
-    let languages_used: string[] = $derived(entries.reduce((result, b) => {
+    let languages_used: string[] = $derived(
+        entries.reduce((result, b) => {
             let lang = b.book.bookApiData?.language;
             if (lang !== undefined && !result.includes(lang)) {
                 return result.concat(lang);
             }
             return result;
-        }, [] as string[]))
+        }, [] as string[]),
+    );
     let category_names: string[] = $derived([
         ...new Set(
             entries
@@ -65,7 +65,7 @@
     let openModal = $state(false);
 
     let showOptions = $state(false);
-    run(() => {
+    $effect(() => {
         let params = $page.url.searchParams;
         showOptions =
             (!!params.get("filter") ||

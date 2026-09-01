@@ -9,7 +9,7 @@
     import BookNew from "$components/composed/BookNew.svelte";
     import Statistics from "$src/lib/components/composed/Statistics/Statistics.svelte";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-        import { getActiveActivies } from "$src/lib/utils/readingActivityUtils";
+    import { getActiveActivies } from "$lib/utils/readingActivityUtils";
 
     interface Props {
         data: PageData;

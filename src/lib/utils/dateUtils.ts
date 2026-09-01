@@ -43,45 +43,44 @@ export function dateDiffFormatted(
     return `${years} year${years !== 1 ? "s" : ""}`;
 }
 export function toMinutePrecision(date: Date) {
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes(),
-    ).getTime();
+    return Math.floor(date.getTime() / 60_000) * 60_000;
 }
-// TODO:
-// export function optionalToDate(o: OptionalDate | null | undefined) {
-//   if (o?.year == null) {
-//     return null;
-//   }
-//   const date = new Date(Date.UTC(
-//     o.year,
-//     (o.month ?? 1) - 1,
-//     o.day ?? 1,
-//     o.hour ?? 0,
-//     o.minute ?? 0
-//   ));
-//   if (o.timezoneOffset != null) {
-//     date.setUTCMinutes(date.getUTCMinutes() - o.timezoneOffset);
-//   }
-//   return date;
-// }
 
 export function optionalToDate(o: OptionalDate | null | undefined) {
     if (o?.year == null) {
         return null;
     }
 
-    return new Date(
-        o.year,
-        (o.month ?? 0) - 1,
-        o.day ?? 1,
-        o.hour ?? 0,
-        o.minute ?? 0,
+    const date = new Date(
+        Date.UTC(
+            o.year,
+            (o.month ?? 1) - 1,
+            o.day ?? 1,
+            o.hour ?? 0,
+            o.minute ?? 0,
+        ),
     );
+
+    if (o.timezoneOffset != null) {
+        date.setUTCMinutes(date.getUTCMinutes() + o.timezoneOffset);
+    }
+
+    return date;
 }
+
+// export function optionalToDate(o: OptionalDate | null | undefined) {
+//     if (o?.year == null) {
+//         return null;
+//     }
+
+//     return new Date(
+//         o.year,
+//         (o.month ?? 0) - 1,
+//         o.day ?? 1,
+//         o.hour ?? 0,
+//         o.minute ?? 0,
+//     );
+// }
 
 export function dateToOptional(date: Date) {
     return {
@@ -119,4 +118,24 @@ export function isValidDate(year: number, month: number, day: number): boolean {
         date.getMonth() === month &&
         date.getDate() === day
     );
+}
+
+export function getTimezoneOffset(d: OptionalDate) {
+    if (
+        d.year == null ||
+        d.month == null ||
+        d.day == null ||
+        d.hour == null ||
+        d.minute == null
+    ) {
+        return null;
+    }
+
+    return new Date(
+        d.year,
+        d.month - 1,
+        d.day,
+        d.hour,
+        d.minute,
+    ).getTimezoneOffset();
 }

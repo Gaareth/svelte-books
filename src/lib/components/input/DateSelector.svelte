@@ -80,7 +80,7 @@
     import ClearButton from "$components/input/ClearButton.svelte";
     import Dropdown from "$components/input/Dropdown.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
-        import { isValidDate } from "$src/lib/utils/dateUtils";
+    import { getTimezoneOffset, isValidDate } from "$src/lib/utils/dateUtils";
 
     interface Props {
         id?: string | undefined;
@@ -113,12 +113,24 @@
 
     // Update the bound datetime whenever localDatetime changes
     $effect(() => {
+        const offset = getTimezoneOffset(localDatetime);
+
+        if (localDatetime.timezoneOffset !== offset) {
+            localDatetime.timezoneOffset = offset;
+        }
+
         if (localDatetime !== datetime) {
             datetime = localDatetime;
         }
     });
 
-    let dateString: string | undefined = $state(undefined);
+    // let dateString: string | undefined = $state(undefined);
+    // $effect(() => {
+    //     dateString = formatOptionalDate(localDatetime);
+    // });
+    let dateString: string | undefined = $derived(
+        formatOptionalDate(localDatetime),
+    );
 
     let selectedOption: "last month" | "this month" | "today" | undefined =
         $state(undefined);
@@ -209,9 +221,6 @@
     const days: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
     $effect(() => {
-        dateString = formatOptionalDate(localDatetime);
-    });
-    $effect(() => {
         if (timeString != null) {
             localDatetime.hour = Number(timeString.split(":")[0]);
             localDatetime.minute = Number(timeString.split(":")[1]);
@@ -223,9 +232,6 @@
             localDatetime.minute != null
         ) {
             timeString = formatTime(localDatetime);
-        } else {
-            // timeString = undefined;
-            // console.log("undf");
         }
     });
     $effect(() => {

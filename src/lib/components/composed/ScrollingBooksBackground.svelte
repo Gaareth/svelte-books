@@ -43,7 +43,7 @@
 
     let booksAndImages = $derived(
         readingActivities
-            .sort((a, b) => (b.rating?.stars ?? -1) - (a.rating?.stars ?? -1))
+            .toSorted((a, b) => (b.rating?.stars ?? -1) - (a.rating?.stars ?? -1))
             .map((activity) => {
                 return {
                     src: getBookImage(activity.book, (imageLinks) =>
