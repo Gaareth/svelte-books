@@ -50,6 +50,7 @@
     {/if}
 
     <ReadingList
+        filterActive={true}
         entries={readingActivity}
         isAuthorizedToModify={data.isAuthorizedToModify} />
 {:else}

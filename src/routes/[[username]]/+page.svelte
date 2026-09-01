@@ -68,6 +68,7 @@
 {/if}
 
 <ReadingList
+    filterActive={false}
     isAuthorizedToModify={data.isAuthorizedToModify}
     entries={data.readingActivity.filter(
         (e) =>

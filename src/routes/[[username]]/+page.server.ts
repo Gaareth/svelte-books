@@ -33,8 +33,6 @@ export async function load({ locals, params }: ServerLoadEvent) {
             ReadingActivityType.READING,
         )) || isAuthorizedToModify;
 
-    console.log(readingActivity.map((e) => e.book.name));
-
     return {
         isCurrentlyReadingPublic,
         readingActivity,

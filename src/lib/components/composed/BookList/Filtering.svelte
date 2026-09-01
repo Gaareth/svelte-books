@@ -10,24 +10,31 @@
     import { page } from "$app/state";
     import { MAX_RATING } from "$lib/constants/constants";
     import { createSearchStore } from "$lib/stores/search";
-        import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
+    import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
     import { dateToYYYY_MM_DD } from "$src/lib/utils/dateUtils";
     import { optionalToDate } from "$src/lib/utils/dateUtils";
     import SortDescendingIcon from "$src/lib/icons/SortDescendingIcon.svelte";
     import SortAscendingIcon from "$src/lib/icons/SortAscendingIcon.svelte";
     import FilterIcon from "$src/lib/icons/FilterIcon.svelte";
     import AutoComplete5 from "../../input/AutoComplete5.svelte";
+    import type { ActiveReadingListItemType } from "./ReadingList.svelte";
 
     type sortOption =
         "date_created" | "date_read" | "author" | "title" | "rating";
 
     interface Props {
+        filterActive?: boolean;
         languages_used: string[];
         category_names: string[]; // not reactive
         searchStore: ReturnType<typeof createSearchStore<any>>;
     }
 
-    let { languages_used, category_names, searchStore }: Props = $props();
+    let {
+        filterActive = true,
+        languages_used,
+        category_names,
+        searchStore,
+    }: Props = $props();
 
     // update when url changes, back button pressed
     const params = $derived(page.url.searchParams);
@@ -155,6 +162,14 @@
                 b.book.bookApiData?.language === this.lang
             );
         }
+
+        matchesActive(b: ActiveReadingListItemType): boolean {
+            return (
+                this.show_active_or_all === "all" ||
+                b.active === true ||
+                b.active === undefined // if entry has no active prop, then we should not use it as a filter
+            );
+        }
     }
 
     // params from the url state
@@ -172,7 +187,8 @@
             filterParams.matchesStart(b) &&
             filterParams.matchesEnd(b) &&
             filterParams.matchesCategory(b) &&
-            filterParams.matchesLanguage(b);
+            filterParams.matchesLanguage(b) &&
+            (!filterActive || filterParams.matchesActive(b));
 
         inputParams = FilterParams.fromParams(params);
     });
@@ -188,6 +204,7 @@
             return undefined;
         }
 
+        // eslint-disable-next-line svelte/prefer-svelte-reactivity
         const date = new Date(value);
         date.setHours(0, 0, 0, 0);
 
@@ -249,18 +266,6 @@
     }
 
     const resetFilter = () => {
-        // const params = page.url.searchParams;
-
-        // // remove all filter params and only copy over query and sorting order
-        // const new_params = new URLSearchParams(
-        //     [...params].filter(([key]) => ["q", "order"].includes(key)),
-        // );
-
-        // new_params.set("filter", "true");
-
-        // goto("?" + new_params.toString(), {
-        //     noScroll: true,
-        // });
         inputParams = FilterParams.fromParams(new URLSearchParams());
     };
 

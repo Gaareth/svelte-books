@@ -10,18 +10,22 @@
     import type { ReadingListItemType } from "$appTypes";
 
     import { invalidateAll } from "$app/navigation";
-    import { page } from "$app/stores";
     import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
     import { createSearchStore, searchHandler } from "$lib/stores/search";
     import MoreDots from "$src/lib/icons/MoreDots.svelte";
+    import { page } from "$app/state";
 
+
+    export type ActiveReadingListItemType = ReadingListItemType & { active?: boolean };
     interface Props {
-        entries: (ReadingListItemType & { active?: boolean })[];
+        entries: ActiveReadingListItemType[];
         showSearch?: boolean;
+        filterActive?: boolean;
         isAuthorizedToModify?: boolean;
     }
 
     let {
+        filterActive = true,
         entries,
         showSearch = true,
         isAuthorizedToModify = false,
@@ -66,7 +70,7 @@
 
     let showOptions = $state(false);
     $effect(() => {
-        let params = $page.url.searchParams;
+        let params = page.url.searchParams;
         showOptions =
             (!!params.get("filter") ||
                 !!params.get("sort") ||
@@ -125,7 +129,7 @@
 </div>
 <!-- TODO: filtering as modal -->
 <div hidden={!showOptions}>
-    <Filtering {searchStore} {languages_used} {category_names} />
+    <Filtering {searchStore} {languages_used} {category_names} {filterActive} />
 </div>
 
 <h2
