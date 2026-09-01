@@ -1,6 +1,20 @@
 <div>
     <h1 class="text-5xl my-4">About</h1>
 
+    <div class="p-4 default-border dark:border-indigo-400 mb-3">
+        <h2 class="text-2xl mb-2">What</h2>
+        <p>
+            A personal book tracking app focused on your reading activity,
+            habits and progress, rather than social interaction. Host it
+            yourself <a
+                href="https://github.com/Gaareth/svelte-books"
+                class="underline text-indigo-300">
+                here
+            </a>
+            .
+        </p>
+    </div>
+
     <div class="p-4 default-border dark:border-indigo-400">
         <h2 class="text-2xl mb-2">Why</h2>
         <p>

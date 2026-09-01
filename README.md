@@ -64,7 +64,6 @@ If you changed the schema and want to test it:
 ## Todos
 
 - SUB
-- simple? cache for showing google book images
 - better google books search
     - a default search result of both title and author and just title combined
     - a custom seach bar with intitle, inauthor etc as styled tags (ideally not editable)
