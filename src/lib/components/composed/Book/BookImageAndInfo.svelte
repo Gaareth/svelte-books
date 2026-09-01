@@ -9,6 +9,7 @@
     import CoverSelection from "./CoverSelection.svelte";
     // import type { ActionData } from "$routes/[[username]]/book/[name]/$types";
     import type { ActionData } from "../../../../routes/[[username]]/book/[name]/$types";
+    import Image from "../../Image.svelte";
 
     interface Props {
         edit: boolean | undefined;
@@ -28,10 +29,9 @@
 
     //lg:group-hover:opacity-50
     const imageSizeClass =
-        "max-w-full h-[300px] sm:w-[320px] sm:h-[330px] lg:w-[199px] aspect-[2/3]";
+        "h-[300px] sm:w-[320px] sm:h-[330px] lg:w-[199px] aspect-[2/3]";
 
-    const imageClass =
-        clsx(`transition-all duration-300 relative text-transparent
+    const imageClass = clsx(`transition-all duration-300 relative
       ${imageSizeClass} object-cover object-center rounded`);
 
     let coverSelection: CoverSelection | undefined = $state();
@@ -55,8 +55,7 @@
 <div class={clsx("lg:item-border-no-hover lg:p-4 relative", edit && "group")}>
     <div class="flex flex-col justify-center relative">
         {#if hasImage}
-            <div
-                class="h-[300px] sm:h-[400px] w-full mb-10 hidden dark:block dark:lg:hidden">
+            <div class="h-[300px] sm:h-[400px] w-full mb-10 block lg:hidden">
             </div>
 
             <div class=" absolute inset-0 w-full">
