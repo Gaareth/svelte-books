@@ -7,6 +7,7 @@ import sharp, { type Sharp } from "sharp";
 import { rgbaToThumbHash } from "thumbhash";
 import { v4 as uuidv4 } from "uuid";
 import { privateConfig } from "../config";
+import { extractIdFromGoogleBooksUrl } from "./googleBooksImages";
 
 export type ImageWithVariants = Prisma.ImageGetPayload<{
     include: {
@@ -17,11 +18,15 @@ export type ImageWithVariants = Prisma.ImageGetPayload<{
 const IMAGE_VARIANTS_WIDTHS = [128, 192, 256, 320, 480, 640, 768, 1024];
 const OUTPUT_PATH = privateConfig.imagesPath;
 
-export async function fetchImage(url: string): Promise<Sharp> {
-    const response = await fetch(url);
+export async function ImageFromFetch(response: Response): Promise<Sharp> {
     const buffer = Buffer.from(await response.arrayBuffer());
     const image = sharp(buffer);
     return image;
+}
+
+export async function fetchImage(url: string): Promise<Sharp> {
+    const response = await fetch(url);
+    return ImageFromFetch(response);
 }
 
 export async function thumbhashImage(image: Sharp): Promise<string> {
@@ -65,7 +70,7 @@ export async function cacheUploadedImage(
 }
 
 // to provide cache busting filenames
-async function saveImageWithHash(
+export async function saveImageWithHash(
     image: Sharp,
     filename: string,
     extension: string = "webp",
@@ -247,4 +252,36 @@ export function generateNewSrcSet(caches: ImgVariantCaches): string {
             width: img.width,
         })),
     );
+}
+
+export async function cacheSingleImageFromStream(
+    stream: ReadableStream<Uint8Array>,
+    url: string,
+) {
+    try {
+        const cachedResponse = new Response(stream);
+
+        const image = await ImageFromFetch(cachedResponse);
+        const metadata = await image.metadata();
+
+        const vid = extractIdFromGoogleBooksUrl(url) ?? "unknown";
+        const output = path.join(
+            privateConfig.imageCaching.path,
+            `google-books-vid-${vid}-uuid-${uuidv4()}`,
+        );
+
+        const filename = await saveImageWithHash(image, output);
+        console.log(`Cached image from stream to ${filename}`);
+
+        await prisma.image.create({
+            data: {
+                sourceUrl: url,
+                path: filename,
+                width: metadata.width,
+                height: metadata.height,
+            },
+        });
+    } catch (error) {
+        console.error(`Error caching image from stream: ${error}`);
+    }
 }

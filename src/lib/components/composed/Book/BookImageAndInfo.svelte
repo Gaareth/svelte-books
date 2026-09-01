@@ -9,7 +9,6 @@
     import CoverSelection from "./CoverSelection.svelte";
     // import type { ActionData } from "$routes/[[username]]/book/[name]/$types";
     import type { ActionData } from "../../../../routes/[[username]]/book/[name]/$types";
-    import Image from "../../Image.svelte";
 
     interface Props {
         edit: boolean | undefined;

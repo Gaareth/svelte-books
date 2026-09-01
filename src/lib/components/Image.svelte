@@ -1,6 +1,6 @@
 <script module lang="ts">
     export interface ImageProps extends HTMLImgAttributes {
-        placeholderHash?: string;
+        placeholderHash?: string | null;
         wrapperClass?: string;
         backgroundClass?: string;
         onloadClass?: string;

@@ -29,7 +29,7 @@ export async function cacheGoogleBooksImageID(
     return await cacheImage(bestImage, id);
 }
 
-function extractIdFromGoogleBooksUrl(url: string): string | null {
+export function extractIdFromGoogleBooksUrl(url: string): string | null {
     try {
         const urlObject = new URL(url);
         if (urlObject.hostname !== "books.google.com") {
@@ -46,5 +46,5 @@ export async function cacheGoogleBooksImageURL(
 ): Promise<ImgVariantCaches> {
     const image = await fetchImage(url);
     const id = extractIdFromGoogleBooksUrl(url) ?? "unknown-google-book-id";
-    return await cacheImage(image, id);
+    return await cacheImage(image, "google-books-image-" + id);
 }

@@ -211,7 +211,7 @@ export type ImageGroupByOutputType = {
   updatedAt: Date
   path: string
   sourceUrl: string | null
-  placeholderHash: string
+  placeholderHash: string | null
   width: number
   height: number
   _count: ImageCountAggregateOutputType | null
@@ -245,7 +245,7 @@ export type ImageWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   path?: Prisma.StringFilter<"Image"> | string
   sourceUrl?: Prisma.StringNullableFilter<"Image"> | string | null
-  placeholderHash?: Prisma.StringFilter<"Image"> | string
+  placeholderHash?: Prisma.StringNullableFilter<"Image"> | string | null
   width?: Prisma.IntFilter<"Image"> | number
   height?: Prisma.IntFilter<"Image"> | number
   variants?: Prisma.ImageVariantListRelationFilter
@@ -258,7 +258,7 @@ export type ImageOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   path?: Prisma.SortOrder
   sourceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  placeholderHash?: Prisma.SortOrder
+  placeholderHash?: Prisma.SortOrderInput | Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   variants?: Prisma.ImageVariantOrderByRelationAggregateInput
@@ -274,7 +274,7 @@ export type ImageWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ImageWhereInput | Prisma.ImageWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Image"> | Date | string
-  placeholderHash?: Prisma.StringFilter<"Image"> | string
+  placeholderHash?: Prisma.StringNullableFilter<"Image"> | string | null
   width?: Prisma.IntFilter<"Image"> | number
   height?: Prisma.IntFilter<"Image"> | number
   variants?: Prisma.ImageVariantListRelationFilter
@@ -287,7 +287,7 @@ export type ImageOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   path?: Prisma.SortOrder
   sourceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  placeholderHash?: Prisma.SortOrder
+  placeholderHash?: Prisma.SortOrderInput | Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   _count?: Prisma.ImageCountOrderByAggregateInput
@@ -306,7 +306,7 @@ export type ImageScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Image"> | Date | string
   path?: Prisma.StringWithAggregatesFilter<"Image"> | string
   sourceUrl?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
-  placeholderHash?: Prisma.StringWithAggregatesFilter<"Image"> | string
+  placeholderHash?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   width?: Prisma.IntWithAggregatesFilter<"Image"> | number
   height?: Prisma.IntWithAggregatesFilter<"Image"> | number
 }
@@ -316,7 +316,7 @@ export type ImageCreateInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   variants?: Prisma.ImageVariantCreateNestedManyWithoutImageInput
@@ -329,7 +329,7 @@ export type ImageUncheckedCreateInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   variants?: Prisma.ImageVariantUncheckedCreateNestedManyWithoutImageInput
@@ -341,7 +341,7 @@ export type ImageUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   variants?: Prisma.ImageVariantUpdateManyWithoutImageNestedInput
@@ -354,7 +354,7 @@ export type ImageUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   variants?: Prisma.ImageVariantUncheckedUpdateManyWithoutImageNestedInput
@@ -367,7 +367,7 @@ export type ImageCreateManyInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
 }
@@ -377,7 +377,7 @@ export type ImageUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -388,7 +388,7 @@ export type ImageUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -483,7 +483,7 @@ export type ImageCreateWithoutBooksInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   variants?: Prisma.ImageVariantCreateNestedManyWithoutImageInput
@@ -495,7 +495,7 @@ export type ImageUncheckedCreateWithoutBooksInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   variants?: Prisma.ImageVariantUncheckedCreateNestedManyWithoutImageInput
@@ -522,7 +522,7 @@ export type ImageUpdateWithoutBooksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   variants?: Prisma.ImageVariantUpdateManyWithoutImageNestedInput
@@ -534,7 +534,7 @@ export type ImageUncheckedUpdateWithoutBooksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   variants?: Prisma.ImageVariantUncheckedUpdateManyWithoutImageNestedInput
@@ -545,7 +545,7 @@ export type ImageCreateWithoutVariantsInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   books?: Prisma.BookCreateNestedManyWithoutCoverImageInput
@@ -557,7 +557,7 @@ export type ImageUncheckedCreateWithoutVariantsInput = {
   updatedAt?: Date | string
   path: string
   sourceUrl?: string | null
-  placeholderHash: string
+  placeholderHash?: string | null
   width: number
   height: number
   books?: Prisma.BookUncheckedCreateNestedManyWithoutCoverImageInput
@@ -584,7 +584,7 @@ export type ImageUpdateWithoutVariantsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   books?: Prisma.BookUpdateManyWithoutCoverImageNestedInput
@@ -596,7 +596,7 @@ export type ImageUncheckedUpdateWithoutVariantsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   path?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  placeholderHash?: Prisma.StringFieldUpdateOperationsInput | string
+  placeholderHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   books?: Prisma.BookUncheckedUpdateManyWithoutCoverImageNestedInput
@@ -710,7 +710,7 @@ export type $ImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     updatedAt: Date
     path: string
     sourceUrl: string | null
-    placeholderHash: string
+    placeholderHash: string | null
     width: number
     height: number
   }, ExtArgs["result"]["image"]>

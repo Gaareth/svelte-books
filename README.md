@@ -84,6 +84,8 @@ If you changed the schema and want to test it:
 
 - takeover: choose what to takeover (pages, title, cover, isbn, ...)
 
+- cache google book api results
+
 - shelves
 
 - google books api throttling and caching, per user

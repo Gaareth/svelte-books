@@ -1,4 +1,9 @@
+import { privateConfig } from "$src/lib/server/config";
+import { cacheSingleImageFromStream } from "$src/lib/server/images/images";
+import { prisma } from "$src/lib/server/prisma";
 import { error, type RequestHandler } from "@sveltejs/kit";
+import { createReadStream } from "node:fs";
+import { Readable } from "node:stream";
 
 export const GET: RequestHandler = async ({ url }) => {
     const imageUrl = url.searchParams.get("url");
@@ -16,13 +21,57 @@ export const GET: RequestHandler = async ({ url }) => {
         );
     }
 
-    //TODO: add caching
+    // delete tracking param
+    const normalizedUrlObject = new URL(urlObject);
+    normalizedUrlObject.searchParams.delete("imgtk");
+
+    const normalizedUrl = normalizedUrlObject.toString();
+
+    if (privateConfig.imageCaching.enabled) {
+        const cachedImage = await prisma.image.findUnique({
+            where: {
+                sourceUrl: normalizedUrl,
+            },
+        });
+
+        if (cachedImage) {
+            const stream = createReadStream(cachedImage.path);
+
+            try {
+                await new Promise<void>((resolve, reject) => {
+                    stream.once("open", () => resolve());
+                    stream.once("error", reject);
+                });
+
+                return new Response(Readable.toWeb(stream) as ReadableStream, {
+                    headers: {
+                        "Content-Type": "image/webp",
+                    },
+                });
+            } catch {
+                stream.destroy();
+                // Cached file is missing → continue and fetch the original
+            }
+        }
+    }
 
     // todo: maybe add api key
-    // console.log("Fetching image from Google Books:", imageUrl);
-    const response = await fetch(urlObject);
+    const response = await fetch(normalizedUrl);
 
-    return new Response(response.body, {
+    if (!response.body) {
+        return new Response("Failed to fetch image", { status: 502 });
+    }
+
+    let clientStream = response.body;
+    if (privateConfig.imageCaching.enabled && response.body) {
+        const [clientStreamTeed, cacheStream] = response.body.tee();
+        clientStream = clientStreamTeed;
+
+        // Cache in the background; don't wait for it.
+        void cacheSingleImageFromStream(cacheStream, response.url);
+    }
+
+    return new Response(clientStream, {
         headers: {
             "Content-Type": response.headers.get("content-type") ?? "image/png",
         },

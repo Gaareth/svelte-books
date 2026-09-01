@@ -238,7 +238,7 @@ model Image {
   // the url this image is cached from
   sourceUrl String? @unique
 
-  placeholderHash String
+  placeholderHash String?
   width           Int
   height          Int
 
@@ -248,11 +248,11 @@ model Image {
 }
 
 model ImageVariant {
-  id      Int    @id @default(autoincrement())
-  width   Int
-  path    String
+  id    Int    @id @default(autoincrement())
+  width Int
+  path  String
 
-  image Image @relation(fields: [primaryImageId], references: [id], onDelete: Cascade)
+  image          Image @relation(fields: [primaryImageId], references: [id], onDelete: Cascade)
   primaryImageId Int
 
   @@unique([primaryImageId, width])

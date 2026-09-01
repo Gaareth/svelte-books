@@ -11,6 +11,75 @@ export function requiredEnv(
     return value;
 }
 
+export const parseDuration = (value: string): number => {
+    const regex =
+        /^(\d+)(ms|millisecond|milliseconds|s|sec|second|seconds|min|minute|minutes|h|hour|hours|d|day|days)$/;
+    const match = value.match(regex);
+
+    if (!match) {
+        throw new Error(
+            `Invalid duration format: ${value}. Expected formats: 100ms, 5s, 10min, 2h, 1d`,
+        );
+    }
+
+    const amount = parseInt(match[1]);
+    const unit = match[2];
+
+    switch (unit) {
+        case "ms":
+        case "millisecond":
+        case "milliseconds":
+            return amount;
+        case "s":
+        case "sec":
+        case "second":
+        case "seconds":
+            return amount * 1000;
+        case "m":
+        case "min":
+        case "minute":
+        case "minutes":
+            return amount * 60 * 1000;
+        case "h":
+        case "hour":
+        case "hours":
+            return amount * 60 * 60 * 1000;
+        case "d":
+        case "day":
+        case "days":
+            return amount * 24 * 60 * 60 * 1000;
+        default:
+            throw new Error(`Unknown duration unit: ${unit}`);
+    }
+};
+
+export const parseSize = (value: string): number => {
+    const regex = /^(\d+)(B|KB|MB|GB)$/;
+    const match = value.match(regex);
+
+    if (!match) {
+        throw new Error(
+            `Invalid size format: ${value}. Expected formats: 100B, 5KB, 10MB, 2GB`,
+        );
+    }
+
+    const amount = parseInt(match[1]);
+    const unit = match[2];
+
+    switch (unit) {
+        case "B":
+            return amount;
+        case "KB":
+            return amount * 1000;
+        case "MB":
+            return amount * 1000 ** 2;
+        case "GB":
+            return amount * 1000 ** 3;
+        default:
+            throw new Error(`Unknown size unit: ${unit}`);
+    }
+};
+
 export const parseCommaSeparatedList = (value: string): string[] => {
     return value.split(",").map((item) => item.trim());
 };
