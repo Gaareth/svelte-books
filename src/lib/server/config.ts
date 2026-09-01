@@ -13,7 +13,6 @@ const insideDocker = envReader.value("INSIDE_DOCKER", parseBool, {
 
 const UPLOADS_PATH = insideDocker ? `/${UPLOADS}` : `static/${UPLOADS}/`;
 const UPLOADS_IMAGES_PATH = path.join(UPLOADS_PATH, "images/");
-console.log(`Uploads path: ${UPLOADS_PATH}`);
 
 export const privateConfig = {
     booksApiKey: envReader.value("BOOKS_API_KEY", nonEmpty, { warn: true }),

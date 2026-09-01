@@ -11,3 +11,4 @@ services:
             - book-store:/uploads
 volumes:
     book-store:
+        name: book-store
