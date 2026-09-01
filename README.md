@@ -69,18 +69,14 @@ If you changed the schema and want to test it:
     - a default search result of both title and author and just title combined
     - a custom seach bar with intitle, inauthor etc as styled tags (ideally not editable)
 
-- sse check
 - browser tests
 - more no-javascript friendly
 - just implement auth myself, authjs is a crazy mess
     - OIDC
 - configurable? median stats
-- dont give each readactivity all books, aka more async
 
 - upgrade tailwind, zod
     - dateselector
-
-- background show fav books covers sliding like steam loading animation
 
 - when adding new reading activity, if there is already an active one, ask if they want to transform the active one to the new status (e.g., from to-read to reading)
 
@@ -105,8 +101,6 @@ If you changed the schema and want to test it:
 - tension stats draw yourself - check
 
     - let user add more graphs
-
-- add or remove google api
 
 - update googleapi values
 
