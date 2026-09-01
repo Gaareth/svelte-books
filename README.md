@@ -14,52 +14,52 @@ A personal book tracking app focused on your reading activity, habits and progre
 - tracking of reading activity (to-read, reading, finished, did not finish, paused, acquired)
 - sortable and filterable book list, quick actions
 - privacy settings (private, public, authenticated users)
+- optional dates, when you can only remember the year you read a book
 - open registration and closed with invite links
-- google books api integration for easy adding of books
+- google books api integration for easy adding of books and metadata
 - crude account management (no password reset, email verification, etc)
 
 ## Installation
 
-You can either use a docker image or build from source.
-However, to configure the app, you first have to create `.env.production` file similar to `env.example`.
-Make sure to:
+1. `mkdir book-store`
+2. Configure the app: create `.env.production` file similar to `env.example`.
+   Make sure to:
 
 - follow the format of the example file and fill in the values
 - not use quotes around the values as they are sometimes taken literally.
 
-This will then initially create your admin account.
+    This will initially create your admin account.
+
+3. You can then either use a docker image or build from source.
 
 ### Docker
 
-Run one of:
-
-- `./run-book-store.sh`
-
-- `docker run -it  -d --env-file .env.production -v book-store:/database -p 4000:3000 --name book-store ghcr.io/gaareth/svelte-books`
-
-- `docker compose up -d`
+1. Get the docker compose file: `wget https://raw.githubusercontent.com/Gaareth/svelte-books/main/docker-compose.yml`
+2. Run it (edit it to change e.g. ports): `docker compose up -d`
 
 ### Source
 
+- (requires a [Node.js](https://nodejs.org/en/) `node` installation. Use e.g. [nvm](https://github.com/nvm-sh/nvm) to install node version 24)
+
 1. `git clone https://github.com/Gaareth/svelte-books`
-2. `npm ci`.
-3. `npx prisma generate`
-4. `npx prisma migrate deploy`.
-5. `npm run build`.
+2. `pnpm install --frozen-lockfile`.
+3. `pnpm exec prisma generate`
+4. `pnpm exec prisma migrate deploy`.
+5. `pnpm run build`.
 6. `node build`
 
 #### Development
 
 1. `git clone https://github.com/Gaareth/svelte-books`
-2. `npm install`
-3. `npx prisma generate`
-4. `npx prisma migrate dev`
-5. `npm run dev`
+2. `pn install`
+3. `pn prisma generate`
+4. `pn prisma migrate dev`
+5. `pn run dev`
 
 If you changed the schema and want to test it:
 
-- `npx prisma db push`: To try out the changes without creating a migration
-- `npx prisma migrate dev --name <migration_name>`: To create a new migration file
+- `pn prisma db push`: To try out the changes without creating a migration
+- `pn prisma migrate dev --name <migration_name>`: To create a new migration file
 
 ## Todos
 
@@ -126,6 +126,8 @@ If you changed the schema and want to test it:
 
 - rework dark mode colors, more consistent styles
 - violet-400 as accent color
+
+- other ORM? maybe TypeOrm?, MikroOrm
 
 # Tech-Stack
 

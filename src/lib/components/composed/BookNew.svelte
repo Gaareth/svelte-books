@@ -282,7 +282,7 @@
                             {#if duplicateEntry}
                                 <Alert
                                     type="warning"
-                                    className="text-base col-span-2 text-center mb-3">
+                                    className="text-lg col-span-2 text-center mb-3">
                                     Warning: A book with this name is already in
                                     a list ({capitalize(
                                         duplicateEntry.status.status,

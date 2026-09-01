@@ -3,8 +3,8 @@
     "version": "1.5.0",
     "private": true,
     "scripts": {
-        "dev": "npx prisma generate; vite dev",
-        "build": "npx prisma generate; vite build",
+        "dev": "prisma generate; vite dev",
+        "build": "prisma generate; vite build",
         "build-noenv": "BOOKS_API_KEY='' vite build",
         "preview": "vite preview",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

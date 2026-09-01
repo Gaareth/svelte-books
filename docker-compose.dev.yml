@@ -1,14 +1,13 @@
 services:
     web:
-        container_name: book-store
-        image: ghcr.io/gaareth/svelte-books:latest
+        container_name: book-store-dev
+        build: .
         ports:
-            - 4000:3000 # to:from
+            - 3000:3000 # to:from
         env_file:
             - .env.production # see env.example for the required keys
         volumes:
             - book-store:/database
             - book-store:/uploads
-        restart: unless-stopped
 volumes:
     book-store:

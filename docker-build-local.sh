@@ -34,15 +34,16 @@ cleanup
 echo "> Starting container"
 # Run the Docker container in detached mode
 
-docker run --env-file .env.production -v book-store:/database -v book-store:/uploads --name book-store -p 3000:3000 -d book-store
-echo "> Access the application at http://localhost:3000"
+# docker run --env-file .env.production -v book-store:/database -v book-store:/uploads --name book-store -p 3000:3000 -d book-store
+docker compose -f docker-compose.dev.yml up -d
+url="localhost:3000"
+echo "> Access the application at http://$url"
 
 # Wait a moment for the server to start
 sleep 3
 
 echo "> Checking return code"
 # Check if the URL returns a 200 status
-url="localhost:3000"
 status_code=$(curl -o /dev/null -s -w "%{http_code}" "$url")
 
 if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 400 ]; then
