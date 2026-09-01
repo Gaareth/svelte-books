@@ -7,10 +7,17 @@
     import { page } from "$app/state";
     import Dropdown from "$components/input/Dropdown.svelte";
     import ThemeSwitcher from "$components/ThemeSwitcher.svelte";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+
     import IconAccount from "$lib/icons/IconAccount.svelte";
 
     import { resolve } from "$app/paths";
+    import { capitalize } from "$src/lib/utils/utils";
+    import {
+        READING_ACTIVITY_TYPES,
+        type ReadingActivityStatusType,
+    } from "$src/lib/constants/enums";
+    import { getReadingActivityColor } from "$src/lib/utils/readingActivityUtils";
+    import AccentBarItemCard from "$src/lib/components/composed/AccentBarItemCard.svelte";
 
     const version = APP_VERSION;
     let { data, children } = $props();
@@ -22,11 +29,105 @@
     <title>{page.data.title || "BookList"}</title>
 </svelte:head>
 
+{#snippet AccountDropdown()}
+    <Dropdown contentClass="!py-0" closeOnClick={false}>
+        {#snippet triggerContent()}
+            <span
+                aria-label="open account dropdown"
+                title="Account"
+                class="block w-8 text-secondary hover:text-secondary-hover">
+                <IconAccount />
+            </span>
+        {/snippet}
+
+        {#snippet dropdown()}
+            <div class="w-56 sm:w-36" id="dropdown-account">
+                <div class="">
+                    {#if data.isAdmin}
+                        <div
+                            class="bg-red-500 w-full h-6 text-center text-sm rounded-t">
+                            ADMIN
+                        </div>
+                    {/if}
+                    <div>
+                        <a
+                            href={resolve("/[[username]]", {
+                                username: page.data.session?.user?.name!,
+                            })}
+                            class="text-center font-bold py-1">
+                            {page.data.session?.user?.name}
+                        </a>
+                    </div>
+                    <hr />
+                    <div class="py-2 flex flex-col gap-1 text-secondary-2">
+                        <a href={resolve("/settings")}>Settings</a>
+                        <a href={resolve("/users")}>All Users</a>
+                    </div>
+                    <hr />
+                    <div class="py-2">
+                        <a
+                            href={resolve("/logout")}
+                            class="whitespace-nowrap"
+                            data-sveltekit-preload-data="off">
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {/snippet}
+    </Dropdown>
+{/snippet}
+
+{#snippet ListAnchor(list: ReadingActivityStatusType)}
+    <a
+        class="whitespace-nowrap"
+        href={resolve("/[[username]]/lists/[[listName]]", {
+            username: page.data.session?.user?.name!,
+            listName: list,
+        })}>
+        <AccentBarItemCard
+            wrapperClass="!m-0 !border-0 rounded-none !bg-inherit gap-3 !p-0"
+            barClass="!h-4 min-h-4"
+            accentStyle={"background-color: " +
+                getReadingActivityColor(list)}>
+            {capitalize(list)}
+        </AccentBarItemCard>
+    </a>
+{/snippet}
+
+{#snippet ListsDropdown()}
+    <Dropdown contentClass="!py-0">
+        {#snippet triggerContent()}
+            <span class="nav-a">Reading Lists</span>
+        {/snippet}
+
+        {#snippet dropdown()}
+            <div class="w-fit" id="dropdown-account">
+                <div class="">
+                    <div class="py-2 flex flex-col gap-1 text-secondary-2">
+                        {#each [READING_ACTIVITY_TYPES.TO_READ, READING_ACTIVITY_TYPES.READING, READING_ACTIVITY_TYPES.FINISHED] as list, i (list)}
+                            {@render ListAnchor(list)}
+                        {/each}
+                        <hr />
+                        {#each [READING_ACTIVITY_TYPES.PAUSED, READING_ACTIVITY_TYPES.DID_NOT_FINISH] as list, i (list)}
+                            {@render ListAnchor(list)}
+                        {/each}
+                        <hr />
+                        {#each [READING_ACTIVITY_TYPES.ACQUIRED] as list, i (list)}
+                            {@render ListAnchor(list)}
+                        {/each}
+                    </div>
+                </div>
+            </div>
+        {/snippet}
+    </Dropdown>
+{/snippet}
+
 <header
     aria-label="Site Header"
     class={clsx(
         !headerConfig.transparent &&
-            "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md",
+            "shadow-sm bg-white/10 dark:bg-slate-600/40 backdrop-blur-md relative z-50",
     )}>
     {#if import.meta.env.DEV}
         <div
@@ -49,11 +150,7 @@
                     Home
                 </a>
                 {#if page.data.session}
-                    <a
-                        class="nav-a"
-                        href="/lists/{READING_ACTIVITY_TYPES.TO_READ}">
-                        To-Read
-                    </a>
+                    {@render ListsDropdown()}
                     {#if data.isAdmin}
                         <a class="nav-a" href={resolve("/admin")}>Admin</a>
                     {/if}
@@ -65,62 +162,7 @@
                 <div class="flex flex-row-reverse xl:flex-row">
                     <div class="flex gap-4 items-center">
                         {#if page.data.session}
-                            <Dropdown contentClass="!py-0" closeOnClick={false}>
-                                {#snippet triggerContent()}
-                                    <span
-                                        aria-label="open account dropdown"
-                                        title="Account"
-                                        class="block w-8 text-secondary hover:text-secondary-hover">
-                                        <IconAccount />
-                                    </span>
-                                {/snippet}
-
-                                {#snippet dropdown()}
-                                    <div
-                                        class="w-56 sm:w-36"
-                                        id="dropdown-account">
-                                        <div class="">
-                                            {#if data.isAdmin}
-                                                <div
-                                                    class="bg-red-500 w-full h-6 text-center text-sm rounded-t">
-                                                    ADMIN
-                                                </div>
-                                            {/if}
-                                            <div>
-                                                <a
-                                                    href={resolve("/[[username]]", {
-                                                        username:
-                                                            page.data.session
-                                                                ?.user?.name!,
-                                                    })}
-                                                    class="text-center font-bold py-1">
-                                                    {page.data.session?.user
-                                                        ?.name}
-                                                </a>
-                                            </div>
-                                            <hr />
-                                            <div
-                                                class="py-2 flex flex-col gap-1 text-secondary-2">
-                                                <a href={resolve("/settings")}>
-                                                    Settings
-                                                </a>
-                                                <a href={resolve("/users")}>
-                                                    All Users
-                                                </a>
-                                            </div>
-                                            <hr />
-                                            <div class="py-2">
-                                                <a
-                                                    href={resolve("/logout")}
-                                                    class="whitespace-nowrap"
-                                                    data-sveltekit-preload-data="off">
-                                                    Sign Out
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {/snippet}
-                            </Dropdown>
+                            {@render AccountDropdown()}
                         {:else}
                             <div>
                                 <a class="auth-button" href={resolve("/login")}>

@@ -17,9 +17,9 @@
     import Modal from "$components/Modal.svelte";
     import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
     import {
-        getReadingActivityColor,
         MAX_RATING,
     } from "$lib/constants/constants";
+    import { getReadingActivityColor } from "$src/lib/utils/readingActivityUtils";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
     import { capitalize } from "$lib/utils/utils";

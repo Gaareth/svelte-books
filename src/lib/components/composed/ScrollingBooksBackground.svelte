@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { ImageLinksType } from "$src/app.js";
     import ScrollingImagesBackground from "$src/lib/components/ScrollingImagesBackground.svelte";
-        import { getImageByResolutionOrder } from "$src/lib/utils/googleApiUtils";
+    import { getImageByResolutionOrder } from "$src/lib/utils/googleApiUtils";
     import { Prisma } from "$prismaBrowser";
     import Image from "../Image.svelte";
     import {
@@ -43,7 +43,9 @@
 
     let booksAndImages = $derived(
         readingActivities
-            .toSorted((a, b) => (b.rating?.stars ?? -1) - (a.rating?.stars ?? -1))
+            .toSorted(
+                (a, b) => (b.rating?.stars ?? -1) - (a.rating?.stars ?? -1),
+            )
             .map((activity) => {
                 return {
                     src: getBookImage(activity.book, (imageLinks) =>
@@ -74,15 +76,19 @@
         IMAGE_WIDTH: number,
         IMAGE_HEIGHT: number,
     )}
-        <Image
-            src={imageAndBookByBookId[bookId].src}
-            srcset={createBookImageSrcset(imageAndBookByBookId[bookId].book)}
-            placeholderHash={imageAndBookByBookId[bookId].book.coverImage
-                ?.placeholderHash}
-            class={imageClass}
-            alt="book cover"
-            style="width: {IMAGE_WIDTH}px; height: {IMAGE_HEIGHT}px;"
-            fetchpriority="high"
-            loading="eager" />
+        {#if imageAndBookByBookId[bookId] != null}
+            <Image
+                src={imageAndBookByBookId[bookId].src}
+                srcset={createBookImageSrcset(
+                    imageAndBookByBookId[bookId].book,
+                )}
+                placeholderHash={imageAndBookByBookId[bookId].book.coverImage
+                    ?.placeholderHash}
+                class={imageClass}
+                alt="book cover"
+                style="width: {IMAGE_WIDTH}px; height: {IMAGE_HEIGHT}px;"
+                fetchpriority="high"
+                loading="eager" />
+        {/if}
     {/snippet}
 </ScrollingImagesBackground>

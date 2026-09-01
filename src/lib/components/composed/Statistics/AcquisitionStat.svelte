@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getReadingActivityColor } from "$src/lib/constants/constants";
+        import { getReadingActivityColor } from "$src/lib/utils/readingActivityUtils";
     import { TO_READ, ACQUIRED, READING } from "$src/lib/constants/enums";
     import DynamicArrow from "$src/lib/icons/DynamicArrow.svelte";
     import Stats from "$src/lib/components/Stats.svelte";
