@@ -73,6 +73,7 @@ If you changed the schema and want to test it:
 - more no-javascript friendly
 - just implement auth myself, authjs is a crazy mess
     - OIDC
+- private initial onboarding/admin account creation
 - configurable? median stats
 
 - upgrade tailwind, zod

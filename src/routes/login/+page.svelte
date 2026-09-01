@@ -15,13 +15,19 @@
 
 <div class="center-screen p-3 sm:p-6">
     <div>
-        <h1 class="text-5xl text-center mb-10">Login</h1>
+        <h1 class="text-5xl text-center mb-5">Login</h1>
         <div class="relative flex flex-1 flex-col items-center justify-center">
             <form
                 method="post"
                 action="/auth/callback/credentials"
                 class="w-full max-w-sm">
                 <input type="hidden" name="callbackUrl" value="/" />
+
+                <p class="mb-5 text-secondary">
+                    Login to access your book collection, and view the books
+                    shared only with authenticated users
+                </p>
+
                 <p
                     class="{data.error
                         ? 'block'
@@ -44,7 +50,9 @@
                         type="password"
                         name="password"
                         id="password"
-                        class="input w-full {data.error ? 'input-error' : ''}" />
+                        class="input w-full {data.error
+                            ? 'input-error'
+                            : ''}" />
                 </div>
 
                 <button
