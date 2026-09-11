@@ -71,7 +71,7 @@
         "language-icons": "^0.3.0",
         "parse-nested-form-data": "^1.0.1",
         "prisma": "^7.9.1",
-        "sharp": "^0.35.3",
+        "sharp": "^0.35.4",
         "svelte-chartjs": "^4.0.1",
         "svelte-french-toast": "2.0.0-alpha.0",
         "tailwind-merge": "^1.14.0",
