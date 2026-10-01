@@ -300,7 +300,9 @@ export const actions = {
                 await updateBookSeries(id, accountId, bookSeries, bookSeriesId);
             }
 
-            const allBooks = await prisma.book.findMany();
+            const allBooks = await prisma.book.findMany({
+                where: { accountId },
+            });
             if (
                 allBooks.find((b) => b.name == name && b.id != id) !== undefined
             ) {

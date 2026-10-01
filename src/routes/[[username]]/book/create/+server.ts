@@ -68,7 +68,7 @@ export async function POST(req: RequestEvent) {
         );
         const dateFinished = nullToUndefined(result.data.dateFinished);
 
-        let book = await prisma.book.findFirst({ where: { name } });
+        let book = await prisma.book.findFirst({ where: { name, accountId } });
         const book_exist = book != null;
 
         if (
