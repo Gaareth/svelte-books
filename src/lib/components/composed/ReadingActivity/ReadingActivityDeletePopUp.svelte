@@ -69,6 +69,7 @@
 
 <Popup
     {id}
+    bind:showModal={openModal}
     message={"Delete reading activity of book: " +
         deletionEntry?.book.name +
         "?"}

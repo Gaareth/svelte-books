@@ -160,7 +160,7 @@
     {/each}
 </div>
 
-{#if deletionEntry}
+{#if deletionEntry != null}
     <ReadingActivityDeletePopUp
         {deletionEntry}
         bind:openModal

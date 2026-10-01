@@ -16,9 +16,7 @@
     import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
     import Modal from "$components/Modal.svelte";
     import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-    import {
-        MAX_RATING,
-    } from "$lib/constants/constants";
+    import { MAX_RATING } from "$lib/constants/constants";
     import { getReadingActivityColor } from "$src/lib/utils/readingActivityUtils";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
     import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
@@ -118,7 +116,7 @@
                         title="View"
                         type="button"
                         onclick={() => (showInfoModal = true)}
-                        commandFor="readingActivityModal"
+                        commandFor={"readingActivityModal" + entry.id}
                         command="show-modal">
                         <span
                             class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
@@ -132,7 +130,7 @@
                             dark:hover:bg-slate-500 border-none"
                             title="Edit book"
                             type="button"
-                            commandFor="readingActivityForm"
+                            commandFor={"readingActivityForm" + entry.id}
                             command="show-modal">
                             <span
                                 class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
@@ -148,7 +146,8 @@
                                 title="Delete book"
                                 type="button"
                                 onclick={() => (showDeletePopUp = true)}
-                                commandFor="readingActivityDeletePopUp"
+                                commandFor={"readingActivityDeletePopUp" +
+                                    entry.id}
                                 command="show-modal">
                                 <span
                                     class="block icon-edit group-hover:animate-drop-hover group-active:animate-drop-click">
@@ -177,7 +176,8 @@
                             <li>
                                 <button
                                     onclick={() => (showInfoModal = true)}
-                                    commandFor="readingActivityModal"
+                                    commandFor={"readingActivityModal" +
+                                        entry.id}
                                     command="show-modal"
                                     class="dropdown-item-button"
                                     type="button">
@@ -193,7 +193,8 @@
                                 <li>
                                     <button
                                         onclick={() => (showFormModal = true)}
-                                        commandFor="readingActivityForm"
+                                        commandFor={"readingActivityForm" +
+                                            entry.id}
                                         command="show-modal"
                                         class="dropdown-item-button"
                                         type="button">
@@ -210,7 +211,8 @@
                                 <li>
                                     <button
                                         onclick={() => (showDeletePopUp = true)}
-                                        commandFor="readingActivityDeletePopUp"
+                                        commandFor={"readingActivityDeletePopUp" +
+                                            entry.id}
                                         command="show-modal"
                                         class="dropdown-item-button text-error"
                                         type="button">
@@ -232,7 +234,7 @@
 
 <Modal
     bind:showModal={showInfoModal}
-    id="readingActivityModal"
+    id={"readingActivityModal" + entry.id}
     divClassName="w-full"
     className="w-[95%] lg:w-2/5">
     {#snippet header()}
@@ -307,11 +309,15 @@
     </p>
 </Modal>
 
-<ReadingActivityForm id="readingActivityForm" {entry} {book} bind:showModal={showFormModal} />
+<ReadingActivityForm
+    id={"readingActivityForm" + entry.id}
+    {entry}
+    {book}
+    bind:showModal={showFormModal} />
 
 <ReadingActivityDeletePopUp
     bind:openModal={showDeletePopUp}
-    id="readingActivityDeletePopUp"
+    id={"readingActivityDeletePopUp"+entry.id}
     deletionEntry={entry}
     onSuccess={() => {
         invalidateAll();
