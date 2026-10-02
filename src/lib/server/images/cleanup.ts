@@ -1,5 +1,5 @@
-import { privateConfig } from "$lib/server/config";
-import { prisma } from "$lib/server/prisma";
+import { privateConfig } from "#lib/server/config.js";
+import { prisma } from "#lib/server/prisma.js";
 import { formatBytes } from "$src/lib/utils/utils";
 import fs from "node:fs/promises";
 import path from "node:path";

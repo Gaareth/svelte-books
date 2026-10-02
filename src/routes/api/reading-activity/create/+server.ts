@@ -4,10 +4,10 @@ import { createReadingActivity } from "../api.server";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/authorization";
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-import { createSchema } from "$lib/schemas/readingActivity";
-import { prisma } from "$lib/server/prisma";
+import { authorize } from "#lib/auth/authorization.js";
+import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+import { createSchema } from "#lib/schemas/readingActivity.js";
+import { prisma } from "#lib/server/prisma.js";
 import { parseFormObject } from "$src/lib/utils/formUtils";
 
 export async function POST(req: RequestEvent) {

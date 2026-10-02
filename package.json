@@ -21,9 +21,9 @@
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@j178/prek": "^0.4.14",
-        "@sveltejs/adapter-auto": "^7.0.1",
-        "@sveltejs/adapter-node": "^5.5.7",
-        "@sveltejs/kit": "^2.70.3",
+        "@sveltejs/adapter-auto": "^8.0.0",
+        "@sveltejs/adapter-node": "^6.0.0",
+        "@sveltejs/kit": "^3.0.0",
         "@sveltejs/vite-plugin-svelte": "^7.3.1",
         "@tailwindcss/forms": "^0.5.11",
         "@types/better-sqlite3": "^9.6.0",
@@ -85,5 +85,16 @@
     },
     "prisma": {
         "seed": "tsx prisma/seed.ts"
+    },
+    "imports": {
+        "#lib": "./src/lib/index.js",
+        "#lib/*": "./src/lib/*",
+        "#src/*": "./src/*",
+        "#utils/*": "./src/lib/utils/*",
+        "#components/*": "./src/lib/components/*",
+        "#routes/*": "./src/routes/*",
+        "#appTypes": "./src/app.d.ts",
+        "#prismaClient/*": "./src/generated/prisma/client/*",
+        "#prismaBrowser/*": "./src/generated/prisma/browser/*"
     }
 }

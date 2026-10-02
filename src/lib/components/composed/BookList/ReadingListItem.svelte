@@ -8,13 +8,13 @@
 
     import { type ReadingListItemType } from "$appTypes";
     import { formatShort } from "$components/input/DateSelector.svelte";
-    import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-    import { MAX_RATING } from "$lib/constants/constants";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import CalenderAdd from "$lib/icons/CalenderAdd.svelte";
-    import EventDone from "$lib/icons/EventDone.svelte";
-    import EventProgress from "$lib/icons/EventProgress.svelte";
-    import Pages from "$lib/icons/pages.svelte";
+    import AccentBarItemCard from "#lib/components/composed/AccentBarItemCard.svelte";
+    import { MAX_RATING } from "#lib/constants/constants.js";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import CalenderAdd from "#lib/icons/CalenderAdd.svelte";
+    import EventDone from "#lib/icons/EventDone.svelte";
+    import EventProgress from "#lib/icons/EventProgress.svelte";
+    import Pages from "#lib/icons/pages.svelte";
     import { categoriesToColor } from "$src/categoryToColor/colorMap";
     import StarIcon from "$src/lib/icons/Star/StarIcon.svelte";
 

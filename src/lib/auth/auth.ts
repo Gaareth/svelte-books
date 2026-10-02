@@ -1,7 +1,7 @@
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Credentials from "@auth/sveltekit/providers/credentials";
 
-import { prisma } from "$lib/server/prisma";
+import { prisma } from "#lib/server/prisma.js";
 import { verifyPassword } from "./password";
 
 export const { handle, signIn, signOut } = SvelteKitAuth({

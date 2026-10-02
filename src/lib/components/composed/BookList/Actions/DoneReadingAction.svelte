@@ -2,7 +2,7 @@
 
     import clsx from "clsx";
 
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
     import DoneAllRoundedIcon from "$src/lib/icons/DoneAllRoundedIcon.svelte";
 
     interface Props {

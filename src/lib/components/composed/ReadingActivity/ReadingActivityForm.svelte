@@ -22,9 +22,9 @@
     import {
         READING_ACTIVITY_TYPES,
         READING_STATUS_VALUES,
-    } from "$lib/constants/enums";
-    import EventDone from "$lib/icons/EventDone.svelte";
-    import EventProgress from "$lib/icons/EventProgress.svelte";
+    } from "#lib/constants/enums.js";
+    import EventDone from "#lib/icons/EventDone.svelte";
+    import EventProgress from "#lib/icons/EventProgress.svelte";
 
     interface Props {
         id?: string | undefined;

@@ -16,7 +16,7 @@
     import {
         READING_ACTIVITY_TYPES,
         type ReadingActivityStatusType,
-    } from "$lib/constants/enums";
+    } from "#lib/constants/enums.js";
 
     interface Props {
         activeEntry: ReviewListItemType;

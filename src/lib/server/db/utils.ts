@@ -2,8 +2,8 @@ import { whereVisibilityPublicOrAuthenticatedOrAll } from "./prismaUtils";
 
 import type { Session } from "@auth/sveltekit";
 
+import { prisma } from "#lib/server/prisma.js";
 import { type queriedBookFull } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
 import {
     type Account,
     type Prisma,

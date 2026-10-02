@@ -1,5 +1,5 @@
+import { prisma } from "#lib/server/prisma.js";
 import { DEFAULT_LISTS } from "$appTypes";
-import { prisma } from "$lib/server/prisma";
 import {
     type BookList,
     type ReadingActivityStatus,

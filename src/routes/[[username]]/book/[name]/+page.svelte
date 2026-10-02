@@ -9,9 +9,9 @@
     import BookListSeries from "$components/composed/BookList/BookListSeries.svelte";
     import ReadingActivityForm from "$components/composed/ReadingActivity/ReadingActivityForm.svelte";
     //@ts-ignore
-    import Calendar from "$lib/icons/Calender.svelte";
-    import Pages from "$lib/icons/pages.svelte";
-    import Words from "$lib/icons/words.svelte";
+    import Calendar from "#lib/icons/Calender.svelte";
+    import Pages from "#lib/icons/pages.svelte";
+    import Words from "#lib/icons/words.svelte";
         import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
     import BookCategories from "$src/lib/components/composed/Book/BookCategories.svelte";
     import BookForm from "$src/lib/components/composed/Book/BookForm.svelte";

@@ -3,10 +3,10 @@ import { json } from "@sveltejs/kit";
 import type { BookOwnership, ReadingActivity } from "$prismaClient";
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/authorization";
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-import { updateSchema } from "$lib/schemas/readingActivity";
-import { prisma } from "$lib/server/prisma";
+import { authorize } from "#lib/auth/authorization.js";
+import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+import { updateSchema } from "#lib/schemas/readingActivity.js";
+import { prisma } from "#lib/server/prisma.js";
 import { parseFormObject } from "$src/lib/utils/formUtils";
 
 /// Update readingActivity

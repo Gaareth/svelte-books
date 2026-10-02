@@ -10,9 +10,9 @@
     import InputAny from "$components/input/InputAny.svelte";
     import InputText from "$components/input/InputText.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
-    import { OWNERSHIP_VALUES } from "$lib/constants/enums";
-    import AddLocation from "$lib/icons/AddLocation.svelte";
-    import EventDone from "$lib/icons/EventDone.svelte";
+    import { OWNERSHIP_VALUES } from "#lib/constants/enums.js";
+    import AddLocation from "#lib/icons/AddLocation.svelte";
+    import EventDone from "#lib/icons/EventDone.svelte";
     import { capitalize } from "$utils/utils";
 
     interface Props {

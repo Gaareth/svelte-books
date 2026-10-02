@@ -1,12 +1,12 @@
 import { error, type ServerLoadEvent } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 
-import { authorize, isReadingActivityPublic } from "$lib/auth/authorization";
+import { authorize, isReadingActivityPublic } from "#lib/auth/authorization.js";
 import {
     READING_STATUS_VALUES,
     type ReadingActivityStatusType,
-} from "$lib/constants/enums";
-import { getReadingActivity } from "$lib/server/db/utils";
+} from "#lib/constants/enums.js";
+import { getReadingActivity } from "#lib/server/db/utils.js";
 import { getActiveActivies } from "$src/lib/utils/readingActivityUtils";
 
 export async function load({ locals, params }: ServerLoadEvent) {

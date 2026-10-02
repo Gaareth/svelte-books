@@ -1,4 +1,4 @@
-import { prisma } from "$lib/server/prisma";
+import { prisma } from "#lib/server/prisma.js";
 import type { ReadingActivityType } from "$prismaClient";
 import { Visibility, type Account } from "$prismaClient";
 import type { Session } from "@auth/sveltekit";

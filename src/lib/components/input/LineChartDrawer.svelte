@@ -4,8 +4,8 @@
     import { twMerge } from "tailwind-merge";
 
     import Modal from "$components/Modal.svelte";
-    import { theme } from "$lib/stores/stores";
-    import { clamp } from "$lib/utils/utils";
+    import { theme } from "#lib/stores/stores.js";
+    import { clamp } from "#lib/utils/utils.js";
     import { defaultBgColor } from "$utils/chartUtils";
 
     interface Props {

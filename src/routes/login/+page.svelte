@@ -65,11 +65,11 @@
                     login
                 </button>
                 <p class="text-lg text-secondary mt-4">
-                    Don't have an account yet? <a
-                        href={resolve("/register/")}
-                        class="dark:text-blue-400 text-blue-500 underline text-lg">
-                        Sign up here
-                    </a>
+                    Don't have an account yet? 
+                    <a
+                        href={resolve('register/')}
+                        class="dark:text-blue-400 text-blue-500 underline text-lg"
+                    >Sign up here</a>
                 </p>
             </form>
         </div>

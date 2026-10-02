@@ -5,8 +5,8 @@
 
     import { enhance } from "$app/forms";
     import { goto } from "$app/navigation";
-    import InputAll from "$lib/components/input/InputAll.svelte";
-    import InputText from "$lib/components/input/InputText.svelte";
+    import InputAll from "#lib/components/input/InputAll.svelte";
+    import InputText from "#lib/components/input/InputText.svelte";
 
     interface Props {
         data: PageData;

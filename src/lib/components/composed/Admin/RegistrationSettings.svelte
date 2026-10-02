@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Prisma } from "$prismaBrowser";
 
-    import EyePlus from "$lib/icons/eye-plus.svelte";
+    import EyePlus from "#lib/icons/eye-plus.svelte";
     import { copyToClipboard } from "$utils/browserUtils";
     import CopyOutlineRounded from "$src/lib/icons/CopyOutlineRounded.svelte";
     import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";

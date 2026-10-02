@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { ReadingActivityStatusType } from "$lib/constants/enums";
+    import type { ReadingActivityStatusType } from "#lib/constants/enums.js";
 
-    import Book from "$lib/icons/book.svelte";
-    import { capitalize } from "$lib/utils/utils";
+    import Book from "#lib/icons/book.svelte";
+    import { capitalize } from "#lib/utils/utils.js";
 
     interface Props {
         users: {

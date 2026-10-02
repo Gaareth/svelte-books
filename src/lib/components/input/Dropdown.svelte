@@ -1,97 +1,97 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
-    import clsx from "clsx";
-    import { twMerge } from "tailwind-merge";
+  import clsx from "clsx";
+  import { twMerge } from "tailwind-merge";
 
-    import { browser } from "$app/environment";
-    import { clickOutside } from "$components/input/clickOutside";
-    import Modal from "$components/Modal.svelte";
-    import { v4 as uuidv4 } from "uuid";
+  import { browser } from '$app/env';
+  import { clickOutside } from "$components/input/clickOutside";
+  import Modal from "$components/Modal.svelte";
+  import { v4 as uuidv4 } from "uuid";
 
-    interface Props {
-        id?: string | undefined;
-        className?: string | undefined;
-        buttonClass?: string | undefined;
-        contentClass?: string | undefined;
-        closeOnClick?: boolean;
-        open?: boolean;
-        triggerWrapper?: import("svelte").Snippet;
-        triggerContent?: import("svelte").Snippet;
+  interface Props {
+    id?: string | undefined;
+    className?: string | undefined;
+    buttonClass?: string | undefined;
+    contentClass?: string | undefined;
+    closeOnClick?: boolean;
+    open?: boolean;
+    triggerWrapper?: import("svelte").Snippet;
+    triggerContent?: import("svelte").Snippet;
         dropdown?: import("svelte").Snippet;
-    }
+  }
 
-    let {
-        id = `dropdown-${uuidv4()}`,
-        className = undefined,
-        buttonClass = undefined,
-        contentClass = undefined,
-        closeOnClick = true,
-        open = $bindable(false),
-        triggerWrapper,
-        triggerContent,
+  let {
+    id = `dropdown-${uuidv4()}`,
+    className = undefined,
+    buttonClass = undefined,
+    contentClass = undefined,
+    closeOnClick = true,
+    open = $bindable(false),
+    triggerWrapper,
+    triggerContent,
         dropdown,
-    }: Props = $props();
+  }: Props = $props();
 
-    let showModal = $state(false);
-    let width: number | undefined = $state();
+  let showModal = $state(false);
+  let width: number | undefined = $state();
 
-    let dropdownWrapper: HTMLDivElement | undefined = $state();
-    let dropdownContentWrapper: HTMLDivElement | undefined = $state();
-    let triggerButton: HTMLButtonElement | undefined = $state();
+  let dropdownWrapper: HTMLDivElement | undefined = $state();
+  let dropdownContentWrapper: HTMLDivElement | undefined = $state();
+  let triggerButton: HTMLButtonElement | undefined = $state();
 
-    $effect(() => {
-        if (browser && width !== undefined) {
-            // breakpoint: sm
-            showModal = open && width < 640;
-        }
+  $effect(() => {
+    if (browser && width !== undefined) {
+      // breakpoint: sm
+      showModal = open && width < 640;
+    }
+  });
+
+  onMount(() => {
+    width = document.documentElement.clientWidth;
+    window.addEventListener("resize", () => {
+      width = document.documentElement.clientWidth;
+      checkDropdownPosition();
     });
+    window.addEventListener("scroll", checkDropdownPosition);
+    // commandFor is the noscript altenative and opens the modal here.
+    // With javascript, we first show the dropdown. So this is disabled, to not show modal and dropdown when js is available.
+    triggerButton?.removeAttribute("commandFor");
+  });
 
-    onMount(() => {
-        width = document.documentElement.clientWidth;
-        window.addEventListener("resize", () => {
-            width = document.documentElement.clientWidth;
-            checkDropdownPosition();
-        });
-        window.addEventListener("scroll", checkDropdownPosition);
-        // commandFor is the noscript altenative and opens the modal here.
-        // With javascript, we first show the dropdown. So this is disabled, to not show modal and dropdown when js is available.
-        triggerButton?.removeAttribute("commandFor");
-    });
+  onDestroy(() => {
+    if (browser) {
+      window.removeEventListener("resize", checkDropdownPosition);
+      window.removeEventListener("scroll", checkDropdownPosition);
+    }
+  });
 
-    onDestroy(() => {
-        if (browser) {
-            window.removeEventListener("resize", checkDropdownPosition);
-            window.removeEventListener("scroll", checkDropdownPosition);
-        }
-    });
+  let openUpwards = $state(false); // track dropdown direction
+  function checkDropdownPosition() {
+    if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
 
-    let openUpwards = $state(false); // track dropdown direction
-    function checkDropdownPosition() {
-        if (!dropdownWrapper || !dropdownContentWrapper || showModal) return;
+    const triggerRect = dropdownWrapper.getBoundingClientRect();
+    const dropdownHeight = dropdownContentWrapper.scrollHeight + 75;
 
-        const triggerRect = dropdownWrapper.getBoundingClientRect();
-        const dropdownHeight = dropdownContentWrapper.scrollHeight + 75;
-
-        const spaceBelow = window.innerHeight - triggerRect.bottom;
-        const spaceAbove = triggerRect.top;
+    const spaceBelow = window.innerHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
 
         openUpwards =
             spaceBelow < dropdownHeight && spaceAbove > dropdownHeight;
+  }
+
+  const toggleOpen = () => {
+    open = !open;
+    if (open) {
+      checkDropdownPosition();
     }
+  };
 
-    const toggleOpen = () => {
-        open = !open;
-        if (open) {
-            checkDropdownPosition();
-        }
-    };
-
-    const click_outside = () => {
-        if (!showModal) {
-            open = false;
-        }
-    };
+  const click_outside = () => {
+    if (!showModal) {
+      open = false;
+    }
+  };
 </script>
 
 <div
@@ -142,20 +142,21 @@
 </div>
 
 <Modal
-    {id}
-    bind:showModal
-    showDividers={false}
-    divClassName="!p-0"
-    onClosed={() => (open = false)}>
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div
-        role="button"
-        tabindex="-1"
-        onclick={() => {
-            //e.preventDefault();
-            if (closeOnClick) {
-                open = false;
-            }
+  id={id}
+  bind:showModal
+  showDividers={false}
+  divClassName="!p-0"
+  onClosed={() => open = false}
+>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <div
+    role="button"
+    tabindex="-1"
+    onclick={() => {
+      //e.preventDefault();
+      if (closeOnClick) {
+        open = false;
+      }
         }}>
         {@render dropdown?.()}
     </div>
@@ -180,26 +181,26 @@
     outline: 0;
   } */
 
-    .dropdown-content {
-        left: 50%;
-        /* visibility: hidden; */
-        /* display: none; */
+  .dropdown-content {
+    left: 50%;
+    /* visibility: hidden; */
+    /* display: none; */
 
-        position: absolute;
-        background-color: #f9f9f9;
-        /* min-width: 60px; */
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        padding: 4px 0px;
-        z-index: 100;
-        border-radius: 0.25rem;
-        border-width: 1px;
+    position: absolute;
+    background-color: #f9f9f9;
+    /* min-width: 60px; */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 4px 0px;
+    z-index: 100;
+    border-radius: 0.25rem;
+    border-width: 1px;
 
-        transform: translateX(-50%) translateY(15px);
+    transform: translateX(-50%) translateY(15px);
 
-        transition: all 150ms linear;
-    }
+    transition: all 150ms linear;
+  }
 
-    /* .dropdown:focus-within .dropdown-content {
+  /* .dropdown:focus-within .dropdown-content {
     visibility: visible;
     transform: translateX(-50%) translateY(10%);
   } */

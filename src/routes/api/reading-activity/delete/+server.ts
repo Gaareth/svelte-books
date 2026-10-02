@@ -2,9 +2,9 @@ import { json } from "@sveltejs/kit";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/authorization";
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-import { prisma } from "$lib/server/prisma";
+import { authorize } from "#lib/auth/authorization.js";
+import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+import { prisma } from "#lib/server/prisma.js";
 import { Prisma } from "$prismaClient";
 
 export async function POST(req: RequestEvent) {

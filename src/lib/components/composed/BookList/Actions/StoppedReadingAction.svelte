@@ -1,8 +1,8 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
 
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import CancelRounded from "$lib/icons/CancelRounded.svelte";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import CancelRounded from "#lib/icons/CancelRounded.svelte";
     interface Props {
         className?: string;
     }

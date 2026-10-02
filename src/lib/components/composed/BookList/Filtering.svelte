@@ -8,8 +8,8 @@
 
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
-    import { MAX_RATING } from "$lib/constants/constants";
-    import { createSearchStore } from "$lib/stores/search";
+    import { MAX_RATING } from "#lib/constants/constants.js";
+    import { createSearchStore } from "#lib/stores/search.js";
     import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
     import { dateToYYYY_MM_DD } from "$src/lib/utils/dateUtils";
     import { optionalToDate } from "$src/lib/utils/dateUtils";

@@ -2,8 +2,8 @@ import { fail, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import { adminAuth } from "$lib/auth/authorization";
-import { prisma } from "$lib/server/prisma";
+import { adminAuth } from "#lib/auth/authorization.js";
+import { prisma } from "#lib/server/prisma.js";
 
 export async function load({ locals }: ServerLoadEvent) {
     await adminAuth(await locals.auth());

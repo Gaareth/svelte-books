@@ -1,7 +1,7 @@
+import type { ServerInit } from "@sveltejs/kit/hooks";
 import * as seed from "../prisma/seed-initial";
 
-import { building } from "$app/environment";
-import type { ServerInit } from "@sveltejs/kit";
+import { building } from "$app/env";
 import { validatePrivateConfig } from "./lib/server/config";
 import { runCacheCleanupScheduler } from "./lib/server/images/cleanup";
 
@@ -29,4 +29,4 @@ export const init: ServerInit = async () => {
     await runCacheCleanupScheduler();
 };
 
-export { handle } from "$lib/auth/auth";
+export { handle } from "#lib/auth/auth.js";

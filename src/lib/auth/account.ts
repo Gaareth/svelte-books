@@ -1,4 +1,4 @@
-import { prisma } from "$lib/server/prisma";
+import { prisma } from "#lib/server/prisma.js";
 import type { Session } from "@auth/sveltekit";
 import { error } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";

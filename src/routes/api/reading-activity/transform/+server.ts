@@ -7,12 +7,12 @@ import {
     getOrCreateReadingActivityStatus,
 } from "../api.server";
 
-import { authorize } from "$lib/auth/authorization";
+import { authorize } from "#lib/auth/authorization.js";
 import {
     READING_ACTIVITY_TYPES,
     type ReadingActivityStatusType,
-} from "$lib/constants/enums";
-import { prisma } from "$lib/server/prisma";
+} from "#lib/constants/enums.js";
+import { prisma } from "#lib/server/prisma.js";
 import { BookOwnership } from "$prismaClient";
 import { storyGraphSchema } from "$src/lib/schemas/schemas";
 import { optionalNumericString } from "$src/lib/schemas/utils";

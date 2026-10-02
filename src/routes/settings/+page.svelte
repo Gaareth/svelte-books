@@ -13,7 +13,7 @@
     import AddApiButton from "$components/composed/Settings/AddApiButton.svelte";
     import ApiResult from "$components/composed/Settings/ApiResult.svelte";
     import ReloadButton from "$components/composed/Settings/ReloadButton.svelte";
-    import ToggleGroup from "$lib/components/input/ToggleGroup.svelte";
+    import ToggleGroup from "#lib/components/input/ToggleGroup.svelte";
     import {
         PRIVATE,
         AUTHENTICATED,
@@ -21,8 +21,8 @@
         PUBLIC,
         type VisibilityType,
         VISIBILITY_VALUES,
-    } from "$lib/constants/enums";
-    import { capitalize } from "$lib/utils/utils";
+    } from "#lib/constants/enums.js";
+    import { capitalize } from "#lib/utils/utils.js";
     import { resolve } from "$app/paths";
     import { onDestroy, onMount } from "svelte";
     import AddApiCover from "$src/lib/components/composed/Settings/AddApiCover.svelte";

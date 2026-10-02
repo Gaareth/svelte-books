@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Moon } from "svelte-loading-spinners";
 
-    import { theme } from "$lib/stores/stores";
+    import { theme } from "#lib/stores/stores.js";
 
     interface Props {
         color?: string | undefined;

@@ -1,6 +1,6 @@
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
-import { getReadingActivity } from "$lib/server/db/utils";
+import { getReadingActivity } from "#lib/server/db/utils.js";
 import { ReadingActivityType } from "$prismaClient";
 import {
     authorize,

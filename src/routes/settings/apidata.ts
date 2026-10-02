@@ -4,9 +4,9 @@ import { SSE_DATA } from "../book/api/update_all/sse";
 import type { queriedBookFull } from "$appTypes";
 import type { Book, BookApiData } from "$prismaClient";
 
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import { prisma } from "$lib/server/prisma";
-import { arrMax, delay, getErrorMessage, zip } from "$lib/utils/utils";
+import { extractBookApiData, extractCategories } from "#lib/server/db/utils.js";
+import { prisma } from "#lib/server/prisma.js";
+import { arrMax, delay, getErrorMessage, zip } from "#lib/utils/utils.js";
 import { GOOGLE_BOOKS_API_REQUEST_DELAY_MS } from "$src/lib/constants/constants";
 import { cacheGoogleBooksImageURL } from "$src/lib/server/images/googleBooksImages";
 import { saveCachesToDB } from "$src/lib/server/images/images";

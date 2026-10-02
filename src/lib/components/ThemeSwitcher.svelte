@@ -2,9 +2,9 @@
     import clsx from "clsx";
     import toast from "svelte-french-toast";
 
-    import { browser } from "$app/environment";
+    import { browser } from '$app/env';
     import Dropdown from "$components/input/Dropdown.svelte";
-    import { theme } from "$lib/stores/stores";
+    import { theme } from "#lib/stores/stores.js";
         import { isDarkModeEnabled } from "../utils/browserUtils";
     import DarkModeIcon from "../icons/DarkModeIcon.svelte";
     import LightModeIcon from "../icons/LightModeIcon.svelte";

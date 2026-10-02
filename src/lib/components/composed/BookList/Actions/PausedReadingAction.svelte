@@ -1,8 +1,8 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
 
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import PauseCircleRounded from "$lib/icons/PauseCircleRounded.svelte";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import PauseCircleRounded from "#lib/icons/PauseCircleRounded.svelte";
     interface Props {
         className?: string;
     }

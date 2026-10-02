@@ -5,7 +5,7 @@
 
     import type { Chart as ChartJS } from "chart.js";
 
-    import { theme } from "$lib/stores/stores";
+    import { theme } from "#lib/stores/stores.js";
     import MoreDots from "$src/lib/icons/MoreDots.svelte";
     import RestartRounded from "$src/lib/icons/RestartRounded.svelte";
     import { defaultBgColor, tupleToDataset } from "$utils/chartUtils";

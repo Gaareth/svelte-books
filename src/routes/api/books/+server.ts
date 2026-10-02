@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 
-import { userAuth } from "$lib/auth/authorization";
+import { userAuth } from "#lib/auth/authorization.js";
 import { loadBooks } from "$src/lib/server/db/utils.js";
 
 export async function GET({ locals }) {

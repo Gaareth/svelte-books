@@ -15,12 +15,12 @@
     import Dropdown from "$components/input/Dropdown.svelte";
     import LineChartDrawer from "$components/input/LineChartDrawer.svelte";
     import Modal from "$components/Modal.svelte";
-    import AccentBarItemCard from "$lib/components/composed/AccentBarItemCard.svelte";
-    import { MAX_RATING } from "$lib/constants/constants";
+    import AccentBarItemCard from "#lib/components/composed/AccentBarItemCard.svelte";
+    import { MAX_RATING } from "#lib/constants/constants.js";
     import { getReadingActivityColor } from "$src/lib/utils/readingActivityUtils";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import DropdownIcon from "$lib/icons/DropdownIcon.svelte";
-    import { capitalize } from "$lib/utils/utils";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import DropdownIcon from "#lib/icons/DropdownIcon.svelte";
+    import { capitalize } from "#lib/utils/utils.js";
     import { type Book } from "$prismaBrowser";
     import StarIcon from "$src/lib/icons/Star/StarIcon.svelte";
     import DeleteIcon from "$src/lib/icons/DeleteIcon.svelte";

@@ -3,13 +3,13 @@
 
     import type { PageData } from "./$types";
 
-    import { page } from "$app/stores";
+    import { page } from '$app/state';
     import BookListReading from "$components/composed/BookList/BookListReading.svelte";
     import ReadingList from "$components/composed/BookList/ReadingList.svelte";
     import BookNew from "$components/composed/BookNew.svelte";
     import Statistics from "$src/lib/components/composed/Statistics/Statistics.svelte";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import { getActiveActivies } from "$lib/utils/readingActivityUtils";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import { getActiveActivies } from "#lib/utils/readingActivityUtils.js";
 
     interface Props {
         data: PageData;
@@ -21,16 +21,8 @@
     let random = Math.floor(Math.random() * chance);
 
     let activeActivies = $derived(getActiveActivies(data.readingActivity));
-    let currentlyReadingActivities = $derived(activeActivies.filter(
-        (e) =>
-            e.status.status === READING_ACTIVITY_TYPES.READING ||
-            e.status.status === READING_ACTIVITY_TYPES.PAUSED
-    ));
-
-    let ownerName =
-        $derived($page.data.session?.user?.name == data.username || data.username == null
-            ? "My"
-            : `${data.username}'s`);
+    let currentlyReadingActivities = $derived(activeActivies.filter((e) => e.status.status === READING_ACTIVITY_TYPES.READING || e.status.status === READING_ACTIVITY_TYPES.PAUSED));
+    let ownerName = $derived(page.data.session?.user?.name == data.username || data.username == null ? "My" : `${data.username}'s`);
 </script>
 
 <svelte:head>

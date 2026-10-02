@@ -8,10 +8,10 @@ import type { Actions, RequestEvent } from "./$types";
 import {
     authorize,
     handlePublicOrAuthenticatedAccount,
-} from "$lib/auth/authorization";
-import { optionalNumericString } from "$lib/schemas/utils";
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import { prisma } from "$lib/server/prisma";
+} from "#lib/auth/authorization.js";
+import { optionalNumericString } from "#lib/schemas/utils.js";
+import { extractBookApiData, extractCategories } from "#lib/server/db/utils.js";
+import { prisma } from "#lib/server/prisma.js";
 import { publicConfig } from "$src/lib/config/public";
 import {
     createImageUploadSchema,

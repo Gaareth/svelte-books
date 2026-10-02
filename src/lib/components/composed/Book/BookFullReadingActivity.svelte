@@ -4,8 +4,8 @@
     import ActiveIndicator from "$components/ActiveIndicator.svelte";
     import ReadingActivityActions from "$components/composed/BookList/Actions/ReadingActivityActions.svelte";
     import ReadingActivityItem from "$components/composed/ReadingActivity/ReadingActivityItem.svelte";
-    import AddIcon from "$lib/icons/AddIcon.svelte";
-    import InfoIcon from "$lib/icons/InfoIcon.svelte";
+    import AddIcon from "#lib/icons/AddIcon.svelte";
+    import InfoIcon from "#lib/icons/InfoIcon.svelte";
 
     interface Props {
         book: BookWithOwnership;

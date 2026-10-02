@@ -32,7 +32,7 @@ export function makeUploadUrl(url: string): string | undefined {
 }
 
 export function resolveAPIImageUrl(url: string): string {
-    return resolve(`/api/book-covers?url=${encodeURIComponent(url)}`);
+    return resolve(`api/book-covers?url=${encodeURIComponent(url)}`);
 }
 
 export function slideHeight(node: Element) {

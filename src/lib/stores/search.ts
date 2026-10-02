@@ -1,4 +1,4 @@
-// import { sortBooksDefault } from "$lib/utils";
+// import { sortBooksDefault } from "#lib/utils";
 // import type { Book } from "$prismaClient";
 import FuzzySearch from "fuzzy-search";
 import { writable } from "svelte/store";

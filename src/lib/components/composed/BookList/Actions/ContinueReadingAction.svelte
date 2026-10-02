@@ -1,8 +1,8 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
 
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import ReplayCircleFilled from "$lib/icons/ReplayCircleFilled.svelte";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import ReplayCircleFilled from "#lib/icons/ReplayCircleFilled.svelte";
     interface Props {
         className?: string;
     }

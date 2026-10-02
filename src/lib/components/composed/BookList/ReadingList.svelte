@@ -11,7 +11,7 @@
 
     import { invalidateAll } from "$app/navigation";
     import ReadingActivityDeletePopUp from "$components/composed/ReadingActivity/ReadingActivityDeletePopUp.svelte";
-    import { createSearchStore, searchHandler } from "$lib/stores/search";
+    import { createSearchStore, searchHandler } from "#lib/stores/search.js";
     import MoreDots from "$src/lib/icons/MoreDots.svelte";
     import { page } from "$app/state";
 

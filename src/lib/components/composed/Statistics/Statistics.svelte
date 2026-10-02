@@ -7,10 +7,10 @@
     import Stats from "$src/lib/components/Stats.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
     import Modal from "$components/Modal.svelte";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import Book from "$lib/icons/book.svelte";
-    import Pages from "$lib/icons/pages.svelte";
-    import Words from "$lib/icons/words.svelte";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import Book from "#lib/icons/book.svelte";
+    import Pages from "#lib/icons/pages.svelte";
+    import Words from "#lib/icons/words.svelte";
     import {
         books_read_per_month,
         books_read_per_year,

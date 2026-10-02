@@ -4,7 +4,7 @@
 
     import type { queriedBookFull } from "$appTypes";
 
-    import { browser } from "$app/environment";
+    import { browser } from '$app/env';
     import KeyboardArrowLeft from "$src/lib/icons/KeyboardArrowLeft.svelte";
     import OpenInNewRounded from "$src/lib/icons/OpenInNewRounded.svelte";
     import type { Snippet } from "svelte";

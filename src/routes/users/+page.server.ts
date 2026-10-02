@@ -1,6 +1,6 @@
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
-import { prisma } from "$lib/server/prisma";
+import { prisma } from "#lib/server/prisma.js";
 import { Visibility } from "$prismaClient";
 import { AUTHENTICATED, PUBLIC } from "$src/lib/constants/enums";
 import { whereVisibilityPublicOrAuthenticated } from "$src/lib/server/db/prismaUtils";

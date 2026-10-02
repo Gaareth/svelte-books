@@ -11,7 +11,7 @@ import {
     type settingsApiReloadResult,
 } from "./apidata";
 
-import { prisma } from "$lib/server/prisma";
+import { prisma } from "#lib/server/prisma.js";
 import { getAccountIdfromSession } from "$src/lib/auth/account";
 import { userAuth } from "$src/lib/auth/authorization";
 import {

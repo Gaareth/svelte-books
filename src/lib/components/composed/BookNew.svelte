@@ -21,17 +21,17 @@
     } from "$components/input/DateSelector.svelte";
     import ToggleGroup from "$components/input/ToggleGroup.svelte";
     import Rating from "$components/Rating.svelte";
-    import { MAX_RATING } from "$lib/constants/constants";
+    import { MAX_RATING } from "#lib/constants/constants.js";
     import {
         ACQUIRED,
         FINISHED,
         READING,
         TO_READ,
         type ReadingActivityStatusType,
-    } from "$lib/constants/enums";
-    import EventDone from "$lib/icons/EventDone.svelte";
-    import EventProgress from "$lib/icons/EventProgress.svelte";
-    import Words from "$lib/icons/words.svelte";
+    } from "#lib/constants/enums.js";
+    import EventDone from "#lib/icons/EventDone.svelte";
+    import EventProgress from "#lib/icons/EventProgress.svelte";
+    import Words from "#lib/icons/words.svelte";
     import { capitalize, decapitalize } from "$utils/utils";
     import { slideHeight } from "$src/lib/utils/browserUtils";
     import AutoComplete5 from "../input/AutoComplete5.svelte";

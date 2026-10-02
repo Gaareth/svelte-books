@@ -1,8 +1,8 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
 
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import NotStartedRounded from "$lib/icons/NotStartedRounded.svelte";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
+    import NotStartedRounded from "#lib/icons/NotStartedRounded.svelte";
     interface Props {
         className?: string;
     }

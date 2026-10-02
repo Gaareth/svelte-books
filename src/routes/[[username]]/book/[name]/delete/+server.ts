@@ -2,8 +2,8 @@ import { json } from "@sveltejs/kit";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/authorization";
-import { prisma } from "$lib/server/prisma";
+import { authorize } from "#lib/auth/authorization.js";
+import { prisma } from "#lib/server/prisma.js";
 
 export async function POST(req: RequestEvent) {
     const { requestedAccount } = await authorize(

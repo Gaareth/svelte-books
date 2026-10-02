@@ -9,7 +9,7 @@
 
     import { enhance } from "$app/forms";
     import { invalidateAll } from "$app/navigation";
-    import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+    import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
     // import SettingsHeart from "$src/lib/icons/SettingsHeart.svelte";
     import SettingsIcon from "$src/lib/icons/SettingsIcon.svelte";
 

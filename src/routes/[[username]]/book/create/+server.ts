@@ -9,15 +9,15 @@ import { getBookApiData } from "../../../book/api/api.server";
 
 import type { RequestEvent } from "./$types";
 
-import { authorize } from "$lib/auth/authorization";
-import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
+import { authorize } from "#lib/auth/authorization.js";
+import { READING_ACTIVITY_TYPES } from "#lib/constants/enums.js";
 import {
     createOwnershipSchema,
     optionalDatetimeSchema,
-} from "$lib/schemas/schemas";
-import { extractBookApiData, extractCategories } from "$lib/server/db/utils";
-import { prisma } from "$lib/server/prisma";
-import { nullToUndefined } from "$lib/utils/utils";
+} from "#lib/schemas/schemas.js";
+import { extractBookApiData, extractCategories } from "#lib/server/db/utils.js";
+import { prisma } from "#lib/server/prisma.js";
+import { nullToUndefined } from "#lib/utils/utils.js";
 import { BookOwnership } from "$prismaBrowser";
 import { dateToOptional, optionalToDate } from "$src/lib/utils/dateUtils";
 

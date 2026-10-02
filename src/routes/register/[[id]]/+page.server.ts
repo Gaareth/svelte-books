@@ -6,8 +6,8 @@ import {
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
-import { createAllReadingActivityStatus } from "$lib/server/db/create";
-import { prisma } from "$lib/server/prisma";
+import { createAllReadingActivityStatus } from "#lib/server/db/create.js";
+import { prisma } from "#lib/server/prisma.js";
 import { hashPassword } from "$src/lib/auth/password";
 
 export async function load({ locals, params }: ServerLoadEvent) {

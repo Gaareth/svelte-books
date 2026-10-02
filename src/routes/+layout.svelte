@@ -8,7 +8,7 @@
     import Dropdown from "$components/input/Dropdown.svelte";
     import ThemeSwitcher from "$components/ThemeSwitcher.svelte";
 
-    import IconAccount from "$lib/icons/IconAccount.svelte";
+    import IconAccount from "#lib/icons/IconAccount.svelte";
 
     import { resolve } from "$app/paths";
     import { capitalize } from "$src/lib/utils/utils";
@@ -60,13 +60,13 @@
                     </div>
                     <hr />
                     <div class="py-2 flex flex-col gap-1 text-secondary-2">
-                        <a href={resolve("/settings")}>Settings</a>
-                        <a href={resolve("/users")}>All Users</a>
+                        <a href={resolve('settings')}>Settings</a>
+                        <a href={resolve('users')}>All Users</a>
                     </div>
                     <hr />
                     <div class="py-2">
                         <a
-                            href={resolve("/logout")}
+                            href={resolve('logout')}
                             class="whitespace-nowrap"
                             data-sveltekit-preload-data="off">
                             Sign Out
@@ -152,10 +152,10 @@
                 {#if page.data.session}
                     {@render ListsDropdown()}
                     {#if data.isAdmin}
-                        <a class="nav-a" href={resolve("/admin")}>Admin</a>
+                        <a class="nav-a" href={resolve('admin')}>Admin</a>
                     {/if}
                 {/if}
-                <a class="nav-a" href={resolve("/about")}>About</a>
+                <a class="nav-a" href={resolve('about')}>About</a>
             </nav>
 
             <div class="flex-1 justify-end flex">
@@ -164,11 +164,7 @@
                         {#if page.data.session}
                             {@render AccountDropdown()}
                         {:else}
-                            <div>
-                                <a class="auth-button" href={resolve("/login")}>
-                                    Log in
-                                </a>
-                            </div>
+                            <div><a class="auth-button" href={resolve('login')}>Log in</a></div>
                         {/if}
                     </div>
                     <div class="flex items-center sm:ml-10 ml-2 xl:mr-0 mr-10">
@@ -199,12 +195,16 @@
             V{version}
         </p>
         <p class="opacity-90">
-            Made using
+            Made using 
             <a href="https://svelte.dev/" class="underline font-semibold">
                 Svelte
             </a>
-            / - Kit and
-            <a href={resolve("/tech-stack")} class="hover:underline">more</a>
+            / - Kit and 
+
+            <a
+                href={resolve('tech-stack')}
+                class="hover:underline"
+            >more</a>
         </p>
     </div>
     <p class="absolute top-0 right-0 p-2 text-violet-900">
