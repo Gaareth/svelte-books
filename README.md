@@ -63,7 +63,11 @@ If you changed the schema and want to test it:
 
 ## Todos
 
-- SUB
+
+- TimeLine view of ALL readingactivity
+    - books read over time or github like graph
+- a review/rating view for a book, consisting of all ratings. to also show the comment/review without expanding it first.
+
 - better google books search
     - a default search result of both title and author and just title combined
     - a custom seach bar with intitle, inauthor etc as styled tags (ideally not editable)
@@ -99,6 +103,7 @@ If you changed the schema and want to test it:
 - more finegrained privacy/visibility settings:
 
     - private books
+    - private review/comment
 
 - tension stats draw yourself - check
 
@@ -111,7 +116,6 @@ If you changed the schema and want to test it:
 - crud for lists
 
 - statistics page
-- books read over time or github like graph
 - per month, year, day etc
 - min/avg/max time for started reading to finished.
 
