@@ -313,7 +313,8 @@ export function get_avg_time_between_reads(ras: ReadingActivityList[]) {
     const times_between = []
     let last_book_end_date = null;
 
-    for (const r of ras.sort(sortReadingActivityReversed)) {
+    const ras_copy = [...ras]
+    for (const r of ras_copy.sort(sortReadingActivityReversed)) {
         if (r.status.status == "DID_NOT_FINISH" || r.status.status == "FINISHED" || r.status.status == "PAUSED") {
             last_book_end_date = optDateFallback(r, r.dateFinished)
         }

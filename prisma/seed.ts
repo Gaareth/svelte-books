@@ -13,6 +13,7 @@ import {
     createAllReadingActivityStatus,
     createLists,
 } from "$lib/server/db/create";
+import { createReadingActivity } from "$routes/api/reading-activity/api.server"
 import { seedInitial } from "./seed-initial";
 
 // Load environment variables
@@ -141,6 +142,7 @@ async function createDummyAccounts() {
 }
 
 async function createBooks(account: Account) {
+    let i = 0;
     for (const bookData of books) {
         const createdBook = await prisma.book.create({
             data: {
@@ -152,65 +154,85 @@ async function createBooks(account: Account) {
                 },
             },
         });
+        const ds = {
+            day: 1,
+            month: 1,
+            year: 2020 + i,
+            hour: 12,
+            minute: 0,
+            timezoneOffset: 0,
+        };
+        const df = {
+            day: 1,
+            month: 3,
+            year: 2020 + i,
+            hour: 12,
+            minute: 0,
+            timezoneOffset: 0,
+        }
 
-        await prisma.readingActivity.create({
-            data: {
-                account: {
-                    connect: {
-                        id: account.id,
-                    },
-                },
-                book: {
-                    connect: {
-                        id: createdBook.id,
-                    },
-                },
-                status: {
-                    connectOrCreate: {
-                        where: {
-                            status_accountId: {
-                                status: ReadingActivityType.FINISHED,
-                                accountId: account.id,
-                            },
-                        },
-                        create: {
-                            status: ReadingActivityType.FINISHED,
-                            account: {
-                                connect: {
-                                    id: account.id,
-                                },
-                            },
-                        },
-                    },
-                },
-                dateStarted: {
-                    create: {
-                        day: 1,
-                        month: 1,
-                        year: 2020,
-                        hour: 12,
-                        minute: 0,
-                        timezoneOffset: 0,
-                    },
-                },
-                dateFinished: {
-                    create: {
-                        day: 1,
-                        month: 1,
-                        year: 2021,
-                        hour: 12,
-                        minute: 0,
-                        timezoneOffset: 0,
-                    },
-                },
-                rating: {
-                    create: {
-                        stars: Math.floor(Math.random() * 5) + 1,
-                        comment: "This is a dummy rating",
-                    },
-                },
-            },
-        });
+        await createReadingActivity(account.id, createdBook.id, null, "READING", ds);
+        await createReadingActivity(account.id, createdBook.id, Math.floor(Math.random() * 5) + 1, "FINISHED", ds, df, null, "Test comment")
+
+        i++;
+        // await prisma.readingActivity.create({
+        //     data: {
+        //         account: {
+        //             connect: {
+        //                 id: account.id,
+        //             },
+        //         },
+        //         book: {
+        //             connect: {
+        //                 id: createdBook.id,
+        //             },
+        //         },
+        //         status: {
+        //             connectOrCreate: {
+        //                 where: {
+        //                     status_accountId: {
+        //                         status: ReadingActivityType.FINISHED,
+        //                         accountId: account.id,
+        //                     },
+        //                 },
+        //                 create: {
+        //                     status: ReadingActivityType.FINISHED,
+        //                     account: {
+        //                         connect: {
+        //                             id: account.id,
+        //                         },
+        //                     },
+        //                 },
+        //             },
+        //         },
+        //         dateStarted: {
+        //             create: {
+        //                 day: 1,
+        //                 month: 1,
+        //                 year: 2020,
+        //                 hour: 12,
+        //                 minute: 0,
+        //                 timezoneOffset: 0,
+        //             },
+        //         },
+        //         dateFinished: {
+        //             create: {
+        //                 day: 1,
+        //                 month: 1,
+        //                 year: 2021,
+        //                 hour: 12,
+        //                 minute: 0,
+        //                 timezoneOffset: 0,
+        //             },
+        //         },
+        //         rating: {
+        //             create: {
+        //                 stars: Math.floor(Math.random() * 5) + 1,
+        //                 comment: "This is a dummy rating",
+        //             },
+        //         },
+        //     },
+        // });
     }
 }
 
