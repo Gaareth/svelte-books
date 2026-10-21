@@ -1,31 +1,40 @@
 allowBuilds:
-    "@prisma/engines": true
-    argon2: true
-    better-sqlite3: true
-    esbuild: true
-    prisma: true
+  '@prisma/engines': true
+  argon2: true
+  better-sqlite3: true
+  esbuild: true
+  prisma: true
 
 overrides:
-    cookie: "0.7.2"
+  cookie: 0.7.2
 
 blockExoticSubdeps: true
-minimumReleaseAge: 10080 # 7 days
+
+minimumReleaseAge: 10080
+
 minimumReleaseAgeExclude:
-    - "@sveltejs/load-config@0.2.3"
-    - "@typescript-eslint/eslint-plugin@8.67.0"
-    - "@typescript-eslint/parser@8.67.0"
-    - "@typescript-eslint/project-service@8.67.0"
-    - "@typescript-eslint/scope-manager@8.67.0"
-    - "@typescript-eslint/tsconfig-utils@8.67.0"
-    - "@typescript-eslint/type-utils@8.67.0"
-    - "@typescript-eslint/types@8.67.0"
-    - "@typescript-eslint/typescript-estree@8.67.0"
-    - "@typescript-eslint/utils@8.67.0"
-    - "@typescript-eslint/visitor-keys@8.67.0"
-    - eslint-plugin-svelte@3.23.0
-    - globals@17.11.0
-    - svelte-check@4.7.6
-    - svelte@5.56.9
-    - tsx@4.23.12
-    - typescript-eslint@8.67.0
-    - deepmerge-ts@8.0.0
+  - '@sveltejs/load-config@0.2.3'
+  - '@typescript-eslint/eslint-plugin@8.67.0'
+  - '@typescript-eslint/parser@8.67.0'
+  - '@typescript-eslint/project-service@8.67.0'
+  - '@typescript-eslint/scope-manager@8.67.0'
+  - '@typescript-eslint/tsconfig-utils@8.67.0'
+  - '@typescript-eslint/type-utils@8.67.0'
+  - '@typescript-eslint/types@8.67.0'
+  - '@typescript-eslint/typescript-estree@8.67.0'
+  - '@typescript-eslint/utils@8.67.0'
+  - '@typescript-eslint/visitor-keys@8.67.0'
+  - eslint-plugin-svelte@3.23.0
+  - globals@17.11.0
+  - svelte-check@4.7.6
+  - svelte@5.56.9
+  - tsx@4.23.12
+  - typescript-eslint@8.67.0
+  - deepmerge-ts@8.0.0
+
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - argon2
+  - better-sqlite3
+  - esbuild
+  - prisma
