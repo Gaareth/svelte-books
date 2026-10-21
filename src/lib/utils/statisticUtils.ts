@@ -4,7 +4,7 @@ import {
     type ReadingActivityStatusType,
 } from "../constants/enums";
 import { optionalToDate } from "./dateUtils";
-import { sortReadingActivityReversed } from "./readingActivityUtils";
+import { sortReadingActivity, sortReadingActivityReversed } from "./readingActivityUtils";
 import { sum } from "./utils";
 
 import type { ReadingActivityList } from "$src/app";
@@ -260,9 +260,9 @@ export function get_average_acquisition_time(
         activity.status.status === FINISHED
             ? optDateFallback(activity, activity.dateStarted)
             : optDateFallback(
-                  activity,
-                  activity.dateStarted ?? activity.dateFinished,
-              );
+                activity,
+                activity.dateStarted ?? activity.dateFinished,
+            );
 
     const to_read_to_acquired = get_average_time_til_status(readingActivities, {
         startStatus: READING_ACTIVITY_TYPES.TO_READ,
@@ -305,6 +305,45 @@ export function get_average_acquisition_time(
             ).toFixed(0),
         },
     };
+}
+
+// what if im reading multiple books in parallel?
+// should i only count times when i finished the last book im reading til the next start?
+export function get_avg_time_between_reads(ras: ReadingActivityList[]) {
+    const times_between = []
+    let last_book_end_date = null;
+
+    for (const r of ras.sort(sortReadingActivityReversed)) {
+        if (r.status.status == "DID_NOT_FINISH" || r.status.status == "FINISHED" || r.status.status == "PAUSED") {
+            last_book_end_date = optDateFallback(r, r.dateFinished)
+        }
+
+        if (r.status.status == "READING" && last_book_end_date != null) {
+            const start_date = optDateFallback(r, r.dateStarted);
+            if (start_date == null) {
+                continue;
+            }
+
+            const time_between = start_date.getTime() - last_book_end_date.getTime();
+            if (time_between < 0) {
+                console.log(
+                    "Found negative duration when caculating avg time between reads:",
+                    time_between,
+                    "for bookId:",
+                    r.bookId,
+                );
+                continue;
+            }
+
+            times_between.push(time_between)
+        }
+    }
+
+    const median = get_median(times_between);
+    return {
+        count: times_between.length,
+        averageTimeBetweenReads_ms: median
+    }
 }
 
 export function get_median(list: number[]): number {

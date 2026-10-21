@@ -18,9 +18,11 @@
         calc_most_read_categories,
         count_pages,
         count_words,
+        get_avg_time_between_reads,
         get_reading_duration,
     } from "$src/lib/utils/statisticUtils";
     import AcquisitionStat from "./AcquisitionStat.svelte";
+    import BetweenReadsStat from "./BetweenReadsStat.svelte";
 
     type ActivityStatistics = ReadingActivityList;
 
@@ -321,7 +323,7 @@
     <Stats
         titleString="TBR"
         value={num_untouched_acquired}
-        className="!bg-transparent backdrop-blur sm:min-w-[00px]" />
+        className="!bg-transparent backdrop-blur sm:min-w-[100px]" />
 </div>
 
 <div
@@ -343,6 +345,7 @@
     </Stats>
 
     <AcquisitionStat {readingActivities}></AcquisitionStat>
+    <BetweenReadsStat {readingActivities}>  </BetweenReadsStat>
 </div>
 
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">

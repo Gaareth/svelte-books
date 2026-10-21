@@ -1,19 +1,8 @@
 import type { ReadingActivityWithDates } from "$src/app";
 import type { OptionalDate } from "../components/input/DateSelector.svelte";
 
-export function dateDiffFormatted(
-    date1: Date | string | null,
-    date2: Date | string | null,
-): string {
-    if (!date1 || !date2) {
-        return "N/A";
-    }
-
-    const d1 = new Date(date1);
-    const d2 = new Date(date2);
-
-    const diffMs = Math.abs(d1.getTime() - d2.getTime());
-    const seconds = Math.floor(diffMs / 1000);
+export function formatDuration(durationMs: number): string {
+    const seconds = Math.floor(durationMs / 1000);
 
     if (seconds < 60) {
         return `${seconds} second${seconds !== 1 ? "s" : ""}`;
@@ -41,6 +30,21 @@ export function dateDiffFormatted(
 
     const years = Math.floor(months / 12);
     return `${years} year${years !== 1 ? "s" : ""}`;
+}
+
+export function dateDiffFormatted(
+    date1: Date | string | null,
+    date2: Date | string | null,
+): string {
+    if (!date1 || !date2) {
+        return "N/A";
+    }
+
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+
+    const diffMs = Math.abs(d1.getTime() - d2.getTime());
+    return formatDuration(diffMs)
 }
 export function toMinutePrecision(date: Date) {
     return Math.floor(date.getTime() / 60_000) * 60_000;
