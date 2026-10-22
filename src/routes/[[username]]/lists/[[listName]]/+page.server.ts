@@ -1,4 +1,4 @@
-import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { error, redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { StatusCodes } from "http-status-codes";
 
 import { authorize, isReadingActivityPublic } from "$lib/auth/authorization";
@@ -9,7 +9,7 @@ import {
 import { getReadingActivity } from "$lib/server/db/utils";
 import { getActiveActivities } from "$src/lib/utils/readingActivityUtils";
 
-export async function load({ locals, params }: ServerLoadEvent) {
+export async function load({ locals, params, url }: ServerLoadEvent) {
     if (
         !READING_STATUS_VALUES.includes(
             params.listName as ReadingActivityStatusType,
@@ -54,6 +54,13 @@ export async function load({ locals, params }: ServerLoadEvent) {
                 active: activeEntries.some((active) => active.id === e.id),
             };
         });
+
+    if (params.listName === "ACQUIRED" && !url.searchParams.has("filter")) {
+        url.searchParams.set("filter", "true");
+        url.searchParams.set("active", "all");
+
+        return redirect(302, url);
+    }
 
     return {
         readingActivity: readingActivity,
