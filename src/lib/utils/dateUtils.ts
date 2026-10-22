@@ -44,7 +44,7 @@ export function dateDiffFormatted(
     const d2 = new Date(date2);
 
     const diffMs = Math.abs(d1.getTime() - d2.getTime());
-    return formatDuration(diffMs)
+    return formatDuration(diffMs);
 }
 export function toMinutePrecision(date: Date) {
     return Math.floor(date.getTime() / 60_000) * 60_000;

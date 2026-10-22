@@ -141,7 +141,7 @@
                 .filter(
                     (a) => a.status?.status === READING_ACTIVITY_TYPES.ACQUIRED,
                 )
-                .map((ra) => ra.book),
+                .map((ra) => ra.book.id),
         );
 
         let touchedBooks = new Set(
@@ -154,7 +154,7 @@
                         a.status?.status ===
                             READING_ACTIVITY_TYPES.DID_NOT_FINISH,
                 )
-                .map((ra) => ra.book),
+                .map((ra) => ra.book.id),
         );
 
         return acquired_books.difference(touchedBooks).size;
@@ -345,7 +345,7 @@
     </Stats>
 
     <AcquisitionStat {readingActivities}></AcquisitionStat>
-    <BetweenReadsStat {readingActivities}>  </BetweenReadsStat>
+    <BetweenReadsStat {readingActivities}></BetweenReadsStat>
 </div>
 
 <div class="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 gap-2">

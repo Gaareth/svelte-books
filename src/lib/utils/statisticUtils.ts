@@ -4,9 +4,10 @@ import {
     type ReadingActivityStatusType,
 } from "../constants/enums";
 import { optionalToDate } from "./dateUtils";
-import { sortReadingActivity, sortReadingActivityReversed } from "./readingActivityUtils";
+import { sortReadingActivityReversed } from "./readingActivityUtils";
 import { sum } from "./utils";
 
+import type { Book } from "$prismaBrowser";
 import type { ReadingActivityList } from "$src/app";
 import type { OptionalDate } from "../components/input/DateSelector.svelte";
 
@@ -260,9 +261,9 @@ export function get_average_acquisition_time(
         activity.status.status === FINISHED
             ? optDateFallback(activity, activity.dateStarted)
             : optDateFallback(
-                activity,
-                activity.dateStarted ?? activity.dateFinished,
-            );
+                  activity,
+                  activity.dateStarted ?? activity.dateFinished,
+              );
 
     const to_read_to_acquired = get_average_time_til_status(readingActivities, {
         startStatus: READING_ACTIVITY_TYPES.TO_READ,
@@ -310,41 +311,64 @@ export function get_average_acquisition_time(
 // what if im reading multiple books in parallel?
 // should i only count times when i finished the last book im reading til the next start?
 export function get_avg_time_between_reads(ras: ReadingActivityList[]) {
-    const times_between = []
-    let last_book_end_date = null;
+    const times_between: number[] = [];
+    let last_done_entry: {
+        date: Date | null;
+        book: Book;
+    } | null = null;
 
-    const ras_copy = [...ras]
+    const ras_copy = [...ras];
     for (const r of ras_copy.sort(sortReadingActivityReversed)) {
-        if (r.status.status == "DID_NOT_FINISH" || r.status.status == "FINISHED" || r.status.status == "PAUSED") {
-            last_book_end_date = optDateFallback(r, r.dateFinished)
-        }
+        const r_status = r.status.status;
 
-        if (r.status.status == "READING" && last_book_end_date != null) {
+        if (
+            (r_status == "READING" || r_status == "FINISHED") &&
+            last_done_entry?.date != null &&
+            last_done_entry.book.id !== r.book.id
+        ) {
             const start_date = optDateFallback(r, r.dateStarted);
             if (start_date == null) {
                 continue;
             }
 
-            const time_between = start_date.getTime() - last_book_end_date.getTime();
+            const time_between =
+                start_date.getTime() - last_done_entry.date.getTime();
             if (time_between < 0) {
-                console.log(
-                    "Found negative duration when caculating avg time between reads:",
-                    time_between,
-                    "for bookId:",
-                    r.bookId,
-                );
+                // console.log(
+                //     "Found negative duration when caculating avg time between reads:",
+                //     time_between,
+                //     "for book", last_done_entry.book.name,
+                //     "and",
+                //     r.book.name
+                // );
                 continue;
             }
 
-            times_between.push(time_between)
+            // console.log("time_between", formatDuration(time_between), "for", last_done_entry.book.name, "and", r.book.name);
+            times_between.push(time_between);
+        }
+
+        if (
+            r_status == "DID_NOT_FINISH" ||
+            r_status == "FINISHED" ||
+            r_status == "PAUSED"
+        ) {
+            last_done_entry = {
+                date: optDateFallback(r, r.dateFinished),
+                book: r.book,
+            };
         }
     }
 
-    const median = get_median(times_between);
+    // const median = get_median(times_between);
+    const mean =
+        times_between.length > 0
+            ? sum(times_between) / times_between.length
+            : 0;
     return {
         count: times_between.length,
-        averageTimeBetweenReads_ms: median
-    }
+        averageTimeBetweenReads_ms: mean,
+    };
 }
 
 export function get_median(list: number[]): number {

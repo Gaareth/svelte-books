@@ -1,43 +1,43 @@
 allowBuilds:
-  '@prisma/engines': true
-  argon2: true
-  better-sqlite3: true
-  esbuild: true
-  prisma: true
+    "@prisma/engines": true
+    argon2: true
+    better-sqlite3: true
+    esbuild: true
+    prisma: true
 
 overrides:
-  cookie: 0.7.2
-  deepmerge-ts@<8.0.0: ^8.0.0
-  mysql2@<=3.23.0: ^3.23.1
-  postcss-selector-parser@<7.1.6: ^7.1.6
+    cookie: 0.7.2
+    deepmerge-ts@<8.0.0: ^8.0.0
+    mysql2@<=3.23.0: ^3.23.1
+    postcss-selector-parser@<7.1.6: ^7.1.6
 
 blockExoticSubdeps: true
 
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  - '@sveltejs/load-config@0.2.3'
-  - '@typescript-eslint/eslint-plugin@8.67.0'
-  - '@typescript-eslint/parser@8.67.0'
-  - '@typescript-eslint/project-service@8.67.0'
-  - '@typescript-eslint/scope-manager@8.67.0'
-  - '@typescript-eslint/tsconfig-utils@8.67.0'
-  - '@typescript-eslint/type-utils@8.67.0'
-  - '@typescript-eslint/types@8.67.0'
-  - '@typescript-eslint/typescript-estree@8.67.0'
-  - '@typescript-eslint/utils@8.67.0'
-  - '@typescript-eslint/visitor-keys@8.67.0'
-  - eslint-plugin-svelte@3.23.0
-  - globals@17.11.0
-  - svelte-check@4.7.6
-  - svelte@5.56.9
-  - tsx@4.23.12
-  - typescript-eslint@8.67.0
-  - deepmerge-ts@8.0.0
+    - "@sveltejs/load-config@0.2.3"
+    - "@typescript-eslint/eslint-plugin@8.67.0"
+    - "@typescript-eslint/parser@8.67.0"
+    - "@typescript-eslint/project-service@8.67.0"
+    - "@typescript-eslint/scope-manager@8.67.0"
+    - "@typescript-eslint/tsconfig-utils@8.67.0"
+    - "@typescript-eslint/type-utils@8.67.0"
+    - "@typescript-eslint/types@8.67.0"
+    - "@typescript-eslint/typescript-estree@8.67.0"
+    - "@typescript-eslint/utils@8.67.0"
+    - "@typescript-eslint/visitor-keys@8.67.0"
+    - eslint-plugin-svelte@3.23.0
+    - globals@17.11.0
+    - svelte-check@4.7.6
+    - svelte@5.56.9
+    - tsx@4.23.12
+    - typescript-eslint@8.67.0
+    - deepmerge-ts@8.0.0
 
 onlyBuiltDependencies:
-  - '@prisma/engines'
-  - argon2
-  - better-sqlite3
-  - esbuild
-  - prisma
+    - "@prisma/engines"
+    - argon2
+    - better-sqlite3
+    - esbuild
+    - prisma

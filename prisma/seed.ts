@@ -5,7 +5,6 @@ import {
     type Account,
     type BookSeries,
     PrismaClient,
-    ReadingActivityType,
 } from "../src/generated/prisma/client";
 
 import { hashPassword } from "$lib/auth/password";
@@ -13,7 +12,7 @@ import {
     createAllReadingActivityStatus,
     createLists,
 } from "$lib/server/db/create";
-import { createReadingActivity } from "$routes/api/reading-activity/api.server"
+import { createReadingActivity } from "$routes/api/reading-activity/api.server";
 import { seedInitial } from "./seed-initial";
 
 // Load environment variables
@@ -169,10 +168,25 @@ async function createBooks(account: Account) {
             hour: 12,
             minute: 0,
             timezoneOffset: 0,
-        }
+        };
 
-        await createReadingActivity(account.id, createdBook.id, null, "READING", ds);
-        await createReadingActivity(account.id, createdBook.id, Math.floor(Math.random() * 5) + 1, "FINISHED", ds, df, null, "Test comment")
+        await createReadingActivity(
+            account.id,
+            createdBook.id,
+            null,
+            "READING",
+            ds,
+        );
+        await createReadingActivity(
+            account.id,
+            createdBook.id,
+            Math.floor(Math.random() * 5) + 1,
+            "FINISHED",
+            ds,
+            df,
+            null,
+            "Test comment",
+        );
 
         i++;
         // await prisma.readingActivity.create({

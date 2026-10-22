@@ -26,8 +26,6 @@ export async function load({ locals, params }: ServerLoadEvent) {
         isAuthorizedToModify,
     );
 
-    console.log(readingActivity);
-
     const isCurrentlyReadingPublic =
         (await isReadingActivityPublic(
             requestedAccount.id,

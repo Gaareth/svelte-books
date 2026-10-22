@@ -63,7 +63,6 @@ If you changed the schema and want to test it:
 
 ## Todos
 
-
 - TimeLine view of ALL readingactivity
     - books read over time or github like graph
 - a review/rating view for a book, consisting of all ratings. to also show the comment/review without expanding it first.
