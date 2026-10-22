@@ -7,7 +7,7 @@ import {
     type ReadingActivityStatusType,
 } from "$lib/constants/enums";
 import { getReadingActivity } from "$lib/server/db/utils";
-import { getActiveActivies } from "$src/lib/utils/readingActivityUtils";
+import { getActiveActivities } from "$src/lib/utils/readingActivityUtils";
 
 export async function load({ locals, params }: ServerLoadEvent) {
     if (
@@ -44,7 +44,7 @@ export async function load({ locals, params }: ServerLoadEvent) {
         isAuthorizedToModify,
     );
 
-    const activeEntries = getActiveActivies(completeReadingActivity);
+    const activeEntries = getActiveActivities(completeReadingActivity);
 
     const readingActivity = completeReadingActivity
         .filter((entry) => entry.status.status === readingActivityStatus)

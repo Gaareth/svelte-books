@@ -12,7 +12,7 @@
     import Calendar from "$lib/icons/Calender.svelte";
     import Pages from "$lib/icons/pages.svelte";
     import Words from "$lib/icons/words.svelte";
-        import { sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
+        import { getActiveActivities, sortReadingActivity } from "$src/lib/utils/readingActivityUtils";
     import BookCategories from "$src/lib/components/composed/Book/BookCategories.svelte";
     import BookForm from "$src/lib/components/composed/Book/BookForm.svelte";
     import BookImageAndInfo from "$src/lib/components/composed/Book/BookImageAndInfo.svelte";
@@ -48,7 +48,8 @@
             return sortReadingActivity(a, b);
         }),
     );
-    let activeEntry = $derived(readingActivitiesSorted[0]);
+    let activeEntry = $derived(getActiveActivities(readingActivitiesSorted)[0]);
+    // let activeEntry = $derived(readingActivitiesSorted[0]);
 </script>
 
 <svelte:head>

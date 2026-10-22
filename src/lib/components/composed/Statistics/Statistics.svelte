@@ -135,6 +135,7 @@
     let showAuthorsModal = $state(false);
     let showReadingDurationModal = $state(false);
 
+    // todo: modal to show the books that are in the TBR list (acquired but not started)
     let num_untouched_acquired = $derived.by(() => {
         let acquired_books = new Set(
             readingActivities
@@ -157,7 +158,9 @@
                 .map((ra) => ra.book.id),
         );
 
-        return acquired_books.difference(touchedBooks).size;
+        const untouched_acquired = acquired_books.difference(touchedBooks);
+        
+        return untouched_acquired.size;
     });
 </script>
 

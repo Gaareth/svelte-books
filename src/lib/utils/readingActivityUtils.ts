@@ -1,4 +1,7 @@
-import type { ReadingActivityWithDates } from "$src/app";
+import type {
+    ReadingActivityWithDates,
+    ReadingActivityWithStatus,
+} from "$src/app";
 import {
     type ReadingActivityStatusType,
     READING_ACTIVITY_TYPES,
@@ -39,15 +42,28 @@ export function sortReadingActivityReversed(
 ) {
     return sortReadingActivity(a, b) * -1;
 }
-export function getActiveActivies<T extends ReadingActivityWithDates>(
-    readingActivity: T[],
-): T[] {
+
+export function getActiveActivities<
+    T extends ReadingActivityWithDates & ReadingActivityWithStatus,
+>(readingActivity: T[]): T[] {
     const bookToActiveActivity: Record<string, T> = {};
 
     for (const activity of readingActivity) {
         const active = bookToActiveActivity[activity.bookId];
+        const isAcquired = activity.status.status === "ACQUIRED";
 
-        if ((active && sortReadingActivity(activity, active) < 0) || !active) {
+        // Keep ACQUIRED only if no other activity exists and it has no start date.
+        if (isAcquired && !activity.dateStarted) {
+            if (!active) bookToActiveActivity[activity.bookId] = activity;
+            continue;
+        }
+
+        // Prefer activities with a start date or a non-ACQUIRED status.
+        if (
+            !active ||
+            (active.status.status === "ACQUIRED" && !active.dateStarted) ||
+            sortReadingActivity(activity, active) < 0
+        ) {
             bookToActiveActivity[activity.bookId] = activity;
         }
     }

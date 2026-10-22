@@ -9,7 +9,7 @@
     import BookNew from "$components/composed/BookNew.svelte";
     import Statistics from "$src/lib/components/composed/Statistics/Statistics.svelte";
     import { READING_ACTIVITY_TYPES } from "$lib/constants/enums";
-    import { getActiveActivies } from "$lib/utils/readingActivityUtils";
+    import { getActiveActivities } from "$lib/utils/readingActivityUtils";
 
     interface Props {
         data: PageData;
@@ -20,7 +20,7 @@
     let chance = 20;
     let random = Math.floor(Math.random() * chance);
 
-    let activeActivies = $derived(getActiveActivies(data.readingActivity));
+    let activeActivies = $derived(getActiveActivities(data.readingActivity));
     let currentlyReadingActivities = $derived(activeActivies.filter(
         (e) =>
             e.status.status === READING_ACTIVITY_TYPES.READING ||
