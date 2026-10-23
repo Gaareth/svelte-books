@@ -63,6 +63,12 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- choose online image as cover from url
+
+- if two users read a book, opt in to show that both users read it
+
+- wrapped
+
 - TimeLine view of ALL readingactivity
     - books read over time or github like graph
 - a review/rating view for a book, consisting of all ratings. to also show the comment/review without expanding it first.
