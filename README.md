@@ -63,6 +63,10 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- if clicked on most read author/category. filter by it.
+
+- books read this year. comparison stat by progress of the year
+
 - choose online image as cover from url
 
 - if two users read a book, opt in to show that both users read it
