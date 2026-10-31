@@ -23,7 +23,7 @@
         "@j178/prek": "^0.4.14",
         "@sveltejs/adapter-auto": "^7.0.1",
         "@sveltejs/adapter-node": "^5.5.7",
-        "@sveltejs/kit": "^2.70.3",
+        "@sveltejs/kit": "^3.0.0",
         "@sveltejs/vite-plugin-svelte": "^7.3.1",
         "@tailwindcss/forms": "^0.5.11",
         "@types/better-sqlite3": "^9.6.0",
