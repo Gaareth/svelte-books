@@ -63,6 +63,10 @@ If you changed the schema and want to test it:
 
 ## Todos
 
+- the frontpage, should show all book activity not just finished
+  - the entries should also show info like duration.
+- the stat page, should have a time window option. with quickselect for this month and year and total but also for arbitrary ranges.
+
 - if clicked on most read author/category. filter by it.
 
 - books read this year. comparison stat by progress of the year
